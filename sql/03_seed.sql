@@ -1,0 +1,6 @@
+-- TODO – TV2 (deadline 20/11): dữ liệu giả lập có seed tái lập được.
+-- Gợi ý quy mô: TO 8, DIA_CHI 50, HO 60, CU_DAN 200,
+-- QUA_TRINH 250, BIEN_DONG 70, TAI_KHOAN 5.
+-- Dữ liệu tạo theo thứ tự FK từ bảng cha tới bảng con.
+-- Nên tách test fixtures (case nhỏ biết đáp án) khỏi dữ liệu nền.
+-- Không dùng người thật / địa chỉ thật / CCCD thật.

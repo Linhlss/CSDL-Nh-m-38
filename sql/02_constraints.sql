@@ -1,0 +1,9 @@
+-- TODO – TV1 (deadline 20/11)
+-- Kiểm tra các quy tắc KHÔNG thể làm chỉ bằng CHECK một hàng:
+-- 1) Không chồng lấn 2 đợt cư trú CÙNG LOẠI của cùng cư dân.
+-- 2) Với CHUYEN_NOI_BO, ma_qua_trinh_cu/moi cùng ma_cu_dan, khác ma_ho.
+-- 3) Ngày biến động phù hợp khoảng cư trú cũ/mới.
+-- 4) Các thao tác đóng/mở đợt + nhật ký được thực hiện trong 1 transaction.
+--
+-- Có thể chọn PostgreSQL EXCLUDE USING gist (btree_gist) hoặc trigger và kèm query validation.
+-- PHẢI VIẾT TEST PHỦ TRƯỜNG HỢP HỢP LỆ VÀ KHÔNG HỢP LỆ.

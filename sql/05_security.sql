@@ -1,0 +1,7 @@
+-- TODO – TV3 (deadline 24/11). Thực thi trên PostgreSQL THẬT; KHÔNG dùng dữ liệu thật.
+-- Demo B1: quyền SELECT vs UPDATE: tạo role thử nghiệm không sở hữu bảng,
+-- cấp SELECT, xác minh SELECT thành công và UPDATE bị từ chối.
+-- Demo B2: VIEW tổng hợp theo tổ và role riêng không được SELECT bảng gốc.
+--
+-- Không commit mật khẩu thật. Đừng giao role demo làm owner bảng.
+-- Nhớ test cả ca được phép và bị từ chối bằng kết nối dưới đúng role.
