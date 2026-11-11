@@ -1,7 +1,7 @@
 -- =====================================================================
 -- BTL CSDL Đề tài 17 — tests/ra_fixture.sql
 -- Bộ dữ liệu thử NHỎ, ĐÃ BIẾT ĐÁP ÁN, để kiểm chứng 10 câu đại số quan hệ
--- (docs/03_relational_algebra.md) và VIEW của Demo B2 (sql/05_security.sql).
+-- (docs/06a_dai_so_quan_he.md) và VIEW của Demo B2 (sql/05_security.sql).
 -- TV3 · 10/11/2026 · Đã chạy trên PostgreSQL 17.11: 11/11 kết quả khớp đáp án.
 --
 -- Chạy:  psql -U postgres -d csdl17_cu_tru_demo -f tests/ra_fixture.sql
