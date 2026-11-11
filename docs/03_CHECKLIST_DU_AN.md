@@ -11,6 +11,8 @@
 > **Vị trí đề xuất trong repository:** `docs/07_checklist_toan_du_an.md`.  
 > **Phiên bản:** 1.0 — lập 10/11/2026. Đây là **checklist kế hoạch**, không tự xác nhận công việc kỹ thuật đã hoàn thành.
 
+> **Cập nhật sản phẩm TV1, 11/11/2026:** Bộ thiết kế tuần 1 đã có đầu ra để bàn giao review; xem [hướng dẫn bàn giao](BAN_GIAO_TV1_TUAN_1.md), [đối chiếu đủ 20 mã việc và Gate 1](../meetings/decision_log.md), [biên bản tự kiểm tra](../tests/week1_verification_log.md). Các checkbox nghiệm thu bên dưới giữ nguyên cho tới khi có reviewer thực tế. Hồ sơ Gate 1 và ứng viên v1 đã chuẩn bị; chưa ký/xác nhận thay TV2/TV3. Phần chuẩn hóa tuần 1 là bản nháp có công bố điểm ngày sự kiện cần chốt ở tuần 2.
+
 ---
 
 ## A. HƯỚNG DẪN SỬ DỤNG — QUY ƯỚC HOÀN THÀNH
@@ -29,7 +31,7 @@
 - [x] Chọn chủ đề số 17, tên đề tài và giới hạn **một phường mô phỏng**.
 - [x] Thống nhất dữ liệu được **giả lập 100%**.
 - [x] Lập kế hoạch 3 tuần và chia ba vai trò chính.
-- [x] Khởi tạo GitHub repository và có các tài liệu `README.md`, `docs/01_de_cuong.md`, `docs/02_bao_cao_suon.md`, `docs/06_phan_cong_tien_do.md`.
+- [x] Khởi tạo GitHub repository và có các tài liệu `README.md`, `docs/01_de_cuong.md`, `docs/02_bao_cao_suon.md`, `docs/03_CHECKLIST_DU_AN.md`.
 - [x] Có bản **DDL dự thảo v0** `sql/01_schema.sql` cho 7 bảng; đây KHÔNG phải schema đã khóa/đã kiểm thử.
 - [x] Có danh sách **10 câu RA** trong đề cương, **10 slot SQL** trong `sql/04_queries.sql`, khung **21 test S01–S21** và kế hoạch **2 demo bảo mật**; chưa có nghĩa đã viết/chạy xong.
 
@@ -443,6 +445,6 @@ Quyết định: PASS / PASS CÓ ĐIỀU KIỆN / FAIL
 
 - Đề cương nội bộ: `docs/01_de_cuong.md` (phạm vi, mô hình, bộ 10 RA/SQL, S01–S21).
 - Sườn báo cáo: `docs/02_bao_cao_suon.md`.
-- Giao việc ban đầu: `docs/06_phan_cong_tien_do.md`.
+- Giao việc ban đầu: `docs/03_CHECKLIST_DU_AN.md`.
 - DDL hiện có: `sql/01_schema.sql`; các phần còn TODO: `sql/02_constraints.sql`, `sql/03_seed.sql`, `sql/04_queries.sql`, `sql/05_security.sql`.
 - Yêu cầu chính thức về bài tập lớn, bản in và thời hạn: **ảnh thông báo giảng viên do nhóm cung cấp**. Nếu cô cập nhật yêu cầu, ưu tiên thông báo mới nhất.

@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1150" height="813" viewBox="0 0 1150 813">
+  <rect width="1150" height="813" fill="white" />
+  <text x="35" y="42.625" fill="#183153" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="start">MÔ HÌNH THỰC THỂ – LIÊN KẾT</text>
+  <text x="35" y="70.5" fill="#52657b" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">Đề tài 17 • Bộ bàn giao TV1 • Cấu trúc v1 / chờ review chéo • 11/11/2026</text>
+  <polyline points="155,216 155,335" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <text x="170" y="243.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">1</text>
+  <text x="170" y="324.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">0..N</text>
+  <polyline points="155,465 155,580" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <text x="170" y="493.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">1</text>
+  <text x="170" y="569.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">0..N</text>
+  <polyline points="557,264 557,410" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <text x="572" y="292.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">1</text>
+  <text x="572" y="399.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">0..N</text>
+  <polyline points="280,645 335,645 335,560 395,560" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <text x="292" y="665.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">1</text>
+  <text x="350" y="551.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">0..N</text>
+  <polyline points="975,264 975,410" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <text x="990" y="292.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">1</text>
+  <text x="990" y="399.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">0..N</text>
+  <polyline points="720,470 830,470" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <text x="723" y="488.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">0..1</text>
+  <text x="790" y="488.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">0..N</text>
+  <polyline points="720,550 830,550" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <text x="723" y="568.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">0..1</text>
+  <text x="790" y="568.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">0..N</text>
+  <text x="774.5" y="457.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="middle">đợt cũ</text>
+  <text x="774.5" y="537.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="middle">đợt mới</text>
+  <rect x="30" y="110" width="250" height="106" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
+  <rect x="30" y="110" width="250" height="34" fill="#183153" stroke="#31577c" stroke-width="1" />
+  <text x="155.0" y="132.625" fill="#ffffff" font-family="Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle">to_dan_pho</text>
+  <text x="38" y="160.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">PK  ma_to : bigint</text>
+  <text x="38" y="184.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">UQ  ten_to : varchar(60)</text>
+  <text x="38" y="208.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">    ghi_chu : text ?</text>
+  <rect x="30" y="335" width="250" height="130" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
+  <rect x="30" y="335" width="250" height="34" fill="#183153" stroke="#31577c" stroke-width="1" />
+  <text x="155.0" y="357.625" fill="#ffffff" font-family="Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle">dia_chi</text>
+  <text x="38" y="385.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">PK  ma_dia_chi : bigint</text>
+  <text x="38" y="409.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">FK  ma_to : bigint</text>
+  <text x="38" y="433.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">    dia_chi_chuan : varchar(200)</text>
+  <text x="38" y="457.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">    ghi_chu : text ?</text>
+  <rect x="30" y="580" width="250" height="130" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
+  <rect x="30" y="580" width="250" height="34" fill="#183153" stroke="#31577c" stroke-width="1" />
+  <text x="155.0" y="602.625" fill="#ffffff" font-family="Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle">ho_cu_tru</text>
+  <text x="38" y="630.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">PK  ma_ho : bigint</text>
+  <text x="38" y="654.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">FK  ma_dia_chi : bigint</text>
+  <text x="38" y="678.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">    ngay_lap : date</text>
+  <text x="38" y="702.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">    ghi_chu : text ?</text>
+  <rect x="395" y="110" width="325" height="154" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
+  <rect x="395" y="110" width="325" height="34" fill="#183153" stroke="#31577c" stroke-width="1" />
+  <text x="557.5" y="132.625" fill="#ffffff" font-family="Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle">cu_dan</text>
+  <text x="403" y="160.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">PK  ma_cu_dan : bigint</text>
+  <text x="403" y="184.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">    ho_ten : varchar(120)</text>
+  <text x="403" y="208.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">    ngay_sinh : date</text>
+  <text x="403" y="232.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">    gioi_tinh : varchar(10)</text>
+  <text x="403" y="256.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">    ghi_chu : text ?</text>
+  <rect x="395" y="410" width="325" height="178" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
+  <rect x="395" y="410" width="325" height="34" fill="#183153" stroke="#31577c" stroke-width="1" />
+  <text x="557.5" y="432.625" fill="#ffffff" font-family="Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle">qua_trinh_cu_tru</text>
+  <text x="403" y="460.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">PK  ma_qua_trinh : bigint</text>
+  <text x="403" y="484.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">FK  ma_cu_dan : bigint</text>
+  <text x="403" y="508.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">FK  ma_ho : bigint</text>
+  <text x="403" y="532.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">    loai_cu_tru : varchar(20)</text>
+  <text x="403" y="556.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">    ngay_bat_dau : date</text>
+  <text x="403" y="580.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">    ngay_ket_thuc : date ?</text>
+  <rect x="830" y="110" width="290" height="154" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
+  <rect x="830" y="110" width="290" height="34" fill="#183153" stroke="#31577c" stroke-width="1" />
+  <text x="975.0" y="132.625" fill="#ffffff" font-family="Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle">tai_khoan</text>
+  <text x="838" y="160.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">PK  ma_tai_khoan : bigint</text>
+  <text x="838" y="184.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">UQ  ten_dang_nhap : varchar(60)</text>
+  <text x="838" y="208.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">    ten_hien_thi : varchar(120)</text>
+  <text x="838" y="232.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">    vai_tro : varchar(20)</text>
+  <text x="838" y="256.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">    trang_thai : varchar(20)</text>
+  <rect x="830" y="410" width="290" height="226" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
+  <rect x="830" y="410" width="290" height="34" fill="#183153" stroke="#31577c" stroke-width="1" />
+  <text x="975.0" y="432.625" fill="#ffffff" font-family="Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle">bien_dong_cu_tru</text>
+  <text x="838" y="460.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">PK  ma_bien_dong : bigint</text>
+  <text x="838" y="484.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">    loai_bien_dong : varchar(20)</text>
+  <text x="838" y="508.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">FK  ma_qua_trinh_cu : bigint ?</text>
+  <text x="838" y="532.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">FK  ma_qua_trinh_moi : bigint ?</text>
+  <text x="838" y="556.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">    ngay_bien_dong : date</text>
+  <text x="838" y="580.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">FK  ma_tai_khoan : bigint</text>
+  <text x="838" y="604.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">    thoi_diem_ghi : timestamptz</text>
+  <text x="838" y="628.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">    ghi_chu : text ?</text>
+  <text x="35" y="749.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">Ký hiệu: PK khóa chính • FK khóa ngoại • UQ duy nhất • ? cho phép NULL • 1 bắt buộc • 0..1 tùy chọn • 0..N nhiều</text>
+  <text x="35" y="779.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">Mỗi sự kiện: đến chỉ đợt mới; đi chỉ đợt cũ; nội bộ có cả hai. UNIQUE ghép địa chỉ: (ma_to, dia_chi_chuan).</text>
+</svg>

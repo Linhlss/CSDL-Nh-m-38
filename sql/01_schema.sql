@@ -1,4 +1,7 @@
--- BTL CSDL Đề tài 17: LƯỢC ĐỒ THAM KHẢO v0 (để nhóm review trước khi khóa v1)
+-- BTL CSDL Đề tài 17: BỘ BÀN GIAO THIẾT KẾ v1-candidate, TV1, 11/11/2026
+-- Cấu trúc giữ nguyên v0: 7 bảng / 35 cột / 7 PK / 7 FK / 3 UNIQUE / 6 CHECK.
+-- Đã đối chiếu tài liệu và ERD; chưa tuyên bố chạy PostgreSQL hoặc được cả nhóm duyệt.
+-- Hợp đồng: docs/03_dac_ta_nghiep_vu.md, docs/04_data_dictionary_va_chuan_hoa.md.
 -- PostgreSQL >= 15, dùng trong DB mới: csdl17_cu_tru_demo
 -- Dữ liệu 100% mô phỏng; không chứa dữ liệu cá nhân thật.
 -- Chưa bao gồm quy tắc nghiệp vụ xuyên bảng, xem 02_constraints.sql.
@@ -81,4 +84,6 @@ CREATE INDEX IF NOT EXISTS idx_qt_cu_dan_ngay ON qua_trinh_cu_tru(ma_cu_dan, nga
 CREATE INDEX IF NOT EXISTS idx_qt_ho_ngay ON qua_trinh_cu_tru(ma_ho, ngay_bat_dau);
 CREATE INDEX IF NOT EXISTS idx_bd_loai_ngay ON bien_dong_cu_tru(loai_bien_dong, ngay_bien_dong);
 
--- TODO: Review logic của mọi ràng buộc với ERD chính thức (GATE 1).
+-- Gate 1: ứng viên v1 chờ TV2/TV3 review; trạng thái ở meetings/decision_log.md.
+-- Không dùng IF NOT EXISTS làm migration: nếu DB có bảng cũ khác cấu trúc,
+-- tạo DB sạch để đối chiếu. Bản này chưa thực thi B06, B08-B11, B14-B15.

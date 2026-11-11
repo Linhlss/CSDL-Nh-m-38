@@ -1,0 +1,8 @@
+{
+  "source": "https://github.com/Linhlss/CSDL-Nh-m-38/blob/d20b394079487438350bb198ca1c418c8ffc1ca5/sql/01_schema.sql",
+  "checked_date": "2026-11-11",
+  "comparison": "SQL after removing line comments and collapsing whitespace",
+  "reference_sha256": "6779c6cc5815d9b99a3ea4a777ea02fb47d3a1a9e8340d637181881d8f6cf3be",
+  "local_sha256": "6779c6cc5815d9b99a3ea4a777ea02fb47d3a1a9e8340d637181881d8f6cf3be",
+  "equal": true
+}

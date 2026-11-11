@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1150" height="813" viewBox="0 0 1150 813">
+  <rect width="1150" height="813" fill="white" />
+  <text x="35" y="42.625" fill="#183153" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="start">SƠ ĐỒ PHÂN RÃ CHỨC NĂNG</text>
+  <text x="35" y="70.5" fill="#52657b" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">Đề tài 17 • Cấp 0 → cấp 1 → cấp 2 • Bộ bàn giao TV1 • 11/11/2026</text>
+  <polyline points="575,169 575,230 112.5,230 112.5,290" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <polyline points="112.5,358 112.5,383 20,383 20,460 30,460" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <rect x="30" y="430" width="165" height="60" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
+  <text x="112.5" y="464.875" fill="#183153" font-family="Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">1.1 Tổ dân phố</text>
+  <polyline points="112.5,358 112.5,383 20,383 20,546 30,546" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <rect x="30" y="516" width="165" height="60" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
+  <text x="112.5" y="550.875" fill="#183153" font-family="Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">1.2 Địa chỉ</text>
+  <rect x="30" y="290" width="165" height="68" fill="#dceafb" stroke="#31577c" stroke-width="1" />
+  <text x="112.5" y="320.5" fill="#183153" font-family="Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">1. Quản lý</text>
+  <text x="112.5" y="338.0" fill="#183153" font-family="Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">địa bàn</text>
+  <polyline points="575,169 575,230 297.5,230 297.5,290" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <polyline points="297.5,358 297.5,383 205,383 205,460 215,460" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <rect x="215" y="430" width="165" height="60" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
+  <text x="297.5" y="464.875" fill="#183153" font-family="Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">2.1 Nhóm hộ</text>
+  <polyline points="297.5,358 297.5,383 205,383 205,546 215,546" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <rect x="215" y="516" width="165" height="60" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
+  <text x="297.5" y="550.875" fill="#183153" font-family="Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">2.2 Hồ sơ cư dân</text>
+  <rect x="215" y="290" width="165" height="68" fill="#dceafb" stroke="#31577c" stroke-width="1" />
+  <text x="297.5" y="320.5" fill="#183153" font-family="Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">2. Quản lý hộ</text>
+  <text x="297.5" y="338.0" fill="#183153" font-family="Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">và cư dân</text>
+  <polyline points="575,169 575,230 482.5,230 482.5,290" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <polyline points="482.5,358 482.5,383 390,383 390,460 400,460" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <rect x="400" y="430" width="165" height="60" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
+  <text x="482.5" y="464.875" fill="#183153" font-family="Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">3.1 Mở đợt</text>
+  <polyline points="482.5,358 482.5,383 390,383 390,546 400,546" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <rect x="400" y="516" width="165" height="60" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
+  <text x="482.5" y="550.875" fill="#183153" font-family="Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">3.2 Kết thúc đợt</text>
+  <rect x="400" y="290" width="165" height="68" fill="#dceafb" stroke="#31577c" stroke-width="1" />
+  <text x="482.5" y="320.5" fill="#183153" font-family="Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">3. Quản lý</text>
+  <text x="482.5" y="338.0" fill="#183153" font-family="Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">quá trình cư trú</text>
+  <polyline points="575,169 575,230 667.5,230 667.5,290" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <polyline points="667.5,358 667.5,383 575,383 575,460 585,460" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <rect x="585" y="430" width="165" height="60" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
+  <text x="667.5" y="464.875" fill="#183153" font-family="Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">4.1 Chuyển đến</text>
+  <polyline points="667.5,358 667.5,383 575,383 575,546 585,546" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <rect x="585" y="516" width="165" height="60" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
+  <text x="667.5" y="550.875" fill="#183153" font-family="Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">4.2 Chuyển đi</text>
+  <polyline points="667.5,358 667.5,383 575,383 575,632 585,632" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <rect x="585" y="602" width="165" height="60" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
+  <text x="667.5" y="636.875" fill="#183153" font-family="Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">4.3 Chuyển nội bộ</text>
+  <rect x="585" y="290" width="165" height="68" fill="#dceafb" stroke="#31577c" stroke-width="1" />
+  <text x="667.5" y="320.5" fill="#183153" font-family="Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">4. Ghi nhận</text>
+  <text x="667.5" y="338.0" fill="#183153" font-family="Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">biến động</text>
+  <polyline points="575,169 575,230 852.5,230 852.5,290" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <polyline points="852.5,358 852.5,383 760,383 760,460 770,460" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <rect x="770" y="430" width="165" height="60" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
+  <text x="852.5" y="464.875" fill="#183153" font-family="Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">5.1 Hiện tại</text>
+  <polyline points="852.5,358 852.5,383 760,383 760,546 770,546" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <rect x="770" y="516" width="165" height="60" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
+  <text x="852.5" y="550.875" fill="#183153" font-family="Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">5.2 Lịch sử</text>
+  <polyline points="852.5,358 852.5,383 760,383 760,632 770,632" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <rect x="770" y="602" width="165" height="60" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
+  <text x="852.5" y="628.75" fill="#183153" font-family="Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">5.3 Thống kê theo</text>
+  <text x="852.5" y="645.0" fill="#183153" font-family="Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">tổ / loại cư trú</text>
+  <rect x="770" y="290" width="165" height="68" fill="#dceafb" stroke="#31577c" stroke-width="1" />
+  <text x="852.5" y="320.5" fill="#183153" font-family="Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">5. Tra cứu</text>
+  <text x="852.5" y="338.0" fill="#183153" font-family="Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">và thống kê</text>
+  <polyline points="575,169 575,230 1037.5,230 1037.5,290" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <polyline points="1037.5,358 1037.5,383 945,383 945,460 955,460" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <rect x="955" y="430" width="165" height="60" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
+  <text x="1037.5" y="464.875" fill="#183153" font-family="Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">6.1 Vai trò</text>
+  <polyline points="1037.5,358 1037.5,383 945,383 945,546 955,546" fill="none" stroke="#52657b" stroke-width="1.6" />
+  <rect x="955" y="516" width="165" height="60" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
+  <text x="1037.5" y="542.75" fill="#183153" font-family="Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">6.2 Giới hạn</text>
+  <text x="1037.5" y="559.0" fill="#183153" font-family="Arial, sans-serif" font-size="13" font-weight="400" text-anchor="middle">truy cập dữ liệu</text>
+  <rect x="955" y="290" width="165" height="68" fill="#dceafb" stroke="#31577c" stroke-width="1" />
+  <text x="1037.5" y="320.5" fill="#183153" font-family="Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">6. Quản trị</text>
+  <text x="1037.5" y="338.0" fill="#183153" font-family="Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle">và bảo mật</text>
+  <rect x="365" y="105" width="420" height="64" fill="#183153" stroke="#31577c" stroke-width="1" />
+  <text x="575.0" y="132.5" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle">QUẢN LÝ CƯ DÂN</text>
+  <text x="575.0" y="155.0" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle">VÀ BIẾN ĐỘNG CƯ TRÚ</text>
+  <text x="35" y="749.875" fill="#183153" font-family="Arial, sans-serif" font-size="13" font-weight="400" text-anchor="start">Một phường mô phỏng • Sáu nhóm chức năng • Mười bốn chức năng cấp 2 • Dữ liệu giả lập 100%</text>
+  <text x="35" y="779.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">Đường nối biểu diễn quan hệ phân rã chức năng; không biểu diễn thứ tự xử lý hay luồng dữ liệu.</text>
+</svg>
