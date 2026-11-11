@@ -71,7 +71,7 @@ Các quyết định là phương án TV1 đã hiện thực trong tài liệu l
 | Người / thời điểm | Nội dung cần xác nhận | Kết quả |
 |---|---|---|
 | TV2 — sau khi đọc bộ bàn giao | Đủ cột/miền/quan hệ để sinh dữ liệu và viết 10 SQL; phản hồi câu hỏi còn mơ hồ | Chờ người nhận ghi |
-| TV3 — sau khi đọc bộ bàn giao | ERD biểu diễn đúng 10 RA; tiếp nhận RV08; hai demo bảo mật khả thi | Chờ người nhận ghi |
+| TV3 — sau khi đọc bộ bàn giao | ERD biểu diễn đúng 10 RA; tiếp nhận RV08; hai demo bảo mật khả thi | 11/11/2026, TV3: xác nhận cả ba điểm; RV08 đã sửa trong `docs/06a_dai_so_quan_he.md` v0.1. Còn mở E1 (DEC06, chờ TV1 trả lời). `tests/ra_fixture.sql` chạy lại trên v1-candidate: 11/11 khớp. Chi tiết: `docs/REVIEW_TV3_ERD_TUAN_1.md`. Chưa ký PASS Gate 1 |
 | Cả nhóm — Gate 1 dự kiến 15/11 | Đồng ý hoặc yêu cầu sửa DEC01–DEC12; ghi phiên bản và lỗi còn mở | Chờ xác nhận thật |
 
 Các Gate 2 (22/11), Gate 3 (24/11), Gate 4 (26/11) chưa được thực hiện trong gói tuần 1.

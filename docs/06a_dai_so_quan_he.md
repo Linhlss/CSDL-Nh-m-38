@@ -1,7 +1,7 @@
 # 10 CÂU HỎI VÀ BIỂU THỨC ĐẠI SỐ QUAN HỆ (QRA01–QRA10)
 
-> **Người viết:** TV3 · **Người kiểm tra:** TV1 · **Phiên bản:** v0 (nháp, 10/11/2026)
-> **Căn cứ:** `sql/01_schema.sql` v0 và mục 6 của `docs/01_de_cuong.md`.
+> **Người viết:** TV3 · **Người kiểm tra:** TV1 · **Phiên bản:** v0.1 (nháp, 11/11/2026; sửa mục 0.3 theo góp ý RV08 của TV1)
+> **Căn cứ:** `sql/01_schema.sql` v1-candidate (cấu trúc giữ nguyên v0) và mục 6 của `docs/01_de_cuong.md`.
 > **Lưu ý:** Nếu Gate 1 (15/11) đổi tên bảng hoặc tên cột, phải sửa lại toàn bộ tệp này. Mục (6) "Kết quả mong đợi" sẽ điền sau khi TV2 có dữ liệu giả lập (dự kiến 20/11).
 
 ---
@@ -25,7 +25,7 @@
 
 Đại số quan hệ cổ điển **không dùng** `COUNT`, `GROUP BY`, `ORDER BY`. Các phép `∪`, `∩`, `−` chỉ áp dụng cho hai quan hệ **khả hợp**, tức là cùng số thuộc tính và cùng miền giá trị.
 
-### 0.2. Lược đồ quan hệ (theo `01_schema.sql` v0)
+### 0.2. Lược đồ quan hệ (theo `01_schema.sql` v1-candidate, cấu trúc như v0)
 
 ```text
 TO_DAN_PHO(ma_to, ten_to, ghi_chu)
@@ -46,45 +46,45 @@ Ngày tham chiếu cố định: **d = DATE '2026-11-20'**.
 
 Một đợt cư trú **có hiệu lực tại ngày d** khi `ngay_bat_dau ≤ d` và (`ngay_ket_thuc` rỗng hoặc `ngay_ket_thuc ≥ d`).
 
-Để giữ đúng đại số quan hệ cổ điển, nhóm **không dùng toán tử `IS NULL`** trong biểu thức. Thay vào đó, định nghĩa `Q_d` bằng phép chọn và phép hiệu:
+**Vấn đề với giá trị rỗng (NULL).** Đại số quan hệ cổ điển giả định mọi bộ đều có giá trị trên mọi thuộc tính. Cột `ngay_ket_thuc` lại được phép rỗng (đợt chưa kết thúc). Mọi phép so sánh với giá trị rỗng, kể cả `ngay_ket_thuc < d`, đều cần **ngữ nghĩa mở rộng** (logic ba giá trị của SQL: đúng, sai, không xác định). Vì vậy, viết `σ_{ngay_ket_thuc < d}` hay đổi `IS NULL` thành một phép hiệu **không** làm biểu thức trở thành đại số cổ điển thuần: vấn đề NULL vẫn còn, chỉ bị che đi.
+
+**Cách nhóm xử lý:** tách làm hai bước, có ranh giới rõ ràng.
+
+**Bước 1 — chuẩn bị dữ liệu (ngoài đại số quan hệ, làm bằng SQL).** Tạo quan hệ các đợt có hiệu lực tại d. Bước này xử lý NULL theo quy tắc B05 của `docs/03_dac_ta_nghiep_vu.md`, rồi **bỏ cột `ngay_ket_thuc`**:
 
 ```text
-Q_d ← σ_{ngay_bat_dau ≤ d}(QUA_TRINH_CU_TRU) − σ_{ngay_ket_thuc < d}(QUA_TRINH_CU_TRU)
+Q_d = CU_TRU_HIEU_LUC_D(ma_qua_trinh, ma_cu_dan, ma_ho, loai_cu_tru, ngay_bat_dau)
 ```
-
-**Giải thích:**
-
-- Vế trái lấy mọi đợt đã bắt đầu trước hoặc đúng ngày d.
-- Vế phải lấy các đợt **đã kết thúc trước ngày d**. Một đợt có `ngay_ket_thuc` rỗng không thỏa điều kiện `ngay_ket_thuc < d` (so sánh với giá trị rỗng không cho kết quả đúng), nên không bị lấy vào vế phải.
-- Lấy hiệu hai vế, ta còn các đợt đã bắt đầu và chưa kết thúc tại ngày d, gồm cả đợt chưa có ngày kết thúc. Đúng với định nghĩa ở trên.
-- Hai vế cùng lược đồ `QUA_TRINH_CU_TRU` nên khả hợp.
-
-`Q_d` có cùng lược đồ với `QUA_TRINH_CU_TRU`. Các câu QRA01, 02, 03, 08, 09 dùng lại `Q_d`.
-
-SQL tương đương (dùng để kiểm chứng; có thể tạo thành view nếu nhóm muốn):
 
 ```sql
--- Q_d: các đợt cư trú có hiệu lực tại 2026-11-20
-SELECT * FROM qua_trinh_cu_tru WHERE ngay_bat_dau <= DATE '2026-11-20'
-EXCEPT
-SELECT * FROM qua_trinh_cu_tru WHERE ngay_ket_thuc < DATE '2026-11-20';
--- Tương đương với:
--- WHERE ngay_bat_dau <= DATE '2026-11-20'
---   AND (ngay_ket_thuc IS NULL OR ngay_ket_thuc >= DATE '2026-11-20')
+-- Bước chuẩn bị Q_d: các đợt cư trú có hiệu lực tại 2026-11-20 (quy tắc B05)
+SELECT ma_qua_trinh, ma_cu_dan, ma_ho, loai_cu_tru, ngay_bat_dau
+FROM qua_trinh_cu_tru
+WHERE ngay_bat_dau <= DATE '2026-11-20'
+  AND (ngay_ket_thuc IS NULL OR ngay_ket_thuc >= DATE '2026-11-20');
 ```
+
+**Bước 2 — đại số quan hệ cổ điển.** `Q_d` được coi là một **quan hệ đầu vào đã cho**, giống các bảng gốc. Năm thuộc tính của `Q_d` đều có giá trị trong mọi bộ (`ngay_bat_dau` là `NOT NULL` trong schema), nên mọi biểu thức dùng `Q_d` ở các câu dưới đây chỉ dùng phép toán cổ điển, không còn so sánh nào với giá trị rỗng.
+
+**Ghi chú:**
+
+- `Q_d` **không còn** cùng lược đồ với `QUA_TRINH_CU_TRU` (thiếu `ngay_ket_thuc`). Các câu dùng `Q_d` chỉ lấy `ma_cu_dan`, `ma_ho`, `loai_cu_tru`, nên công thức không đổi.
+- Muốn dùng `Q_d` trong phép `∪`, `∩`, `−` với một quan hệ khác thì phải chiếu cả hai vế về cùng thuộc tính trước, ví dụ `π_{ma_cu_dan}(Q_d)` ở QRA09.
+- Các câu chỉ xét lịch sử (QRA04, 05, 06, 07, 10) dùng trực tiếp bảng gốc và không đụng tới `ngay_ket_thuc`, nên không cần bước chuẩn bị.
+- Các câu QRA01, 02, 03, 08, 09 dùng lại `Q_d`. SQL kiểm chứng của từng câu viết thẳng điều kiện B05 ở trên.
 
 ### 0.4. Bảng phủ phép toán
 
 | Câu | σ | π | ⋈ tự nhiên | ⋈ theta | ρ | ∪ | ∩ | − | Kịch bản |
 |---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|---|
-| QRA01 | ✓ | ✓ | ✓ | | | | | (qua Q_d) | S01 |
-| QRA02 | ✓ | ✓ | | ✓ | | | | (qua Q_d) | S02 |
-| QRA03 | ✓ | ✓ | ✓ | | | | | (qua Q_d) | S03 |
+| QRA01 | ✓ | ✓ | ✓ | | | | | | S01 |
+| QRA02 | ✓ | ✓ | | ✓ | | | | | S02 |
+| QRA03 | ✓ | ✓ | ✓ | | | | | | S03 |
 | QRA04 | ✓ | ✓ | ✓ (tự kết nối) | | ✓ | | | | S06 |
 | QRA05 | | ✓ | ✓ | | | | | ✓ | S04 |
 | QRA06 | | ✓ | ✓ | | | | | ✓ | S10 |
 | QRA07 | ✓ | ✓ | ✓ | | | | ✓ | | S07, S08 |
-| QRA08 | ✓ | ✓ | ✓ | | | ✓ | | (qua Q_d) | S01, S02 |
+| QRA08 | ✓ | ✓ | ✓ | | | ✓ | | | S01, S02 |
 | QRA09 | ✓ | ✓ | ✓ | | | | | ✓ | S09 |
 | QRA10 | ✓ | ✓ | ✓ | | ✓ | | | | S13 |
 

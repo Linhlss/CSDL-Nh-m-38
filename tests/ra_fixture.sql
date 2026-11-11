@@ -3,6 +3,8 @@
 -- Bộ dữ liệu thử NHỎ, ĐÃ BIẾT ĐÁP ÁN, để kiểm chứng 10 câu đại số quan hệ
 -- (docs/06a_dai_so_quan_he.md) và VIEW của Demo B2 (sql/05_security.sql).
 -- TV3 · 10/11/2026 · Đã chạy trên PostgreSQL 17.11: 11/11 kết quả khớp đáp án.
+-- Chạy lại 11/11/2026 trên DB trắng với 01_schema.sql v1-candidate + 05_security.sql,
+-- sau khi sửa Q_d theo RV08: 11/11 kết quả khớp (Q_d, QRA01–10, VIEW dưới role report).
 --
 -- Chạy:  psql -U postgres -d csdl17_cu_tru_demo -f tests/ra_fixture.sql
 -- Yêu cầu: 7 bảng ĐANG RỖNG (dùng mã cố định 1, 2, 3...); đã chạy 05_security.sql
@@ -65,13 +67,13 @@ INSERT INTO bien_dong_cu_tru(loai_bien_dong, ma_qua_trinh_cu, ma_qua_trinh_moi, 
 
 -- ----- Q_d · MONG ĐỢI: 7 dòng: ma_qua_trinh 1, 2, 3, 5, 8, 11, 12
 \echo '===== Q_d | mong doi: 7 dòng: ma_qua_trinh 1, 2, 3, 5, 8, 11, 12'
--- Q_d: các đợt cư trú có hiệu lực tại 2026-11-20
-SELECT * FROM qua_trinh_cu_tru WHERE ngay_bat_dau <= DATE '2026-11-20'
-EXCEPT
-SELECT * FROM qua_trinh_cu_tru WHERE ngay_ket_thuc < DATE '2026-11-20';
--- Tương đương với:
--- WHERE ngay_bat_dau <= DATE '2026-11-20'
---   AND (ngay_ket_thuc IS NULL OR ngay_ket_thuc >= DATE '2026-11-20')
+-- Bước chuẩn bị Q_d (06a mục 0.3, quy tắc B05): đợt có hiệu lực tại 2026-11-20,
+-- bỏ cột ngay_ket_thuc để phần đại số không còn giá trị rỗng.
+SELECT ma_qua_trinh, ma_cu_dan, ma_ho, loai_cu_tru, ngay_bat_dau
+FROM qua_trinh_cu_tru
+WHERE ngay_bat_dau <= DATE '2026-11-20'
+  AND (ngay_ket_thuc IS NULL OR ngay_ket_thuc >= DATE '2026-11-20')
+ORDER BY ma_qua_trinh;
 
 -- ----- QRA01 · MONG ĐỢI: ma_cu_dan 1, 7, 9, 10 (1 và 10 trùng họ tên, phải là 2 dòng)
 \echo '===== QRA01 | mong doi: ma_cu_dan 1, 7, 9, 10 (1 và 10 trùng họ tên, phải là 2 dòng)'

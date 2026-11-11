@@ -88,6 +88,17 @@ Mỗi tài khoản chỉ được cấp **đúng những quyền cần cho công
 
 "6 bảng nghiệp vụ" là `to_dan_pho`, `dia_chi`, `ho_cu_tru`, `cu_dan`, `qua_trinh_cu_tru`, `bien_dong_cu_tru`.
 
+**Đối chiếu với cột `tai_khoan.vai_tro`** (bổ sung 11/11/2026, mục E2 trong `docs/REVIEW_TV3_ERD_TUAN_1.md`):
+
+| `vai_tro` trong bảng `tai_khoan` (tầng nghiệp vụ mô phỏng) | Role PostgreSQL tương ứng trong demo (tầng quyền thật) |
+|---|---|
+| `QUAN_TRI` | `csdl17_admin` |
+| `CAN_BO` (người ghi nhận biến động) | `csdl17_admin` |
+| Không có (cán bộ chỉ tra cứu, không ghi sự kiện nên không cần tài khoản ghi nhận) | `csdl17_reader` |
+| `THONG_KE` | `csdl17_report` |
+
+Bảng trên chỉ là **tương ứng gợi ý** để giải thích trong báo cáo. Hai tầng **độc lập**: đổi `vai_tro` hoặc khóa một tài khoản (`trang_thai = 'KHOA'`) **không** tự cấp hay thu hồi role PostgreSQL nào (B14). Muốn chặn một người thật thì quản trị viên phải `REVOKE` hoặc `ALTER ROLE ... NOLOGIN`.
+
 ---
 
 ## 4. Thứ tự chạy
