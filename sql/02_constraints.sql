@@ -7,3 +7,16 @@
 --
 -- Có thể chọn PostgreSQL EXCLUDE USING gist (btree_gist) hoặc trigger và kèm query validation.
 -- PHẢI VIẾT TEST PHỦ TRƯỜNG HỢP HỢP LỆ VÀ KHÔNG HỢP LỆ.
+--
+-- ĐẶC TẢ ĐÃ BÀN GIAO TUẦN 1 (11/11/2026), CHƯA LÀ MÃ THỰC THI:
+-- Nguồn chuẩn: docs/03_dac_ta_nghiep_vu.md B06, B08-B11, B14;
+-- docs/04_data_dictionary_va_chuan_hoa.md mục 6; tests/week1_design_cases.md.
+-- B06: cùng cư dân + cùng loại, khoảng [bắt đầu, kết thúc] không giao;
+--      cận trên NULL là không giới hạn. GiST + btree_gist; D08-D10.
+-- B08: hai đợt cùng cư dân, khác hộ; D15-D18.
+-- B09: ngày sự kiện t; đợt mới bắt đầu t, đợt cũ kết thúc t-1; D19-D20.
+--      Kiểm cả INSERT/UPDATE sự kiện và UPDATE đợt đang được tham chiếu (D22).
+-- B10: khóa đợt cũ, đóng/mở/ghi sự kiện một giao dịch; thử rollback (D21).
+-- B11: giữ liên kết hộ-địa chỉ/tổ ổn định khi đã có lịch sử (D23).
+-- B14: khi ghi mới, tài khoản phải HOAT_DONG; không làm sai nhật ký cũ khi khóa.
+-- Chỉ đánh dấu hoàn thành tuần 2 sau khi có code, test DB và kết quả thật.

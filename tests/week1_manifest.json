@@ -1,0 +1,193 @@
+{
+  "version": "v1-candidate",
+  "recorded_date": "2026-11-11",
+  "database_executed": false,
+  "group_gate1_approved": false,
+  "files": [
+    {
+      "path": ".gitignore",
+      "bytes": 48,
+      "sha256": "9e1eec0c05984d6933b473ce5458fd0986d317a4385122bc6c2e0410cfa2f796"
+    },
+    {
+      "path": "README.md",
+      "bytes": 3972,
+      "sha256": "fe8e9a88d84df84dcecb728c91ee41b7eeab2549714831b924a167552adb8527"
+    },
+    {
+      "path": "data/README.md",
+      "bytes": 993,
+      "sha256": "40442c58f2c73fc12798324d3771cfe62886849f85e0f14b1b8e2b1ea6356181"
+    },
+    {
+      "path": "data/generated/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "diagrams/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "diagrams/erd_v1.drawio",
+      "bytes": 27471,
+      "sha256": "22dec7cbfef35ae1f84ac526e4180afe315ee6d2a350b83f562fd02ad9410367"
+    },
+    {
+      "path": "diagrams/erd_v1.png",
+      "bytes": 166683,
+      "sha256": "ddfea285e7b19c1436efbba9961d9bdad26614ee1a017b0f6d2ef4911d78b062"
+    },
+    {
+      "path": "diagrams/erd_v1.svg",
+      "bytes": 11955,
+      "sha256": "67eef1ef62be063be1b1f75f752a8ad70d46d2eee82665f2356a4f54d5360109"
+    },
+    {
+      "path": "diagrams/phan_ra_chuc_nang.drawio",
+      "bytes": 24382,
+      "sha256": "7af365dbd4ed993dcdc412ce9cfa269e432f46088dbd1e3164f8a332c1ad4211"
+    },
+    {
+      "path": "diagrams/phan_ra_chuc_nang.png",
+      "bytes": 128389,
+      "sha256": "9317cfc95ad4193ed70802a2491f58a864955103d5a0a027135a57f5deaded24"
+    },
+    {
+      "path": "diagrams/phan_ra_chuc_nang.svg",
+      "bytes": 10109,
+      "sha256": "9e03f4714f57798b56fec28cc20236bd61975c06ec3c67e468a699103c2d141e"
+    },
+    {
+      "path": "docs/01_de_cuong.md",
+      "bytes": 76506,
+      "sha256": "c2cc26ff18dfb864935f2720a6e4db0a48da6cfa413a4b0f4130cc94292e608f"
+    },
+    {
+      "path": "docs/02_bao_cao_suon.md",
+      "bytes": 17091,
+      "sha256": "887904d3ec71da300b9279924e0f4fcb8b4aa761e13c66f369421da3b5367a03"
+    },
+    {
+      "path": "docs/03_CHECKLIST_DU_AN.md",
+      "bytes": 55907,
+      "sha256": "4e664977c52d852648ff5df4e3ad7493bf14b5de3d6bfcc9c162d39d4a93563d"
+    },
+    {
+      "path": "docs/03_dac_ta_nghiep_vu.md",
+      "bytes": 16735,
+      "sha256": "c059ea1ba0998ac7a5e4cbefc2898b9bf996ecc9cd71bbbcb091ba35b4d98eab"
+    },
+    {
+      "path": "docs/04_data_dictionary_va_chuan_hoa.md",
+      "bytes": 19463,
+      "sha256": "9ea03214f370612b25375f08be1ab3965e3ff1bd4b8733fb61b64029e194da62"
+    },
+    {
+      "path": "docs/07_ma_tran_truy_van_va_review.md",
+      "bytes": 8743,
+      "sha256": "c228904869139618cb4441acb18a5a98c83a724acbeced857229508862608746"
+    },
+    {
+      "path": "docs/BAN_GIAO_TV1_TUAN_1.md",
+      "bytes": 6799,
+      "sha256": "310c0a4b2b4af8f1f541ef6384794105ae0485c96406d25db4f69d9acfd24476"
+    },
+    {
+      "path": "docs/KE_HOACH_TV1_TUAN_1.md",
+      "bytes": 14067,
+      "sha256": "6d862b291d13b34aaf98e9d9e9f20bfd607e90042d7b7e5308f373708d3d1d86"
+    },
+    {
+      "path": "evidence/security/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/sql/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "meetings/decision_log.md",
+      "bytes": 8209,
+      "sha256": "e3660a23db4f6f3022a34c4f250ddcb3b71fec35174e007ed2054075a66fc123"
+    },
+    {
+      "path": "report/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "scripts/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "scripts/render_week1_diagrams.py",
+      "bytes": 11420,
+      "sha256": "f2ef64950cb2ba5d989c8184093b7cc313f766e6f1a0f74b6db6e08eba28b907"
+    },
+    {
+      "path": "scripts/verify_week1.py",
+      "bytes": 15511,
+      "sha256": "97f5a8a86cdb48409dbaf902a93b11f93d04a3b1a0996e4b629fe14d976364fc"
+    },
+    {
+      "path": "sql/01_schema.sql",
+      "bytes": 4355,
+      "sha256": "e3a220c0ea8fbe7ad4475c0ede3201d25573a1007c5b4e0b26f698df2607f6f5"
+    },
+    {
+      "path": "sql/02_constraints.sql",
+      "bytes": 1645,
+      "sha256": "7c0192462a6c5e47e29c63ec5162d08765a057250f1f68ee662f5a46966da122"
+    },
+    {
+      "path": "sql/03_seed.sql",
+      "bytes": 418,
+      "sha256": "37a3e80b628eb3bbe9e2e02a1b89fd4504fadb62c2d26d4b11c0d4bab8ccfab6"
+    },
+    {
+      "path": "sql/04_queries.sql",
+      "bytes": 1112,
+      "sha256": "56ab5c77e31642a035a722b0fb65a3e525e0660ddc309d8f9d466630bd35dfad"
+    },
+    {
+      "path": "sql/05_security.sql",
+      "bytes": 543,
+      "sha256": "adba232fd980dd4fd3c4487a956a3aeca9896e08cbc01a9594109cb7702a8c87"
+    },
+    {
+      "path": "sql/06_validation.sql",
+      "bytes": 941,
+      "sha256": "c7ae775d1172c05cfa56f49340be784c2592d02794dcfdbf2a6393f82e08fcf6"
+    },
+    {
+      "path": "tests/final_test_log.md",
+      "bytes": 647,
+      "sha256": "e3fdb816c2e3e38ce9bd59ff250ab34e77ae926aad6c04055ee7a67a922ad4ae"
+    },
+    {
+      "path": "tests/test_scenarios.md",
+      "bytes": 1299,
+      "sha256": "70c2d442186e02cf3856d270c232d92453163fabbd00d0b0b06eb36e51252abb"
+    },
+    {
+      "path": "tests/week1_design_cases.md",
+      "bytes": 5617,
+      "sha256": "33b3dc5f0c0ba0fb51e12c40ee2b5a18146428d78d567842da8ad9608fa96804"
+    },
+    {
+      "path": "tests/week1_sql_compatibility.json",
+      "bytes": 425,
+      "sha256": "80f0a7308f888d7e1e1bce58a6f41c858378439b0bb89af5c5e6d1f09f207021"
+    },
+    {
+      "path": "tests/week1_verification_log.md",
+      "bytes": 3246,
+      "sha256": "99fe7cee368717f07516b1e8a1cd5e35a7f34918063142904f1c26082ed75126"
+    }
+  ]
+}

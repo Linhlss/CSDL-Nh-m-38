@@ -1,0 +1,285 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" version="24.7.17">
+  <diagram id="erd_v1" name="MÔ HÌNH THỰC THỂ – LIÊN KẾT">
+    <mxGraphModel dx="1150" dy="813" grid="1" gridSize="10" page="1" pageScale="1" pageWidth="1150" pageHeight="813" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="n1" value="MÔ HÌNH THỰC THỂ – LIÊN KẾT" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=23;fontColor=#183153;fontStyle=1;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="30" y="20" width="1090" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="n2" value="Đề tài 17 • Bộ bàn giao TV1 • Cấu trúc v1 / chờ review chéo • 11/11/2026" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#52657b;fontStyle=0;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="30" y="55" width="1090" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="n3" value="" edge="1" parent="1" style="endArrow=none;startArrow=none;rounded=0;strokeColor=#52657b;strokeWidth=1.6;" relationship="dia_chi.ma_to">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="155" y="216" as="sourcePoint" />
+            <mxPoint x="155" y="335" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n4" value="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="165" y="228" width="52" height="21" as="geometry" />
+        </mxCell>
+        <mxCell id="n5" value="0..N" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="165" y="309" width="52" height="21" as="geometry" />
+        </mxCell>
+        <mxCell id="n6" value="" edge="1" parent="1" style="endArrow=none;startArrow=none;rounded=0;strokeColor=#52657b;strokeWidth=1.6;" relationship="ho_cu_tru.ma_dia_chi">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="155" y="465" as="sourcePoint" />
+            <mxPoint x="155" y="580" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n7" value="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="165" y="478" width="52" height="21" as="geometry" />
+        </mxCell>
+        <mxCell id="n8" value="0..N" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="165" y="554" width="52" height="21" as="geometry" />
+        </mxCell>
+        <mxCell id="n9" value="" edge="1" parent="1" style="endArrow=none;startArrow=none;rounded=0;strokeColor=#52657b;strokeWidth=1.6;" relationship="qua_trinh_cu_tru.ma_cu_dan">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="557" y="264" as="sourcePoint" />
+            <mxPoint x="557" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n10" value="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="567" y="277" width="52" height="21" as="geometry" />
+        </mxCell>
+        <mxCell id="n11" value="0..N" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="567" y="384" width="52" height="21" as="geometry" />
+        </mxCell>
+        <mxCell id="n12" value="" edge="1" parent="1" style="endArrow=none;startArrow=none;rounded=0;strokeColor=#52657b;strokeWidth=1.6;" relationship="qua_trinh_cu_tru.ma_ho">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="280" y="645" as="sourcePoint" />
+            <mxPoint x="395" y="560" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="335" y="645" />
+              <mxPoint x="335" y="560" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n13" value="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="287" y="650" width="52" height="21" as="geometry" />
+        </mxCell>
+        <mxCell id="n14" value="0..N" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="345" y="536" width="52" height="21" as="geometry" />
+        </mxCell>
+        <mxCell id="n15" value="" edge="1" parent="1" style="endArrow=none;startArrow=none;rounded=0;strokeColor=#52657b;strokeWidth=1.6;" relationship="bien_dong_cu_tru.ma_tai_khoan">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="975" y="264" as="sourcePoint" />
+            <mxPoint x="975" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n16" value="1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="985" y="277" width="52" height="21" as="geometry" />
+        </mxCell>
+        <mxCell id="n17" value="0..N" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="985" y="384" width="52" height="21" as="geometry" />
+        </mxCell>
+        <mxCell id="n18" value="" edge="1" parent="1" style="endArrow=none;startArrow=none;rounded=0;strokeColor=#52657b;strokeWidth=1.6;" relationship="bien_dong_cu_tru.ma_qua_trinh_cu">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="720" y="470" as="sourcePoint" />
+            <mxPoint x="830" y="470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n19" value="0..1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="718" y="473" width="52" height="21" as="geometry" />
+        </mxCell>
+        <mxCell id="n20" value="0..N" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="785" y="473" width="52" height="21" as="geometry" />
+        </mxCell>
+        <mxCell id="n21" value="" edge="1" parent="1" style="endArrow=none;startArrow=none;rounded=0;strokeColor=#52657b;strokeWidth=1.6;" relationship="bien_dong_cu_tru.ma_qua_trinh_moi">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="720" y="550" as="sourcePoint" />
+            <mxPoint x="830" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n22" value="0..1" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="718" y="553" width="52" height="21" as="geometry" />
+        </mxCell>
+        <mxCell id="n23" value="0..N" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="785" y="553" width="52" height="21" as="geometry" />
+        </mxCell>
+        <mxCell id="n24" value="đợt cũ" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="733" y="441" width="83" height="23" as="geometry" />
+        </mxCell>
+        <mxCell id="n25" value="đợt mới" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="733" y="521" width="83" height="23" as="geometry" />
+        </mxCell>
+        <mxCell id="n26" value="" style="rounded=0;fillColor=#f3f7fc;strokeColor=#31577c;" vertex="1" parent="1" schemaTable="to_dan_pho">
+          <mxGeometry x="30" y="110" width="250" height="106" as="geometry" />
+        </mxCell>
+        <mxCell id="n27" value="" style="rounded=0;fillColor=#183153;strokeColor=#31577c;" vertex="1" parent="1">
+          <mxGeometry x="30" y="110" width="250" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="n28" value="to_dan_pho" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=15;fontColor=#ffffff;fontStyle=1;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="33" y="111" width="244" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="n29" value="PK  ma_to : bigint" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="to_dan_pho.ma_to">
+          <mxGeometry x="33" y="144" width="244" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n30" value="UQ  ten_to : varchar(60)" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="to_dan_pho.ten_to">
+          <mxGeometry x="33" y="168" width="244" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n31" value="    ghi_chu : text ?" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="to_dan_pho.ghi_chu">
+          <mxGeometry x="33" y="192" width="244" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n32" value="" style="rounded=0;fillColor=#f3f7fc;strokeColor=#31577c;" vertex="1" parent="1" schemaTable="dia_chi">
+          <mxGeometry x="30" y="335" width="250" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="n33" value="" style="rounded=0;fillColor=#183153;strokeColor=#31577c;" vertex="1" parent="1">
+          <mxGeometry x="30" y="335" width="250" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="n34" value="dia_chi" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=15;fontColor=#ffffff;fontStyle=1;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="33" y="336" width="244" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="n35" value="PK  ma_dia_chi : bigint" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="dia_chi.ma_dia_chi">
+          <mxGeometry x="33" y="369" width="244" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n36" value="FK  ma_to : bigint" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="dia_chi.ma_to">
+          <mxGeometry x="33" y="393" width="244" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n37" value="    dia_chi_chuan : varchar(200)" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="dia_chi.dia_chi_chuan">
+          <mxGeometry x="33" y="417" width="244" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n38" value="    ghi_chu : text ?" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="dia_chi.ghi_chu">
+          <mxGeometry x="33" y="441" width="244" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n39" value="" style="rounded=0;fillColor=#f3f7fc;strokeColor=#31577c;" vertex="1" parent="1" schemaTable="ho_cu_tru">
+          <mxGeometry x="30" y="580" width="250" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="n40" value="" style="rounded=0;fillColor=#183153;strokeColor=#31577c;" vertex="1" parent="1">
+          <mxGeometry x="30" y="580" width="250" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="n41" value="ho_cu_tru" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=15;fontColor=#ffffff;fontStyle=1;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="33" y="581" width="244" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="n42" value="PK  ma_ho : bigint" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="ho_cu_tru.ma_ho">
+          <mxGeometry x="33" y="614" width="244" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n43" value="FK  ma_dia_chi : bigint" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="ho_cu_tru.ma_dia_chi">
+          <mxGeometry x="33" y="638" width="244" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n44" value="    ngay_lap : date" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="ho_cu_tru.ngay_lap">
+          <mxGeometry x="33" y="662" width="244" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n45" value="    ghi_chu : text ?" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="ho_cu_tru.ghi_chu">
+          <mxGeometry x="33" y="686" width="244" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n46" value="" style="rounded=0;fillColor=#f3f7fc;strokeColor=#31577c;" vertex="1" parent="1" schemaTable="cu_dan">
+          <mxGeometry x="395" y="110" width="325" height="154" as="geometry" />
+        </mxCell>
+        <mxCell id="n47" value="" style="rounded=0;fillColor=#183153;strokeColor=#31577c;" vertex="1" parent="1">
+          <mxGeometry x="395" y="110" width="325" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="n48" value="cu_dan" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=15;fontColor=#ffffff;fontStyle=1;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="398" y="111" width="319" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="n49" value="PK  ma_cu_dan : bigint" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="cu_dan.ma_cu_dan">
+          <mxGeometry x="398" y="144" width="319" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n50" value="    ho_ten : varchar(120)" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="cu_dan.ho_ten">
+          <mxGeometry x="398" y="168" width="319" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n51" value="    ngay_sinh : date" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="cu_dan.ngay_sinh">
+          <mxGeometry x="398" y="192" width="319" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n52" value="    gioi_tinh : varchar(10)" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="cu_dan.gioi_tinh">
+          <mxGeometry x="398" y="216" width="319" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n53" value="    ghi_chu : text ?" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="cu_dan.ghi_chu">
+          <mxGeometry x="398" y="240" width="319" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n54" value="" style="rounded=0;fillColor=#f3f7fc;strokeColor=#31577c;" vertex="1" parent="1" schemaTable="qua_trinh_cu_tru">
+          <mxGeometry x="395" y="410" width="325" height="178" as="geometry" />
+        </mxCell>
+        <mxCell id="n55" value="" style="rounded=0;fillColor=#183153;strokeColor=#31577c;" vertex="1" parent="1">
+          <mxGeometry x="395" y="410" width="325" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="n56" value="qua_trinh_cu_tru" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=15;fontColor=#ffffff;fontStyle=1;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="398" y="411" width="319" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="n57" value="PK  ma_qua_trinh : bigint" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="qua_trinh_cu_tru.ma_qua_trinh">
+          <mxGeometry x="398" y="444" width="319" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n58" value="FK  ma_cu_dan : bigint" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="qua_trinh_cu_tru.ma_cu_dan">
+          <mxGeometry x="398" y="468" width="319" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n59" value="FK  ma_ho : bigint" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="qua_trinh_cu_tru.ma_ho">
+          <mxGeometry x="398" y="492" width="319" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n60" value="    loai_cu_tru : varchar(20)" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="qua_trinh_cu_tru.loai_cu_tru">
+          <mxGeometry x="398" y="516" width="319" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n61" value="    ngay_bat_dau : date" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="qua_trinh_cu_tru.ngay_bat_dau">
+          <mxGeometry x="398" y="540" width="319" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n62" value="    ngay_ket_thuc : date ?" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="qua_trinh_cu_tru.ngay_ket_thuc">
+          <mxGeometry x="398" y="564" width="319" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n63" value="" style="rounded=0;fillColor=#f3f7fc;strokeColor=#31577c;" vertex="1" parent="1" schemaTable="tai_khoan">
+          <mxGeometry x="830" y="110" width="290" height="154" as="geometry" />
+        </mxCell>
+        <mxCell id="n64" value="" style="rounded=0;fillColor=#183153;strokeColor=#31577c;" vertex="1" parent="1">
+          <mxGeometry x="830" y="110" width="290" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="n65" value="tai_khoan" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=15;fontColor=#ffffff;fontStyle=1;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="833" y="111" width="284" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="n66" value="PK  ma_tai_khoan : bigint" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="tai_khoan.ma_tai_khoan">
+          <mxGeometry x="833" y="144" width="284" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n67" value="UQ  ten_dang_nhap : varchar(60)" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="tai_khoan.ten_dang_nhap">
+          <mxGeometry x="833" y="168" width="284" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n68" value="    ten_hien_thi : varchar(120)" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="tai_khoan.ten_hien_thi">
+          <mxGeometry x="833" y="192" width="284" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n69" value="    vai_tro : varchar(20)" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="tai_khoan.vai_tro">
+          <mxGeometry x="833" y="216" width="284" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n70" value="    trang_thai : varchar(20)" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="tai_khoan.trang_thai">
+          <mxGeometry x="833" y="240" width="284" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n71" value="" style="rounded=0;fillColor=#f3f7fc;strokeColor=#31577c;" vertex="1" parent="1" schemaTable="bien_dong_cu_tru">
+          <mxGeometry x="830" y="410" width="290" height="226" as="geometry" />
+        </mxCell>
+        <mxCell id="n72" value="" style="rounded=0;fillColor=#183153;strokeColor=#31577c;" vertex="1" parent="1">
+          <mxGeometry x="830" y="410" width="290" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="n73" value="bien_dong_cu_tru" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=15;fontColor=#ffffff;fontStyle=1;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="833" y="411" width="284" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="n74" value="PK  ma_bien_dong : bigint" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="bien_dong_cu_tru.ma_bien_dong">
+          <mxGeometry x="833" y="444" width="284" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n75" value="    loai_bien_dong : varchar(20)" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="bien_dong_cu_tru.loai_bien_dong">
+          <mxGeometry x="833" y="468" width="284" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n76" value="FK  ma_qua_trinh_cu : bigint ?" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="bien_dong_cu_tru.ma_qua_trinh_cu">
+          <mxGeometry x="833" y="492" width="284" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n77" value="FK  ma_qua_trinh_moi : bigint ?" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="bien_dong_cu_tru.ma_qua_trinh_moi">
+          <mxGeometry x="833" y="516" width="284" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n78" value="    ngay_bien_dong : date" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="bien_dong_cu_tru.ngay_bien_dong">
+          <mxGeometry x="833" y="540" width="284" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n79" value="FK  ma_tai_khoan : bigint" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="bien_dong_cu_tru.ma_tai_khoan">
+          <mxGeometry x="833" y="564" width="284" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n80" value="    thoi_diem_ghi : timestamptz" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="bien_dong_cu_tru.thoi_diem_ghi">
+          <mxGeometry x="833" y="588" width="284" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n81" value="    ghi_chu : text ?" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1" schemaColumn="bien_dong_cu_tru.ghi_chu">
+          <mxGeometry x="833" y="612" width="284" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n82" value="Ký hiệu: PK khóa chính • FK khóa ngoại • UQ duy nhất • ? cho phép NULL • 1 bắt buộc • 0..1 tùy chọn • 0..N nhiều" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="30" y="733" width="1090" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="n83" value="Mỗi sự kiện: đến chỉ đợt mới; đi chỉ đợt cũ; nội bộ có cả hai. UNIQUE ghép địa chỉ: (ma_to, dia_chi_chuan)." style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#183153;fontStyle=0;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="30" y="763" width="1090" height="23" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

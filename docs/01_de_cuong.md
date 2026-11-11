@@ -13,7 +13,9 @@
 
 ## 0. Hướng dẫn sử dụng tài liệu này
 
-Tài liệu là **bản điều hành duy nhất (single source of truth)** của nhóm từ lúc khởi động đến khi nộp. Đừng sao chép toàn bộ tài liệu này thành báo cáo ngay: các phần đánh dấu **[CẦN HOÀN THIỆN]**, **[BẢNG/ẢNH CẦN BỔ SUNG]** là công việc cần thực hiện và có người chịu trách nhiệm. Các sơ đồ và lược đồ là **đề xuất v0**, cần được nhóm kiểm tra trước khi đóng băng thiết kế.
+**Cập nhật 11/11/2026:** TV1 đã chuẩn bị [bộ bàn giao tuần 1](BAN_GIAO_TV1_TUAN_1.md). Phần mô hình/DDL v0 và chuẩn hóa tổng quát bên dưới lưu lại định hướng khởi tạo; nguồn kỹ thuật hiện hành cho review là [đặc tả](03_dac_ta_nghiep_vu.md), [từ điển/chuẩn hóa](04_data_dictionary_va_chuan_hoa.md), [ERD](../diagrams/erd_v1.png) và DDL v1-candidate. Quy tắc ngày chuyển và giới hạn kết luận 3NF phải đọc theo bộ bàn giao mới. Gate 1 chưa có xác nhận chéo; [biên bản](../meetings/decision_log.md) ghi trạng thái thực tế.
+
+Tài liệu giữ phạm vi và lịch điều hành toàn dự án; bộ bàn giao được dẫn ở trên giữ đặc tả kỹ thuật mới nhất. Đừng sao chép toàn bộ đề cương thành báo cáo: các phần đánh dấu **[CẦN HOÀN THIỆN]**, **[BẢNG/ẢNH CẦN BỔ SUNG]** là công việc theo từng tuần. Các sơ đồ trong đề cương là **đề xuất v0**; dùng sơ đồ xuất trong bộ bàn giao để review bản ứng viên v1.
 
 **Quy ước trạng thái:** `[ ]` Chưa làm · `[~]` Đang làm · `[x]` Hoàn thành và đã được người khác kiểm tra. Chỉ tích `[x]` khi có tệp đầu ra, kiểm thử hoặc bằng chứng tương ứng.
 
@@ -664,7 +666,7 @@ ID QSQLxx / Tên câu:
 
 | Người | Đầu việc chi tiết trong tuần | Tệp/sản phẩm nộp nội bộ | Hạn | Reviewer |
 |---|---|---|---|---|
-| **TV1** | (1) Chốt tên và phạm vi; (2) viết bài toán, tác nhân, P1–P6; (3) vẽ sơ đồ phân rã chức năng; (4) vẽ ERD 7 bảng; (5) bảng bản số, PK/FK; (6) ánh xạ và draft 3NF | `docs/01_nghiep_vu.md`, `diagrams/function_tree.*`, `diagrams/erd_v1.*`, `docs/02_data_dictionary.md` | **15/11** | TV3 |
+| **TV1** | (1) Chốt tên và phạm vi; (2) viết bài toán, tác nhân, P1–P6; (3) vẽ sơ đồ phân rã chức năng; (4) vẽ ERD 7 bảng; (5) bảng bản số, PK/FK; (6) ánh xạ và draft 3NF | `docs/03_dac_ta_nghiep_vu.md`, `diagrams/phan_ra_chuc_nang.*`, `diagrams/erd_v1.*`, `docs/04_data_dictionary_va_chuan_hoa.md` | **15/11** | TV3 |
 | **TV2** | (1) Liệt kê 10 câu SQL (chưa cần hoàn thiện code); (2) viết bộ test S01–S21; (3) mô tả quy tắc sinh dữ liệu theo FK/niên đại; (4) cài PostgreSQL và kiểm tra kết nối | `docs/04_sql_questions.md`, `tests/test_scenarios.md`, `data/generation_plan.md`, ảnh môi trường | **15/11** | TV1 |
 | **TV3** | (1) Chốt 10 câu RA và phép toán cho từng câu; (2) viết thử QRA05 và QRA07; (3) lập dàn ý bảo mật và kịch bản B1/B2; (4) rà lại sơ đồ sự kiện cũ/mới | `docs/03_ra_questions.md`, `docs/05_security_plan.md`, phiếu review ERD | **15/11** | TV1 + TV2 |
 
