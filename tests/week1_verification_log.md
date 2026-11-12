@@ -1,4 +1,4 @@
-# BIÊN BẢN TỰ KIỂM TRA BỘ BÀN GIAO TV1 — 12/11/2026
+# BIÊN BẢN TỰ KIỂM TRA BỘ BÀN GIAO TV1 — 13/11/2026
 
 **Lệnh đã chạy:** `python3 scripts/verify_week1.py --record` từ thư mục gốc.
 **Python thực tế:** 3.13.5. **Hệ điều hành:** Darwin 25.6.0.

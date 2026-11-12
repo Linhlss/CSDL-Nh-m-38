@@ -1,6 +1,6 @@
 {
   "version": "v1-candidate",
-  "recorded_date": "2026-11-12",
+  "recorded_date": "2026-11-13",
   "scope": "static_handoff_checks_only",
   "database_executed": false,
   "group_gate1_approved": false,
@@ -12,8 +12,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 4420,
-      "sha256": "7ec0fb51f672db59448634a6dc56d524228a975b7681b4a0e7b708ca94b18fd6"
+      "bytes": 4969,
+      "sha256": "1fc2ff95df54c3aaef6083e43cb7ccec281dfe922241f10ac8da3217ab998e97"
     },
     {
       "path": "data/README.md",
@@ -92,8 +92,8 @@
     },
     {
       "path": "docs/06b_bao_mat.md",
-      "bytes": 18747,
-      "sha256": "54587d970dc3ffaabdd1f81e7116617feb40a7e15d074f3eb61d37da4f2b71fa"
+      "bytes": 20651,
+      "sha256": "5269323e4a101787cadf2de607588e722a5a9122bdf5c7ac0577c3a451244901"
     },
     {
       "path": "docs/07_ma_tran_truy_van_va_review.md",
@@ -102,8 +102,8 @@
     },
     {
       "path": "docs/BAN_GIAO_TV1_TUAN_1.md",
-      "bytes": 7456,
-      "sha256": "ee2c1ba81b77348fe5bb3cdd47522acbd59875a689f4c53581d762e67752e318"
+      "bytes": 7599,
+      "sha256": "14e72baca1f3380fef290385dfe57182dcb4306b7c7cc2d2ee183f8b6153d823"
     },
     {
       "path": "docs/KE_HOACH_TV1_TUAN_1.md",
@@ -112,8 +112,8 @@
     },
     {
       "path": "docs/REVIEW_TV3_CHI_TIET.md",
-      "bytes": 15223,
-      "sha256": "b507036d49e74c31273e5f5ee9e38e1eb11e5c48592e9e84a7c343a9ae35859b"
+      "bytes": 19542,
+      "sha256": "d79f85e8a78eac83474deba49f2b724447fda361e744bd00036b4367297af9ec"
     },
     {
       "path": "docs/REVIEW_TV3_ERD_TUAN_1.md",
@@ -152,8 +152,8 @@
     },
     {
       "path": "scripts/review_tv3.py",
-      "bytes": 16249,
-      "sha256": "e9ace1592979c1426a9728ac5f7bbc22bb27c24024ea4fedfea8f6cf18402046"
+      "bytes": 21834,
+      "sha256": "286b11a1ca9bd8496039d29fc0d8f24bf448ab3e24ccfdad4ec03f2b8919e0a9"
     },
     {
       "path": "scripts/verify_week1.py",
@@ -182,8 +182,8 @@
     },
     {
       "path": "sql/05_security.sql",
-      "bytes": 10441,
-      "sha256": "e98b27674d4a0453c48bc1dce03a3cd5a83eafef81a208539c775ed4039b1a72"
+      "bytes": 13183,
+      "sha256": "1a3329adb5072a5189bbf4736312e377a3e20c8b5d64bf57aa03180ab87fa5e1"
     },
     {
       "path": "sql/06_validation.sql",
@@ -207,8 +207,8 @@
     },
     {
       "path": "tests/tv3_review_results.json",
-      "bytes": 92293,
-      "sha256": "2542f8ba92342dda2513a5504ff9849697b0b43f663b5ddc18b9ca114439e8e2"
+      "bytes": 117350,
+      "sha256": "2cabf90606dd2a6634a901aeb5909aaefff6678df6151d0e9d466f76fe9cf358"
     },
     {
       "path": "tests/week1_design_cases.md",
@@ -223,7 +223,7 @@
     {
       "path": "tests/week1_verification_log.md",
       "bytes": 3476,
-      "sha256": "bea07923c922cfdb9602dcf18b66257d8bf8cc70a270857cb89e13ba0d931eb8"
+      "sha256": "9d5d5c8d6d89392f98e01d450ea00a00ffe1e4e6619e3cd98d775bd827a4449c"
     }
   ]
 }
