@@ -27,6 +27,7 @@ Khi cần dựng lại ảnh, dùng Python 3 + Pillow, chạy `python3 scripts/r
 - Ngày cuối bao gồm; đợt tương lai không hiệu lực sớm dù kết thúc NULL. Ngày chuyển t: cũ kết thúc t−1, mới bắt đầu t.
 - Chống chồng lấn theo cùng người+cùng loại; cho hai loại khác nhau đồng thời. Số người trong từng nhóm dùng mã phân biệt; tổng số người các tổ có thể khác số người phân biệt toàn phường.
 - Không sửa liên kết hộ–địa chỉ/tổ đã dùng để mô phỏng chuyển chỗ ở. Không UNIQUE hai FK cũ/mới; mỗi sự kiện có tối đa một đợt ở mỗi vai trò.
+- E1 đã được TV1 trả lời ngày 12/11: trước nghiệm thu, V_E1_CU/V_E1_MOI trong `sql/06_validation.sql` phải trả 0 dòng. Kiểm riêng mỗi vai trò, bỏ qua NULL; một đợt được dùng lần lượt ở vai trò mới và cũ vẫn hợp lệ. Đây là validation, DB chưa tự chặn ghi trùng. V_B09 phải trả 0 dòng khi đối chiếu ngày chuyển với các đợt liên quan.
 - Mọi dữ liệu dân cư giả lập; không lưu mật khẩu hoặc thông tin cư dân thật.
 
 ## 3. Người tiếp theo làm gì?
@@ -45,12 +46,12 @@ Nếu nhập ID gán tay rồi tiếp tục dùng ID tự sinh, đồng bộ seq
 
 | Nội dung | Trạng thái / người tiếp nhận |
 |---|---|
-| Review chéo/Gate 1 | Chưa có xác nhận TV2/TV3; không ghi PASS hoặc ký thay |
+| Review chéo/Gate 1 | TV3 đã xác nhận khả năng biểu diễn 10 RA/B1/B2 tại `7abe4d5`; TV1 đã trả lời E1 ngày 12/11. Chờ TV2 và TV3 tiếp nhận phản hồi cuối; chưa PASS |
 | Thông báo gốc, mã lớp, họ tên/MSSV, giảng viên | Nhóm bổ sung thông tin thật; không suy đoán từ tên repo |
 | Ngày sự kiện và chuẩn hóa | Đã phân tích FD và công bố dư thừa có điều kiện do B09; TV1 + reviewer chốt luận chứng cuối tuần 2, xem từ điển mục 5 |
-| RA với NULL | RV08 yêu cầu TV3 phân biệt chuẩn bị dữ liệu và đại số cổ điển; không đòi thêm bảng lõi |
+| RA với NULL | TV3 đã sửa RV08 tại `7abe4d5`: chuẩn bị Q_d bằng SQL, bỏ cột kết thúc trước phần đại số cổ điển; xem review độc lập bên dưới |
 | Ràng buộc xuyên bảng | Đã đặc tả, chưa thực thi; tuần 2 kiểm cả sửa sự kiện và sửa đợt |
-| PostgreSQL | Chưa chạy trong workspace này: không có psql trên PATH và Docker daemon chưa hoạt động khi kiểm tra. Tự kiểm tệp không thay test DB |
+| PostgreSQL | Lần bàn giao 11/11 chưa chạy PostgreSQL. Kết quả kiểm chứng độc lập mới được ghi riêng trong [review TV3 chi tiết](REVIEW_TV3_CHI_TIET.md); kiểm tra tệp không thay test DB hoặc seed chính thức |
 | GitHub | Nhận bộ thiết kế qua nhánh main của repository chung. Đã đọc PR #1 và lưu review nội bộ; chưa gửi review hoặc merge PR TV3. Việc push không thay thế xác nhận Gate 1 |
 
 ## 5. Sản phẩm và kiểm chứng

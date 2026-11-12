@@ -1,0 +1,3770 @@
+{
+  "recorded_at": "2026-11-12T20:56:23.117855+07:00",
+  "source_tv3_commit": "7abe4d54f7e7cc96ac086b7e1127073493152e24",
+  "tv3_worktree_head": "7abe4d54f7e7cc96ac086b7e1127073493152e24",
+  "postgres_version": "PostgreSQL 17.11 (Debian 17.11-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit",
+  "python": "3.13.5",
+  "image": "sha256:ff87138949ad9a46f32ff23bd6852b52ce024a13dffe9b4087be98292cdd3b4f",
+  "image_digest": "[\"postgres@sha256:ff87138949ad9a46f32ff23bd6852b52ce024a13dffe9b4087be98292cdd3b4f\"]",
+  "direct_login_auth": "TCP 127.0.0.1 inside isolated container; trust auth, authorization tested; no password authentication claim",
+  "files_sha256": {
+    "sql/01_schema.sql": "e3a220c0ea8fbe7ad4475c0ede3201d25573a1007c5b4e0b26f698df2607f6f5",
+    "sql/06_validation.sql": "d04b6769a8286da743c8b1874f5ed45781112bd89e89995e5eaf453ba12c4db7",
+    "scripts/review_tv3.py": "e9ace1592979c1426a9728ac5f7bbc22bb27c24024ea4fedfea8f6cf18402046",
+    "sql/05_security.sql": "e98b27674d4a0453c48bc1dce03a3cd5a83eafef81a208539c775ed4039b1a72",
+    "tests/ra_fixture.sql": "fdf269d0f5412ad5ae0bc44719065e492727e25484502a9aaae6935b74730ca8",
+    "docs/06a_dai_so_quan_he.md": "aabb1cb2f566d93265103a2d342566ec3dc02a257f53660b819563fe9b143066"
+  },
+  "summary": {
+    "passed": 89,
+    "failed": 0,
+    "reproductions": 3
+  },
+  "checks": [
+    {
+      "test": "review_original/security-script-expected-errors",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        [
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501"
+        ]
+      ],
+      "actual": [
+        [
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501"
+        ]
+      ]
+    },
+    {
+      "test": "review_fixed/security-script-expected-errors",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        [
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501"
+        ]
+      ],
+      "actual": [
+        [
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501"
+        ]
+      ]
+    },
+    {
+      "test": "original/B09-reproduced",
+      "kind": "reproduction",
+      "status": "PASS",
+      "expected": [
+        {
+          "count": 1
+        }
+      ],
+      "actual": [
+        {
+          "count": 1
+        }
+      ]
+    },
+    {
+      "test": "fixed/V_E1_CU/clean",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [],
+      "actual": []
+    },
+    {
+      "test": "fixed/V_E1_MOI/clean",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [],
+      "actual": []
+    },
+    {
+      "test": "fixed/V_B09/clean",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [],
+      "actual": []
+    },
+    {
+      "test": "core/QRA01/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 1,
+          "ho_ten": "Nguyen Van An"
+        },
+        {
+          "ma_cu_dan": 7,
+          "ho_ten": "Do Thi Giang"
+        },
+        {
+          "ma_cu_dan": 9,
+          "ho_ten": "Ngo Van Khoa"
+        },
+        {
+          "ma_cu_dan": 10,
+          "ho_ten": "Nguyen Van An"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 1,
+          "ho_ten": "Nguyen Van An"
+        },
+        {
+          "ma_cu_dan": 7,
+          "ho_ten": "Do Thi Giang"
+        },
+        {
+          "ma_cu_dan": 9,
+          "ho_ten": "Ngo Van Khoa"
+        },
+        {
+          "ma_cu_dan": 10,
+          "ho_ten": "Nguyen Van An"
+        }
+      ]
+    },
+    {
+      "test": "fixture/QRA01/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 1,
+          "ho_ten": "Nguyen Van An"
+        },
+        {
+          "ma_cu_dan": 7,
+          "ho_ten": "Do Thi Giang"
+        },
+        {
+          "ma_cu_dan": 9,
+          "ho_ten": "Ngo Van Khoa"
+        },
+        {
+          "ma_cu_dan": 10,
+          "ho_ten": "Nguyen Van An"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 1,
+          "ho_ten": "Nguyen Van An"
+        },
+        {
+          "ma_cu_dan": 7,
+          "ho_ten": "Do Thi Giang"
+        },
+        {
+          "ma_cu_dan": 9,
+          "ho_ten": "Ngo Van Khoa"
+        },
+        {
+          "ma_cu_dan": 10,
+          "ho_ten": "Nguyen Van An"
+        }
+      ]
+    },
+    {
+      "test": "core/QRA02/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 2,
+          "ho_ten": "Tran Thi Binh"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 2,
+          "ho_ten": "Tran Thi Binh"
+        }
+      ]
+    },
+    {
+      "test": "fixture/QRA02/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 2,
+          "ho_ten": "Tran Thi Binh"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 2,
+          "ho_ten": "Tran Thi Binh"
+        }
+      ]
+    },
+    {
+      "test": "core/QRA03/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 1,
+          "ho_ten": "Nguyen Van An",
+          "ngay_sinh": "1950-01-01"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 1,
+          "ho_ten": "Nguyen Van An",
+          "ngay_sinh": "1950-01-01"
+        }
+      ]
+    },
+    {
+      "test": "fixture/QRA03/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 1,
+          "ho_ten": "Nguyen Van An",
+          "ngay_sinh": "1950-01-01"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 1,
+          "ho_ten": "Nguyen Van An",
+          "ngay_sinh": "1950-01-01"
+        }
+      ]
+    },
+    {
+      "test": "core/QRA04/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 4,
+          "ho_ten": "Pham Van Dung"
+        },
+        {
+          "ma_cu_dan": 9,
+          "ho_ten": "Ngo Van Khoa"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 4,
+          "ho_ten": "Pham Van Dung"
+        },
+        {
+          "ma_cu_dan": 9,
+          "ho_ten": "Ngo Van Khoa"
+        }
+      ]
+    },
+    {
+      "test": "fixture/QRA04/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 4,
+          "ho_ten": "Pham Van Dung"
+        },
+        {
+          "ma_cu_dan": 9,
+          "ho_ten": "Ngo Van Khoa"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 4,
+          "ho_ten": "Pham Van Dung"
+        },
+        {
+          "ma_cu_dan": 9,
+          "ho_ten": "Ngo Van Khoa"
+        }
+      ]
+    },
+    {
+      "test": "core/QRA05/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_dia_chi": 5,
+          "dia_chi_chuan": "So 5 ngo B (chua co ho)"
+        }
+      ],
+      "actual": [
+        {
+          "ma_dia_chi": 5,
+          "dia_chi_chuan": "So 5 ngo B (chua co ho)"
+        }
+      ]
+    },
+    {
+      "test": "fixture/QRA05/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_dia_chi": 5,
+          "dia_chi_chuan": "So 5 ngo B (chua co ho)"
+        }
+      ],
+      "actual": [
+        {
+          "ma_dia_chi": 5,
+          "dia_chi_chuan": "So 5 ngo B (chua co ho)"
+        }
+      ]
+    },
+    {
+      "test": "core/QRA06/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 6,
+          "ho_ten": "Vu Van Phuc"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 6,
+          "ho_ten": "Vu Van Phuc"
+        }
+      ]
+    },
+    {
+      "test": "fixture/QRA06/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 6,
+          "ho_ten": "Vu Van Phuc"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 6,
+          "ho_ten": "Vu Van Phuc"
+        }
+      ]
+    },
+    {
+      "test": "core/QRA07/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 4,
+          "ho_ten": "Pham Van Dung"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 4,
+          "ho_ten": "Pham Van Dung"
+        }
+      ]
+    },
+    {
+      "test": "fixture/QRA07/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 4,
+          "ho_ten": "Pham Van Dung"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 4,
+          "ho_ten": "Pham Van Dung"
+        }
+      ]
+    },
+    {
+      "test": "core/QRA08/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 1
+        },
+        {
+          "ma_cu_dan": 2
+        },
+        {
+          "ma_cu_dan": 3
+        },
+        {
+          "ma_cu_dan": 7
+        },
+        {
+          "ma_cu_dan": 9
+        },
+        {
+          "ma_cu_dan": 10
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 1
+        },
+        {
+          "ma_cu_dan": 2
+        },
+        {
+          "ma_cu_dan": 3
+        },
+        {
+          "ma_cu_dan": 7
+        },
+        {
+          "ma_cu_dan": 9
+        },
+        {
+          "ma_cu_dan": 10
+        }
+      ]
+    },
+    {
+      "test": "fixture/QRA08/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 1
+        },
+        {
+          "ma_cu_dan": 2
+        },
+        {
+          "ma_cu_dan": 3
+        },
+        {
+          "ma_cu_dan": 7
+        },
+        {
+          "ma_cu_dan": 9
+        },
+        {
+          "ma_cu_dan": 10
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 1
+        },
+        {
+          "ma_cu_dan": 2
+        },
+        {
+          "ma_cu_dan": 3
+        },
+        {
+          "ma_cu_dan": 7
+        },
+        {
+          "ma_cu_dan": 9
+        },
+        {
+          "ma_cu_dan": 10
+        }
+      ]
+    },
+    {
+      "test": "core/QRA09/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 5,
+          "ho_ten": "Hoang Van Em"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 5,
+          "ho_ten": "Hoang Van Em"
+        }
+      ]
+    },
+    {
+      "test": "fixture/QRA09/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 5,
+          "ho_ten": "Hoang Van Em"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 5,
+          "ho_ten": "Hoang Van Em"
+        }
+      ]
+    },
+    {
+      "test": "core/QRA10/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 4,
+          "ho_ten": "Pham Van Dung"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 4,
+          "ho_ten": "Pham Van Dung"
+        }
+      ]
+    },
+    {
+      "test": "fixture/QRA10/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 4,
+          "ho_ten": "Pham Van Dung"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 4,
+          "ho_ten": "Pham Van Dung"
+        }
+      ]
+    },
+    {
+      "test": "core/Q_d/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_qua_trinh": 1,
+          "ma_cu_dan": 1,
+          "ma_ho": 1,
+          "loai_cu_tru": "THUONG_TRU",
+          "ngay_bat_dau": "2010-01-01"
+        },
+        {
+          "ma_qua_trinh": 2,
+          "ma_cu_dan": 2,
+          "ma_ho": 3,
+          "loai_cu_tru": "TAM_TRU",
+          "ngay_bat_dau": "2024-03-01"
+        },
+        {
+          "ma_qua_trinh": 3,
+          "ma_cu_dan": 3,
+          "ma_ho": 3,
+          "loai_cu_tru": "THUONG_TRU",
+          "ngay_bat_dau": "2008-01-01"
+        },
+        {
+          "ma_qua_trinh": 5,
+          "ma_cu_dan": 4,
+          "ma_ho": 4,
+          "loai_cu_tru": "TAM_TRU",
+          "ngay_bat_dau": "2021-01-01"
+        },
+        {
+          "ma_qua_trinh": 8,
+          "ma_cu_dan": 7,
+          "ma_ho": 1,
+          "loai_cu_tru": "THUONG_TRU",
+          "ngay_bat_dau": "2016-01-01"
+        },
+        {
+          "ma_qua_trinh": 11,
+          "ma_cu_dan": 9,
+          "ma_ho": 2,
+          "loai_cu_tru": "THUONG_TRU",
+          "ngay_bat_dau": "2022-06-01"
+        },
+        {
+          "ma_qua_trinh": 12,
+          "ma_cu_dan": 10,
+          "ma_ho": 2,
+          "loai_cu_tru": "TAM_TRU",
+          "ngay_bat_dau": "2023-01-01"
+        }
+      ],
+      "actual": [
+        {
+          "ma_qua_trinh": 1,
+          "ma_cu_dan": 1,
+          "ma_ho": 1,
+          "loai_cu_tru": "THUONG_TRU",
+          "ngay_bat_dau": "2010-01-01"
+        },
+        {
+          "ma_qua_trinh": 2,
+          "ma_cu_dan": 2,
+          "ma_ho": 3,
+          "loai_cu_tru": "TAM_TRU",
+          "ngay_bat_dau": "2024-03-01"
+        },
+        {
+          "ma_qua_trinh": 3,
+          "ma_cu_dan": 3,
+          "ma_ho": 3,
+          "loai_cu_tru": "THUONG_TRU",
+          "ngay_bat_dau": "2008-01-01"
+        },
+        {
+          "ma_qua_trinh": 5,
+          "ma_cu_dan": 4,
+          "ma_ho": 4,
+          "loai_cu_tru": "TAM_TRU",
+          "ngay_bat_dau": "2021-01-01"
+        },
+        {
+          "ma_qua_trinh": 8,
+          "ma_cu_dan": 7,
+          "ma_ho": 1,
+          "loai_cu_tru": "THUONG_TRU",
+          "ngay_bat_dau": "2016-01-01"
+        },
+        {
+          "ma_qua_trinh": 11,
+          "ma_cu_dan": 9,
+          "ma_ho": 2,
+          "loai_cu_tru": "THUONG_TRU",
+          "ngay_bat_dau": "2022-06-01"
+        },
+        {
+          "ma_qua_trinh": 12,
+          "ma_cu_dan": 10,
+          "ma_ho": 2,
+          "loai_cu_tru": "TAM_TRU",
+          "ngay_bat_dau": "2023-01-01"
+        }
+      ]
+    },
+    {
+      "test": "core/VIEW/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_to": 1,
+          "ten_to": "Tổ 01",
+          "so_cu_dan": 4
+        },
+        {
+          "ma_to": 2,
+          "ten_to": "Tổ 02",
+          "so_cu_dan": 2
+        },
+        {
+          "ma_to": 3,
+          "ten_to": "Tổ 03",
+          "so_cu_dan": 1
+        }
+      ],
+      "actual": [
+        {
+          "ma_to": 1,
+          "ten_to": "Tổ 01",
+          "so_cu_dan": 4
+        },
+        {
+          "ma_to": 2,
+          "ten_to": "Tổ 02",
+          "so_cu_dan": 2
+        },
+        {
+          "ma_to": 3,
+          "ten_to": "Tổ 03",
+          "so_cu_dan": 1
+        }
+      ]
+    },
+    {
+      "test": "set-role/reader-identity",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "current_user": "csdl17_reader",
+          "session_user": "postgres"
+        }
+      ],
+      "actual": [
+        {
+          "current_user": "csdl17_reader",
+          "session_user": "postgres"
+        }
+      ]
+    },
+    {
+      "test": "set-role/reader-select",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 1,
+          "ho_ten": "Nguyen Van An"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 1,
+          "ho_ten": "Nguyen Van An"
+        }
+      ]
+    },
+    {
+      "test": "set-role/report-view",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_to": 1,
+          "ten_to": "Tổ 01",
+          "so_cu_dan": 4
+        },
+        {
+          "ma_to": 2,
+          "ten_to": "Tổ 02",
+          "so_cu_dan": 2
+        },
+        {
+          "ma_to": 3,
+          "ten_to": "Tổ 03",
+          "so_cu_dan": 1
+        }
+      ],
+      "actual": [
+        {
+          "ma_to": 1,
+          "ten_to": "Tổ 01",
+          "so_cu_dan": 4
+        },
+        {
+          "ma_to": 2,
+          "ten_to": "Tổ 02",
+          "so_cu_dan": 2
+        },
+        {
+          "ma_to": 3,
+          "ten_to": "Tổ 03",
+          "so_cu_dan": 1
+        }
+      ]
+    },
+    {
+      "test": "set-role/reader-update",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "role": "csdl17_reader",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "role": "csdl17_reader",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ]
+    },
+    {
+      "test": "set-role/reader-insert",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "role": "csdl17_reader",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "role": "csdl17_reader",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ]
+    },
+    {
+      "test": "set-role/reader-delete",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "role": "csdl17_reader",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "role": "csdl17_reader",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ]
+    },
+    {
+      "test": "set-role/reader-account",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "role": "csdl17_reader",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "role": "csdl17_reader",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ]
+    },
+    {
+      "test": "set-role/report-residents",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "role": "csdl17_report",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "role": "csdl17_report",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ]
+    },
+    {
+      "test": "set-role/report-episodes",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "role": "csdl17_report",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "role": "csdl17_report",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ]
+    },
+    {
+      "test": "direct-login/reader-identity",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "current_user": "csdl17_reader",
+          "session_user": "csdl17_reader"
+        }
+      ],
+      "actual": [
+        {
+          "current_user": "csdl17_reader",
+          "session_user": "csdl17_reader"
+        }
+      ]
+    },
+    {
+      "test": "direct-login/reader-select",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 1,
+          "ho_ten": "Nguyen Van An"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 1,
+          "ho_ten": "Nguyen Van An"
+        }
+      ]
+    },
+    {
+      "test": "direct-login/report-view",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_to": 1,
+          "ten_to": "Tổ 01",
+          "so_cu_dan": 4
+        },
+        {
+          "ma_to": 2,
+          "ten_to": "Tổ 02",
+          "so_cu_dan": 2
+        },
+        {
+          "ma_to": 3,
+          "ten_to": "Tổ 03",
+          "so_cu_dan": 1
+        }
+      ],
+      "actual": [
+        {
+          "ma_to": 1,
+          "ten_to": "Tổ 01",
+          "so_cu_dan": 4
+        },
+        {
+          "ma_to": 2,
+          "ten_to": "Tổ 02",
+          "so_cu_dan": 2
+        },
+        {
+          "ma_to": 3,
+          "ten_to": "Tổ 03",
+          "so_cu_dan": 1
+        }
+      ]
+    },
+    {
+      "test": "direct-login/reader-update",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "role": "csdl17_reader",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "role": "csdl17_reader",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ]
+    },
+    {
+      "test": "direct-login/reader-insert",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "role": "csdl17_reader",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "role": "csdl17_reader",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ]
+    },
+    {
+      "test": "direct-login/reader-delete",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "role": "csdl17_reader",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "role": "csdl17_reader",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ]
+    },
+    {
+      "test": "direct-login/reader-account",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "role": "csdl17_reader",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "role": "csdl17_reader",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ]
+    },
+    {
+      "test": "direct-login/report-residents",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "role": "csdl17_report",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "role": "csdl17_report",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ]
+    },
+    {
+      "test": "direct-login/report-episodes",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "role": "csdl17_report",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "role": "csdl17_report",
+          "denied": true,
+          "sqlstate": [
+            "42501"
+          ]
+        }
+      ]
+    },
+    {
+      "test": "security/no-data-changes",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "to_dan_pho": [
+            {
+              "ma_to": 1,
+              "ten_to": "Tổ 01",
+              "ghi_chu": null
+            },
+            {
+              "ma_to": 2,
+              "ten_to": "Tổ 02",
+              "ghi_chu": null
+            },
+            {
+              "ma_to": 3,
+              "ten_to": "Tổ 03",
+              "ghi_chu": null
+            }
+          ],
+          "dia_chi": [
+            {
+              "ma_dia_chi": 1,
+              "ma_to": 1,
+              "dia_chi_chuan": "So 1 ngo A",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 2,
+              "ma_to": 1,
+              "dia_chi_chuan": "So 2 ngo A",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 3,
+              "ma_to": 2,
+              "dia_chi_chuan": "So 3 ngo B",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 4,
+              "ma_to": 3,
+              "dia_chi_chuan": "So 4 ngo C",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 5,
+              "ma_to": 2,
+              "dia_chi_chuan": "So 5 ngo B (chua co ho)",
+              "ghi_chu": null
+            }
+          ],
+          "ho_cu_tru": [
+            {
+              "ma_ho": 1,
+              "ma_dia_chi": 1,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 2,
+              "ma_dia_chi": 2,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 3,
+              "ma_dia_chi": 3,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 4,
+              "ma_dia_chi": 4,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 5,
+              "ma_dia_chi": 1,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            }
+          ],
+          "cu_dan": [
+            {
+              "ma_cu_dan": 1,
+              "ho_ten": "Nguyen Van An",
+              "ngay_sinh": "1950-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 2,
+              "ho_ten": "Tran Thi Binh",
+              "ngay_sinh": "1990-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 3,
+              "ho_ten": "Le Thi Chi",
+              "ngay_sinh": "1960-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 4,
+              "ho_ten": "Pham Van Dung",
+              "ngay_sinh": "1985-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 5,
+              "ho_ten": "Hoang Van Em",
+              "ngay_sinh": "1995-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 6,
+              "ho_ten": "Vu Van Phuc",
+              "ngay_sinh": "2000-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 7,
+              "ho_ten": "Do Thi Giang",
+              "ngay_sinh": "1980-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 8,
+              "ho_ten": "Bui Thi Ha",
+              "ngay_sinh": "1975-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 9,
+              "ho_ten": "Ngo Van Khoa",
+              "ngay_sinh": "1970-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 10,
+              "ho_ten": "Nguyen Van An",
+              "ngay_sinh": "1992-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            }
+          ],
+          "qua_trinh_cu_tru": [
+            {
+              "ma_qua_trinh": 1,
+              "ma_cu_dan": 1,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2010-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 2,
+              "ma_cu_dan": 2,
+              "ma_ho": 3,
+              "loai_cu_tru": "TAM_TRU",
+              "ngay_bat_dau": "2024-03-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 3,
+              "ma_cu_dan": 3,
+              "ma_ho": 3,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2008-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 4,
+              "ma_cu_dan": 4,
+              "ma_ho": 2,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2015-01-01",
+              "ngay_ket_thuc": "2020-12-31"
+            },
+            {
+              "ma_qua_trinh": 5,
+              "ma_cu_dan": 4,
+              "ma_ho": 4,
+              "loai_cu_tru": "TAM_TRU",
+              "ngay_bat_dau": "2021-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 6,
+              "ma_cu_dan": 5,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2018-01-01",
+              "ngay_ket_thuc": "2025-06-30"
+            },
+            {
+              "ma_qua_trinh": 7,
+              "ma_cu_dan": 7,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2010-01-01",
+              "ngay_ket_thuc": "2015-12-31"
+            },
+            {
+              "ma_qua_trinh": 8,
+              "ma_cu_dan": 7,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2016-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 9,
+              "ma_cu_dan": 8,
+              "ma_ho": 2,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2027-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 10,
+              "ma_cu_dan": 9,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2012-01-01",
+              "ngay_ket_thuc": "2022-05-31"
+            },
+            {
+              "ma_qua_trinh": 11,
+              "ma_cu_dan": 9,
+              "ma_ho": 2,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2022-06-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 12,
+              "ma_cu_dan": 10,
+              "ma_ho": 2,
+              "loai_cu_tru": "TAM_TRU",
+              "ngay_bat_dau": "2023-01-01",
+              "ngay_ket_thuc": null
+            }
+          ],
+          "tai_khoan": [
+            {
+              "ma_tai_khoan": 1,
+              "ten_dang_nhap": "canbo01",
+              "ten_hien_thi": "Can bo 01",
+              "vai_tro": "CAN_BO",
+              "trang_thai": "HOAT_DONG"
+            }
+          ],
+          "bien_dong_cu_tru": [
+            {
+              "ma_bien_dong": 1,
+              "loai_bien_dong": "CHUYEN_NOI_BO",
+              "ma_qua_trinh_cu": 4,
+              "ma_qua_trinh_moi": 5,
+              "ngay_bien_dong": "2021-01-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            },
+            {
+              "ma_bien_dong": 2,
+              "loai_bien_dong": "CHUYEN_NOI_BO",
+              "ma_qua_trinh_cu": 10,
+              "ma_qua_trinh_moi": 11,
+              "ngay_bien_dong": "2022-06-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            },
+            {
+              "ma_bien_dong": 3,
+              "loai_bien_dong": "CHUYEN_DI",
+              "ma_qua_trinh_cu": 6,
+              "ma_qua_trinh_moi": null,
+              "ngay_bien_dong": "2025-07-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            },
+            {
+              "ma_bien_dong": 4,
+              "loai_bien_dong": "CHUYEN_DEN",
+              "ma_qua_trinh_cu": null,
+              "ma_qua_trinh_moi": 2,
+              "ngay_bien_dong": "2024-03-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "to_dan_pho": [
+            {
+              "ma_to": 1,
+              "ten_to": "Tổ 01",
+              "ghi_chu": null
+            },
+            {
+              "ma_to": 2,
+              "ten_to": "Tổ 02",
+              "ghi_chu": null
+            },
+            {
+              "ma_to": 3,
+              "ten_to": "Tổ 03",
+              "ghi_chu": null
+            }
+          ],
+          "dia_chi": [
+            {
+              "ma_dia_chi": 1,
+              "ma_to": 1,
+              "dia_chi_chuan": "So 1 ngo A",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 2,
+              "ma_to": 1,
+              "dia_chi_chuan": "So 2 ngo A",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 3,
+              "ma_to": 2,
+              "dia_chi_chuan": "So 3 ngo B",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 4,
+              "ma_to": 3,
+              "dia_chi_chuan": "So 4 ngo C",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 5,
+              "ma_to": 2,
+              "dia_chi_chuan": "So 5 ngo B (chua co ho)",
+              "ghi_chu": null
+            }
+          ],
+          "ho_cu_tru": [
+            {
+              "ma_ho": 1,
+              "ma_dia_chi": 1,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 2,
+              "ma_dia_chi": 2,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 3,
+              "ma_dia_chi": 3,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 4,
+              "ma_dia_chi": 4,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 5,
+              "ma_dia_chi": 1,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            }
+          ],
+          "cu_dan": [
+            {
+              "ma_cu_dan": 1,
+              "ho_ten": "Nguyen Van An",
+              "ngay_sinh": "1950-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 2,
+              "ho_ten": "Tran Thi Binh",
+              "ngay_sinh": "1990-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 3,
+              "ho_ten": "Le Thi Chi",
+              "ngay_sinh": "1960-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 4,
+              "ho_ten": "Pham Van Dung",
+              "ngay_sinh": "1985-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 5,
+              "ho_ten": "Hoang Van Em",
+              "ngay_sinh": "1995-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 6,
+              "ho_ten": "Vu Van Phuc",
+              "ngay_sinh": "2000-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 7,
+              "ho_ten": "Do Thi Giang",
+              "ngay_sinh": "1980-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 8,
+              "ho_ten": "Bui Thi Ha",
+              "ngay_sinh": "1975-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 9,
+              "ho_ten": "Ngo Van Khoa",
+              "ngay_sinh": "1970-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 10,
+              "ho_ten": "Nguyen Van An",
+              "ngay_sinh": "1992-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            }
+          ],
+          "qua_trinh_cu_tru": [
+            {
+              "ma_qua_trinh": 1,
+              "ma_cu_dan": 1,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2010-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 2,
+              "ma_cu_dan": 2,
+              "ma_ho": 3,
+              "loai_cu_tru": "TAM_TRU",
+              "ngay_bat_dau": "2024-03-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 3,
+              "ma_cu_dan": 3,
+              "ma_ho": 3,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2008-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 4,
+              "ma_cu_dan": 4,
+              "ma_ho": 2,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2015-01-01",
+              "ngay_ket_thuc": "2020-12-31"
+            },
+            {
+              "ma_qua_trinh": 5,
+              "ma_cu_dan": 4,
+              "ma_ho": 4,
+              "loai_cu_tru": "TAM_TRU",
+              "ngay_bat_dau": "2021-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 6,
+              "ma_cu_dan": 5,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2018-01-01",
+              "ngay_ket_thuc": "2025-06-30"
+            },
+            {
+              "ma_qua_trinh": 7,
+              "ma_cu_dan": 7,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2010-01-01",
+              "ngay_ket_thuc": "2015-12-31"
+            },
+            {
+              "ma_qua_trinh": 8,
+              "ma_cu_dan": 7,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2016-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 9,
+              "ma_cu_dan": 8,
+              "ma_ho": 2,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2027-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 10,
+              "ma_cu_dan": 9,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2012-01-01",
+              "ngay_ket_thuc": "2022-05-31"
+            },
+            {
+              "ma_qua_trinh": 11,
+              "ma_cu_dan": 9,
+              "ma_ho": 2,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2022-06-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 12,
+              "ma_cu_dan": 10,
+              "ma_ho": 2,
+              "loai_cu_tru": "TAM_TRU",
+              "ngay_bat_dau": "2023-01-01",
+              "ngay_ket_thuc": null
+            }
+          ],
+          "tai_khoan": [
+            {
+              "ma_tai_khoan": 1,
+              "ten_dang_nhap": "canbo01",
+              "ten_hien_thi": "Can bo 01",
+              "vai_tro": "CAN_BO",
+              "trang_thai": "HOAT_DONG"
+            }
+          ],
+          "bien_dong_cu_tru": [
+            {
+              "ma_bien_dong": 1,
+              "loai_bien_dong": "CHUYEN_NOI_BO",
+              "ma_qua_trinh_cu": 4,
+              "ma_qua_trinh_moi": 5,
+              "ngay_bien_dong": "2021-01-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            },
+            {
+              "ma_bien_dong": 2,
+              "loai_bien_dong": "CHUYEN_NOI_BO",
+              "ma_qua_trinh_cu": 10,
+              "ma_qua_trinh_moi": 11,
+              "ngay_bien_dong": "2022-06-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            },
+            {
+              "ma_bien_dong": 3,
+              "loai_bien_dong": "CHUYEN_DI",
+              "ma_qua_trinh_cu": 6,
+              "ma_qua_trinh_moi": null,
+              "ngay_bien_dong": "2025-07-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            },
+            {
+              "ma_bien_dong": 4,
+              "loai_bien_dong": "CHUYEN_DEN",
+              "ma_qua_trinh_cu": null,
+              "ma_qua_trinh_moi": 2,
+              "ngay_bien_dong": "2024-03-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "test": "security/admin-update-rollback",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ghi_chu": "admin-test"
+        }
+      ],
+      "actual": [
+        {
+          "ghi_chu": "admin-test"
+        }
+      ]
+    },
+    {
+      "test": "security/admin-rollback-clean",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "to_dan_pho": [
+            {
+              "ma_to": 1,
+              "ten_to": "Tổ 01",
+              "ghi_chu": null
+            },
+            {
+              "ma_to": 2,
+              "ten_to": "Tổ 02",
+              "ghi_chu": null
+            },
+            {
+              "ma_to": 3,
+              "ten_to": "Tổ 03",
+              "ghi_chu": null
+            }
+          ],
+          "dia_chi": [
+            {
+              "ma_dia_chi": 1,
+              "ma_to": 1,
+              "dia_chi_chuan": "So 1 ngo A",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 2,
+              "ma_to": 1,
+              "dia_chi_chuan": "So 2 ngo A",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 3,
+              "ma_to": 2,
+              "dia_chi_chuan": "So 3 ngo B",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 4,
+              "ma_to": 3,
+              "dia_chi_chuan": "So 4 ngo C",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 5,
+              "ma_to": 2,
+              "dia_chi_chuan": "So 5 ngo B (chua co ho)",
+              "ghi_chu": null
+            }
+          ],
+          "ho_cu_tru": [
+            {
+              "ma_ho": 1,
+              "ma_dia_chi": 1,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 2,
+              "ma_dia_chi": 2,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 3,
+              "ma_dia_chi": 3,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 4,
+              "ma_dia_chi": 4,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 5,
+              "ma_dia_chi": 1,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            }
+          ],
+          "cu_dan": [
+            {
+              "ma_cu_dan": 1,
+              "ho_ten": "Nguyen Van An",
+              "ngay_sinh": "1950-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 2,
+              "ho_ten": "Tran Thi Binh",
+              "ngay_sinh": "1990-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 3,
+              "ho_ten": "Le Thi Chi",
+              "ngay_sinh": "1960-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 4,
+              "ho_ten": "Pham Van Dung",
+              "ngay_sinh": "1985-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 5,
+              "ho_ten": "Hoang Van Em",
+              "ngay_sinh": "1995-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 6,
+              "ho_ten": "Vu Van Phuc",
+              "ngay_sinh": "2000-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 7,
+              "ho_ten": "Do Thi Giang",
+              "ngay_sinh": "1980-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 8,
+              "ho_ten": "Bui Thi Ha",
+              "ngay_sinh": "1975-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 9,
+              "ho_ten": "Ngo Van Khoa",
+              "ngay_sinh": "1970-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 10,
+              "ho_ten": "Nguyen Van An",
+              "ngay_sinh": "1992-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            }
+          ],
+          "qua_trinh_cu_tru": [
+            {
+              "ma_qua_trinh": 1,
+              "ma_cu_dan": 1,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2010-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 2,
+              "ma_cu_dan": 2,
+              "ma_ho": 3,
+              "loai_cu_tru": "TAM_TRU",
+              "ngay_bat_dau": "2024-03-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 3,
+              "ma_cu_dan": 3,
+              "ma_ho": 3,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2008-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 4,
+              "ma_cu_dan": 4,
+              "ma_ho": 2,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2015-01-01",
+              "ngay_ket_thuc": "2020-12-31"
+            },
+            {
+              "ma_qua_trinh": 5,
+              "ma_cu_dan": 4,
+              "ma_ho": 4,
+              "loai_cu_tru": "TAM_TRU",
+              "ngay_bat_dau": "2021-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 6,
+              "ma_cu_dan": 5,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2018-01-01",
+              "ngay_ket_thuc": "2025-06-30"
+            },
+            {
+              "ma_qua_trinh": 7,
+              "ma_cu_dan": 7,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2010-01-01",
+              "ngay_ket_thuc": "2015-12-31"
+            },
+            {
+              "ma_qua_trinh": 8,
+              "ma_cu_dan": 7,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2016-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 9,
+              "ma_cu_dan": 8,
+              "ma_ho": 2,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2027-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 10,
+              "ma_cu_dan": 9,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2012-01-01",
+              "ngay_ket_thuc": "2022-05-31"
+            },
+            {
+              "ma_qua_trinh": 11,
+              "ma_cu_dan": 9,
+              "ma_ho": 2,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2022-06-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 12,
+              "ma_cu_dan": 10,
+              "ma_ho": 2,
+              "loai_cu_tru": "TAM_TRU",
+              "ngay_bat_dau": "2023-01-01",
+              "ngay_ket_thuc": null
+            }
+          ],
+          "tai_khoan": [
+            {
+              "ma_tai_khoan": 1,
+              "ten_dang_nhap": "canbo01",
+              "ten_hien_thi": "Can bo 01",
+              "vai_tro": "CAN_BO",
+              "trang_thai": "HOAT_DONG"
+            }
+          ],
+          "bien_dong_cu_tru": [
+            {
+              "ma_bien_dong": 1,
+              "loai_bien_dong": "CHUYEN_NOI_BO",
+              "ma_qua_trinh_cu": 4,
+              "ma_qua_trinh_moi": 5,
+              "ngay_bien_dong": "2021-01-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            },
+            {
+              "ma_bien_dong": 2,
+              "loai_bien_dong": "CHUYEN_NOI_BO",
+              "ma_qua_trinh_cu": 10,
+              "ma_qua_trinh_moi": 11,
+              "ngay_bien_dong": "2022-06-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            },
+            {
+              "ma_bien_dong": 3,
+              "loai_bien_dong": "CHUYEN_DI",
+              "ma_qua_trinh_cu": 6,
+              "ma_qua_trinh_moi": null,
+              "ngay_bien_dong": "2025-07-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            },
+            {
+              "ma_bien_dong": 4,
+              "loai_bien_dong": "CHUYEN_DEN",
+              "ma_qua_trinh_cu": null,
+              "ma_qua_trinh_moi": 2,
+              "ngay_bien_dong": "2024-03-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "to_dan_pho": [
+            {
+              "ma_to": 1,
+              "ten_to": "Tổ 01",
+              "ghi_chu": null
+            },
+            {
+              "ma_to": 2,
+              "ten_to": "Tổ 02",
+              "ghi_chu": null
+            },
+            {
+              "ma_to": 3,
+              "ten_to": "Tổ 03",
+              "ghi_chu": null
+            }
+          ],
+          "dia_chi": [
+            {
+              "ma_dia_chi": 1,
+              "ma_to": 1,
+              "dia_chi_chuan": "So 1 ngo A",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 2,
+              "ma_to": 1,
+              "dia_chi_chuan": "So 2 ngo A",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 3,
+              "ma_to": 2,
+              "dia_chi_chuan": "So 3 ngo B",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 4,
+              "ma_to": 3,
+              "dia_chi_chuan": "So 4 ngo C",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 5,
+              "ma_to": 2,
+              "dia_chi_chuan": "So 5 ngo B (chua co ho)",
+              "ghi_chu": null
+            }
+          ],
+          "ho_cu_tru": [
+            {
+              "ma_ho": 1,
+              "ma_dia_chi": 1,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 2,
+              "ma_dia_chi": 2,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 3,
+              "ma_dia_chi": 3,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 4,
+              "ma_dia_chi": 4,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 5,
+              "ma_dia_chi": 1,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            }
+          ],
+          "cu_dan": [
+            {
+              "ma_cu_dan": 1,
+              "ho_ten": "Nguyen Van An",
+              "ngay_sinh": "1950-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 2,
+              "ho_ten": "Tran Thi Binh",
+              "ngay_sinh": "1990-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 3,
+              "ho_ten": "Le Thi Chi",
+              "ngay_sinh": "1960-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 4,
+              "ho_ten": "Pham Van Dung",
+              "ngay_sinh": "1985-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 5,
+              "ho_ten": "Hoang Van Em",
+              "ngay_sinh": "1995-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 6,
+              "ho_ten": "Vu Van Phuc",
+              "ngay_sinh": "2000-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 7,
+              "ho_ten": "Do Thi Giang",
+              "ngay_sinh": "1980-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 8,
+              "ho_ten": "Bui Thi Ha",
+              "ngay_sinh": "1975-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 9,
+              "ho_ten": "Ngo Van Khoa",
+              "ngay_sinh": "1970-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 10,
+              "ho_ten": "Nguyen Van An",
+              "ngay_sinh": "1992-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            }
+          ],
+          "qua_trinh_cu_tru": [
+            {
+              "ma_qua_trinh": 1,
+              "ma_cu_dan": 1,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2010-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 2,
+              "ma_cu_dan": 2,
+              "ma_ho": 3,
+              "loai_cu_tru": "TAM_TRU",
+              "ngay_bat_dau": "2024-03-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 3,
+              "ma_cu_dan": 3,
+              "ma_ho": 3,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2008-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 4,
+              "ma_cu_dan": 4,
+              "ma_ho": 2,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2015-01-01",
+              "ngay_ket_thuc": "2020-12-31"
+            },
+            {
+              "ma_qua_trinh": 5,
+              "ma_cu_dan": 4,
+              "ma_ho": 4,
+              "loai_cu_tru": "TAM_TRU",
+              "ngay_bat_dau": "2021-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 6,
+              "ma_cu_dan": 5,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2018-01-01",
+              "ngay_ket_thuc": "2025-06-30"
+            },
+            {
+              "ma_qua_trinh": 7,
+              "ma_cu_dan": 7,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2010-01-01",
+              "ngay_ket_thuc": "2015-12-31"
+            },
+            {
+              "ma_qua_trinh": 8,
+              "ma_cu_dan": 7,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2016-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 9,
+              "ma_cu_dan": 8,
+              "ma_ho": 2,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2027-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 10,
+              "ma_cu_dan": 9,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2012-01-01",
+              "ngay_ket_thuc": "2022-05-31"
+            },
+            {
+              "ma_qua_trinh": 11,
+              "ma_cu_dan": 9,
+              "ma_ho": 2,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2022-06-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 12,
+              "ma_cu_dan": 10,
+              "ma_ho": 2,
+              "loai_cu_tru": "TAM_TRU",
+              "ngay_bat_dau": "2023-01-01",
+              "ngay_ket_thuc": null
+            }
+          ],
+          "tai_khoan": [
+            {
+              "ma_tai_khoan": 1,
+              "ten_dang_nhap": "canbo01",
+              "ten_hien_thi": "Can bo 01",
+              "vai_tro": "CAN_BO",
+              "trang_thai": "HOAT_DONG"
+            }
+          ],
+          "bien_dong_cu_tru": [
+            {
+              "ma_bien_dong": 1,
+              "loai_bien_dong": "CHUYEN_NOI_BO",
+              "ma_qua_trinh_cu": 4,
+              "ma_qua_trinh_moi": 5,
+              "ngay_bien_dong": "2021-01-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            },
+            {
+              "ma_bien_dong": 2,
+              "loai_bien_dong": "CHUYEN_NOI_BO",
+              "ma_qua_trinh_cu": 10,
+              "ma_qua_trinh_moi": 11,
+              "ngay_bien_dong": "2022-06-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            },
+            {
+              "ma_bien_dong": 3,
+              "loai_bien_dong": "CHUYEN_DI",
+              "ma_qua_trinh_cu": 6,
+              "ma_qua_trinh_moi": null,
+              "ngay_bien_dong": "2025-07-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            },
+            {
+              "ma_bien_dong": 4,
+              "loai_bien_dong": "CHUYEN_DEN",
+              "ma_qua_trinh_cu": null,
+              "ma_qua_trinh_moi": 2,
+              "ngay_bien_dong": "2024-03-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "test": "rerun/security-script-expected-errors",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        [
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501"
+        ]
+      ],
+      "actual": [
+        [
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501"
+        ]
+      ]
+    },
+    {
+      "test": "security/rerun-no-data-changes",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "to_dan_pho": [
+            {
+              "ma_to": 1,
+              "ten_to": "Tổ 01",
+              "ghi_chu": null
+            },
+            {
+              "ma_to": 2,
+              "ten_to": "Tổ 02",
+              "ghi_chu": null
+            },
+            {
+              "ma_to": 3,
+              "ten_to": "Tổ 03",
+              "ghi_chu": null
+            }
+          ],
+          "dia_chi": [
+            {
+              "ma_dia_chi": 1,
+              "ma_to": 1,
+              "dia_chi_chuan": "So 1 ngo A",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 2,
+              "ma_to": 1,
+              "dia_chi_chuan": "So 2 ngo A",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 3,
+              "ma_to": 2,
+              "dia_chi_chuan": "So 3 ngo B",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 4,
+              "ma_to": 3,
+              "dia_chi_chuan": "So 4 ngo C",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 5,
+              "ma_to": 2,
+              "dia_chi_chuan": "So 5 ngo B (chua co ho)",
+              "ghi_chu": null
+            }
+          ],
+          "ho_cu_tru": [
+            {
+              "ma_ho": 1,
+              "ma_dia_chi": 1,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 2,
+              "ma_dia_chi": 2,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 3,
+              "ma_dia_chi": 3,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 4,
+              "ma_dia_chi": 4,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 5,
+              "ma_dia_chi": 1,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            }
+          ],
+          "cu_dan": [
+            {
+              "ma_cu_dan": 1,
+              "ho_ten": "Nguyen Van An",
+              "ngay_sinh": "1950-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 2,
+              "ho_ten": "Tran Thi Binh",
+              "ngay_sinh": "1990-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 3,
+              "ho_ten": "Le Thi Chi",
+              "ngay_sinh": "1960-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 4,
+              "ho_ten": "Pham Van Dung",
+              "ngay_sinh": "1985-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 5,
+              "ho_ten": "Hoang Van Em",
+              "ngay_sinh": "1995-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 6,
+              "ho_ten": "Vu Van Phuc",
+              "ngay_sinh": "2000-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 7,
+              "ho_ten": "Do Thi Giang",
+              "ngay_sinh": "1980-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 8,
+              "ho_ten": "Bui Thi Ha",
+              "ngay_sinh": "1975-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 9,
+              "ho_ten": "Ngo Van Khoa",
+              "ngay_sinh": "1970-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 10,
+              "ho_ten": "Nguyen Van An",
+              "ngay_sinh": "1992-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            }
+          ],
+          "qua_trinh_cu_tru": [
+            {
+              "ma_qua_trinh": 1,
+              "ma_cu_dan": 1,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2010-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 2,
+              "ma_cu_dan": 2,
+              "ma_ho": 3,
+              "loai_cu_tru": "TAM_TRU",
+              "ngay_bat_dau": "2024-03-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 3,
+              "ma_cu_dan": 3,
+              "ma_ho": 3,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2008-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 4,
+              "ma_cu_dan": 4,
+              "ma_ho": 2,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2015-01-01",
+              "ngay_ket_thuc": "2020-12-31"
+            },
+            {
+              "ma_qua_trinh": 5,
+              "ma_cu_dan": 4,
+              "ma_ho": 4,
+              "loai_cu_tru": "TAM_TRU",
+              "ngay_bat_dau": "2021-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 6,
+              "ma_cu_dan": 5,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2018-01-01",
+              "ngay_ket_thuc": "2025-06-30"
+            },
+            {
+              "ma_qua_trinh": 7,
+              "ma_cu_dan": 7,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2010-01-01",
+              "ngay_ket_thuc": "2015-12-31"
+            },
+            {
+              "ma_qua_trinh": 8,
+              "ma_cu_dan": 7,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2016-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 9,
+              "ma_cu_dan": 8,
+              "ma_ho": 2,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2027-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 10,
+              "ma_cu_dan": 9,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2012-01-01",
+              "ngay_ket_thuc": "2022-05-31"
+            },
+            {
+              "ma_qua_trinh": 11,
+              "ma_cu_dan": 9,
+              "ma_ho": 2,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2022-06-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 12,
+              "ma_cu_dan": 10,
+              "ma_ho": 2,
+              "loai_cu_tru": "TAM_TRU",
+              "ngay_bat_dau": "2023-01-01",
+              "ngay_ket_thuc": null
+            }
+          ],
+          "tai_khoan": [
+            {
+              "ma_tai_khoan": 1,
+              "ten_dang_nhap": "canbo01",
+              "ten_hien_thi": "Can bo 01",
+              "vai_tro": "CAN_BO",
+              "trang_thai": "HOAT_DONG"
+            }
+          ],
+          "bien_dong_cu_tru": [
+            {
+              "ma_bien_dong": 1,
+              "loai_bien_dong": "CHUYEN_NOI_BO",
+              "ma_qua_trinh_cu": 4,
+              "ma_qua_trinh_moi": 5,
+              "ngay_bien_dong": "2021-01-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            },
+            {
+              "ma_bien_dong": 2,
+              "loai_bien_dong": "CHUYEN_NOI_BO",
+              "ma_qua_trinh_cu": 10,
+              "ma_qua_trinh_moi": 11,
+              "ngay_bien_dong": "2022-06-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            },
+            {
+              "ma_bien_dong": 3,
+              "loai_bien_dong": "CHUYEN_DI",
+              "ma_qua_trinh_cu": 6,
+              "ma_qua_trinh_moi": null,
+              "ngay_bien_dong": "2025-07-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            },
+            {
+              "ma_bien_dong": 4,
+              "loai_bien_dong": "CHUYEN_DEN",
+              "ma_qua_trinh_cu": null,
+              "ma_qua_trinh_moi": 2,
+              "ngay_bien_dong": "2024-03-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "to_dan_pho": [
+            {
+              "ma_to": 1,
+              "ten_to": "Tổ 01",
+              "ghi_chu": null
+            },
+            {
+              "ma_to": 2,
+              "ten_to": "Tổ 02",
+              "ghi_chu": null
+            },
+            {
+              "ma_to": 3,
+              "ten_to": "Tổ 03",
+              "ghi_chu": null
+            }
+          ],
+          "dia_chi": [
+            {
+              "ma_dia_chi": 1,
+              "ma_to": 1,
+              "dia_chi_chuan": "So 1 ngo A",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 2,
+              "ma_to": 1,
+              "dia_chi_chuan": "So 2 ngo A",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 3,
+              "ma_to": 2,
+              "dia_chi_chuan": "So 3 ngo B",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 4,
+              "ma_to": 3,
+              "dia_chi_chuan": "So 4 ngo C",
+              "ghi_chu": null
+            },
+            {
+              "ma_dia_chi": 5,
+              "ma_to": 2,
+              "dia_chi_chuan": "So 5 ngo B (chua co ho)",
+              "ghi_chu": null
+            }
+          ],
+          "ho_cu_tru": [
+            {
+              "ma_ho": 1,
+              "ma_dia_chi": 1,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 2,
+              "ma_dia_chi": 2,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 3,
+              "ma_dia_chi": 3,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 4,
+              "ma_dia_chi": 4,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            },
+            {
+              "ma_ho": 5,
+              "ma_dia_chi": 1,
+              "ngay_lap": "2005-01-01",
+              "ghi_chu": null
+            }
+          ],
+          "cu_dan": [
+            {
+              "ma_cu_dan": 1,
+              "ho_ten": "Nguyen Van An",
+              "ngay_sinh": "1950-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 2,
+              "ho_ten": "Tran Thi Binh",
+              "ngay_sinh": "1990-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 3,
+              "ho_ten": "Le Thi Chi",
+              "ngay_sinh": "1960-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 4,
+              "ho_ten": "Pham Van Dung",
+              "ngay_sinh": "1985-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 5,
+              "ho_ten": "Hoang Van Em",
+              "ngay_sinh": "1995-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 6,
+              "ho_ten": "Vu Van Phuc",
+              "ngay_sinh": "2000-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 7,
+              "ho_ten": "Do Thi Giang",
+              "ngay_sinh": "1980-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 8,
+              "ho_ten": "Bui Thi Ha",
+              "ngay_sinh": "1975-01-01",
+              "gioi_tinh": "Nu",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 9,
+              "ho_ten": "Ngo Van Khoa",
+              "ngay_sinh": "1970-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            },
+            {
+              "ma_cu_dan": 10,
+              "ho_ten": "Nguyen Van An",
+              "ngay_sinh": "1992-01-01",
+              "gioi_tinh": "Nam",
+              "ghi_chu": null
+            }
+          ],
+          "qua_trinh_cu_tru": [
+            {
+              "ma_qua_trinh": 1,
+              "ma_cu_dan": 1,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2010-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 2,
+              "ma_cu_dan": 2,
+              "ma_ho": 3,
+              "loai_cu_tru": "TAM_TRU",
+              "ngay_bat_dau": "2024-03-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 3,
+              "ma_cu_dan": 3,
+              "ma_ho": 3,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2008-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 4,
+              "ma_cu_dan": 4,
+              "ma_ho": 2,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2015-01-01",
+              "ngay_ket_thuc": "2020-12-31"
+            },
+            {
+              "ma_qua_trinh": 5,
+              "ma_cu_dan": 4,
+              "ma_ho": 4,
+              "loai_cu_tru": "TAM_TRU",
+              "ngay_bat_dau": "2021-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 6,
+              "ma_cu_dan": 5,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2018-01-01",
+              "ngay_ket_thuc": "2025-06-30"
+            },
+            {
+              "ma_qua_trinh": 7,
+              "ma_cu_dan": 7,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2010-01-01",
+              "ngay_ket_thuc": "2015-12-31"
+            },
+            {
+              "ma_qua_trinh": 8,
+              "ma_cu_dan": 7,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2016-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 9,
+              "ma_cu_dan": 8,
+              "ma_ho": 2,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2027-01-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 10,
+              "ma_cu_dan": 9,
+              "ma_ho": 1,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2012-01-01",
+              "ngay_ket_thuc": "2022-05-31"
+            },
+            {
+              "ma_qua_trinh": 11,
+              "ma_cu_dan": 9,
+              "ma_ho": 2,
+              "loai_cu_tru": "THUONG_TRU",
+              "ngay_bat_dau": "2022-06-01",
+              "ngay_ket_thuc": null
+            },
+            {
+              "ma_qua_trinh": 12,
+              "ma_cu_dan": 10,
+              "ma_ho": 2,
+              "loai_cu_tru": "TAM_TRU",
+              "ngay_bat_dau": "2023-01-01",
+              "ngay_ket_thuc": null
+            }
+          ],
+          "tai_khoan": [
+            {
+              "ma_tai_khoan": 1,
+              "ten_dang_nhap": "canbo01",
+              "ten_hien_thi": "Can bo 01",
+              "vai_tro": "CAN_BO",
+              "trang_thai": "HOAT_DONG"
+            }
+          ],
+          "bien_dong_cu_tru": [
+            {
+              "ma_bien_dong": 1,
+              "loai_bien_dong": "CHUYEN_NOI_BO",
+              "ma_qua_trinh_cu": 4,
+              "ma_qua_trinh_moi": 5,
+              "ngay_bien_dong": "2021-01-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            },
+            {
+              "ma_bien_dong": 2,
+              "loai_bien_dong": "CHUYEN_NOI_BO",
+              "ma_qua_trinh_cu": 10,
+              "ma_qua_trinh_moi": 11,
+              "ngay_bien_dong": "2022-06-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            },
+            {
+              "ma_bien_dong": 3,
+              "loai_bien_dong": "CHUYEN_DI",
+              "ma_qua_trinh_cu": 6,
+              "ma_qua_trinh_moi": null,
+              "ngay_bien_dong": "2025-07-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            },
+            {
+              "ma_bien_dong": 4,
+              "loai_bien_dong": "CHUYEN_DEN",
+              "ma_qua_trinh_cu": null,
+              "ma_qua_trinh_moi": 2,
+              "ngay_bien_dong": "2024-03-01",
+              "ma_tai_khoan": 1,
+              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "ghi_chu": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "test": "security/role-attributes",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "rolname": "csdl17_admin",
+          "rolsuper": false,
+          "rolcreatedb": false,
+          "rolcreaterole": false
+        },
+        {
+          "rolname": "csdl17_reader",
+          "rolsuper": false,
+          "rolcreatedb": false,
+          "rolcreaterole": false
+        },
+        {
+          "rolname": "csdl17_report",
+          "rolsuper": false,
+          "rolcreatedb": false,
+          "rolcreaterole": false
+        }
+      ],
+      "actual": [
+        {
+          "rolname": "csdl17_admin",
+          "rolsuper": false,
+          "rolcreatedb": false,
+          "rolcreaterole": false
+        },
+        {
+          "rolname": "csdl17_reader",
+          "rolsuper": false,
+          "rolcreatedb": false,
+          "rolcreaterole": false
+        },
+        {
+          "rolname": "csdl17_report",
+          "rolsuper": false,
+          "rolcreatedb": false,
+          "rolcreaterole": false
+        }
+      ]
+    },
+    {
+      "test": "security/not-table-owner",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [],
+      "actual": []
+    },
+    {
+      "test": "edge/QRA01/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 1,
+          "ho_ten": "Nguyen Van An"
+        },
+        {
+          "ma_cu_dan": 7,
+          "ho_ten": "Do Thi Giang"
+        },
+        {
+          "ma_cu_dan": 9,
+          "ho_ten": "Ngo Van Khoa"
+        },
+        {
+          "ma_cu_dan": 10,
+          "ho_ten": "Nguyen Van An"
+        },
+        {
+          "ma_cu_dan": 11,
+          "ho_ten": "Bien tuoi dung ngay"
+        },
+        {
+          "ma_cu_dan": 12,
+          "ho_ten": "Bien tuoi ngay sau"
+        },
+        {
+          "ma_cu_dan": 15,
+          "ho_ten": "Hai to dong thoi"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 1,
+          "ho_ten": "Nguyen Van An"
+        },
+        {
+          "ma_cu_dan": 7,
+          "ho_ten": "Do Thi Giang"
+        },
+        {
+          "ma_cu_dan": 9,
+          "ho_ten": "Ngo Van Khoa"
+        },
+        {
+          "ma_cu_dan": 10,
+          "ho_ten": "Nguyen Van An"
+        },
+        {
+          "ma_cu_dan": 11,
+          "ho_ten": "Bien tuoi dung ngay"
+        },
+        {
+          "ma_cu_dan": 12,
+          "ho_ten": "Bien tuoi ngay sau"
+        },
+        {
+          "ma_cu_dan": 15,
+          "ho_ten": "Hai to dong thoi"
+        }
+      ]
+    },
+    {
+      "test": "edge/QRA02/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 2,
+          "ho_ten": "Tran Thi Binh"
+        },
+        {
+          "ma_cu_dan": 15,
+          "ho_ten": "Hai to dong thoi"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 2,
+          "ho_ten": "Tran Thi Binh"
+        },
+        {
+          "ma_cu_dan": 15,
+          "ho_ten": "Hai to dong thoi"
+        }
+      ]
+    },
+    {
+      "test": "edge/QRA03/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 1,
+          "ho_ten": "Nguyen Van An",
+          "ngay_sinh": "1950-01-01"
+        },
+        {
+          "ma_cu_dan": 11,
+          "ho_ten": "Bien tuoi dung ngay",
+          "ngay_sinh": "1966-11-20"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 1,
+          "ho_ten": "Nguyen Van An",
+          "ngay_sinh": "1950-01-01"
+        },
+        {
+          "ma_cu_dan": 11,
+          "ho_ten": "Bien tuoi dung ngay",
+          "ngay_sinh": "1966-11-20"
+        }
+      ]
+    },
+    {
+      "test": "edge/QRA04/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 4,
+          "ho_ten": "Pham Van Dung"
+        },
+        {
+          "ma_cu_dan": 9,
+          "ho_ten": "Ngo Van Khoa"
+        },
+        {
+          "ma_cu_dan": 15,
+          "ho_ten": "Hai to dong thoi"
+        },
+        {
+          "ma_cu_dan": 17,
+          "ho_ten": "Hai loai trong qua khu"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 4,
+          "ho_ten": "Pham Van Dung"
+        },
+        {
+          "ma_cu_dan": 9,
+          "ho_ten": "Ngo Van Khoa"
+        },
+        {
+          "ma_cu_dan": 15,
+          "ho_ten": "Hai to dong thoi"
+        },
+        {
+          "ma_cu_dan": 17,
+          "ho_ten": "Hai loai trong qua khu"
+        }
+      ]
+    },
+    {
+      "test": "edge/QRA05/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_dia_chi": 5,
+          "dia_chi_chuan": "So 5 ngo B (chua co ho)"
+        }
+      ],
+      "actual": [
+        {
+          "ma_dia_chi": 5,
+          "dia_chi_chuan": "So 5 ngo B (chua co ho)"
+        }
+      ]
+    },
+    {
+      "test": "edge/QRA06/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 6,
+          "ho_ten": "Vu Van Phuc"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 6,
+          "ho_ten": "Vu Van Phuc"
+        }
+      ]
+    },
+    {
+      "test": "edge/QRA07/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 4,
+          "ho_ten": "Pham Van Dung"
+        },
+        {
+          "ma_cu_dan": 12,
+          "ho_ten": "Bien tuoi ngay sau"
+        },
+        {
+          "ma_cu_dan": 15,
+          "ho_ten": "Hai to dong thoi"
+        },
+        {
+          "ma_cu_dan": 17,
+          "ho_ten": "Hai loai trong qua khu"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 4,
+          "ho_ten": "Pham Van Dung"
+        },
+        {
+          "ma_cu_dan": 12,
+          "ho_ten": "Bien tuoi ngay sau"
+        },
+        {
+          "ma_cu_dan": 15,
+          "ho_ten": "Hai to dong thoi"
+        },
+        {
+          "ma_cu_dan": 17,
+          "ho_ten": "Hai loai trong qua khu"
+        }
+      ]
+    },
+    {
+      "test": "edge/QRA08/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 1
+        },
+        {
+          "ma_cu_dan": 2
+        },
+        {
+          "ma_cu_dan": 3
+        },
+        {
+          "ma_cu_dan": 7
+        },
+        {
+          "ma_cu_dan": 9
+        },
+        {
+          "ma_cu_dan": 10
+        },
+        {
+          "ma_cu_dan": 11
+        },
+        {
+          "ma_cu_dan": 12
+        },
+        {
+          "ma_cu_dan": 15
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 1
+        },
+        {
+          "ma_cu_dan": 2
+        },
+        {
+          "ma_cu_dan": 3
+        },
+        {
+          "ma_cu_dan": 7
+        },
+        {
+          "ma_cu_dan": 9
+        },
+        {
+          "ma_cu_dan": 10
+        },
+        {
+          "ma_cu_dan": 11
+        },
+        {
+          "ma_cu_dan": 12
+        },
+        {
+          "ma_cu_dan": 15
+        }
+      ]
+    },
+    {
+      "test": "edge/QRA09/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 5,
+          "ho_ten": "Hoang Van Em"
+        },
+        {
+          "ma_cu_dan": 13,
+          "ho_ten": "Da ket thuc hom qua"
+        },
+        {
+          "ma_cu_dan": 17,
+          "ho_ten": "Hai loai trong qua khu"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 5,
+          "ho_ten": "Hoang Van Em"
+        },
+        {
+          "ma_cu_dan": 13,
+          "ho_ten": "Da ket thuc hom qua"
+        },
+        {
+          "ma_cu_dan": 17,
+          "ho_ten": "Hai loai trong qua khu"
+        }
+      ]
+    },
+    {
+      "test": "edge/QRA10/full-rows",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 4,
+          "ho_ten": "Pham Van Dung"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 4,
+          "ho_ten": "Pham Van Dung"
+        }
+      ]
+    },
+    {
+      "test": "edge/VIEW/zero-and-distinct",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_to": 1,
+          "ten_to": "Tổ 01",
+          "so_cu_dan": 7
+        },
+        {
+          "ma_to": 2,
+          "ten_to": "Tổ 02",
+          "so_cu_dan": 3
+        },
+        {
+          "ma_to": 3,
+          "ten_to": "Tổ 03",
+          "so_cu_dan": 1
+        },
+        {
+          "ma_to": 4,
+          "ten_to": "Tổ 04",
+          "so_cu_dan": 0
+        }
+      ],
+      "actual": [
+        {
+          "ma_to": 1,
+          "ten_to": "Tổ 01",
+          "so_cu_dan": 7
+        },
+        {
+          "ma_to": 2,
+          "ten_to": "Tổ 02",
+          "so_cu_dan": 3
+        },
+        {
+          "ma_to": 3,
+          "ten_to": "Tổ 03",
+          "so_cu_dan": 1
+        },
+        {
+          "ma_to": 4,
+          "ten_to": "Tổ 04",
+          "so_cu_dan": 0
+        }
+      ]
+    },
+    {
+      "test": "edge/V_E1_CU/clean",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [],
+      "actual": []
+    },
+    {
+      "test": "edge/V_E1_MOI/clean",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [],
+      "actual": []
+    },
+    {
+      "test": "edge/V_B09/clean",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [],
+      "actual": []
+    },
+    {
+      "test": "E1/CU/duplicate-found",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_qua_trinh": 6,
+          "vai_tro": "CU",
+          "so_lan": 2
+        }
+      ],
+      "actual": [
+        {
+          "ma_qua_trinh": 6,
+          "vai_tro": "CU",
+          "so_lan": 2
+        }
+      ]
+    },
+    {
+      "test": "E1/CU/all-event-ids",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        true
+      ],
+      "actual": [
+        true
+      ]
+    },
+    {
+      "test": "E1/CU/nulls-not-grouped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [],
+      "actual": []
+    },
+    {
+      "test": "E1/MOI/duplicate-found",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_qua_trinh": 2,
+          "vai_tro": "MOI",
+          "so_lan": 2
+        }
+      ],
+      "actual": [
+        {
+          "ma_qua_trinh": 2,
+          "vai_tro": "MOI",
+          "so_lan": 2
+        }
+      ]
+    },
+    {
+      "test": "E1/MOI/all-event-ids",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        true
+      ],
+      "actual": [
+        true
+      ]
+    },
+    {
+      "test": "E1/MOI/nulls-not-grouped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [],
+      "actual": []
+    },
+    {
+      "test": "E1/both-roles-valid/V_E1_CU",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [],
+      "actual": []
+    },
+    {
+      "test": "E1/both-roles-valid/V_E1_MOI",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [],
+      "actual": []
+    },
+    {
+      "test": "E1/both-roles-valid/V_B09",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [],
+      "actual": []
+    },
+    {
+      "test": "B09/old-date/found",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        1
+      ],
+      "actual": [
+        1
+      ]
+    },
+    {
+      "test": "B09/old-null/found",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        1
+      ],
+      "actual": [
+        1
+      ]
+    },
+    {
+      "test": "B09/new-date/found",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        1
+      ],
+      "actual": [
+        1
+      ]
+    },
+    {
+      "test": "B09/internal-old/found",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        1
+      ],
+      "actual": [
+        1
+      ]
+    },
+    {
+      "test": "B09/internal-new/found",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        1
+      ],
+      "actual": [
+        1
+      ]
+    },
+    {
+      "test": "QRA10/exclude-different-person",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "ma_cu_dan": 4,
+          "ho_ten": "Pham Van Dung"
+        }
+      ],
+      "actual": [
+        {
+          "ma_cu_dan": 4,
+          "ho_ten": "Pham Van Dung"
+        }
+      ]
+    },
+    {
+      "test": "after-negative-tests/V_E1_CU/clean",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [],
+      "actual": []
+    },
+    {
+      "test": "after-negative-tests/V_E1_MOI/clean",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [],
+      "actual": []
+    },
+    {
+      "test": "after-negative-tests/V_B09/clean",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [],
+      "actual": []
+    },
+    {
+      "test": "empty-db/security-script-expected-errors",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        [
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501"
+        ]
+      ],
+      "actual": [
+        [
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501"
+        ]
+      ]
+    },
+    {
+      "test": "fixture/rollback-empty",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "to_dan_pho": 0,
+          "dia_chi": 0,
+          "ho_cu_tru": 0,
+          "cu_dan": 0,
+          "qua_trinh_cu_tru": 0,
+          "tai_khoan": 0,
+          "bien_dong_cu_tru": 0
+        }
+      ],
+      "actual": [
+        {
+          "to_dan_pho": 0,
+          "dia_chi": 0,
+          "ho_cu_tru": 0,
+          "cu_dan": 0,
+          "qua_trinh_cu_tru": 0,
+          "tai_khoan": 0,
+          "bien_dong_cu_tru": 0
+        }
+      ]
+    },
+    {
+      "test": "RISK/existing-superuser-not-reset",
+      "kind": "reproduction",
+      "status": "PASS",
+      "expected": [
+        {
+          "rolsuper": true
+        }
+      ],
+      "actual": [
+        {
+          "rolsuper": true
+        }
+      ]
+    },
+    {
+      "test": "RISK/fixture-no-result-assertions",
+      "kind": "reproduction",
+      "status": "PASS",
+      "expected": [
+        false
+      ],
+      "actual": [
+        false
+      ]
+    }
+  ]
+}

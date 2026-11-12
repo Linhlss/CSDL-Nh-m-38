@@ -78,6 +78,8 @@ Các đường nối trên sơ đồ thể hiện phân rã chức năng, không
 
 Không áp đặt một đợt chỉ được tham chiếu bởi một sự kiện đầu vào/đầu ra. Không thêm UNIQUE cho hai FK đợt cũ/mới trong phiên bản này. Các quy tắc B06, B08–B11, phần hoạt động tài khoản ở B14 cần được hiện thực trong tuần 2; đã có thiết kế không có nghĩa DB đã chặn được vi phạm.
 
+**Làm rõ E1, 12/11/2026:** Giữ khả năng lưu 0..N tham chiếu ở mức schema để tương thích bộ bàn giao, nhưng nhiều sự kiện dùng cùng đợt trong **cùng vai trò** là cảnh báo ghi trùng phải xử lý trước nghiệm thu. Chạy riêng V_E1_CU và V_E1_MOI trong `sql/06_validation.sql`, yêu cầu cả hai trả 0 dòng. Một đợt là đợt mới của sự kiện đến, rồi là đợt cũ của sự kiện đi/nội bộ, không bị coi là trùng. Validation không tự chặn thao tác ghi, không tự xóa hoặc gộp nhật ký. Quyết định này không thay thế các ràng buộc xuyên bảng tuần 2.
+
 ## 6. Đặc tả sáu quy trình
 
 ### P1 — Thiết lập địa bàn và hộ cư trú

@@ -8,6 +8,8 @@
 
 **Cập nhật 11/11/2026:** Sản phẩm thiết kế TV1 đã hoàn thiện để bàn giao ở phiên bản `v1-candidate`. Gate 1 của cả nhóm còn chờ TV2/TV3 review; chưa hoàn tất toàn bộ đồ án.
 
+**Cập nhật 12/11/2026:** TV1 đã trả lời E1, thêm validation phát hiện trùng sự kiện theo từng vai trò và kiểm tra ngày B09. [Review TV3 chi tiết](docs/REVIEW_TV3_CHI_TIET.md) có kết quả kiểm chứng độc lập PostgreSQL 17.11: 86 kiểm tra chức năng đạt và 3 phép tái hiện lỗi/giới hạn. Fixture sửa ở nhánh `codex/review-tv3`; PR #1 giữ nguyên. Gate 1 chung vẫn chờ xác nhận.
+
 1. Đọc [hướng dẫn bàn giao TV1](docs/BAN_GIAO_TV1_TUAN_1.md) để tiếp tục đúng phần được giao.
 2. Dùng [đặc tả nghiệp vụ](docs/03_dac_ta_nghiep_vu.md), [từ điển/chuẩn hóa](docs/04_data_dictionary_va_chuan_hoa.md) và [DDL](sql/01_schema.sql) làm bộ giao diện dữ liệu. SQL giữ cấu trúc v0: 7 bảng, 35 cột.
 3. Xem [ERD](diagrams/erd_v1.png), [cây chức năng](diagrams/phan_ra_chuc_nang.png) và [ma trận 20 câu hỏi](docs/07_ma_tran_truy_van_va_review.md). Sơ đồ có nguồn .drawio và bản vector .svg.

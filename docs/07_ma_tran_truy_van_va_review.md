@@ -59,4 +59,8 @@ Với RV08, quan hệ chuẩn bị tối thiểu có thể là `CU_TRU_HIEU_LUC_
 
 - TV2 kiểm tra từ điển, miền giá trị, thứ tự nạp và các ca seed cần thêm: tổ 0 người, tài khoản 0 sự kiện, đợt tương lai, hai đợt cùng hộ, hai người trùng tên, nội bộ cùng tổ.
 - TV3 kiểm tra hai vai trò FK trên ERD, bản số/NULL, mô hình đủ biểu diễn 10 câu; xử lý RV08 và thống nhất lược đồ `Q_d`.
-- Hai thành viên ghi phản hồi, tệp/phiên bản và ngày trong `../meetings/decision_log.md`. Hiện chưa có xác nhận review chéo cho bộ bàn giao local này.
+- Hai thành viên ghi phản hồi, tệp/phiên bản và ngày trong `../meetings/decision_log.md`. TV3 đã xác nhận 10 RA/B1/B2 tại commit `7abe4d5`; TV2 vẫn chờ xác nhận.
+
+## 5. Review tiếp nhận ngày 12/11/2026
+
+RV01–RV07 và RV09 được kiểm tra lại trên `7abe4d5`; 10 SQL kiểm chứng khớp đầy đủ kết quả trên fixture nhỏ và các ca biên. **RV08 đã sửa đạt:** Q_d chuẩn bị bằng SQL, bỏ cột kết thúc trước khi dùng đại số cổ điển. **RV10 còn mở:** mô tả PR vẫn ghi tên cũ dù file thực tế đã đổi; TV3 cập nhật tham chiếu. E1 có quyết định giữ schema và bổ sung validation theo vai trò ở DEC06. Xem [báo cáo review độc lập](REVIEW_TV3_CHI_TIET.md) cho lệnh chạy, expected/actual, lỗi đã sửa và giới hạn role có sẵn. Không dùng kết quả fixture thay nghiệm thu seed chính thức.

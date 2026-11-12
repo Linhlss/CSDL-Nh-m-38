@@ -1,7 +1,7 @@
-# BIÊN BẢN TỰ KIỂM TRA BỘ BÀN GIAO TV1 — 11/11/2026
+# BIÊN BẢN TỰ KIỂM TRA BỘ BÀN GIAO TV1 — 12/11/2026
 
-**Lệnh đã chạy:** `python3 scripts/verify_week1.py --record` từ thư mục gốc.  
-**Python thực tế:** 3.13.5. **Hệ điều hành:** Darwin 25.0.0.  
+**Lệnh đã chạy:** `python3 scripts/verify_week1.py --record` từ thư mục gốc.
+**Python thực tế:** 3.13.5. **Hệ điều hành:** Darwin 25.6.0.
 **Phạm vi:** kiểm tra tệp và đối chiếu cấu trúc/tài liệu, không kết nối PostgreSQL.
 
 | Kiểm tra | Kết quả | Bằng chứng / phạm vi |
@@ -13,7 +13,7 @@
 | PNG exports | PASS | 2 valid 2300×1626 PNGs, A4 landscape proportions, all PNG chunk CRCs valid |
 | Question/rule/case coverage | PASS | 10 RA + 10 SQL design mappings; 30 design cases; 18 business rules; 10 review notes |
 | Report and task handoff | PASS | Chapters 1–3 filled; all 20 TV1 tasks traced; peer-review and DB-test limits explicit |
-| Local file links | PASS | 40 local Markdown file links resolve (anchors and external URLs are not network-tested) |
+| Local file links | PASS | 45 local Markdown file links resolve (anchors and external URLs are not network-tested) |
 | SQL compatibility | PASS | Executable SQL unchanged from GitHub main d20b394; only comments differ |
 | Utility syntax | PASS | Python utility sources parse successfully; no cache files written |
 
@@ -27,9 +27,9 @@
 
 ## Những điều chưa được xác nhận
 
-- Chưa chạy DDL hoặc S01–S21 trên PostgreSQL. psql không có trên PATH; Docker daemon không hoạt động khi kiểm tra môi trường.
-- Chưa triển khai cơ chế tuần 2 trong constraints/seed/query/security. Ca D01–D30 là đối chiếu thiết kế với đáp án kỳ vọng, không là kết quả DB PASS.
-- Chưa có review/xác nhận TV2/TV3 hoặc Gate 1 PASS. Phân tích chuẩn hóa công bố điểm dư thừa ngày sự kiện và phần cần chốt tuần 2.
+- Lệnh kiểm tra tệp này không chạy DDL hoặc S01–S21 trên PostgreSQL. Kiểm chứng DB độc lập (nếu đã có) được ghi riêng trong docs/REVIEW_TV3_CHI_TIET.md; không dùng log này làm bằng chứng DB.
+- Lệnh này không nghiệm thu cơ chế tuần 2 trong constraints/seed/query/security; xem sản phẩm và kết quả của từng owner. Ca D01–D30 là đối chiếu thiết kế với đáp án kỳ vọng, không là kết quả DB PASS.
+- Lệnh này không tự xác nhận review của TV2/TV3 hoặc Gate 1 PASS; xem meetings/decision_log.md và báo cáo review mới nhất. Phân tích chuẩn hóa công bố điểm dư thừa ngày sự kiện và phần cần chốt tuần 2.
 - Biên bản này chỉ kiểm tra tệp; commit và trạng thái phát hành xem lịch sử main trên GitHub. Chưa gửi review hoặc merge PR của TV3.
 
 ## Kiểm tra lại
