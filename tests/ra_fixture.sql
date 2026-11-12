@@ -5,6 +5,8 @@
 -- TV3 · 10/11/2026 · Đã chạy trên PostgreSQL 17.11: 11/11 kết quả khớp đáp án.
 -- Chạy lại 11/11/2026 trên DB trắng với 01_schema.sql v1-candidate + 05_security.sql,
 -- sau khi sửa Q_d theo RV08: 11/11 kết quả khớp (Q_d, QRA01–10, VIEW dưới role report).
+-- Sửa qua review TV1, 12/11/2026: ngày CHUYEN_DI của đợt 6 là 2025-07-01
+-- để khớp B09 (đợt cũ kết thúc 2025-06-30). Không đổi đáp án QRA tại d.
 --
 -- Chạy:  psql -U postgres -d csdl17_cu_tru_demo -f tests/ra_fixture.sql
 -- Yêu cầu: 7 bảng ĐANG RỖNG (dùng mã cố định 1, 2, 3...); đã chạy 05_security.sql
@@ -22,7 +24,7 @@
 --   CD3  1960, thường trú hộ 3 (Tổ 02), đang ở             -> 60+ nhưng khác tổ
 --   CD4  thường trú hộ 2 (Tổ 01) đến 2020, rồi tạm trú hộ 4 (Tổ 03);
 --        CHUYEN_NOI_BO khác tổ                             (S06, S07, S13)
---   CD5  thường trú hộ 1 đến 2025-06-30; CHUYEN_DI         (S09, S12)
+--   CD5  thường trú hộ 1 đến 2025-06-30; CHUYEN_DI 2025-07-01 (S09, S12)
 --   CD6  chưa từng có đợt                                  (S10)
 --   CD7  2 đợt thường trú cùng hộ 1                         (S08, bẫy QRA04)
 --   CD8  chỉ có đợt bắt đầu 2027-01-01                     (bẫy QRA09)
@@ -62,7 +64,7 @@ INSERT INTO tai_khoan(ma_tai_khoan, ten_dang_nhap, ten_hien_thi, vai_tro) VALUES
 INSERT INTO bien_dong_cu_tru(loai_bien_dong, ma_qua_trinh_cu, ma_qua_trinh_moi, ngay_bien_dong, ma_tai_khoan) VALUES
  ('CHUYEN_NOI_BO',4,5,'2021-01-01',1),
  ('CHUYEN_NOI_BO',10,11,'2022-06-01',1),
- ('CHUYEN_DI',6,NULL,'2025-06-30',1),
+ ('CHUYEN_DI',6,NULL,'2025-07-01',1),
  ('CHUYEN_DEN',NULL,2,'2024-03-01',1);
 
 -- ----- Q_d · MONG ĐỢI: 7 dòng: ma_qua_trinh 1, 2, 3, 5, 8, 11, 12
