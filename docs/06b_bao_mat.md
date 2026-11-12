@@ -1,8 +1,8 @@
 # KẾ HOẠCH BẢO MẬT CSDL VÀ KỊCH BẢN DEMO B1, B2
 
-> **Người viết:** TV3 · **Người kiểm tra:** TV2 · **Phiên bản:** v0 (nháp, 10/11/2026)
+> **Người viết:** TV3 · **Reviewer nghiệp vụ:** TV2 · **Phiên bản:** v0.2 (13/11/2026, bổ sung kiểm tra role có sẵn qua review TV1)
 > **Script đi kèm:** `sql/05_security.sql`
-> **Căn cứ:** mục 8 của `docs/01_de_cuong.md`, schema `sql/01_schema.sql` v0.
+> **Căn cứ:** mục 8 của `docs/01_de_cuong.md`, schema `sql/01_schema.sql` v1-candidate (cấu trúc giữ nguyên v0).
 > Tệp này là nguồn để viết **Chương 6 – Bảo mật CSDL** của báo cáo.
 
 ---
@@ -111,7 +111,11 @@ Bảng trên chỉ là **tương ứng gợi ý** để giải thích trong báo
    psql -U postgres -d csdl17_cu_tru_demo -f sql/05_security.sql
    ```
 
-   Không bật `ON_ERROR_STOP`, vì các lệnh bị từ chối là cố ý. Nếu dùng pgAdmin hoặc DBeaver, chạy **từng khối** một.
+   Script tự bật `ON_ERROR_STOP` và dùng transaction cho toàn bộ thiết lập. Chỉ tắt dừng ở các lệnh bị từ chối cố ý trong B1/B2, rồi bật lại. Không dùng `--single-transaction` bao cả tệp vì demo có lỗi quyền cố ý.
+
+   **Kiểm tra role có sẵn (F03):** trước CREATE ROLE/VIEW/GRANT/REVOKE, kiểm tra cả ba tên role. Dừng với `CSDL17_PREFLIGHT` nếu role có SUPERUSER, CREATEDB, CREATEROLE, REPLICATION, BYPASSRLS; không LOGIN; sở hữu database hiện tại/schema public/quan hệ trong public; hoặc là thành viên của bất kỳ role khác. Ba role demo phải độc lập. Chiều ngược `GRANT csdl17_reader TO <người cài đặt>` được phép để thử SET ROLE. Không tự hạ quyền, đổi owner hoặc xóa membership của role có sẵn.
+
+   Nếu dùng pgAdmin/DBeaver: **không gửi nguyên tệp có lệnh psql `\set` tới SQL editor**. Chọn trọn khối thiết lập từ `BEGIN` đầu tiên tới `COMMIT` đầu tiên, gồm preflight trước đoạn CREATE ROLE, và bỏ các dòng `\set`. Nếu khối thiết lập lỗi, ROLLBACK và dừng. Chỉ sau COMMIT thành công mới chạy từng khối demo; lỗi 42501 ở các lệnh thử từ chối là mong đợi.
 4. Chụp ảnh theo danh sách ở mục 7.
 
 **Đăng nhập thật thay cho `SET ROLE`** (đề cương khuyến khích làm ít nhất một lần cho mỗi demo):
@@ -190,6 +194,7 @@ Mỗi ảnh phải thấy rõ **câu lệnh**, **role đang chạy** và **kết
 | Hiện tượng | Nguyên nhân thường gặp | Cách xử lý |
 |---|---|---|
 | Reader vẫn `UPDATE` được | Đang chạy dưới superuser (quên `SET ROLE`), hoặc reader là owner bảng, hoặc `PUBLIC` còn quyền | Kiểm tra `SELECT current_user`; kiểm tra owner bằng `\dt`; chạy lại PHẦN 2 |
+| `CSDL17_PREFLIGHT: từ chối role ...` | Role có sẵn vi phạm một điều kiện độc lập/LOGIN/đặc quyền/quyền sở hữu | Dừng, giữ nguyên role đó; dùng cluster demo sạch hoặc nhờ quản trị viên xác minh riêng. Không bỏ qua preflight để chạy demo |
 | `ERROR: permission denied to set role` | Tài khoản đang chạy không phải superuser và không là thành viên của role đó | Chạy bằng `postgres`, hoặc `GRANT csdl17_reader TO <tài khoản đang chạy>` |
 | Report bị từ chối cả khi đọc VIEW | VIEW đặt `security_invoker = true`, hoặc chưa `GRANT SELECT` trên VIEW | Kiểm tra PHẦN 1 và 2.4 |
 | `ERROR: unrecognized parameter "security_invoker"` | PostgreSQL dưới bản 15 | Cài bản 15 trở lên, hoặc bỏ mệnh đề `WITH (...)` (khi đó mặc định vẫn là quyền của owner) |
@@ -221,9 +226,10 @@ Mỗi ảnh phải thấy rõ **câu lệnh**, **role đang chạy** và **kết
 **Checklist nghiệm thu:**
 
 - [ ] Script chạy từ DB sạch không lỗi ngoài các lỗi cố ý.
+- [ ] Role có sẵn không phù hợp bị từ chối trước khi thay đổi dữ liệu, ACL, VIEW hoặc role; lỗi thiết lập rollback toàn bộ.
 - [ ] B1: reader SELECT được; UPDATE/INSERT/DELETE bị từ chối; dữ liệu không đổi.
 - [ ] B2: report đọc được VIEW; đọc `cu_dan` bị từ chối.
-- [ ] Đủ 8 ảnh ở mục 7 (ảnh admin tùy chọn).
+- [ ] Đủ 7 ảnh bắt buộc ở mục 7 (ảnh admin thứ 8 tùy chọn).
 - [ ] Không có mật khẩu trong Git hay trong báo cáo.
 - [ ] TV2 đã review.
 
@@ -236,4 +242,6 @@ Mỗi ảnh phải thấy rõ **câu lệnh**, **role đang chạy** và **kết
 - PostgreSQL Documentation – *REVOKE*: https://www.postgresql.org/docs/current/sql-revoke.html
 - PostgreSQL Documentation – *CREATE VIEW* (tùy chọn `security_invoker`): https://www.postgresql.org/docs/current/sql-createview.html
 - PostgreSQL Documentation – *Database Roles*: https://www.postgresql.org/docs/current/user-manag.html
+- PostgreSQL 17 – *Role Membership*: https://www.postgresql.org/docs/17/role-membership.html
+- PostgreSQL 17 – *psql*, `ON_ERROR_STOP`: https://www.postgresql.org/docs/17/app-psql.html
 - [CẦN ĐIỀN: giáo trình môn Cơ sở dữ liệu của lớp, chương về bảo mật và an toàn dữ liệu]

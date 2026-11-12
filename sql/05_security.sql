@@ -1,6 +1,6 @@
 -- =====================================================================
 -- BTL CSDL Đề tài 17 — 05_security.sql
--- NHÁP v0 · TV3 · 10/11/2026 · Reviewer: TV2
+-- TV3 · cập nhật qua review TV1 13/11/2026 · Reviewer nghiệp vụ: TV2
 -- Demo B1: phân quyền (reader được SELECT, bị từ chối UPDATE/INSERT/DELETE).
 -- Demo B2: VIEW giới hạn thông tin (report chỉ xem số liệu tổng hợp theo tổ,
 --          bị chặn khi đọc bảng gốc cu_dan).
@@ -10,21 +10,74 @@
 --   * Đã chạy 01_schema.sql trên DB csdl17_cu_tru_demo. Nên chạy sau
 --     03_seed.sql để VIEW có số liệu; trên bảng rỗng các phép thử quyền
 --     vẫn đúng (quyền được kiểm tra trước khi đọc dữ liệu).
---   * Chạy bằng tài khoản superuser (ví dụ postgres) hoặc chủ sở hữu bảng.
---     Nếu không phải superuser, cần thêm: GRANT csdl17_reader, csdl17_report,
---     csdl17_admin TO <tài khoản đang chạy>; để dùng được SET ROLE.
+--   * Đường chạy chuẩn dùng postgres: cần CREATE ROLE, quyền trên bảng và SET ROLE.
+--   * Ba role demo độc lập, LOGIN, không đặc quyền, không sở hữu đối tượng
+--     trong database/public và không là thành viên role khác.
+--     Chiều ngược (GRANT role_demo TO người_cài_đặt) được phép để thử SET ROLE.
 --
 -- Cách chạy (psql):
 --   psql -U postgres -d csdl17_cu_tru_demo -f sql/05_security.sql
---   KHÔNG bật -v ON_ERROR_STOP=1: các lệnh bị từ chối ở PHẦN 3, 4 là CỐ Ý,
---   psql cần chạy tiếp sau lỗi.
--- Nếu dùng pgAdmin/DBeaver: chạy TỪNG KHỐI một (bôi đen rồi chạy),
---   vì công cụ sẽ dừng cả script ở lỗi đầu tiên.
+--   Script tự bật ON_ERROR_STOP khi thiết lập; chỉ tắt ở các lệnh bị từ chối cố ý.
+--   Không chạy bằng psql --single-transaction vì demo có lỗi quyền cố ý.
+-- GUI: bỏ các dòng \set khi chọn SQL thuần. Chọn trọn BEGIN..COMMIT của thiết lập,
+-- gồm preflight bên dưới, không bắt đầu giữa tệp ở đoạn CREATE ROLE;
+-- nếu bất kỳ lệnh nào lỗi, ROLLBACK và DỪNG. Chỉ chạy từng khối demo sau COMMIT
+-- thiết lập thành công. Không gửi nguyên tệp có lệnh psql \set tới SQL editor.
 --
 -- Bảo mật tệp: KHÔNG ghi mật khẩu vào tệp này. Muốn đăng nhập thật bằng role
 -- demo thì đặt mật khẩu trong psql bằng: \password csdl17_reader
 -- Dữ liệu: 100% mô phỏng.
 -- =====================================================================
+
+\set ON_ERROR_STOP on
+BEGIN;
+SET search_path = public;
+
+-- Kiểm tra TOÀN BỘ role có sẵn trước CREATE ROLE, VIEW, GRANT hoặc REVOKE.
+-- Từ chối thay vì tự hạ quyền/sửa owner/membership của role trên cluster dùng chung.
+DO $preflight$
+DECLARE
+    demo_role RECORD;
+    reason TEXT;
+BEGIN
+    FOR demo_role IN
+        SELECT oid, rolname, rolsuper, rolcreatedb, rolcreaterole,
+               rolreplication, rolbypassrls, rolcanlogin
+        FROM pg_catalog.pg_roles
+        WHERE rolname IN ('csdl17_admin', 'csdl17_reader', 'csdl17_report')
+        ORDER BY rolname
+    LOOP
+        reason := NULL;
+        IF demo_role.rolsuper OR demo_role.rolcreatedb OR demo_role.rolcreaterole
+           OR demo_role.rolreplication OR demo_role.rolbypassrls
+           OR NOT demo_role.rolcanlogin THEN
+            reason := 'attributes: cần LOGIN, NOSUPERUSER, NOCREATEDB, NOCREATEROLE, NOREPLICATION, NOBYPASSRLS';
+        ELSIF EXISTS (
+            SELECT 1 FROM pg_catalog.pg_database
+            WHERE datname = current_database() AND datdba = demo_role.oid
+        ) OR EXISTS (
+            SELECT 1 FROM pg_catalog.pg_namespace
+            WHERE nspname = 'public' AND nspowner = demo_role.oid
+        ) OR EXISTS (
+            SELECT 1 FROM pg_catalog.pg_class c
+            JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE n.nspname = 'public' AND c.relowner = demo_role.oid
+        ) THEN
+            reason := 'ownership: role demo không được sở hữu database, schema public hoặc quan hệ trong public';
+        ELSIF EXISTS (
+            SELECT 1 FROM pg_catalog.pg_auth_members
+            WHERE member = demo_role.oid
+        ) THEN
+            reason := 'membership: role demo phải độc lập, không được là thành viên role khác';
+        END IF;
+        IF reason IS NOT NULL THEN
+            RAISE EXCEPTION USING ERRCODE = '42501',
+                MESSAGE = format('CSDL17_PREFLIGHT: từ chối role %I (%s)', demo_role.rolname, reason),
+                HINT = 'Giữ nguyên role có sẵn. Dùng cluster demo sạch hoặc nhờ quản trị viên xác minh riêng.';
+        END IF;
+    END LOOP;
+END
+$preflight$;
 
 
 -- =====================================================================
@@ -122,6 +175,8 @@ WHERE grantee IN ('csdl17_admin', 'csdl17_reader', 'csdl17_report')
 GROUP BY grantee, table_name
 ORDER BY grantee, table_name;
 
+COMMIT;
+
 
 -- =====================================================================
 -- PHẦN 3. DEMO B1 — PHÂN QUYỀN: SELECT ĐƯỢC, SỬA BỊ TỪ CHỐI
@@ -148,6 +203,7 @@ ORDER BY ma_cu_dan
 LIMIT 5;
 
 -- 3.5. BỊ TỪ CHỐI (cố ý). Mong đợi: ERROR: permission denied for table ...
+\set ON_ERROR_STOP off
 UPDATE cu_dan SET ghi_chu = 'reader thu sua' WHERE ma_cu_dan = 1;
 INSERT INTO to_dan_pho (ten_to) VALUES ('Tổ thử quyền');
 DELETE FROM qua_trinh_cu_tru WHERE ma_qua_trinh = 1;
@@ -155,6 +211,7 @@ DELETE FROM qua_trinh_cu_tru WHERE ma_qua_trinh = 1;
 -- 3.6. BỊ TỪ CHỐI: bảng không được cấp. Mong đợi: permission denied for table tai_khoan
 SELECT * FROM tai_khoan LIMIT 1;
 
+\set ON_ERROR_STOP on
 RESET ROLE;
 SELECT current_user AS da_tro_ve_role;
 
@@ -192,9 +249,11 @@ FROM vw_thong_ke_cu_dan_theo_to
 ORDER BY ma_to;
 
 -- 4.5. BỊ TỪ CHỐI (cố ý): đọc trực tiếp bảng gốc
+\set ON_ERROR_STOP off
 SELECT ho_ten, ngay_sinh FROM cu_dan LIMIT 5;        -- permission denied for table cu_dan
 SELECT * FROM qua_trinh_cu_tru LIMIT 5;              -- permission denied for table qua_trinh_cu_tru
 
+\set ON_ERROR_STOP on
 RESET ROLE;
 
 
