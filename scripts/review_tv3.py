@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Reproduce TV3 review in a DISPOSABLE, labelled PostgreSQL Docker container.
 
-Standard library only. Never connect to a host/user database. Creates three
+Standard library only. Never connect to a host/user database. Creates four
 review databases inside the specified container; run once per fresh container.
 SQL comes from TV3's document/fixture and main's validation, not copied queries.
 """
@@ -140,6 +140,93 @@ def denied(label, statement, db, role, direct=False):
             [{"role": role, "denied": True, "sqlstate": ["42501"]}])
 
 
+def guard_state(db):
+    """Hash complete data + relevant catalog state, without advancing sequences."""
+    state = snapshot(db)
+    state["roles"] = rows("SELECT rolname, rolsuper, rolcreatedb, rolcreaterole, rolreplication, rolbypassrls, rolcanlogin, rolinherit, rolconfig FROM pg_roles WHERE rolname LIKE 'csdl17_%' OR rolname LIKE 'review_%' ORDER BY rolname", db)
+    state["memberships"] = rows("SELECT * FROM pg_auth_members ORDER BY roleid, member, grantor", db)
+    state["database"] = rows("SELECT datdba, datacl::text FROM pg_database WHERE datname=current_database()", db)
+    state["schema"] = rows("SELECT nspowner, nspacl::text FROM pg_namespace WHERE nspname='public'", db)
+    state["relations"] = rows("SELECT c.relname, c.relkind, c.relowner, c.relacl::text FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='public' ORDER BY c.relname", db)
+    state["views"] = rows("SELECT viewname, definition FROM pg_views WHERE schemaname='public' ORDER BY viewname", db)
+    for seq in rows("SELECT c.relname FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='public' AND c.relkind='S' ORDER BY c.relname", db):
+        name = seq["relname"].replace('"', '""')
+        state["sequence/" + name] = rows(f'SELECT last_value, is_called FROM public."{name}"', db)
+    return hashlib.sha256(json.dumps(state,sort_keys=True,ensure_ascii=False).encode()).hexdigest()
+
+
+def guard_rejected(db, label, category):
+    before = guard_state(db)
+    result = psql(SECURITY, db, stop=False)
+    compare(f"guard/{label}/stopped", [{"failed":result.returncode != 0,
+        "states":re.findall(r"ERROR:\s+(\w{5}):",result.stderr),
+        "preflight": "CSDL17_PREFLIGHT" in result.stderr,
+        "reason": category in result.stderr, "demo_output":bool(result.stdout.strip())}],
+        [{"failed":True,"states":["42501"],"preflight":True,"reason":True,"demo_output":False}])
+    compare(f"guard/{label}/unchanged", [guard_state(db)], [before])
+
+
+def guard_tests(schema, fixture):
+    db = "review_guard"
+    run(f"CREATE DATABASE {db};")
+    run(schema, db)
+    run(data(fixture), db)
+    security(db, "guard/safe-existing")
+    # Each attribute is tested independently on EACH of the three demo roles.
+    for role in ("csdl17_admin","csdl17_reader","csdl17_report"):
+        for bad, good in (("SUPERUSER","NOSUPERUSER"),("CREATEDB","NOCREATEDB"),
+                          ("CREATEROLE","NOCREATEROLE"),("REPLICATION","NOREPLICATION"),
+                          ("BYPASSRLS","NOBYPASSRLS"),("NOLOGIN","LOGIN")):
+            run(f"ALTER ROLE {role} {bad};", db)
+            try:
+                guard_rejected(db, f"{role}/{bad}", "attributes")
+            finally:
+                run(f"ALTER ROLE {role} {good};", db)
+    for label, setup, cleanup in [
+        ("database-owner",f"ALTER DATABASE {db} OWNER TO csdl17_admin;",f"ALTER DATABASE {db} OWNER TO postgres;"),
+        ("schema-owner","ALTER SCHEMA public OWNER TO csdl17_reader;","ALTER SCHEMA public OWNER TO pg_database_owner;"),
+        ("table-owner","ALTER TABLE cu_dan OWNER TO csdl17_reader;","ALTER TABLE cu_dan OWNER TO postgres;"),
+        ("view-owner","ALTER VIEW vw_thong_ke_cu_dan_theo_to OWNER TO csdl17_report;","ALTER VIEW vw_thong_ke_cu_dan_theo_to OWNER TO postgres;"),
+        ("sequence-owner","CREATE SEQUENCE public.review_owned_seq; ALTER SEQUENCE public.review_owned_seq OWNER TO csdl17_report;","DROP SEQUENCE public.review_owned_seq;")]:
+        run(setup, db)
+        try:
+            guard_rejected(db, label, "ownership")
+        finally:
+            run(cleanup, db)
+    run("CREATE ROLE review_guard_parent;", db)
+    for label, options in [("inherit-parent","INHERIT TRUE, SET FALSE"),("set-parent-noinherit","INHERIT FALSE, SET TRUE")]:
+        run(f"GRANT review_guard_parent TO csdl17_reader WITH {options};", db)
+        try:
+            guard_rejected(db, label, "membership")
+        finally:
+            run("REVOKE review_guard_parent FROM csdl17_reader;", db)
+    # A bad existing reader is checked before the other missing roles are created.
+    run("ALTER ROLE csdl17_admin RENAME TO review_renamed_admin; ALTER ROLE csdl17_report RENAME TO review_renamed_report; ALTER ROLE csdl17_reader NOLOGIN;", db)
+    try:
+        guard_rejected(db, "before-creating-missing-roles", "attributes")
+    finally:
+        run("ALTER ROLE review_renamed_admin RENAME TO csdl17_admin; ALTER ROLE review_renamed_report RENAME TO csdl17_report; ALTER ROLE csdl17_reader LOGIN;", db)
+    # Receiving a demo role is allowed; being a member of a parent role is not.
+    run(f"CREATE ROLE review_installer LOGIN; GRANT csdl17_reader TO review_installer; GRANT CONNECT ON DATABASE {db} TO review_installer;", db)
+    security(db, "guard/reverse-membership-allowed")
+    compare("guard/installer-can-set-demo-role", rows("SELECT current_user, session_user",db,
+            role="review_installer",direct=True,setup="SET ROLE csdl17_reader;"),
+            [{"current_user":"csdl17_reader","session_user":"review_installer"}])
+    # An error LATER in setup must roll back prior CREATE VIEW / REVOKE changes.
+    run("GRANT UPDATE ON cu_dan TO csdl17_reader; CREATE OR REPLACE VIEW vw_thong_ke_cu_dan_theo_to AS SELECT ma_to,ten_to,-1::bigint AS so_cu_dan FROM to_dan_pho;", db)
+    before = guard_state(db)
+    injected = SECURITY.replace("\nCOMMIT;", "\nSELECT 1/0;\nCOMMIT;", 1)
+    if injected == SECURITY:
+        raise RuntimeError("Could not inject setup rollback test before COMMIT")
+    result = psql(injected, db, stop=False)
+    compare("guard/setup-error-stops-before-demo", [{"failed":result.returncode != 0,
+        "states":re.findall(r"ERROR:\s+(\w{5}):",result.stderr)}],
+        [{"failed":True,"states":["22012"]}])
+    compare("guard/setup-error-rolls-back-all-state", [guard_state(db)], [before])
+    run("REVOKE UPDATE ON cu_dan FROM csdl17_reader;", db)
+    security(db, "guard/after-negative-cases")
+
+
 def main():
     global OPTIONS, SECURITY
     parser = argparse.ArgumentParser(description=__doc__)
@@ -256,16 +343,11 @@ def main():
     security("review_fixture", "empty-db")
     run(fixture, "review_fixture")
     compare("fixture/rollback-empty", [{t:len(r) for t,r in snapshot("review_fixture").items()}], [{t:0 for t in before}])
-    # Reproduce a documented precondition gap without modifying the TV3 script.
-    setup_part = SECURITY.split("-- PHẦN 3.",1)[0]
-    run("ALTER ROLE csdl17_reader SUPERUSER;", "review_fixture")
-    run(setup_part, "review_fixture")
-    actual = rows("SELECT rolsuper FROM pg_roles WHERE rolname='csdl17_reader'", "review_fixture")
-    compare("RISK/existing-superuser-not-reset", actual, [{"rolsuper":True}], "reproduction")
-    run("ALTER ROLE csdl17_reader NOSUPERUSER;", "review_fixture")
+    guard_tests(schema, fixture)
     compare("RISK/fixture-no-result-assertions", [bool(re.search(r"\bASSERT\b|RAISE EXCEPTION|\\if", fixture))], [False], "reproduction")
     result = {"recorded_at":datetime.now(ZoneInfo("Asia/Ho_Chi_Minh")).isoformat(),
         "source_tv3_commit":SOURCE, "tv3_worktree_head":command(["git","-C",str(tv3),"rev-parse","HEAD"]).stdout.strip(),
+        "scope":"pre-merge regression: fixed fixture, strict setup and existing-role rejection",
         "postgres_version":run("SELECT version();"), "python":platform.python_version(),
         "image":command(["docker","inspect","--format","{{.Image}}",OPTIONS.container]).stdout.strip(),
         "image_digest":command(["docker","image","inspect","--format","{{json .RepoDigests}}","postgres:17.11"]).stdout.strip(),

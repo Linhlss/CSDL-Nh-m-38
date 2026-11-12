@@ -10,6 +10,8 @@
 
 **Cập nhật 12/11/2026:** TV1 đã trả lời E1, thêm validation phát hiện trùng sự kiện theo từng vai trò và kiểm tra ngày B09. [Review TV3 chi tiết](docs/REVIEW_TV3_CHI_TIET.md) có kết quả kiểm chứng độc lập PostgreSQL 17.11: 86 kiểm tra chức năng đạt và 3 phép tái hiện lỗi/giới hạn. Fixture sửa ở nhánh `codex/review-tv3`; PR #1 giữ nguyên. Gate 1 chung vẫn chờ xác nhận.
 
+**Cập nhật 13/11/2026:** đã sửa F03: kiểm tra role có sẵn trước mọi thay đổi quyền và rollback nếu thiết lập lỗi. Bộ kiểm chứng mới đạt 144 kiểm tra chức năng và 2 phép tái hiện; bản sửa chuẩn bị tích hợp qua [PR #1](https://github.com/Linhlss/CSDL-Nh-m-38/pull/1). Gate 1 tiếp tục chờ xác nhận thành viên; kết quả trên seed chính thức chưa được nghiệm thu.
+
 1. Đọc [hướng dẫn bàn giao TV1](docs/BAN_GIAO_TV1_TUAN_1.md) để tiếp tục đúng phần được giao.
 2. Dùng [đặc tả nghiệp vụ](docs/03_dac_ta_nghiep_vu.md), [từ điển/chuẩn hóa](docs/04_data_dictionary_va_chuan_hoa.md) và [DDL](sql/01_schema.sql) làm bộ giao diện dữ liệu. SQL giữ cấu trúc v0: 7 bảng, 35 cột.
 3. Xem [ERD](diagrams/erd_v1.png), [cây chức năng](diagrams/phan_ra_chuc_nang.png) và [ma trận 20 câu hỏi](docs/07_ma_tran_truy_van_va_review.md). Sơ đồ có nguồn .drawio và bản vector .svg.
@@ -37,7 +39,7 @@ python3 scripts/verify_week1.py
 ## Tiến độ và phần tiếp theo
 
 - **Tuần 1 (10–15/11):** đã chuẩn bị nghiệp vụ, sơ đồ, ánh xạ, 35 cột, chuẩn hóa nháp, review khả năng đáp ứng truy vấn và Chương 1–3. Chờ review chéo/Gate 1; điểm dư thừa ngày sự kiện được công bố trong tài liệu chuẩn hóa.
-- **Tuần 2 (16–22/11):** TV1 triển khai DDL/ràng buộc/transaction và test; TV2 làm seed, 10 SQL/kết quả; TV3 làm 10 RA, đối soát và hai demo. Script 02–05 local còn TODO đúng phân công.
+- **Tuần 2 (16–22/11):** TV1 tiếp tục ràng buộc/transaction và test; TV2 làm seed, 10 SQL/kết quả. TV3 đã có 10 RA/SQL kiểm chứng và script bảo mật chạy trên fixture nhỏ; còn đối soát seed chính thức và hai demo/ảnh cuối. Script 02–04 còn TODO đúng phân công.
 - **Tuần 3 (23–27/11):** test DB trắng, ảnh minh chứng, báo cáo, in/nộp. `report/`, `evidence/`, `data/generated/` chưa có sản phẩm cuối kỳ.
 
 [Đề cương](docs/01_de_cuong.md) giữ kế hoạch toàn dự án; [checklist](docs/03_CHECKLIST_DU_AN.md) giữ mã việc và trách nhiệm. Khi khác với phần thiết kế khởi tạo trong đề cương, bộ bàn giao v1 là nguồn kỹ thuật hiện hành cho review.

@@ -1,6 +1,8 @@
-# REVIEW CHI TIẾT PHẦN TV3 — 12/11/2026
+# REVIEW CHI TIẾT PHẦN TV3 — CẬP NHẬT 13/11/2026
 
-**Người thực hiện:** kiểm chứng kỹ thuật hỗ trợ TV1 theo yêu cầu chủ repo. **Đối tượng:** [PR #1](https://github.com/Linhlss/CSDL-Nh-m-38/pull/1), nhánh `tv3/dai-so-quan-he-bao-mat`, [commit gốc 7abe4d5](https://github.com/Linhlss/CSDL-Nh-m-38/tree/7abe4d54f7e7cc96ac086b7e1127073493152e24). PR gốc chưa merge; không gửi review hoặc ký xác nhận thay thành viên.
+**Cập nhật mới nhất:** F03 đã được sửa bằng preflight và transaction thiết lập; bộ kiểm chứng trước merge đạt **146/146**, gồm 144 kiểm tra chức năng và 2 phép tái hiện. Chi tiết mới và trạng thái tích hợp ở mục 7. Các mục 1–6 lưu kết quả review ngày 12/11 để giữ lịch sử.
+
+**Người thực hiện:** kiểm chứng kỹ thuật hỗ trợ TV1 theo yêu cầu chủ repo. **Đối tượng review ngày 12/11:** [PR #1](https://github.com/Linhlss/CSDL-Nh-m-38/pull/1), nhánh `tv3/dai-so-quan-he-bao-mat`, [commit gốc 7abe4d5](https://github.com/Linhlss/CSDL-Nh-m-38/tree/7abe4d54f7e7cc96ac086b7e1127073493152e24). Khi đó PR chưa merge; không gửi review hoặc ký xác nhận thay thành viên.
 
 **Kết luận:** phần đặc tả tuần 1 của TV3 đủ nội dung để tiếp tục; 10 biểu thức được soát thủ công và 10 SQL kiểm chứng khớp đầy đủ kết quả trên fixture nhỏ cùng các ca biên bổ sung. Hai demo quyền B1/B2 đạt trên cluster sạch. Có một lỗi B09 đã sửa, một giới hạn tái sử dụng role cần TV3 xử lý trước khi dùng trên cluster có sẵn và một tham chiếu PR còn cũ. Chưa nghiệm thu trên seed chính thức, chưa PASS Gate 1 chung.
 
@@ -9,27 +11,27 @@
 - PostgreSQL **17.11**, Debian, aarch64; Python **3.13.5** trên máy chủ macOS. Phiên bản Python thực tế được lưu trong JSON nếu môi trường chạy lại thay đổi.
 - Image chính thức `postgres:17.11`, digest `sha256:ff87138949ad9a46f32ff23bd6852b52ce024a13dffe9b4087be98292cdd3b4f`.
 - Container tạm `csdl17-tv3-review-20261112`, mạng `none`, không publish cổng, dữ liệu trên tmpfs. Ba DB riêng `review_original`, `review_fixed`, `review_fixture`; không kết nối DB của nhóm.
-- Hoàn tất lần chạy: **12/11/2026 20:56:23 +07:00**. [Kết quả từng kiểm tra, expected/actual và SHA-256 các đầu vào](../tests/tv3_review_results.json).
+- Hoàn tất lần chạy: **12/11/2026 20:56:23 +07:00**. [Bằng chứng lịch sử 89 kiểm tra tại 30f557f](https://github.com/Linhlss/CSDL-Nh-m-38/blob/30f557f3762c43831a5d10b8b11e4acf8f080412/tests/tv3_review_results.json). Kết quả hiện hành 13/11 ở mục 7.
 - Fixture đã sửa được commit riêng tại [355aa6e](https://github.com/Linhlss/CSDL-Nh-m-38/commit/355aa6ea588afa0ec1716b144e6baaa81094dd26), trên nhánh `codex/review-tv3`. Lần chạy dùng worktree của `7abe4d5` cộng bản sửa này; hash fixture trong JSON xác định chính xác nội dung đã chạy. Các biểu thức và script bảo mật gốc không bị sửa.
 - Báo cáo cũ của TV3 nói 11/11. Lần kiểm chứng này thực hiện độc lập; **89/89 kiểm tra đạt = 86 kiểm tra chức năng + 3 phép tái hiện lỗi/giới hạn**. PASS của phép tái hiện nghĩa là xác nhận được vấn đề, không phải vấn đề đã được sửa.
 
-Lệnh tái lập trên một container mới có cùng nhãn, từ thư mục gốc `main`:
+Lệnh tái lập **phiên bản hiện hành** trên container mới, từ thư mục gốc repo đã tích hợp bản sửa:
 
 ```sh
-docker run --detach --rm --name csdl17-tv3-review-20261112 \
+docker run --detach --rm --name csdl17-tv3-merge-20261113 \
   --label csdl17.review=tv3 --network none \
   --tmpfs /var/lib/postgresql/data:rw \
   -e POSTGRES_HOST_AUTH_METHOD=trust postgres:17.11
-python3 scripts/review_tv3.py --container csdl17-tv3-review-20261112 \
-  --tv3-root /private/tmp/csdl17-review-tv3
-docker rm --force csdl17-tv3-review-20261112
+docker exec csdl17-tv3-merge-20261113 pg_isready -U postgres
+python3 scripts/review_tv3.py --container csdl17-tv3-merge-20261113 --tv3-root .
+docker rm --force csdl17-tv3-merge-20261113
 ```
 
-`--tv3-root` trỏ tới một checkout nhánh `codex/review-tv3`; đổi đường dẫn cho đúng máy. Script chỉ nhận container có nhãn `csdl17.review=tv3`, đọc SQL từ tài liệu/fixture TV3 và validation của main. Chạy một lần trên mỗi container mới, sau khi PostgreSQL đã sẵn sàng (`docker exec <container> pg_isready -U postgres`). Hash trong JSON giúp kiểm tra đúng phiên bản đầu vào. Ngày kết quả gốc của TV3 là lịch sử tác giả báo cáo, không đổi thành ngày của lần review này.
+`--tv3-root .` dùng cùng checkout đã tích hợp; cũng có thể trỏ tới checkout nhánh sửa riêng. Script chỉ nhận container có nhãn `csdl17.review=tv3`, đọc SQL từ tài liệu/fixture TV3 và validation trong repo. Chạy một lần trên mỗi container mới, sau khi pg_isready báo sẵn sàng; dùng bốn DB riêng gồm DB guard. Hash trong JSON giúp kiểm tra đúng phiên bản đầu vào. Lệnh trên ghi lại kết quả hiện hành; bằng chứng ngày 12/11 được giữ ở commit lịch sử đã dẫn.
 
 ## 2. Phát hiện và hướng xử lý
 
-| Mã | Mức | Bằng chứng / ảnh hưởng | Trạng thái / người xử lý |
+| Mã | Mức | Bằng chứng / ảnh hưởng ngày 12/11 | Trạng thái ngày 12/11 / người xử lý; cập nhật xem mục 7 |
 |---|---|---|---|
 | F01 | Vừa — sai dữ liệu nghiệp vụ | [Fixture gốc dòng 54–65](https://github.com/Linhlss/CSDL-Nh-m-38/blob/7abe4d54f7e7cc96ac086b7e1127073493152e24/tests/ra_fixture.sql#L54-L65): đợt 6 kết thúc 30/06/2025 nhưng chuyển đi cũng 30/06. V_B09 phát hiện đúng 1 sự kiện; 10 truy vấn vẫn có thể cho đáp án đúng nên chúng không phát hiện lỗi này | **Đã sửa** ngày chuyển đi thành 01/07/2025 ở `355aa6e`; fixture sửa trả 0 vi phạm B09. TV3 tiếp nhận commit |
 | F02 / E1 | Vừa — rủi ro đếm trùng sự kiện | Schema cho ghi trùng cùng FK cũ hoặc mới trong cùng vai trò. Không được dùng COUNT DISTINCT cư dân để che lỗi vì SQL08/10 phải đếm sự kiện | **TV1 đã trả lời** bằng DEC06: giữ schema, validation phải trả 0 dòng trước nghiệm thu. TV2 chạy trên seed; TV1/TV2 xử lý các dòng bị cảnh báo |
@@ -96,7 +98,7 @@ Nguồn: [06b](https://github.com/Linhlss/CSDL-Nh-m-38/blob/7abe4d54f7e7cc96ac08
 
 Phần `02_constraints.sql` của TV1 và seed/10 QSQL của TV2 chưa hoàn thiện. Kiểm tra E1/B09 không tuyên bố đã bật B06, B08, B10, B11, B14 hoặc đạt S01–S21 trên seed chính thức. SQL kiểm chứng RA của TV3 không thay thế 10 SQL nghiệp vụ của TV2. Chưa có ảnh bảo mật chính thức; danh sách 06b có 7 ảnh bắt buộc và 1 ảnh admin tùy chọn.
 
-## 6. Phần việc tiếp nhận sau review
+## 6. Phần việc tiếp nhận sau review ngày 12/11 (lịch sử)
 
 | Người | Làm ngay | Khi có seed/Gate tiếp theo |
 |---|---|---|
@@ -104,4 +106,26 @@ Phần `02_constraints.sql` của TV1 và seed/10 QSQL của TV2 chưa hoàn thi
 | TV3 | Tiếp nhận fixture tại `355aa6e`; xử lý F03 về role có sẵn và F05 về mô tả PR; xác nhận tiếp nhận phản hồi E1 | Điền expected/actual chính thức cho 10 QRA, phối hợp TV2 đối soát, chụp ảnh B1/B2 và hoàn thiện Chương 4/6 |
 | TV2 | Review schema, chuẩn bị dữ liệu phủ các ca biên được liệt kê | Chạy validation tới 0 cảnh báo, so VIEW với từng dòng QSQL03 cùng ngày, review bảo mật và lưu kết quả thật |
 
-**Trạng thái cuối của lần review:** đủ điều kiện tiếp tục triển khai; F01 đã sửa, E1 đã có quyết định và test; F03/F05 cùng việc tiếp nhận của TV3 còn mở. Gate 1 chung **CHỜ REVIEW**, không ký thay TV2/TV3. PR #1 vẫn giữ để tác giả tiếp nhận; nhánh sửa không tự merge PR vào main.
+**Trạng thái chốt ngày 12/11:** đủ điều kiện tiếp tục triển khai; F01 đã sửa, E1 đã có quyết định và test; F03/F05 cùng việc tiếp nhận của TV3 còn mở. Gate 1 chung **CHỜ REVIEW**, không ký thay TV2/TV3. Khi đó PR #1 vẫn giữ để tác giả tiếp nhận, chưa merge vào main. Trạng thái mới xem mục 7.
+
+## 7. Kiểm chứng bản sửa trước merge — 13/11/2026
+
+- **F03 đã sửa:** preflight đọc toàn bộ role có sẵn trước thay đổi role/VIEW/ACL, từ chối các thuộc tính nguy hiểm hoặc NOLOGIN, quyền sở hữu trong database/public và mọi membership đi từ role demo sang role khác. Chiều cấp role demo cho người cài đặt vẫn được phép.
+- Thiết lập nằm trong transaction, psql bật ON_ERROR_STOP. Lỗi guard hoặc lỗi SQL phía sau đều dừng và rollback; chỉ các lệnh thử quyền cố ý được phép tiếp tục qua lỗi. Hướng dẫn GUI chỉ chạy khối BEGIN..COMMIT đầy đủ trước khi chạy demo, không gửi lệnh psql tới SQL editor.
+- Lần chạy **13/11/2026 05:13:44 +07:00**, PostgreSQL 17.11 trên cùng digest image đã nêu, Python 3.13.5. [Bằng chứng mới: expected/actual, hash đầu vào và thống kê](../tests/tv3_review_results.json).
+- **146/146 đạt = 144 kiểm tra chức năng + 2 phép tái hiện** (B09 của fixture cũ và việc fixture đứng riêng chưa tự ASSERT). Bộ chạy bổ sung so sánh đầy đủ kết quả nên không dùng exit code của fixture làm tiêu chí duy nhất.
+- Đầu vào chạy là worktree nền `7463104` cộng bản sửa code, được lưu ở [commit 52f5c6e](https://github.com/Linhlss/CSDL-Nh-m-38/commit/52f5c6e2514cee19c966ed4451a549fae2c7ceb4). Hash script bảo mật và bộ kiểm chứng trong JSON khớp chính xác nội dung code commit này. Các commit bằng chứng/tài liệu sau đó không đổi code đã chạy.
+
+| Nhóm test mới | Kết quả |
+|---|---|
+| SUPERUSER, CREATEDB, CREATEROLE, REPLICATION, BYPASSRLS, NOLOGIN trên từng role admin/reader/report | Đủ 18 ca, mỗi ca dừng đúng 42501/CSDL17_PREFLIGHT và trạng thái không đổi |
+| Owner database, public schema, bảng, VIEW, sequence trong public | Cả 5 ca bị từ chối, trạng thái không đổi |
+| Membership INHERIT TRUE/SET FALSE và INHERIT FALSE/SET TRUE | Cả hai bị từ chối; không dựa vào việc quyền có đang được kế thừa ngay hay không |
+| Reader không phù hợp trong khi hai tên role còn lại chưa tồn tại | Dừng trước CREATE ROLE; không tạo thêm role |
+| Người cài đặt nhận role reader (chiều ngược) | Thiết lập được; phiên đăng nhập riêng của người cài đặt SET ROLE reader được |
+| Gây lỗi chia 0 ngay trước COMMIT sau thay đổi VIEW/ACL | Dừng 22012; rollback khôi phục chính xác trạng thái trước thiết lập |
+| Role mới, role an toàn có sẵn, chạy lại và sau các test âm | Thiết lập/demo tiếp tục đúng sáu lỗi quyền cố ý |
+
+So sánh trước/sau bằng SHA-256 của toàn bộ dữ liệu 7 bảng, thuộc tính role, membership, owner/ACL database/schema/quan hệ, định nghĩa VIEW và trạng thái sequence; hash expected/actual nằm trong log. Đây là kiểm soát phạm vi demo, không phải audit mọi đối tượng/quyền trên cluster bất kỳ. E1/schema không đổi; 10 RA, Q_d, VIEW, ca biên, B1/B2 với SET ROLE và đăng nhập trực tiếp đều được chạy lại đạt.
+
+**Tích hợp:** bản sửa được chuẩn bị trên `codex/review-tv3` để fast-forward nhánh nguồn của PR #1, cập nhật mô tả cũ (F05) rồi merge commit theo HEAD đã kiểm chứng. Kết quả merge thực tế sẽ được bổ sung sau khi GitHub xác nhận. Gate 1 chung vẫn chờ xác nhận thành viên; chưa nghiệm thu seed chính thức, ảnh và báo cáo cuối.

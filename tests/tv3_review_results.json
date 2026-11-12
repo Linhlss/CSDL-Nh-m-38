@@ -1,7 +1,8 @@
 {
-  "recorded_at": "2026-11-12T20:56:23.117855+07:00",
+  "recorded_at": "2026-11-13T05:13:44.588031+07:00",
   "source_tv3_commit": "7abe4d54f7e7cc96ac086b7e1127073493152e24",
-  "tv3_worktree_head": "7abe4d54f7e7cc96ac086b7e1127073493152e24",
+  "tv3_worktree_head": "74631049287b045f27e66bc5352d0bceeee5be46",
+  "scope": "pre-merge regression: fixed fixture, strict setup and existing-role rejection",
   "postgres_version": "PostgreSQL 17.11 (Debian 17.11-1.pgdg13+2) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit",
   "python": "3.13.5",
   "image": "sha256:ff87138949ad9a46f32ff23bd6852b52ce024a13dffe9b4087be98292cdd3b4f",
@@ -10,15 +11,15 @@
   "files_sha256": {
     "sql/01_schema.sql": "e3a220c0ea8fbe7ad4475c0ede3201d25573a1007c5b4e0b26f698df2607f6f5",
     "sql/06_validation.sql": "d04b6769a8286da743c8b1874f5ed45781112bd89e89995e5eaf453ba12c4db7",
-    "scripts/review_tv3.py": "e9ace1592979c1426a9728ac5f7bbc22bb27c24024ea4fedfea8f6cf18402046",
-    "sql/05_security.sql": "e98b27674d4a0453c48bc1dce03a3cd5a83eafef81a208539c775ed4039b1a72",
+    "scripts/review_tv3.py": "286b11a1ca9bd8496039d29fc0d8f24bf448ab3e24ccfdad4ec03f2b8919e0a9",
+    "sql/05_security.sql": "1a3329adb5072a5189bbf4736312e377a3e20c8b5d64bf57aa03180ab87fa5e1",
     "tests/ra_fixture.sql": "fdf269d0f5412ad5ae0bc44719065e492727e25484502a9aaae6935b74730ca8",
     "docs/06a_dai_so_quan_he.md": "aabb1cb2f566d93265103a2d342566ec3dc02a257f53660b819563fe9b143066"
   },
   "summary": {
-    "passed": 89,
+    "passed": 146,
     "failed": 0,
-    "reproductions": 3
+    "reproductions": 2
   },
   "checks": [
     {
@@ -1413,7 +1414,7 @@
               "ma_qua_trinh_moi": 5,
               "ngay_bien_dong": "2021-01-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             },
             {
@@ -1423,7 +1424,7 @@
               "ma_qua_trinh_moi": 11,
               "ngay_bien_dong": "2022-06-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             },
             {
@@ -1433,7 +1434,7 @@
               "ma_qua_trinh_moi": null,
               "ngay_bien_dong": "2025-07-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             },
             {
@@ -1443,7 +1444,7 @@
               "ma_qua_trinh_moi": 2,
               "ngay_bien_dong": "2024-03-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             }
           ]
@@ -1719,7 +1720,7 @@
               "ma_qua_trinh_moi": 5,
               "ngay_bien_dong": "2021-01-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             },
             {
@@ -1729,7 +1730,7 @@
               "ma_qua_trinh_moi": 11,
               "ngay_bien_dong": "2022-06-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             },
             {
@@ -1739,7 +1740,7 @@
               "ma_qua_trinh_moi": null,
               "ngay_bien_dong": "2025-07-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             },
             {
@@ -1749,7 +1750,7 @@
               "ma_qua_trinh_moi": 2,
               "ngay_bien_dong": "2024-03-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             }
           ]
@@ -2045,7 +2046,7 @@
               "ma_qua_trinh_moi": 5,
               "ngay_bien_dong": "2021-01-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             },
             {
@@ -2055,7 +2056,7 @@
               "ma_qua_trinh_moi": 11,
               "ngay_bien_dong": "2022-06-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             },
             {
@@ -2065,7 +2066,7 @@
               "ma_qua_trinh_moi": null,
               "ngay_bien_dong": "2025-07-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             },
             {
@@ -2075,7 +2076,7 @@
               "ma_qua_trinh_moi": 2,
               "ngay_bien_dong": "2024-03-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             }
           ]
@@ -2351,7 +2352,7 @@
               "ma_qua_trinh_moi": 5,
               "ngay_bien_dong": "2021-01-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             },
             {
@@ -2361,7 +2362,7 @@
               "ma_qua_trinh_moi": 11,
               "ngay_bien_dong": "2022-06-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             },
             {
@@ -2371,7 +2372,7 @@
               "ma_qua_trinh_moi": null,
               "ngay_bien_dong": "2025-07-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             },
             {
@@ -2381,7 +2382,7 @@
               "ma_qua_trinh_moi": 2,
               "ngay_bien_dong": "2024-03-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             }
           ]
@@ -2687,7 +2688,7 @@
               "ma_qua_trinh_moi": 5,
               "ngay_bien_dong": "2021-01-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             },
             {
@@ -2697,7 +2698,7 @@
               "ma_qua_trinh_moi": 11,
               "ngay_bien_dong": "2022-06-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             },
             {
@@ -2707,7 +2708,7 @@
               "ma_qua_trinh_moi": null,
               "ngay_bien_dong": "2025-07-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             },
             {
@@ -2717,7 +2718,7 @@
               "ma_qua_trinh_moi": 2,
               "ngay_bien_dong": "2024-03-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             }
           ]
@@ -2993,7 +2994,7 @@
               "ma_qua_trinh_moi": 5,
               "ngay_bien_dong": "2021-01-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             },
             {
@@ -3003,7 +3004,7 @@
               "ma_qua_trinh_moi": 11,
               "ngay_bien_dong": "2022-06-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             },
             {
@@ -3013,7 +3014,7 @@
               "ma_qua_trinh_moi": null,
               "ngay_bien_dong": "2025-07-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             },
             {
@@ -3023,7 +3024,7 @@
               "ma_qua_trinh_moi": 2,
               "ngay_bien_dong": "2024-03-01",
               "ma_tai_khoan": 1,
-              "thoi_diem_ghi": "2026-11-12T13:56:13.008711+00:00",
+              "thoi_diem_ghi": "2026-11-12T22:11:54.868829+00:00",
               "ghi_chu": null
             }
           ]
@@ -3741,18 +3742,1115 @@
       ]
     },
     {
-      "test": "RISK/existing-superuser-not-reset",
-      "kind": "reproduction",
+      "test": "guard/safe-existing/security-script-expected-errors",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        [
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501"
+        ]
+      ],
+      "actual": [
+        [
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501"
+        ]
+      ]
+    },
+    {
+      "test": "guard/csdl17_admin/SUPERUSER/stopped",
+      "kind": "verification",
       "status": "PASS",
       "expected": [
         {
-          "rolsuper": true
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
         }
       ],
       "actual": [
         {
-          "rolsuper": true
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
         }
+      ]
+    },
+    {
+      "test": "guard/csdl17_admin/SUPERUSER/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "084ae1d6c4cdc25f80a3847b5e186219c0a24b396b88f3cab0ac1ff0a7c4a59c"
+      ],
+      "actual": [
+        "084ae1d6c4cdc25f80a3847b5e186219c0a24b396b88f3cab0ac1ff0a7c4a59c"
+      ]
+    },
+    {
+      "test": "guard/csdl17_admin/CREATEDB/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/csdl17_admin/CREATEDB/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "a1adc9fd77c0d4feac46868bd81d5471e05afa308064b5a4c316f3fc368b2ac3"
+      ],
+      "actual": [
+        "a1adc9fd77c0d4feac46868bd81d5471e05afa308064b5a4c316f3fc368b2ac3"
+      ]
+    },
+    {
+      "test": "guard/csdl17_admin/CREATEROLE/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/csdl17_admin/CREATEROLE/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "98d157de17bacbcd0c2a5abe53ccec70a34e391f1f28998211a1e5fe84590123"
+      ],
+      "actual": [
+        "98d157de17bacbcd0c2a5abe53ccec70a34e391f1f28998211a1e5fe84590123"
+      ]
+    },
+    {
+      "test": "guard/csdl17_admin/REPLICATION/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/csdl17_admin/REPLICATION/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "e6beabaf304cfefc8396fa7368e20e67caa35ca978e90864604030adea5d2d37"
+      ],
+      "actual": [
+        "e6beabaf304cfefc8396fa7368e20e67caa35ca978e90864604030adea5d2d37"
+      ]
+    },
+    {
+      "test": "guard/csdl17_admin/BYPASSRLS/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/csdl17_admin/BYPASSRLS/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "d73c3c3eaf4169e7b02f4e8f14514265d0a28af3b87d2c9a9c50009a8653cca6"
+      ],
+      "actual": [
+        "d73c3c3eaf4169e7b02f4e8f14514265d0a28af3b87d2c9a9c50009a8653cca6"
+      ]
+    },
+    {
+      "test": "guard/csdl17_admin/NOLOGIN/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/csdl17_admin/NOLOGIN/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "dd6ff71ddcb8dbbb2d8906f38b59637cdf639778abb47d294beddd11f2242d46"
+      ],
+      "actual": [
+        "dd6ff71ddcb8dbbb2d8906f38b59637cdf639778abb47d294beddd11f2242d46"
+      ]
+    },
+    {
+      "test": "guard/csdl17_reader/SUPERUSER/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/csdl17_reader/SUPERUSER/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "ca0d401af937a6170c7519236a4d7b7266865c215c81d554f3302694d856f6dc"
+      ],
+      "actual": [
+        "ca0d401af937a6170c7519236a4d7b7266865c215c81d554f3302694d856f6dc"
+      ]
+    },
+    {
+      "test": "guard/csdl17_reader/CREATEDB/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/csdl17_reader/CREATEDB/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "6bfb8769a7346a0137b6e0ac6b3a24553b3afc7b52e8a46057b0803f49118598"
+      ],
+      "actual": [
+        "6bfb8769a7346a0137b6e0ac6b3a24553b3afc7b52e8a46057b0803f49118598"
+      ]
+    },
+    {
+      "test": "guard/csdl17_reader/CREATEROLE/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/csdl17_reader/CREATEROLE/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "35ac47d05c3bcc6961acfbd4486f09200421ef8de5e2d97461859ecb423f08f2"
+      ],
+      "actual": [
+        "35ac47d05c3bcc6961acfbd4486f09200421ef8de5e2d97461859ecb423f08f2"
+      ]
+    },
+    {
+      "test": "guard/csdl17_reader/REPLICATION/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/csdl17_reader/REPLICATION/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "3e5f522b2c9b4bcad9a9c19e00b44876f2263bb6c2ae80d2247814b6b27f894b"
+      ],
+      "actual": [
+        "3e5f522b2c9b4bcad9a9c19e00b44876f2263bb6c2ae80d2247814b6b27f894b"
+      ]
+    },
+    {
+      "test": "guard/csdl17_reader/BYPASSRLS/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/csdl17_reader/BYPASSRLS/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "01e886654475ad74765f5edd884a09e6b1cec2139ff08ed9c7c52dc3d0d5edbb"
+      ],
+      "actual": [
+        "01e886654475ad74765f5edd884a09e6b1cec2139ff08ed9c7c52dc3d0d5edbb"
+      ]
+    },
+    {
+      "test": "guard/csdl17_reader/NOLOGIN/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/csdl17_reader/NOLOGIN/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "da5b0548ab6240be2f9ea695625254283080ebd7cd16add65feaa7ff9325f02f"
+      ],
+      "actual": [
+        "da5b0548ab6240be2f9ea695625254283080ebd7cd16add65feaa7ff9325f02f"
+      ]
+    },
+    {
+      "test": "guard/csdl17_report/SUPERUSER/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/csdl17_report/SUPERUSER/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "aeb821f0c8d014a9fad02c7a69c2e8cdf9511c4607add8bb0000ac6c353f10fa"
+      ],
+      "actual": [
+        "aeb821f0c8d014a9fad02c7a69c2e8cdf9511c4607add8bb0000ac6c353f10fa"
+      ]
+    },
+    {
+      "test": "guard/csdl17_report/CREATEDB/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/csdl17_report/CREATEDB/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "658a6bafe1aac84aebe8732d5b69da2ab4d34ef01b329a311502ef05fc978946"
+      ],
+      "actual": [
+        "658a6bafe1aac84aebe8732d5b69da2ab4d34ef01b329a311502ef05fc978946"
+      ]
+    },
+    {
+      "test": "guard/csdl17_report/CREATEROLE/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/csdl17_report/CREATEROLE/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "110b1affe968bd0dfa3517cd2c56739dca864aa02217d4bf7c7340bc252a5331"
+      ],
+      "actual": [
+        "110b1affe968bd0dfa3517cd2c56739dca864aa02217d4bf7c7340bc252a5331"
+      ]
+    },
+    {
+      "test": "guard/csdl17_report/REPLICATION/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/csdl17_report/REPLICATION/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "f803c919f1f24f1e5946d5222c63c62c841536eecc9781cd81e030e697b049eb"
+      ],
+      "actual": [
+        "f803c919f1f24f1e5946d5222c63c62c841536eecc9781cd81e030e697b049eb"
+      ]
+    },
+    {
+      "test": "guard/csdl17_report/BYPASSRLS/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/csdl17_report/BYPASSRLS/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "3d4a151f59d06e7324a2f88f56feb3005d07a502f5654179cbb69d8c6bec0c03"
+      ],
+      "actual": [
+        "3d4a151f59d06e7324a2f88f56feb3005d07a502f5654179cbb69d8c6bec0c03"
+      ]
+    },
+    {
+      "test": "guard/csdl17_report/NOLOGIN/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/csdl17_report/NOLOGIN/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "3c1d63ccab5ea7caeed08d561a81176a152cd118d733f64da9c9740da62292b5"
+      ],
+      "actual": [
+        "3c1d63ccab5ea7caeed08d561a81176a152cd118d733f64da9c9740da62292b5"
+      ]
+    },
+    {
+      "test": "guard/database-owner/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/database-owner/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "9df4d838f754eaf53b273c5603a43eb916a44b2e1eff2cd8899d1c10fe7e8205"
+      ],
+      "actual": [
+        "9df4d838f754eaf53b273c5603a43eb916a44b2e1eff2cd8899d1c10fe7e8205"
+      ]
+    },
+    {
+      "test": "guard/schema-owner/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/schema-owner/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "b3fb603f33f5efcec0a815798fe1f097c493dbbeed826ff3d3e9459f95793bef"
+      ],
+      "actual": [
+        "b3fb603f33f5efcec0a815798fe1f097c493dbbeed826ff3d3e9459f95793bef"
+      ]
+    },
+    {
+      "test": "guard/table-owner/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/table-owner/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "7f753b95167c1fe911c8998b40bf07c0cab22a2bbd5572798aff077b36001522"
+      ],
+      "actual": [
+        "7f753b95167c1fe911c8998b40bf07c0cab22a2bbd5572798aff077b36001522"
+      ]
+    },
+    {
+      "test": "guard/view-owner/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/view-owner/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "ea66675af2523a73a622a8c7dbf0fb294bb9c9724dae64bdd1ec034b6dbd177f"
+      ],
+      "actual": [
+        "ea66675af2523a73a622a8c7dbf0fb294bb9c9724dae64bdd1ec034b6dbd177f"
+      ]
+    },
+    {
+      "test": "guard/sequence-owner/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/sequence-owner/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "f15781666b7a24b93b027e25dd7b040f6c8d08e94c78bc6b5f8eeccc8162b347"
+      ],
+      "actual": [
+        "f15781666b7a24b93b027e25dd7b040f6c8d08e94c78bc6b5f8eeccc8162b347"
+      ]
+    },
+    {
+      "test": "guard/inherit-parent/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/inherit-parent/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "033b2c4cb3871db009f483055f763c70ed08e7b1048057d6aa724fd391b7929f"
+      ],
+      "actual": [
+        "033b2c4cb3871db009f483055f763c70ed08e7b1048057d6aa724fd391b7929f"
+      ]
+    },
+    {
+      "test": "guard/set-parent-noinherit/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/set-parent-noinherit/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "b15afb4b9a6d8f194c133b3593fcc5ab56ccfb6d3e7fd24754deb9e30d34896a"
+      ],
+      "actual": [
+        "b15afb4b9a6d8f194c133b3593fcc5ab56ccfb6d3e7fd24754deb9e30d34896a"
+      ]
+    },
+    {
+      "test": "guard/before-creating-missing-roles/stopped",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "42501"
+          ],
+          "preflight": true,
+          "reason": true,
+          "demo_output": false
+        }
+      ]
+    },
+    {
+      "test": "guard/before-creating-missing-roles/unchanged",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "f81586763a5a96a8409ccb28b02e8a92cec650facffcb1e2ec024e36df237821"
+      ],
+      "actual": [
+        "f81586763a5a96a8409ccb28b02e8a92cec650facffcb1e2ec024e36df237821"
+      ]
+    },
+    {
+      "test": "guard/reverse-membership-allowed/security-script-expected-errors",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        [
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501"
+        ]
+      ],
+      "actual": [
+        [
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501"
+        ]
+      ]
+    },
+    {
+      "test": "guard/installer-can-set-demo-role",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "current_user": "csdl17_reader",
+          "session_user": "review_installer"
+        }
+      ],
+      "actual": [
+        {
+          "current_user": "csdl17_reader",
+          "session_user": "review_installer"
+        }
+      ]
+    },
+    {
+      "test": "guard/setup-error-stops-before-demo",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        {
+          "failed": true,
+          "states": [
+            "22012"
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "failed": true,
+          "states": [
+            "22012"
+          ]
+        }
+      ]
+    },
+    {
+      "test": "guard/setup-error-rolls-back-all-state",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        "dfe243b156095cfd8376d5920a44d3cdbc40e63bde1f819923115b83050232b3"
+      ],
+      "actual": [
+        "dfe243b156095cfd8376d5920a44d3cdbc40e63bde1f819923115b83050232b3"
+      ]
+    },
+    {
+      "test": "guard/after-negative-cases/security-script-expected-errors",
+      "kind": "verification",
+      "status": "PASS",
+      "expected": [
+        [
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501"
+        ]
+      ],
+      "actual": [
+        [
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501",
+          "42501"
+        ]
       ]
     },
     {
