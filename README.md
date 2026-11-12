@@ -10,7 +10,7 @@
 
 **Cập nhật 12/11/2026:** TV1 đã trả lời E1, thêm validation phát hiện trùng sự kiện theo từng vai trò và kiểm tra ngày B09. [Review TV3 chi tiết](docs/REVIEW_TV3_CHI_TIET.md) có kết quả kiểm chứng độc lập PostgreSQL 17.11: 86 kiểm tra chức năng đạt và 3 phép tái hiện lỗi/giới hạn. Fixture sửa ở nhánh `codex/review-tv3`; PR #1 giữ nguyên. Gate 1 chung vẫn chờ xác nhận.
 
-**Cập nhật 13/11/2026:** đã sửa F03: kiểm tra role có sẵn trước mọi thay đổi quyền và rollback nếu thiết lập lỗi. Bộ kiểm chứng mới đạt 144 kiểm tra chức năng và 2 phép tái hiện; bản sửa chuẩn bị tích hợp qua [PR #1](https://github.com/Linhlss/CSDL-Nh-m-38/pull/1). Gate 1 tiếp tục chờ xác nhận thành viên; kết quả trên seed chính thức chưa được nghiệm thu.
+**Cập nhật 13/11/2026:** đã sửa F03 và merge [PR #1](https://github.com/Linhlss/CSDL-Nh-m-38/pull/1) vào main tại [d84571e](https://github.com/Linhlss/CSDL-Nh-m-38/commit/d84571e544b480c9c4ba4a421d5d5435b33faac8). Role có sẵn được kiểm tra trước mọi thay đổi quyền; lỗi thiết lập rollback toàn bộ. Bộ kiểm chứng mới đạt 144 kiểm tra chức năng và 2 phép tái hiện. Gate 1 tiếp tục chờ xác nhận thành viên; kết quả trên seed chính thức chưa được nghiệm thu.
 
 1. Đọc [hướng dẫn bàn giao TV1](docs/BAN_GIAO_TV1_TUAN_1.md) để tiếp tục đúng phần được giao.
 2. Dùng [đặc tả nghiệp vụ](docs/03_dac_ta_nghiep_vu.md), [từ điển/chuẩn hóa](docs/04_data_dictionary_va_chuan_hoa.md) và [DDL](sql/01_schema.sql) làm bộ giao diện dữ liệu. SQL giữ cấu trúc v0: 7 bảng, 35 cột.

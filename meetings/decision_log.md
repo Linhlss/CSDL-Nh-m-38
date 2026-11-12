@@ -83,3 +83,10 @@ Các Gate 2 (22/11), Gate 3 (24/11), Gate 4 (26/11) chưa được thực hiện
 - B09 có truy vấn đối chiếu ngày và bộ test riêng; không thay thế trigger/transaction tuần 2.
 - Báo cáo độc lập và trạng thái từng phát hiện: [review TV3 chi tiết](../docs/REVIEW_TV3_CHI_TIET.md).
 - Gate 1 của cả nhóm **CHỜ REVIEW**: còn cần TV2 xác nhận và TV3 tiếp nhận phản hồi cuối; giải quyết E1 không tự tạo chữ ký PASS.
+
+## 7. Tích hợp kỹ thuật TV3 — 13/11/2026
+
+- Theo yêu cầu chủ repo, đã sửa F03 bằng preflight cho cả ba role có sẵn và transaction thiết lập; giữ nguyên schema/DEC06. F05 đã cập nhật mô tả PR sang đúng file và quy ước Q_d.
+- Kiểm chứng trước merge: 146/146 đạt, gồm 144 kiểm tra chức năng và 2 phép tái hiện; log/hash trong `tests/tv3_review_results.json`. Kiểm tra tệp sau merge 11/11 đạt.
+- PR #1 đã merge bằng merge commit `d84571e544b480c9c4ba4a421d5d5435b33faac8`, HEAD nguồn `3414131a66bff6f39d7094225bf5a858beb3421f`. Lịch sử TV3 được giữ; main đã chứa bộ RA/bảo mật cùng bản sửa.
+- Đây là tích hợp mã và tài liệu, không phải biên bản họp hay chữ ký nghiệm thu. Gate 1 **CHỜ REVIEW** những xác nhận còn thiếu; TV2/TV3 tiếp tục seed chính thức, đối soát, ảnh và báo cáo theo phân công.

@@ -30,7 +30,7 @@
 - Lệnh kiểm tra tệp này không chạy DDL hoặc S01–S21 trên PostgreSQL. Kiểm chứng DB độc lập (nếu đã có) được ghi riêng trong docs/REVIEW_TV3_CHI_TIET.md; không dùng log này làm bằng chứng DB.
 - Lệnh này không nghiệm thu cơ chế tuần 2 trong constraints/seed/query/security; xem sản phẩm và kết quả của từng owner. Ca D01–D30 là đối chiếu thiết kế với đáp án kỳ vọng, không là kết quả DB PASS.
 - Lệnh này không tự xác nhận review của TV2/TV3 hoặc Gate 1 PASS; xem meetings/decision_log.md và báo cáo review mới nhất. Phân tích chuẩn hóa công bố điểm dư thừa ngày sự kiện và phần cần chốt tuần 2.
-- Biên bản này chỉ kiểm tra tệp; commit và trạng thái phát hành xem lịch sử main trên GitHub. Chưa gửi review hoặc merge PR của TV3.
+- Biên bản này chỉ kiểm tra tệp; trạng thái tích hợp PR và commit xem docs/REVIEW_TV3_CHI_TIET.md, meetings/decision_log.md và lịch sử main trên GitHub. Merge không thay thế xác nhận Gate 1.
 
 ## Kiểm tra lại
 

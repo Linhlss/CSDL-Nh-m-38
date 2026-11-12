@@ -35,7 +35,7 @@ Khi cần dựng lại ảnh, dùng Python 3 + Pillow, chạy `python3 scripts/r
 | Người | Việc tiếp nhận trong tuần 1 | Việc tuần 2 |
 |---|---|---|
 | TV2 | Review ERD/từ điển/DDL, xác nhận đủ cột cho 10 SQL và sinh dữ liệu; chuẩn bị S01–S21 và đáp án dự kiến | Sinh fixture nhỏ rồi dữ liệu nền theo FK; hoàn thiện seed, 10 SQL/kết quả; thêm tổ 0 người, tài khoản 0 sự kiện, tương lai và trùng tên |
-| TV3 | Review hai vai trò FK, bản số/NULL; đọc RV01–RV10, xử lý RV08 về đại số cổ điển; xác nhận 10 RA và B1/B2 | Hoàn thiện/đối soát 10 RA, role/VIEW và hai demo trên cùng seed; lưu kết quả thật |
+| TV3 | Đã review ERD và sửa RV08; PR #1 đã tích hợp sau review kỹ thuật ngày 13/11. Tiếp nhận phản hồi E1 và xác nhận thành viên còn thiếu | Hoàn thiện/đối soát 10 RA, role/VIEW và hai demo trên cùng seed; lưu kết quả thật |
 | TV1 — phần tiếp theo đúng lịch | Tiếp nhận phản hồi vào biên bản và chuẩn bị bản được nhóm duyệt | DDL chạy trên DB sạch; ràng buộc/transaction, S17–S19; chốt luận chứng chuẩn hóa; review seed |
 
 Thứ tự sau review: DB sạch → `01_schema.sql` → triển khai/chạy `02_constraints.sql` → seed → validation → SQL/RA đối soát → bảo mật. Constraints, seed và queries vẫn còn TODO đúng kế hoạch. Security đã có mã chạy trên fixture nhỏ, thêm preflight role và transaction qua review 13/11; chưa thay việc nghiệm thu trên seed chính thức. Không coi việc chạy qua file chỉ chứa chú thích là hoàn thành chức năng.
@@ -52,7 +52,7 @@ Nếu nhập ID gán tay rồi tiếp tục dùng ID tự sinh, đồng bộ seq
 | RA với NULL | TV3 đã sửa RV08 tại `7abe4d5`: chuẩn bị Q_d bằng SQL, bỏ cột kết thúc trước phần đại số cổ điển; xem review độc lập bên dưới |
 | Ràng buộc xuyên bảng | Đã đặc tả, chưa thực thi; tuần 2 kiểm cả sửa sự kiện và sửa đợt |
 | PostgreSQL | Lần bàn giao 11/11 chưa chạy PostgreSQL. Kết quả kiểm chứng độc lập mới được ghi riêng trong [review TV3 chi tiết](REVIEW_TV3_CHI_TIET.md); kiểm tra tệp không thay test DB hoặc seed chính thức |
-| GitHub | Nhận bộ thiết kế qua nhánh main của repository chung. Đã đọc PR #1 và lưu review nội bộ; chưa gửi review hoặc merge PR TV3. Việc push không thay thế xác nhận Gate 1 |
+| GitHub | PR #1 đã merge vào main tại `d84571e` ngày 13/11/2026, gồm fixture sửa B09 và preflight role. Xem báo cáo review cho kết quả thực tế; merge không thay xác nhận Gate 1 |
 
 ## 5. Sản phẩm và kiểm chứng
 

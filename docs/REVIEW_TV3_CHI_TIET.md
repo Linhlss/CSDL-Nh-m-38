@@ -1,6 +1,6 @@
 # REVIEW CHI TIẾT PHẦN TV3 — CẬP NHẬT 13/11/2026
 
-**Cập nhật mới nhất:** F03 đã được sửa bằng preflight và transaction thiết lập; bộ kiểm chứng trước merge đạt **146/146**, gồm 144 kiểm tra chức năng và 2 phép tái hiện. Chi tiết mới và trạng thái tích hợp ở mục 7. Các mục 1–6 lưu kết quả review ngày 12/11 để giữ lịch sử.
+**Cập nhật mới nhất:** PR #1 đã merge vào main tại `d84571e` ngày 13/11. F03 đã sửa bằng preflight và transaction thiết lập, F05 đã cập nhật mô tả PR; bộ kiểm chứng trước merge đạt **146/146**, gồm 144 kiểm tra chức năng và 2 phép tái hiện. Chi tiết mới ở mục 7, xác nhận merge ở mục 8. Các mục 1–6 lưu kết quả review ngày 12/11 để giữ lịch sử.
 
 **Người thực hiện:** kiểm chứng kỹ thuật hỗ trợ TV1 theo yêu cầu chủ repo. **Đối tượng review ngày 12/11:** [PR #1](https://github.com/Linhlss/CSDL-Nh-m-38/pull/1), nhánh `tv3/dai-so-quan-he-bao-mat`, [commit gốc 7abe4d5](https://github.com/Linhlss/CSDL-Nh-m-38/tree/7abe4d54f7e7cc96ac086b7e1127073493152e24). Khi đó PR chưa merge; không gửi review hoặc ký xác nhận thay thành viên.
 
@@ -128,4 +128,11 @@ Phần `02_constraints.sql` của TV1 và seed/10 QSQL của TV2 chưa hoàn thi
 
 So sánh trước/sau bằng SHA-256 của toàn bộ dữ liệu 7 bảng, thuộc tính role, membership, owner/ACL database/schema/quan hệ, định nghĩa VIEW và trạng thái sequence; hash expected/actual nằm trong log. Đây là kiểm soát phạm vi demo, không phải audit mọi đối tượng/quyền trên cluster bất kỳ. E1/schema không đổi; 10 RA, Q_d, VIEW, ca biên, B1/B2 với SET ROLE và đăng nhập trực tiếp đều được chạy lại đạt.
 
-**Tích hợp:** bản sửa được chuẩn bị trên `codex/review-tv3` để fast-forward nhánh nguồn của PR #1, cập nhật mô tả cũ (F05) rồi merge commit theo HEAD đã kiểm chứng. Kết quả merge thực tế sẽ được bổ sung sau khi GitHub xác nhận. Gate 1 chung vẫn chờ xác nhận thành viên; chưa nghiệm thu seed chính thức, ảnh và báo cáo cuối.
+**Trạng thái trước merge:** bản sửa được chuẩn bị trên `codex/review-tv3` để fast-forward nhánh nguồn của PR #1, cập nhật mô tả cũ (F05) rồi merge commit theo HEAD đã kiểm chứng. Kết quả merge thực tế ở mục 8. Gate 1 chung vẫn chờ xác nhận thành viên; chưa nghiệm thu seed chính thức, ảnh và báo cáo cuối.
+
+## 8. Xác nhận tích hợp — 13/11/2026
+
+- GitHub xác nhận [PR #1](https://github.com/Linhlss/CSDL-Nh-m-38/pull/1) **merged/closed** lúc **13/11/2026 05:18:11 +07:00**, bằng merge commit [d84571e544b480c9c4ba4a421d5d5435b33faac8](https://github.com/Linhlss/CSDL-Nh-m-38/commit/d84571e544b480c9c4ba4a421d5d5435b33faac8).
+- HEAD PR đã khóa khi merge: `3414131a66bff6f39d7094225bf5a858beb3421f`; nhánh nguồn và nhánh review được push fast-forward, giữ lịch sử tác giả TV3. Mô tả PR đã đổi sang 06a/06b và quy ước Q_d hiện hành: **F05 đã xử lý**. **F03 đã xử lý**, có test đầy đủ ở mục 7.
+- Main local đã fast-forward tới merge commit; đối chiếu script bảo mật, fixture và bộ kiểm chứng với HEAD PR không có khác biệt. Kiểm tra tài liệu/sơ đồ/liên kết/manifest sau merge đạt **11/11**. Các cập nhật trạng thái bàn giao sau merge chỉ sửa tài liệu và log kiểm tra tệp, không đổi đầu vào kiểm chứng PostgreSQL.
+- Còn lại theo phân công: TV2 xác nhận schema, cung cấp seed chính thức và review bảo mật; TV2/TV3 đối soát trên seed, hoàn thiện expected/actual, ảnh và báo cáo cuối. TV1 tiếp tục ràng buộc/transaction tuần 2. Gate 1 **CHỜ REVIEW** các xác nhận còn thiếu, không tự ký thay thành viên.

@@ -12,8 +12,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 4969,
-      "sha256": "1fc2ff95df54c3aaef6083e43cb7ccec281dfe922241f10ac8da3217ab998e97"
+      "bytes": 5063,
+      "sha256": "4c9e8c83ddcd9897e07cda22a9056047901592a8c62ecf4cdb442ff44408c558"
     },
     {
       "path": "data/README.md",
@@ -97,13 +97,13 @@
     },
     {
       "path": "docs/07_ma_tran_truy_van_va_review.md",
-      "bytes": 9503,
-      "sha256": "bc0e2f4400a984a0cc36e90e74279a4bb298c6ab612c545cce6f35887711f757"
+      "bytes": 10160,
+      "sha256": "20acb9ab1226de53cdb4bb9fef9dbad2d716f30ce3ad6152128fb6b58889e805"
     },
     {
       "path": "docs/BAN_GIAO_TV1_TUAN_1.md",
-      "bytes": 7599,
-      "sha256": "14e72baca1f3380fef290385dfe57182dcb4306b7c7cc2d2ee183f8b6153d823"
+      "bytes": 7621,
+      "sha256": "73b7f2c21e2d7a4abbd2177863918008682b9296a68bf06991637bf4fba44cc7"
     },
     {
       "path": "docs/KE_HOACH_TV1_TUAN_1.md",
@@ -112,8 +112,8 @@
     },
     {
       "path": "docs/REVIEW_TV3_CHI_TIET.md",
-      "bytes": 19542,
-      "sha256": "d79f85e8a78eac83474deba49f2b724447fda361e744bd00036b4367297af9ec"
+      "bytes": 20994,
+      "sha256": "270704dd64eda24e78ab8f8450fd6c43424a3d4882ff0826a9ba8201c15e2a02"
     },
     {
       "path": "docs/REVIEW_TV3_ERD_TUAN_1.md",
@@ -132,8 +132,8 @@
     },
     {
       "path": "meetings/decision_log.md",
-      "bytes": 9972,
-      "sha256": "8148ca695a7c5f5b4bc80b564b09a2beb94d83b6c430af1b06d551f356d6d72e"
+      "bytes": 10924,
+      "sha256": "eea80c23e94c2dc92d5f6bb87f09f978821c60ad3b04d0bc7224666c3ce1946b"
     },
     {
       "path": "report/.gitkeep",
@@ -157,8 +157,8 @@
     },
     {
       "path": "scripts/verify_week1.py",
-      "bytes": 15925,
-      "sha256": "1d20ebded1eb7ed30a38a4e96fcae562b94c5d27cc7099ee6fd007be2230249f"
+      "bytes": 15984,
+      "sha256": "f86a9e3cbdb7d15b5f3f1e150a5b927f1e34d57a90ff72a54e1349bc3bc98cea"
     },
     {
       "path": "sql/01_schema.sql",
@@ -222,8 +222,8 @@
     },
     {
       "path": "tests/week1_verification_log.md",
-      "bytes": 3476,
-      "sha256": "9d5d5c8d6d89392f98e01d450ea00a00ffe1e4e6619e3cd98d775bd827a4449c"
+      "bytes": 3535,
+      "sha256": "5b3b5613aed676d549b02e2c7fc60b134abbcd5d0cce37c2f54532af97c29c1a"
     }
   ]
 }
