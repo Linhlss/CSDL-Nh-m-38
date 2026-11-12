@@ -86,6 +86,16 @@
       "sha256": "9ea03214f370612b25375f08be1ab3965e3ff1bd4b8733fb61b64029e194da62"
     },
     {
+      "path": "docs/06a_dai_so_quan_he.md",
+      "bytes": 27838,
+      "sha256": "aabb1cb2f566d93265103a2d342566ec3dc02a257f53660b819563fe9b143066"
+    },
+    {
+      "path": "docs/06b_bao_mat.md",
+      "bytes": 18747,
+      "sha256": "54587d970dc3ffaabdd1f81e7116617feb40a7e15d074f3eb61d37da4f2b71fa"
+    },
+    {
       "path": "docs/07_ma_tran_truy_van_va_review.md",
       "bytes": 9503,
       "sha256": "bc0e2f4400a984a0cc36e90e74279a4bb298c6ab612c545cce6f35887711f757"
@@ -104,6 +114,11 @@
       "path": "docs/REVIEW_TV3_CHI_TIET.md",
       "bytes": 15223,
       "sha256": "b507036d49e74c31273e5f5ee9e38e1eb11e5c48592e9e84a7c343a9ae35859b"
+    },
+    {
+      "path": "docs/REVIEW_TV3_ERD_TUAN_1.md",
+      "bytes": 6308,
+      "sha256": "ba29416f3c71bb096f78ee895e08eff7191a4723ac1c762aaa14136104f8fa15"
     },
     {
       "path": "evidence/security/.gitkeep",
@@ -167,8 +182,8 @@
     },
     {
       "path": "sql/05_security.sql",
-      "bytes": 543,
-      "sha256": "adba232fd980dd4fd3c4487a956a3aeca9896e08cbc01a9594109cb7702a8c87"
+      "bytes": 10441,
+      "sha256": "e98b27674d4a0453c48bc1dce03a3cd5a83eafef81a208539c775ed4039b1a72"
     },
     {
       "path": "sql/06_validation.sql",
@@ -179,6 +194,11 @@
       "path": "tests/final_test_log.md",
       "bytes": 647,
       "sha256": "e3fdb816c2e3e38ce9bd59ff250ab34e77ae926aad6c04055ee7a67a922ad4ae"
+    },
+    {
+      "path": "tests/ra_fixture.sql",
+      "bytes": 10890,
+      "sha256": "fdf269d0f5412ad5ae0bc44719065e492727e25484502a9aaae6935b74730ca8"
     },
     {
       "path": "tests/test_scenarios.md",
