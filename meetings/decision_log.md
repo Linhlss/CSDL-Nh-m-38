@@ -12,7 +12,7 @@
 | DEC03 | Thời gian | Ngày cuối bao gồm; NULL chưa có ngày kết thúc; truy vấn hiện lực xét cả đầu và cuối | B04–B05; d=20/11/2026 cho đối chiếu |
 | DEC04 | Ngày chuyển | Ngày chuyển t là ngày bắt đầu nơi mới/không còn ở nơi cũ; cũ kết thúc t−1, mới bắt đầu t | B09; ví dụ và ca D17–D20 đã viết |
 | DEC05 | Chồng lấn | Cấm cùng người+cùng loại; cho hai loại khác nhau đồng thời theo mô phỏng | B06; COUNT DISTINCT khi thống kê người |
-| DEC06 | Nhật ký | Hai FK riêng, đúng hình dạng; không UNIQUE mỗi FK theo từng đợt | B07–B09; giữ cardinality 0..N sự kiện cho mỗi vai trò của đợt |
+| DEC06 | Nhật ký; trả lời E1 ngày 12/11/2026 | Giữ hai FK riêng và schema hiện hành, không thêm UNIQUE. Một đợt xuất hiện một lần ở vai trò mới rồi một lần ở vai trò cũ là hợp lệ; nhiều sự kiện dùng cùng đợt trong cùng vai trò là cảnh báo phải xử lý trước nghiệm thu | Giữ cardinality DB 0..N để tương thích bộ bàn giao; V_E1_CU/V_E1_MOI trong `sql/06_validation.sql` phải trả 0 dòng. Đây là validation, DB chưa tự ngăn ghi trùng; không tự xóa/gộp sự kiện vì sẽ làm đổi thống kê |
 | DEC07 | Địa chỉ lịch sử | Không dùng sửa liên kết hộ–địa chỉ/tổ để ghi chuyển chỗ ở | B11; tạo bản ghi mới để bảo toàn diễn giải lịch sử |
 | DEC08 | Ràng buộc tuần 2 | Exclusion GiST + btree_gist cho chồng lấn; trigger sự kiện và chiều sửa đợt; transaction đóng/mở/ghi | Mới là đặc tả, chưa bật trong DB |
 | DEC09 | Câu hỏi | Giữ bộ 10 RA/10 SQL; QSQL03 có tổ 0 người; QSQL08 chỉ có nhóm phát sinh | Ma trận 20 câu và hợp đồng cột đầu ra |
@@ -71,7 +71,15 @@ Các quyết định là phương án TV1 đã hiện thực trong tài liệu l
 | Người / thời điểm | Nội dung cần xác nhận | Kết quả |
 |---|---|---|
 | TV2 — sau khi đọc bộ bàn giao | Đủ cột/miền/quan hệ để sinh dữ liệu và viết 10 SQL; phản hồi câu hỏi còn mơ hồ | Chờ người nhận ghi |
-| TV3 — sau khi đọc bộ bàn giao | ERD biểu diễn đúng 10 RA; tiếp nhận RV08; hai demo bảo mật khả thi | Chờ người nhận ghi |
+| TV3 — sau khi đọc bộ bàn giao | ERD biểu diễn đúng 10 RA; tiếp nhận RV08; hai demo bảo mật khả thi | 11/11/2026, TV3: xác nhận cả ba điểm; RV08 đã sửa trong `docs/06a_dai_so_quan_he.md` v0.1. Còn mở E1 (DEC06, chờ TV1 trả lời). `tests/ra_fixture.sql` chạy lại trên v1-candidate: 11/11 khớp. Chi tiết: `docs/REVIEW_TV3_ERD_TUAN_1.md`. Chưa ký PASS Gate 1 |
 | Cả nhóm — Gate 1 dự kiến 15/11 | Đồng ý hoặc yêu cầu sửa DEC01–DEC12; ghi phiên bản và lỗi còn mở | Chờ xác nhận thật |
 
 Các Gate 2 (22/11), Gate 3 (24/11), Gate 4 (26/11) chưa được thực hiện trong gói tuần 1.
+
+## 6. Tiếp nhận review TV3 — 12/11/2026
+
+- TV1 đã đọc phiếu TV3 tại PR #1, commit `7abe4d5`: xác nhận đủ đường nối 10 RA/B1/B2 và tiếp nhận bản sửa RV08. Đây là lời xác nhận của TV3 trong nhánh của họ; giữ nguyên tác giả và không ký thay.
+- **E1: TV1 đã trả lời bằng DEC06 cập nhật.** Giữ schema để TV2/TV3 tiếp tục dùng giao diện đã bàn giao; không coi ghi trùng là hợp lệ về nghiệp vụ. Validation liệt kê đầy đủ các mã sự kiện trùng theo từng vai trò; TV2/TV1 xử lý nguồn nhập hoặc hiệu chỉnh trước nghiệm thu, rồi chạy lại tới 0 dòng.
+- B09 có truy vấn đối chiếu ngày và bộ test riêng; không thay thế trigger/transaction tuần 2.
+- Báo cáo độc lập và trạng thái từng phát hiện: [review TV3 chi tiết](../docs/REVIEW_TV3_CHI_TIET.md).
+- Gate 1 của cả nhóm **CHỜ REVIEW**: còn cần TV2 xác nhận và TV3 tiếp nhận phản hồi cuối; giải quyết E1 không tự tạo chữ ký PASS.

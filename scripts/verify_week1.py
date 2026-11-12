@@ -16,6 +16,7 @@ import re
 import struct
 import sys
 import zlib
+from datetime import date
 from pathlib import Path
 from urllib.parse import unquote
 from xml.etree import ElementTree as ET
@@ -192,7 +193,7 @@ def report_and_handoff():
     assert len(ids) == 20 and set(ids) == {f"W1-T1-{n:02}" for n in range(1,21)}
     assert "CHỜ REVIEW" in read("meetings/decision_log.md")
     assert "dư thừa" in read("docs/04_data_dictionary_va_chuan_hoa.md")
-    assert "Chưa chạy" in read("docs/BAN_GIAO_TV1_TUAN_1.md")
+    assert "kiểm tra tệp không thay test DB" in read("docs/BAN_GIAO_TV1_TUAN_1.md")
     return "Chapters 1–3 filled; all 20 TV1 tasks traced; peer-review and DB-test limits explicit"
 
 
@@ -245,11 +246,12 @@ def check_manifest():
 
 
 def record_evidence():
+    recorded_date = date.today()
     rows = "\n".join(f"| {name} | {state} | {detail} |" for name,state,detail in RESULTS)
-    LOG.write_text(f"""# BIÊN BẢN TỰ KIỂM TRA BỘ BÀN GIAO TV1 — 11/11/2026
+    LOG.write_text(f"""# BIÊN BẢN TỰ KIỂM TRA BỘ BÀN GIAO TV1 — {recorded_date:%d/%m/%Y}
 
-**Lệnh đã chạy:** `python3 scripts/verify_week1.py --record` từ thư mục gốc.  
-**Python thực tế:** {platform.python_version()}. **Hệ điều hành:** {platform.system()} {platform.release()}.  
+**Lệnh đã chạy:** `python3 scripts/verify_week1.py --record` từ thư mục gốc.
+**Python thực tế:** {platform.python_version()}. **Hệ điều hành:** {platform.system()} {platform.release()}.
 **Phạm vi:** kiểm tra tệp và đối chiếu cấu trúc/tài liệu, không kết nối PostgreSQL.
 
 | Kiểm tra | Kết quả | Bằng chứng / phạm vi |
@@ -266,9 +268,9 @@ def record_evidence():
 
 ## Những điều chưa được xác nhận
 
-- Chưa chạy DDL hoặc S01–S21 trên PostgreSQL. psql không có trên PATH; Docker daemon không hoạt động khi kiểm tra môi trường.
-- Chưa triển khai cơ chế tuần 2 trong constraints/seed/query/security. Ca D01–D30 là đối chiếu thiết kế với đáp án kỳ vọng, không là kết quả DB PASS.
-- Chưa có review/xác nhận TV2/TV3 hoặc Gate 1 PASS. Phân tích chuẩn hóa công bố điểm dư thừa ngày sự kiện và phần cần chốt tuần 2.
+- Lệnh kiểm tra tệp này không chạy DDL hoặc S01–S21 trên PostgreSQL. Kiểm chứng DB độc lập (nếu đã có) được ghi riêng trong docs/REVIEW_TV3_CHI_TIET.md; không dùng log này làm bằng chứng DB.
+- Lệnh này không nghiệm thu cơ chế tuần 2 trong constraints/seed/query/security; xem sản phẩm và kết quả của từng owner. Ca D01–D30 là đối chiếu thiết kế với đáp án kỳ vọng, không là kết quả DB PASS.
+- Lệnh này không tự xác nhận review của TV2/TV3 hoặc Gate 1 PASS; xem meetings/decision_log.md và báo cáo review mới nhất. Phân tích chuẩn hóa công bố điểm dư thừa ngày sự kiện và phần cần chốt tuần 2.
 - Biên bản này chỉ kiểm tra tệp; commit và trạng thái phát hành xem lịch sử main trên GitHub. Chưa gửi review hoặc merge PR của TV3.
 
 ## Kiểm tra lại
@@ -276,7 +278,8 @@ def record_evidence():
 Nhận bản mới bằng `git pull --ff-only origin main` trên nhánh main, rồi chạy `python3 scripts/verify_week1.py`. Lệnh kiểm tra chỉ đọc, gồm đối chiếu SHA-256 của các tệp trong repository. Sau khi sửa nội dung, review rồi chạy lại --record để tái tạo biên bản và manifest trước commit; không chỉnh log thành PASS bằng tay.
 """,encoding="utf-8")
     entries = [{"path":str(p.relative_to(ROOT)),"bytes":p.stat().st_size,"sha256":sha(p)} for p in files_for_manifest()]
-    MANIFEST.write_text(json.dumps({"version":"v1-candidate","recorded_date":"2026-11-11",
+    MANIFEST.write_text(json.dumps({"version":"v1-candidate","recorded_date":recorded_date.isoformat(),
+                                    "scope":"static_handoff_checks_only",
                                     "database_executed":False,"group_gate1_approved":False,"files":entries},
                                    ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
 
