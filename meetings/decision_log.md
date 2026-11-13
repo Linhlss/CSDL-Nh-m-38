@@ -57,10 +57,10 @@ Các quyết định là phương án TV1 đã hiện thực trong tài liệu l
 
 | Hạng mục | Tự kiểm tra của TV1 | Xác nhận chéo |
 |---|---|---|
-| Đặc tả và cây chức năng | Có sản phẩm | Chờ TV3 |
-| ERD, lược đồ, từ điển, chuẩn hóa nháp | Có sản phẩm; công bố điểm chuẩn hóa cần chốt tiếp | Chờ TV2/TV3 |
-| Khả năng đáp ứng 10 RA + 10 SQL | Đã đối chiếu thiết kế 20 câu | Chờ owner hai phần xác nhận |
-| Phương án 2 demo bảo mật | Đã có yêu cầu role/VIEW trong kế hoạch; không cần đổi bảng lõi | Chờ TV3 xác nhận triển khai |
+| Đặc tả và cây chức năng | Có sản phẩm | TV3 13/11: đồng ý; câu hỏi C1 về chức năng 3.2 không chặn. Chờ TV2 |
+| ERD, lược đồ, từ điển, chuẩn hóa nháp | Có sản phẩm; công bố điểm chuẩn hóa cần chốt tiếp | TV3 11/11: đồng ý ERD/lược đồ; chuẩn hóa để chốt tuần 2. Chờ TV2 |
+| Khả năng đáp ứng 10 RA + 10 SQL | Đã đối chiếu thiết kế 20 câu | TV3 13/11: đồng ý phần 10 RA. Chờ TV2 phần 10 SQL |
+| Phương án 2 demo bảo mật | Đã có yêu cầu role/VIEW trong kế hoạch; không cần đổi bảng lõi | TV3 13/11: xác nhận triển khai B1/B2 theo script trên main |
 | DDL, sơ đồ và tài liệu thống nhất | Chạy bộ tự kiểm tra ở `tests/week1_verification_log.md` | Chờ TV2 |
 | Quyết định / phiên bản chung | Ứng viên v1 sẵn sàng | Chưa có đồng ý của cả ba |
 
@@ -90,3 +90,13 @@ Các Gate 2 (22/11), Gate 3 (24/11), Gate 4 (26/11) chưa được thực hiện
 - Kiểm chứng trước merge: 146/146 đạt, gồm 144 kiểm tra chức năng và 2 phép tái hiện; log/hash trong `tests/tv3_review_results.json`. Kiểm tra tệp sau merge 11/11 đạt.
 - PR #1 đã merge bằng merge commit `d84571e544b480c9c4ba4a421d5d5435b33faac8`, HEAD nguồn `3414131a66bff6f39d7094225bf5a858beb3421f`. Lịch sử TV3 được giữ; main đã chứa bộ RA/bảo mật cùng bản sửa.
 - Đây là tích hợp mã và tài liệu, không phải biên bản họp hay chữ ký nghiệm thu. Gate 1 **CHỜ REVIEW** những xác nhận còn thiếu; TV2/TV3 tiếp tục seed chính thức, đối soát, ảnh và báo cáo theo phân công.
+
+## 8. Xác nhận của TV3 — 13/11/2026
+
+Do TV3 ghi. Chi tiết ở `../docs/REVIEW_TV3_ERD_TUAN_1.md` mục 6–9.
+
+- **Review sơ đồ phân rã chức năng (W1-T1-08): đạt.** 1 nút gốc, 6 nhóm, 14 chức năng cấp 2; đủ `.drawio`/`.png`/`.svg`; mọi QRA và hai demo B1/B2 đều có chức năng tương ứng. Còn câu hỏi **C1** cho TV1: phạm vi của chức năng 3.2 Kết thúc đợt (khi nào được đóng đợt không kèm sự kiện). Không chặn Gate 1.
+- **Tiếp nhận phản hồi review của TV1:** đồng ý F01–F05 và câu trả lời E1 (DEC06 + `V_E1_CU`/`V_E1_MOI` phải 0 dòng). E1 đóng. TV3 đã chạy lại trên máy của mình tại `fa6c055`: `05_security.sql` ra đúng 6 lỗi quyền cố ý, `ra_fixture.sql` cho kết quả giống lần 11/11.
+- **Xác nhận triển khai hai demo bảo mật** B1 và B2 theo `sql/05_security.sql`, `docs/06b_bao_mat.md`. Ảnh minh chứng và chạy trên seed chính thức làm trong tuần 2–3.
+- TV3 đã sửa tên tác nhân trong `docs/06b_bao_mat.md` cho khớp đặc tả mục 3 (C2).
+- **Phía TV3 không còn điều kiện chặn Gate 1.** Đây là ý kiến ghi trong tài liệu, chưa phải chữ ký biên bản họp. Gate 1 chung vẫn **CHỜ REVIEW** vì còn thiếu xác nhận của TV2.
