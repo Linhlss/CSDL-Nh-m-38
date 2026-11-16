@@ -109,8 +109,8 @@
     },
     {
       "path": "docs/02_bao_cao_suon.md",
-      "bytes": 19438,
-      "sha256": "7d54c25fbdcbcf81a25d13a119d2d644dbdb632f7206a78a5b0dd0d14542fc34"
+      "bytes": 47643,
+      "sha256": "380d5758c9fd045415f41771fba3ec0d611ea1f27358d1feb9eb2bc3d88892eb"
     },
     {
       "path": "docs/03_CHECKLIST_DU_AN.md",
@@ -310,7 +310,7 @@
     {
       "path": "tests/week1_verification_log.md",
       "bytes": 3954,
-      "sha256": "2768af42421b372f018d9199bfd09874b7ad6487d323fb9bc5e53a1cee44833e"
+      "sha256": "6637f4e1d02aac5095ef9829fd8dc0d48a4adb3c82f3154d863f13740bb961b1"
     }
   ]
 }
