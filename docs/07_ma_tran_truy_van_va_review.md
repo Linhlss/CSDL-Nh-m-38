@@ -59,7 +59,7 @@ Với RV08, quan hệ chuẩn bị tối thiểu có thể là `CU_TRU_HIEU_LUC_
 
 - TV2 kiểm tra từ điển, miền giá trị, thứ tự nạp và các ca seed cần thêm: tổ 0 người, tài khoản 0 sự kiện, đợt tương lai, hai đợt cùng hộ, hai người trùng tên, nội bộ cùng tổ.
 - TV3 kiểm tra hai vai trò FK trên ERD, bản số/NULL, mô hình đủ biểu diễn 10 câu; xử lý RV08 và thống nhất lược đồ `Q_d`.
-- Hai thành viên ghi phản hồi, tệp/phiên bản và ngày trong `../meetings/decision_log.md`. TV3 đã xác nhận 10 RA/B1/B2 tại commit `7abe4d5`; TV2 vẫn chờ xác nhận.
+- Hai thành viên ghi phản hồi, tệp/phiên bản và ngày trong `../meetings/decision_log.md`. TV3 đã xác nhận 10 RA/B1/B2 tại commit `7abe4d5`; ngày16/11 chủ repo xác nhận cả ba đồng ý thiết kế, nguồn tại [Gate 1](../meetings/decision_log.md#gate1).
 
 ## 5. Lịch sử review ngày 12/11/2026
 
@@ -68,3 +68,7 @@ RV01–RV07 và RV09 được kiểm tra lại trên `7abe4d5`; 10 SQL kiểm ch
 ## 6. Cập nhật tích hợp ngày 13/11/2026
 
 PR #1 đã merge tại `d84571e` sau khi khóa HEAD `3414131`. **RV10/F05 đã xử lý:** mô tả PR dùng đúng 06a/06b và cách chuẩn bị Q_d. **F03 đã xử lý:** kiểm tra role có sẵn và transaction thiết lập, kiểm chứng đầy đủ điều kiện từ chối/rollback. Bộ kiểm chứng mới đạt 146/146 (144 chức năng, 2 tái hiện); cấu trúc và 20 câu hỏi giữ nguyên. Gate 1 vẫn chờ các xác nhận thành viên và lần đối soát seed chính thức là bước riêng. Xem [nhật ký review](../meetings/decision_log.md#review-tv3) và log146 để truy commit, expected/actual và phạm vi kiểm chứng.
+
+## 7. Chốt thiết kế ngày tiếp nhận 16/11/2026
+
+Gate 1 PASS, thiết kế v1 theo chủ repo xác nhận trong chat rằng cả ba đã đồng ý và đã đối chiếu thông báo gốc. Các đoạn review ngày11–13/11 phía trên giữ trạng thái lịch sử. Môi trường cá nhân TV2 (Windows, phiên bản/công cụ/kết nối chưa có) hoãn sang W2-T2-01; [nhật ký](../meetings/decision_log.md#gate1) giữ nguồn và phạm vi phê duyệt.

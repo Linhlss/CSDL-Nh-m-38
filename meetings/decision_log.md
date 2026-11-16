@@ -12,8 +12,8 @@ Danh tính và thứ tự TV do chủ repo cung cấp, không suy từ tài kho�
 
 ## 1. Trạng thái hiện hành
 
-- **Kỹ thuật tuần 1: ĐẠT.** Có thiết kế, fixture29, seed636 sửa B15, 10 SQL, 10 RA, bảo mật và review dữ liệu. Bảng tuần 1 có **46 mục đủ sản phẩm/review kỹ thuật hỗ trợ**, 7 mục chờ nguồn hoặc xác nhận ở mục 6.
-- **Gate 1 chung: CHỜ REVIEW** các xác nhận còn thiếu; schema vẫn `v1-candidate`. Không tự tạo ngày họp, người duyệt, điểm đánh giá hoặc chữ ký. Có thể tiếp tục triển khai kỹ thuật tuần 2 trên giao diện hiện hành.
+- **Kỹ thuật tuần 1: ĐẠT.** Có thiết kế, fixture29, seed636 sửa B15, 10 SQL, 10 RA, bảo mật và review dữ liệu. Bảng tuần 1 có **52/53 mục hoàn thành**: 46 mục đủ sản phẩm/review kỹ thuật hỗ trợ và 6 mục đã có xác nhận chủ repo; **1 mục môi trường cá nhân TV2 hoãn sang tuần 2** (mục 6).
+- **Gate 1 chung: PASS — thiết kế v1.** Ngày tiếp nhận 16/11/2026, nguồn là chủ repo xác nhận trong chat rằng cả ba đã đồng ý khóa thiết kế và đã đối chiếu yêu cầu/thời hạn/quy cách in. Đây là xác nhận qua chủ repo, không tạo chữ ký hoặc khẳng định ngày họp.
 - Kiểm chứng độc lập do agent hỗ trợ theo yêu cầu chủ repo: **146/146** trước PR #1 (144 chức năng + 2 tái hiện), **96/96** tuần 1 (95 chức năng + 1 tái hiện B15). Phép tái hiện PASS xác nhận lỗi/giới hạn cũ, không có nghĩa lỗi đó hợp lệ.
 - PR #1–#4 đã merge. [PR #4](https://github.com/Linhlss/CSDL-Nh-m-38/pull/4) tích hợp nháp Chương 4/6 tại `12994f106ad9993c0ddf0ff9069bf21268352bd8`. Các nhánh phụ đã dọn; hướng dẫn hiện hành dùng `main`.
 - Tuần 2 ưu tiên ràng buộc/transaction của TV1, Chương 3.5/5 của TV2 và bốn kết quả RA còn thiếu trên seed636 của TV3. Lịch và người review nằm trong checklist; ảnh chính thức theo lịch 24/11.
@@ -23,7 +23,7 @@ Danh tính và thứ tự TV do chủ repo cung cấp, không suy từ tài kho�
 | ID | Chủ đề | Quyết định kỹ thuật đã dùng | Ảnh hưởng / căn cứ |
 |---|---|---|---|
 | DEC01 | Phạm vi | Một phường mô phỏng; giữ 7 bảng, 3 loại biến động, 6 nhóm chức năng | Theo đề cương và yêu cầu người dùng hoàn tất đúng tuần 1 |
-| DEC02 | Phiên bản | `v1-candidate`; giữ nguyên cấu trúc SQL v0, chỉ bổ sung chú thích bàn giao | Không buộc TV2/TV3 đổi cột hoặc viết lại JOIN |
+| DEC02 | Phiên bản | Thiết kế `v1`, chốt theo xác nhận chủ repo tiếp nhận 16/11/2026; giữ nguyên cấu trúc SQL v0 | Không đổi cột/JOIN hoặc byte đầu vào kiểm chứng; chú thích ngày 11/11 trong SQL giữ lịch sử bản v1-candidate |
 | DEC03 | Thời gian | Ngày cuối bao gồm; NULL chưa có ngày kết thúc; truy vấn hiện lực xét cả đầu và cuối | B04–B05; d=20/11/2026 cho đối chiếu |
 | DEC04 | Ngày chuyển | Ngày chuyển t là ngày bắt đầu nơi mới/không còn ở nơi cũ; cũ kết thúc t−1, mới bắt đầu t | B09; ví dụ và ca D17–D20 đã viết |
 | DEC05 | Chồng lấn | Cấm cùng người+cùng loại; cho hai loại khác nhau đồng thời theo mô phỏng | B06; COUNT DISTINCT khi thống kê người |
@@ -36,17 +36,17 @@ Danh tính và thứ tự TV do chủ repo cung cấp, không suy từ tài kho�
 | DEC12 | Chuẩn hóa | Hoàn thiện phân tích khóa/FD; công bố riêng điểm dư thừa ngày sự kiện theo B09 | Không tuyên bố tuyệt đối 3NF cho mọi phụ thuộc có điều kiện; reviewer chốt luận chứng cuối tuần 2 |
 | DEC13 | C1 / kết thúc đợt, 16/11 | Nhập/hiệu chỉnh lịch sử hoặc hết hạn tạm trú không phát sinh chuyển chỗ có thể kết thúc đợt không CHUYEN_DI; chuyển thực tế vẫn dùng P4/P5 và giữ B08–B09 | QRA09/QSQL07 dựa vào ngày của đợt; các ca C1 trong log tuần1 đã chạy |
 
-Các quyết định trên là cơ sở triển khai đã dùng trong repo; chưa thay phê duyệt cả nhóm. Quy tắc và tên cột chi tiết nằm ở [đặc tả](../docs/03_dac_ta_nghiep_vu.md), [từ điển/chuẩn hóa](../docs/04_data_dictionary_va_chuan_hoa.md) và [ma trận 20 câu hỏi](../docs/07_ma_tran_truy_van_va_review.md).
+Các quyết định trên là cơ sở thiết kế v1 được cả nhóm đồng ý theo xác nhận chủ repo tiếp nhận ngày 16/11/2026. Phê duyệt Gate 1 không nghiệm thu thay phần ràng buộc nâng cao, seed cuối hoặc báo cáo tuần 2–3. Quy tắc và tên cột chi tiết nằm ở [đặc tả](../docs/03_dac_ta_nghiep_vu.md), [từ điển/chuẩn hóa](../docs/04_data_dictionary_va_chuan_hoa.md) và [ma trận 20 câu hỏi](../docs/07_ma_tran_truy_van_va_review.md).
 
 <a id="week1-ledger"></a>
 
 ## 3. Đối chiếu đủ 53 mã tuần 1
 
-Mỗi mã chỉ có một dòng. Trạng thái giữ nguyên khi gộp; reviewer kỹ thuật hỗ trợ là agent, xác nhận thật của TV3 truy được qua PR #2. Checkbox tuần 1 ở checklist phản ánh các dòng bắt đầu bằng “Đạt”; không tự thay lời phê duyệt của thành viên.
+Mỗi mã chỉ có một dòng. Reviewer kỹ thuật hỗ trợ là agent, xác nhận thật của TV3 truy được qua PR #2; sáu mục xác nhận bổ sung đóng theo lời chủ repo tiếp nhận 16/11/2026. Mục máy cá nhân TV2 được ghi riêng là hoãn sang W2-T2-01. Checkbox tuần 1 ở checklist phản ánh các dòng bắt đầu bằng “Đạt”; không tự thay lời phê duyệt của thành viên.
 
 | Mã | Người phụ trách | Nội dung | Sản phẩm / bằng chứng | Trạng thái |
 |---|---|---|---|---|
-| W1-T1-01 | TV1 | 10/11 · Xác nhận đầu vào | [01_de_cuong.md](../docs/01_de_cuong.md); [03_dac_ta_nghiep_vu.md](../docs/03_dac_ta_nghiep_vu.md) | Chờ đối chiếu thông báo gốc; đề cương và phạm vi đã có |
+| W1-T1-01 | TV1 | 10/11 · Xác nhận đầu vào | [01_de_cuong.md](../docs/01_de_cuong.md); [03_dac_ta_nghiep_vu.md](../docs/03_dac_ta_nghiep_vu.md) | Đạt đối chiếu thông báo gốc theo xác nhận chủ repo trong chat, tiếp nhận 16/11/2026; bản thông báo chưa lưu trong repo |
 | W1-T1-02 | TV1 | 10/11 · Chốt thuật ngữ | [03_dac_ta_nghiep_vu.md](../docs/03_dac_ta_nghiep_vu.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
 | W1-T1-03 | TV1 | 10–11/11 · Mô tả bối cảnh và tác nhân | [03_dac_ta_nghiep_vu.md](../docs/03_dac_ta_nghiep_vu.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
 | W1-T1-04 | TV1 | 11/11 · Đặc tả P1–P6 | [03_dac_ta_nghiep_vu.md](../docs/03_dac_ta_nghiep_vu.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
@@ -64,9 +64,9 @@ Mỗi mã chỉ có một dòng. Trạng thái giữ nguyên khi gộp; reviewer
 | W1-T1-16 | TV1 | 14/11 · Kiểm tra các ràng buộc còn thiếu | [02_constraints.sql](../sql/02_constraints.sql); [week1_design_cases.md](../tests/week1_design_cases.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
 | W1-T1-17 | TV1 | 14/11 · Đối chiếu truy vấn | [07_ma_tran_truy_van_va_review.md](../docs/07_ma_tran_truy_van_va_review.md); [05_ke_hoach_du_lieu_va_sql.md](../docs/05_ke_hoach_du_lieu_va_sql.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
 | W1-T1-18 | TV1 | 14–15/11 · Hoàn thiện Chương 1–3 dạng bản nháp | [02_bao_cao_suon.md](../docs/02_bao_cao_suon.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
-| W1-T1-19 | TV1 | 15/11 · Tổ chức Gate 1 | [decision_log.md](../meetings/decision_log.md) | Hồ sơ họp đã chuẩn bị; chờ biên bản/xác nhận thực tế |
-| W1-T1-20 | TV1 | 15/11 · Phát hành schema v1 | [phiên bản và Gate 1](decision_log.md#gate1) | Bộ v1-candidate sẵn sàng; chờ đồng ý chung để khóa v1 |
-| W1-T2-01 | TV2 | 10–11/11 · Thiết lập máy | [week1_environment.md](../tests/week1_environment.md); [week1_execution_results.json](../tests/week1_execution_results.json) | Môi trường chung đã đạt; chờ xác nhận máy cá nhân TV2 |
+| W1-T1-19 | TV1 | 15/11 · Tổ chức Gate 1 | [decision_log.md](../meetings/decision_log.md) | Đạt review Gate 1 theo chủ repo xác nhận cả ba đã đồng ý, tiếp nhận 16/11/2026; không ghi ngày họp hoặc chữ ký giả |
+| W1-T1-20 | TV1 | 15/11 · Phát hành schema v1 | [phiên bản và Gate 1](decision_log.md#gate1) | Đạt phát hành thiết kế v1 theo xác nhận chủ repo tiếp nhận 16/11/2026; giữ nguyên schema |
+| W1-T2-01 | TV2 | 10–11/11 · Thiết lập máy | [week1_environment.md](../tests/week1_environment.md); [week1_execution_results.json](../tests/week1_execution_results.json) | Hoãn theo yêu cầu chủ repo 16/11/2026 sang W2-T2-01; TV2 dùng Windows, chưa rõ PostgreSQL/công cụ/kết quả kết nối cá nhân |
 | W1-T2-02 | TV2 | 11/11 · Đọc schema v0 | [05_ke_hoach_du_lieu_va_sql.md](../docs/05_ke_hoach_du_lieu_va_sql.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
 | W1-T2-03 | TV2 | 11/11 · Chốt danh sách QSQL01–10 | [05_ke_hoach_du_lieu_va_sql.md](../docs/05_ke_hoach_du_lieu_va_sql.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
 | W1-T2-04 | TV2 | 11–12/11 · Ma trận truy vấn–bảng | [05_ke_hoach_du_lieu_va_sql.md](../docs/05_ke_hoach_du_lieu_va_sql.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
@@ -79,7 +79,7 @@ Mỗi mã chỉ có một dòng. Trạng thái giữ nguyên khi gộp; reviewer
 | W1-T2-11 | TV2 | 13–14/11 · Ma trận S01–S16 | [test_scenarios.md](../tests/test_scenarios.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
 | W1-T2-12 | TV2 | 14/11 · Lập kế hoạch test S17–S21 | [test_scenarios.md](../tests/test_scenarios.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
 | W1-T2-13 | TV2 | 14/11 · Review ERD với TV1 | [05_ke_hoach_du_lieu_va_sql.md](../docs/05_ke_hoach_du_lieu_va_sql.md); [review dữ liệu](decision_log.md#review-data) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
-| W1-T2-14 | TV2 | 15/11 · Bàn giao kế hoạch | [05_ke_hoach_du_lieu_va_sql.md](../docs/05_ke_hoach_du_lieu_va_sql.md) | Đủ bộ bàn giao; chờ xác nhận cá nhân TV2/Gate1 |
+| W1-T2-14 | TV2 | 15/11 · Bàn giao kế hoạch | [05_ke_hoach_du_lieu_va_sql.md](../docs/05_ke_hoach_du_lieu_va_sql.md) | Đạt bộ bàn giao và xác nhận đồng ý thiết kế của cả nhóm qua chủ repo, tiếp nhận 16/11/2026 |
 | W1-T3-01 | TV3 | 10–11/11 · Đọc đề bài và schema | [06a_dai_so_quan_he.md](../docs/06a_dai_so_quan_he.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
 | W1-T3-02 | TV3 | 11/11 · Chốt QRA01–10 | [06a_dai_so_quan_he.md](../docs/06a_dai_so_quan_he.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
 | W1-T3-03 | TV3 | 11–12/11 · Ma trận toán tử | [06a_dai_so_quan_he.md](../docs/06a_dai_so_quan_he.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
@@ -96,8 +96,8 @@ Mỗi mã chỉ có một dòng. Trạng thái giữ nguyên khi gộp; reviewer
 | W1-T3-14 | TV3 | 15/11 · Bàn giao đặc tả | [06a_dai_so_quan_he.md](../docs/06a_dai_so_quan_he.md); [06b_bao_mat.md](../docs/06b_bao_mat.md); [review TV3](decision_log.md#review-tv3) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
 | W1-G-01 | Cả nhóm | Kickoff, vai trò và thông tin nhóm | [02_bao_cao_suon.md](../docs/02_bao_cao_suon.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
 | W1-G-02 | Cả nhóm | Repo và quyền cộng tác | [README.md](../README.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
-| W1-G-03 | Cả nhóm | Đối soát chung 10 RA/10 SQL | [week1_execution_results.json](../tests/week1_execution_results.json); [decision_log.md](../meetings/decision_log.md) | Đối soát kỹ thuật đạt; chờ xác nhận cuộc review chung |
-| W1-G-04 | Cả nhóm | Biên bản Gate 1 | [decision_log.md](../meetings/decision_log.md) | Biên bản kỹ thuật sẵn sàng; chờ phê duyệt Gate1 thật |
+| W1-G-03 | Cả nhóm | Đối soát chung 10 RA/10 SQL | [week1_execution_results.json](../tests/week1_execution_results.json); [decision_log.md](../meetings/decision_log.md) | Đạt đối soát kỹ thuật; nhóm đồng ý thiết kế theo xác nhận chủ repo tiếp nhận 16/11/2026 |
+| W1-G-04 | Cả nhóm | Biên bản Gate 1 | [decision_log.md](../meetings/decision_log.md) | Đạt Gate 1 theo xác nhận chủ repo trong chat, tiếp nhận 16/11/2026; không tạo ngày họp hoặc chữ ký |
 | W1-G-05 | Cả nhóm | Bàn giao giao diện dữ liệu | [phiên bản và Gate 1](decision_log.md#gate1); [05_ke_hoach_du_lieu_va_sql.md](../docs/05_ke_hoach_du_lieu_va_sql.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
 
 <a id="review-tv3"></a>
@@ -199,25 +199,33 @@ Container không publish cổng, dữ liệu tmpfs; bốn DB review riêng, ch�
 
 <a id="gate1"></a>
 
-## 6. Xác nhận còn thiếu và các Gate tiếp theo
+## 6. Xác nhận Gate 1 và phần chuyển sang tuần 2
 
-| Mã còn chờ | Nguồn/xác nhận cần bổ sung |
+Bảng trạng thái hiện hành dưới đây là nguồn cho script kiểm tra và manifest; các đoạn review ngày 11–13/11 phía trên giữ lịch sử, không dùng để suy ngược trạng thái mới.
+
+| Trường | Giá trị |
 |---|---|
-| `W1-T1-01` | Đối chiếu thông báo yêu cầu gốc; ảnh danh sách nhóm chỉ chứng minh thông tin nhóm. |
-| `W1-T1-19` | Cuộc review/họp thật, người tham gia và ngày xác nhận. |
-| `W1-T1-20` | Đồng ý chung để khóa v1 từ v1-candidate. |
-| `W1-T2-01` | OS/công cụ/SELECT version từ máy cá nhân TV2; môi trường Docker chung đã có. |
-| `W1-T2-14` | TV2 xác nhận schema đủ cho dữ liệu/SQL và bộ bàn giao. |
-| `W1-G-03` | Nhóm xác nhận kết quả đối soát chung; kiểm chứng kỹ thuật đã có. |
-| `W1-G-04` | Người/ngày duyệt biên bản Gate 1. |
+| Gate 1 | PASS |
+| Phiên bản thiết kế | v1 |
+| Ngày tiếp nhận | 16/11/2026 |
+| Nguồn xác nhận | Chủ repo xác nhận trong chat ngày 16/11/2026 |
+| Thành viên đồng ý | TV1, TV2, TV3 — theo xác nhận chủ repo |
 
-Bảng này giải thích bảy mục còn chờ, không tạo một bảng ledger thứ hai. TV3 đã xác nhận ERD, cây chức năng, 10 RA/B1/B2; TV2 và phê duyệt chung vẫn chờ. Không điền giả thông báo, máy cá nhân hoặc lời đồng ý. Chuẩn hóa tuần 1 đã công bố dư thừa ngày sự kiện; chốt luận chứng cuối theo DEC12 ở tuần 2.
+Chủ repo trả lời “có” cho việc cả ba đã đồng ý bộ thiết kế/khóa v1, và “có” cho việc nhóm đã đối chiếu thông báo gốc, yêu cầu, hạn nộp 27/11/2026 tiết 3 và quy cách in hiện ghi trong repo. Ngày 16/11 là ngày tiếp nhận xác nhận, không suy ra đó là ngày nhóm họp. Bản thông báo gốc chưa lưu trong repo; không coi ảnh danh sách nhóm là thông báo yêu cầu. Không tạo chữ ký cá nhân, điểm đánh giá hoặc xác nhận nghiệm thu tuần 2–3.
+
+Sáu mục đã đóng: `W1-T1-01`, `W1-T1-19`, `W1-T1-20`, `W1-T2-14`, `W1-G-03`, `W1-G-04`. Kết quả là **52/53 mục tuần 1 hoàn thành, 1 mục hoãn**; Gate 1 được chốt theo xác nhận thiết kế, phần hoãn được chuyển rõ sang tuần 2.
+
+| Mục hoãn | Thông tin đã biết | Phần cần bổ sung | Tiếp nhận |
+|---|---|---|---|
+| `W1-T2-01` | Windows, do chủ repo cung cấp 16/11/2026 | Phiên bản PostgreSQL, công cụ quản trị, kết quả kết nối/SELECT version() từ máy TV2 chưa có | `W2-T2-01`, TV2 bổ sung khi sử dụng theo yêu cầu chủ repo |
+
+Lời chủ repo về môi trường: “windows, phiên bản không biết, khi nào dùng thì sửa sau”. Mục này giữ checkbox chưa hoàn thành; không ghi rằng TV2 đã cài/kết nối thành công. [Môi trường chung PostgreSQL17.11](../tests/week1_environment.md) là kết quả kỹ thuật riêng, không gán thành phiên bản trên máy Windows TV2. Luận chứng chuẩn hóa cuối và cơ chế xuyên bảng tiếp tục tuần 2 theo DEC12.
 
 | Gate | Hạn | Sản phẩm và người xác nhận |
 |---|---|---|
 | G2 | 22/11 | Ràng buộc/transaction, dữ liệu, 10 SQL, 10 RA, B1/B2 và lỗi còn lại có owner/hạn; cả ba xác nhận. |
 | G3 | 24/11 | Rebuild DB sạch, đối soát, demo quyền thật, log và ảnh minh chứng. |
 | G4 | 26/11 | Báo cáo/PDF/bản in, đánh giá/chữ ký và tập dượt. |
-| Nộp | 27/11, tiết 3 | Theo kế hoạch nhóm; TV1 điều phối, đối chiếu thông báo gốc khi bổ sung. |
+| Nộp | 27/11, tiết 3 | TV1 điều phối; yêu cầu/thời hạn đã được chủ repo xác nhận nhóm đối chiếu ngày16/11. |
 
 Quyền repo kiểm tra 16/11: Linhlss admin, Ngocdeezet write, ninhdn07 write. Chỉ giữ main sau tích hợp; không đếm nhiều nhánh chứa cùng commit thành đóng góp mới. Toàn bộ hồ sơ trước khi gộp có trong [lịch sử tại 12994f1](https://github.com/Linhlss/CSDL-Nh-m-38/tree/12994f106ad9993c0ddf0ff9069bf21268352bd8). Nhật ký giữ kết luận/nguồn và trạng thái; công thức, SQL, dữ liệu, fixture, log gốc và sơ đồ tiếp tục là sản phẩm kỹ thuật chính.

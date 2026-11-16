@@ -12,7 +12,7 @@ Xây dựng CSDL quản lý cư dân và biến động cư trú tại một ph�
 
 ## Hiện trạng và việc tiếp theo
 
-**Kỹ thuật tuần 1 đã hoàn thiện.** Repo có schema 7 bảng/35 cột, fixture29, seed636, 10 SQL, 10 RA và B1/B2; nháp Chương 4/6 đã merge. Log tuần 1 đạt 96/96 (95 kiểm tra chức năng + 1 tái hiện B15 cũ). 46/53 mục tuần 1 đủ sản phẩm/review kỹ thuật; 7 mục nguồn/xác nhận còn chờ được giữ tại [nhật ký chung](meetings/decision_log.md#gate1), Gate 1 chưa tự ghi PASS.
+**Kỹ thuật tuần 1 đã hoàn thiện.** Repo có schema 7 bảng/35 cột, fixture29, seed636, 10 SQL, 10 RA và B1/B2; nháp Chương 4/6 đã merge. Log tuần 1 đạt 96/96 (95 kiểm tra chức năng + 1 tái hiện B15 cũ). **Gate 1 PASS, thiết kế v1** theo xác nhận chủ repo tiếp nhận 16/11/2026: cả ba đã đồng ý thiết kế và đã đối chiếu yêu cầu/thời hạn/quy cách in. **52/53 mục tuần 1 hoàn thành, 1 mục môi trường cá nhân TV2 hoãn sang W2-T2-01**; TV2 dùng Windows, phiên bản PostgreSQL/công cụ/kết quả kết nối chưa có. [Nguồn xác nhận và phần hoãn](meetings/decision_log.md#gate1).
 
 **Tuần 2 — 16–22/11:**
 

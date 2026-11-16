@@ -6,6 +6,8 @@
 
 > Cập nhật 15/11/2026 bởi agent hỗ trợ TV1: làm rõ C1 ở P3/chức năng 3.2, đồng bộ ý nghĩa đợt–sự kiện và phạm vi chuẩn hóa nháp. Giữ nguyên schema; không thay lời xác nhận hoặc chữ ký của thành viên.
 
+> Thiết kế v1/Gate 1 PASS theo xác nhận chủ repo tiếp nhận16/11/2026; [nguồn xác nhận](../meetings/decision_log.md#gate1). Đây là chốt thiết kế, các chương/kết quả/ảnh và chữ ký báo cáo cuối tiếp tục theo tuần 2–3.
+
 ## TRANG BÌA
 
 - Mã lớp: 174356

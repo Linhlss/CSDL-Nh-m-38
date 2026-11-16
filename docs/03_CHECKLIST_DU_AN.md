@@ -10,13 +10,13 @@
 > **Nền kỹ thuật:** PostgreSQL >= 15, mô hình 7 bảng; seed hiện hành 636 dòng giả lập 100%. ~643 là dự kiến ban đầu, không phải yêu cầu bắt buộc.
 > **Cập nhật điều hành:** 16/11/2026. Giữ 142 mã việc gốc; bằng chứng kỹ thuật và phê duyệt nhóm được ghi riêng.
 
-> **Tuần 1 đã hoàn thiện kỹ thuật:** 46/53 mục đủ sản phẩm/review hỗ trợ; 7 mục chờ nguồn hoặc xác nhận. [Nhật ký chung](../meetings/decision_log.md#week1-ledger) là bảng đối chiếu duy nhất; không tự ký Gate 1 PASS. [Phần tuần 2](#tuan-2-hien-hanh) bên dưới nêu việc tiếp theo.
+> **Tuần 1 đã hoàn thiện kỹ thuật:** 52/53 mục hoàn thành; W1-T2-01 hoãn sang W2-T2-01 theo yêu cầu chủ repo. [Nhật ký chung](../meetings/decision_log.md#week1-ledger) là bảng đối chiếu duy nhất. Gate 1 PASS, thiết kế v1 theo chủ repo xác nhận trong chat, tiếp nhận 16/11/2026; không tạo chữ ký hoặc ngày họp. [Phần tuần 2](#tuan-2-hien-hanh) bên dưới nêu việc tiếp theo.
 
 ---
 
 ## A. HƯỚNG DẪN SỬ DỤNG — QUY ƯỚC HOÀN THÀNH
 
-- Dấu `[ ]`: chưa đủ điều kiện nghiệm thu của mục; `[x]`: có sản phẩm, kiểm chứng và nguồn review được ghi rõ. Tuần 1 dùng kết luận review kỹ thuật hỗ trợ trong nhật ký; checkbox này không thay phê duyệt cá nhân hoặc Gate của nhóm. Tuần 2–3 chưa tự tích chỉ vì có mã hoặc nháp.
+- Dấu `[ ]`: chưa đủ điều kiện nghiệm thu của mục; `[x]`: có sản phẩm, kiểm chứng và nguồn review được ghi rõ. Tuần 1 dùng kết luận review kỹ thuật và xác nhận chủ repo đã lưu trong nhật ký; phần hoãn giữ `[ ]` kèm mã tiếp nhận, không tính hoàn thành. Tuần 2–3 chưa tự tích chỉ vì có mã hoặc nháp.
 - Mã công việc có dạng `W1-T1-01` = tuần 1, thành viên 1, việc 01. **Owner** là người làm và sửa lỗi; **Reviewer** được ghi theo cụm công việc; làm xong phải gửi đường dẫn commit/PR hoặc file và kết quả kiểm tra.
 - Trạng thái nên ghi tại GitHub Issues/PR: `TODO → DOING → REVIEW → DONE`, hoặc ghi trong `meetings/decision_log.md`. Checklist này vẫn dùng `[ ] / [x]` để hoạt động ngay trên GitHub.
 - **Mỗi người tự viết phần báo cáo của mình**, TV1 kiểm tra định dạng và tích hợp; không đẩy phần viết chương 4–6 sang TV1.
@@ -37,7 +37,7 @@ Schema/ERD/từ điển đã thống nhất về cấu trúc 7 bảng/35 cột. 
 | `diagrams/phan_ra_chuc_nang.drawio` và `.png` | TV1 | Sơ đồ phân rã chức năng chính thức |
 | `diagrams/erd_v1.drawio` và `.png` | TV1 | Mô hình ER chính thức, 7 thực thể/quan hệ |
 | `docs/04_data_dictionary_va_chuan_hoa.md` | TV1 | 7 bảng, thuộc tính, PK/FK/CK, ánh xạ, phụ thuộc hàm, 3NF |
-| `sql/01_schema.sql` | TV1 | CREATE TABLE hiện hành, v1-candidate chờ phê duyệt nhóm |
+| `sql/01_schema.sql` | TV1 | CREATE TABLE thiết kế v1, chốt theo xác nhận chủ repo tiếp nhận16/11 |
 | `sql/02_constraints.sql` | TV1 | Ràng buộc liên bảng và thời gian, kèm giải thích/SQL kiểm thử |
 | `docs/05_ke_hoach_du_lieu_va_sql.md` | TV2 | 10 câu SQL, dữ liệu cần cho từng câu, kịch bản sinh dữ liệu |
 | `scripts/generate_data.py` | TV2 | Sinh dữ liệu giả lập có seed cố định và kiểm tra quan hệ |
@@ -70,13 +70,13 @@ Schema/ERD/từ điển đã thống nhất về cấu trúc 7 bảng/35 cột. 
 
 # TUẦN 1 — 10–15/11: ĐẶC TẢ, THIẾT KẾ VÀ KHÓA SCHEMA (G1)
 
-**Kết quả kỹ thuật đã chốt ngày 16/11:** thiết kế, tài liệu và kiểm chứng đã có; giữ nguyên 53 mã cùng trạng thái theo nhật ký. Các mục chưa tích dưới đây còn chờ nguồn/xác nhận; phần triển khai tiếp theo nằm ở tuần 2.
+**Kết quả kỹ thuật đã chốt ngày 16/11:** thiết kế, tài liệu và kiểm chứng đã có; giữ nguyên 53 mã cùng trạng thái theo nhật ký. Gate 1 đã chốt ngày tiếp nhận16/11 theo xác nhận chủ repo; chỉ W1-T2-01 còn chưa tích vì được hoãn sang tuần 2.
 
 ## W1 / TV1 — Trưởng nhóm, nghiệp vụ, ERD, lược đồ quan hệ
 
 **Reviewer chính: TV2 kiểm tra tính khả thi SQL/dữ liệu; TV3 kiểm tra quan hệ, đại số và bảo mật.**
 
-- [ ] **W1-T1-01 · 10/11 · Xác nhận đầu vào:** Đọc thông báo cô, đối chiếu 6 yêu cầu chuyên môn và hình thức; ghi rõ **không bắt buộc website/dataset thực**, không bỏ sót 10 RA, 10 SQL, 2 bảo mật. **Bàn giao:** phần phạm vi/mục tiêu trong `docs/03_dac_ta_nghiep_vu.md`.
+- [x] **W1-T1-01 · 10/11 · Xác nhận đầu vào:** Đọc thông báo cô, đối chiếu 6 yêu cầu chuyên môn và hình thức; ghi rõ **không bắt buộc website/dataset thực**, không bỏ sót 10 RA, 10 SQL, 2 bảo mật. **Bàn giao:** phần phạm vi/mục tiêu trong `docs/03_dac_ta_nghiep_vu.md`.
 - [x] **W1-T1-02 · 10/11 · Chốt thuật ngữ:** Định nghĩa “cư dân”, “nhóm hộ cư trú”, “địa chỉ”, “tổ dân phố”, “đợt cư trú”, “biến động”, “ngày tham chiếu”; phân biệt **nhóm hộ** với quan hệ huyết thống. **Đạt:** không dùng cùng một thuật ngữ với hai nghĩa.
 - [x] **W1-T1-03 · 10–11/11 · Mô tả bối cảnh và tác nhân:** Viết bài toán thực tế, mục tiêu, người sử dụng (cán bộ nhập, thống kê, quản trị), các tác vụ được phép; liệt kê rõ phạm vi loại trừ. **Đạt:** đọc độc lập hiểu hệ thống làm gì/không làm gì.
 - [x] **W1-T1-04 · 11/11 · Đặc tả P1–P6:** Với mỗi quy trình quản lý địa bàn, thêm cư dân, mở đợt, chuyển đến, chuyển đi/chuyển nội bộ, tra cứu/thống kê, mô tả **đầu vào → điều kiện → xử lý → đầu ra → bảng đọc/ghi → lỗi có thể gặp**. **Bàn giao:** bảng 6 quy trình.
@@ -94,8 +94,8 @@ Schema/ERD/từ điển đã thống nhất về cấu trúc 7 bảng/35 cột. 
 - [x] **W1-T1-16 · 14/11 · Kiểm tra các ràng buộc còn thiếu:** Lập danh sách việc phải làm ở `02_constraints.sql`: chống khoảng chồng lấn cùng loại, cùng cư dân ở sự kiện nội bộ, ngày biến động phù hợp, transaction; ghi phương án khả thi (exclusion constraint/trigger + test) và giới hạn.
 - [x] **W1-T1-17 · 14/11 · Đối chiếu truy vấn:** Nhờ TV2 và TV3 chỉ rõ 10 SQL/10 RA có thiếu trường, thiếu quan hệ, thiếu trường hợp kiểm thử hay không; xử lý phản hồi **trước khi sinh dữ liệu**.
 - [x] **W1-T1-18 · 14–15/11 · Hoàn thiện Chương 1–3 dạng bản nháp:** Chương 1 (nghiệp vụ/chức năng), Chương 2 (ERD), Chương 3 (ánh xạ/bảng/ràng buộc/3NF); gắn TODO rõ cho phần dữ liệu do TV2 làm sau.
-- [ ] **W1-T1-19 · 15/11 · Tổ chức Gate 1:** Họp 3 người, chốt quyết định về quy tắc thời gian, sơ đồ, tên bảng/cột và 10+10 câu hỏi; ghi `meetings/decision_log.md` kèm reviewer, ngày, file/commit.
-- [ ] **W1-T1-20 · 15/11 · Phát hành schema v1:** Gắn nhãn `schema v1` trong tài liệu/commit và thông báo TV2/TV3; từ đây mọi đổi khóa/cột phải có đồng ý chung. **Đạt:** TV2/TV3 xác nhận có thể triển khai trên v1.
+- [x] **W1-T1-19 · 15/11 · Tổ chức Gate 1:** Review cả ba qua họp hoặc xác nhận bằng văn bản, chốt quyết định về quy tắc thời gian, sơ đồ, tên bảng/cột và 10+10 câu hỏi; ghi `meetings/decision_log.md` kèm reviewer, ngày, file/commit.
+- [x] **W1-T1-20 · 15/11 · Phát hành schema v1:** Gắn nhãn `schema v1` trong tài liệu/commit và thông báo TV2/TV3; từ đây mọi đổi khóa/cột phải có đồng ý chung. **Đạt:** TV2/TV3 xác nhận có thể triển khai trên v1.
 
 **Bộ bàn giao tuần 1 của TV1:** `docs/03_dac_ta_nghiep_vu.md`, `diagrams/phan_ra_chuc_nang.*`, `diagrams/erd_v1.*`, `docs/04_data_dictionary_va_chuan_hoa.md`, `sql/01_schema.sql` (v1), phần Chương 1–3 bản nháp, biên bản Gate 1.
 
@@ -103,7 +103,7 @@ Schema/ERD/từ điển đã thống nhất về cấu trúc 7 bảng/35 cột. 
 
 **Reviewer chính: TV1 kiểm tra thống nhất schema; TV3 soát bao phủ câu hỏi và test.**
 
-- [ ] **W1-T2-01 · 10–11/11 · Thiết lập máy:** Cài PostgreSQL >= 15 và pgAdmin/DBeaver (hoặc CLI); ghi hệ điều hành, bản PostgreSQL, công cụ quản trị; xác nhận kết nối DB thử và chạy `SELECT version();`.
+- [ ] **W1-T2-01 · 10–11/11 · Thiết lập máy:** Cài PostgreSQL >= 15 và pgAdmin/DBeaver (hoặc CLI); ghi hệ điều hành, bản PostgreSQL, công cụ quản trị; xác nhận kết nối DB thử và chạy `SELECT version();`. **Hoãn theo yêu cầu chủ repo 16/11/2026:** đã biết Windows; phiên bản/công cụ/kết quả kết nối chuyển sang W2-T2-01, chưa tính hoàn thành.
 - [x] **W1-T2-02 · 11/11 · Đọc schema v0:** Kiểm tra 7 bảng, khóa PK/FK, miền giá trị, `CHECK`; liệt kê cột nào cần TV1 giải thích trước khi sinh dữ liệu; không tự sửa quan hệ trong repo.
 - [x] **W1-T2-03 · 11/11 · Chốt danh sách QSQL01–10:** Với từng câu, viết **câu hỏi tiếng Việt có ý nghĩa nghiệp vụ**, bảng sử dụng, thuộc tính hiển thị, tiêu chí lọc, thứ tự kết quả nếu cần; không chỉ ghi tên kỹ thuật SQL.
 - [x] **W1-T2-04 · 11–12/11 · Ma trận truy vấn–bảng:** Tạo bảng 10 hàng cho QSQL01–10, cột `bảng`, `JOIN`, `WHERE`, `GROUP BY/HAVING`, `EXISTS`, `LEFT JOIN`, dữ liệu bắt buộc; phát hiện câu nào trùng ý nghĩa hoặc quá đơn giản.
@@ -116,7 +116,7 @@ Schema/ERD/từ điển đã thống nhất về cấu trúc 7 bảng/35 cột. 
 - [x] **W1-T2-11 · 13–14/11 · Ma trận S01–S16:** Với mỗi kịch bản dương, xác định ID test, điều kiện đầu vào, dữ liệu cần có, kết quả dự kiến, QSQL/QRA được kiểm chứng; điền rõ trong `tests/test_scenarios.md` hoặc tài liệu riêng.
 - [x] **W1-T2-12 · 14/11 · Lập kế hoạch test S17–S21:** Tách trách nhiệm: S17–S19 kiểm tra lỗi toàn vẹn TV1 chủ trì; S20–S21 là bảo mật TV3; TV2 hỗ trợ ghi kết quả kiểm thử.
 - [x] **W1-T2-13 · 14/11 · Review ERD với TV1:** Soát `JOIN` từ cư dân đến tổ dân phố, kết nối đôi của sự kiện nội bộ, yêu cầu nhóm hộ không có ai và địa chỉ không có hộ; lập danh sách lỗi/đề nghị sửa có dẫn chứng.
-- [ ] **W1-T2-14 · 15/11 · Bàn giao kế hoạch:** Nộp `docs/05_ke_hoach_du_lieu_va_sql.md` gồm QSQL01–10, ma trận test, hướng sinh dữ liệu, cách nạp; xác nhận schema v1 đủ điều kiện code.
+- [x] **W1-T2-14 · 15/11 · Bàn giao kế hoạch:** Nộp `docs/05_ke_hoach_du_lieu_va_sql.md` gồm QSQL01–10, ma trận test, hướng sinh dữ liệu, cách nạp; xác nhận schema v1 đủ điều kiện code.
 
 **Bộ bàn giao tuần 1 của TV2:** Xác nhận môi trường, `docs/05_ke_hoach_du_lieu_va_sql.md`, ma trận QSQL–S01…S21, nhận xét ERD, xác nhận Gate 1. **Chưa yêu cầu TV2 viết xong 10 SQL hoặc 643 bản ghi trong tuần 1.**
 
@@ -145,8 +145,8 @@ Schema/ERD/từ điển đã thống nhất về cấu trúc 7 bảng/35 cột. 
 
 - [x] **W1-G-01 · G0:** Điền tên, MSSV 3 thành viên, mã lớp, **số thứ tự nhóm thực tế** vào các vị trí `[TODO]`; lập người phụ trách dự phòng.
 - [x] **W1-G-02:** Tạo GitHub quyền cộng tác cho cả 3; các thư mục `.gitkeep` có thể thay bằng file thật khi làm; thống nhất đặt tên branch/commit, không ghi đè bản đang review.
-- [ ] **W1-G-03:** Họp kiểm tra xung đột: 10 QRA/10 SQL có thực hiện được trên cùng schema và dữ liệu dự kiến không? Nếu thiếu, sửa ERD và DDL trước khi khóa.
-- [ ] **W1-G-04:** Chốt và lưu **biên bản Gate 1** gồm 5 mục: đặc tả, cây chức năng, ERD, data dictionary + 3NF, schema v1 và 10+10 câu hỏi đã duyệt.
+- [x] **W1-G-03:** Họp kiểm tra xung đột: 10 QRA/10 SQL có thực hiện được trên cùng schema và dữ liệu dự kiến không? Nếu thiếu, sửa ERD và DDL trước khi khóa.
+- [x] **W1-G-04:** Chốt và lưu **biên bản Gate 1** gồm 5 mục: đặc tả, cây chức năng, ERD, data dictionary + 3NF, schema v1 và 10+10 câu hỏi đã duyệt.
 - [x] **W1-G-05:** TV1 bàn giao schema cho TV2/TV3, ghi rõ tên bảng/cột, kiểu, ngày tham chiếu, bộ kịch bản; không có thay đổi thầm lặng sau 15/11.
 
 ---
@@ -162,7 +162,7 @@ Schema/ERD/từ điển đã thống nhất về cấu trúc 7 bảng/35 cột. 
 | TV1: W2-T1-01–03 | Schema đã tạo trên DB thử; log có kiểm tra cơ bản | Dựng lại DB tuần 2, xác nhận đủ PK/FK/UNIQUE/NOT NULL/CHECK và lưu lỗi đúng; không nhận kết quả tuần 1 là kiểm chứng ràng buộc mới | TV2 + TV3 |
 | TV1: W2-T1-04–09,11–12 | Đặc tả B06/B08–B11/B14, validation E1/B09 và ca D01–D30 | **Ưu tiên:** viết 02_constraints.sql đang TODO; chống chồng lấn, kiểm tra hai đợt/ngày và chiều sửa đợt, bảo vệ lịch sử, tài khoản ghi; transaction chuyển nội bộ và rollback. Test hợp lệ, vi phạm và trạng thái trước/sau | TV2 + TV3 |
 | TV1: W2-T1-10,13–15 | Review seed sửa B15; Chương 1–3 và luận chứng chuẩn hóa nháp | Soát lại dữ liệu dưới ràng buộc mới, chốt FD/3NF với giới hạn ngày sự kiện; hoàn thiện Chương 1–3 và kiểm tra Gate 2 | TV2 + TV3 |
-| TV2: W2-T2-01–06 | Generator/seed636/fixture29, hướng dẫn nạp, reload và sequence đã kiểm chứng | Bổ sung xác nhận môi trường cá nhân nếu dùng; chạy nạp/reset/validation khi có ràng buộc mới, ghi bản ghi từng bảng và kết quả vào final_test_log | TV1 + TV3 |
+| TV2: W2-T2-01–06 | Generator/seed636/fixture29, hướng dẫn nạp, reload và sequence đã kiểm chứng | Tiếp nhận W1-T2-01: Windows đã biết, phiên bản/công cụ/kết nối cá nhân bổ sung khi sử dụng; chạy nạp/reset/validation khi có ràng buộc mới, ghi bản ghi từng bảng và kết quả vào final_test_log | TV1 + TV3 |
 | TV2: W2-T2-07–14 | 10 SQL đầy đủ, tuple khớp tiny29/seed636; sáu cặp RA/SQL đã đối soát | Rà đủ S01–S21, ca bị loại đúng và expected/actual; chạy lại sau tích hợp, xử lý lỗi và review chéo. Không viết lại 10 SQL chỉ để đổi tuần | TV1 + TV3 |
 | TV2: W2-T2-15–16 | Dữ liệu/SQL có thể dùng làm nguồn báo cáo; Chương 5 còn TODO | Viết Chương 3.5/5: câu hỏi, SQL, kết quả và nhận xét; dọn dữ liệu âm, chốt phiên bản dữ liệu/SQL cho Gate 2 | TV1 + TV3 |
 | TV3: W2-T3-01–07,11 | 10 RA/SQL kiểm chứng, review dữ liệu; sáu cặp seed636 khớp, bốn QRA khác đã đúng trên tiny29 | Lưu đủ kết quả **QRA02/03/06/08 trên seed636**; hoàn thiện bảng 10 câu và chuẩn hóa cùng mức hạt; review độ phủ S01–S16 | TV1 + TV2 |
@@ -202,7 +202,7 @@ Schema/ERD/từ điển đã thống nhất về cấu trúc 7 bảng/35 cột. 
 
 **Reviewer chính: TV3 đối soát tập kết quả; TV1 duyệt dữ liệu và sự nhất quán với schema.**
 
-- [ ] **W2-T2-01 · 16/11:** Chốt môi trường chạy, xuất hướng dẫn ngắn trong `data/README.md` về PostgreSQL/Python, thứ tự nạp và lệnh kiểm tra; không đưa thông tin đăng nhập vào GitHub public.
+- [ ] **W2-T2-01 · 16/11:** Chốt môi trường chạy, xuất hướng dẫn ngắn trong `data/README.md` về PostgreSQL/Python, thứ tự nạp và lệnh kiểm tra; không đưa thông tin đăng nhập vào GitHub public. **Nhận phần hoãn W1-T2-01:** TV2 dùng Windows; bổ sung phiên bản PostgreSQL, công cụ quản trị và kết quả kết nối/SELECT version() khi sử dụng.
 - [ ] **W2-T2-02 · 16–17/11:** Viết `scripts/generate_data.py` với seed cố định, định dạng CSV UTF-8, ID nhất quán và tham chiếu FK có tồn tại.
 - [ ] **W2-T2-03 · 17/11:** Sinh **bộ kịch bản 15–30 bản ghi kiểm chứng bằng tay** trước; viết bảng người/hộ/tổ/ngày và kết quả mong đợi cho RA/SQL tiêu biểu.
 - [ ] **W2-T2-04 · 17–18/11:** Sinh 7 tập dữ liệu mô phỏng đủ S01–S16, mục tiêu ~643 bản ghi khi cần; bảo đảm không làm mất các case âm/dương do nạp random.
@@ -463,7 +463,7 @@ Quyết định: PASS / PASS CÓ ĐIỀU KIỆN / FAIL
 - Đề cương nội bộ: `docs/01_de_cuong.md` (phạm vi, mô hình, bộ 10 RA/SQL, S01–S21).
 - Sườn báo cáo: `docs/02_bao_cao_suon.md`.
 - Giao việc ban đầu: `docs/03_CHECKLIST_DU_AN.md`.
-- DDL hiện có: `sql/01_schema.sql`; các phần còn TODO: `sql/02_constraints.sql`, `sql/03_seed.sql`, `sql/04_queries.sql`, `sql/05_security.sql`.
-- Yêu cầu chính thức về bài tập lớn, bản in và thời hạn: **ảnh thông báo giảng viên do nhóm cung cấp**. Nếu cô cập nhật yêu cầu, ưu tiên thông báo mới nhất.
+- DDL thiết kế v1: `sql/01_schema.sql`; ràng buộc nâng cao `sql/02_constraints.sql` còn TODO. Seed/10 SQL/bảo mật đã có mã và bằng chứng, nghiệm thu tuần 2 theo checklist.
+- Yêu cầu, bản in và thời hạn: nhóm đã đối chiếu thông báo gốc theo xác nhận chủ repo tiếp nhận16/11/2026; bản thông báo chưa lưu trong repo. Nếu cô cập nhật, ưu tiên thông báo mới nhất.
 
-**Cập nhật 16/11/2026:** tuần 1 hoàn thiện kỹ thuật, bảng đối chiếu53mã và các xác nhận còn chờ tập trung tại [nhật ký chung](../meetings/decision_log.md#week1-ledger). Tuần2 có bảng hiện trạng/lịch phối hợp ở trên; 142 mã và checkbox gốc được giữ, không tự nghiệm thu thay nhóm.
+**Cập nhật 16/11/2026:** Gate 1 PASS, thiết kế v1; tuần 1 có52mục hoàn thành và1mục môi trường TV2 hoãn sang W2-T2-01. Bảng53mã và nguồn xác nhận tập trung tại [nhật ký chung](../meetings/decision_log.md#week1-ledger). Tuần2 có bảng hiện trạng/lịch phối hợp ở trên; 142 mã và checkbox gốc được giữ, không tự nghiệm thu thay nhóm.

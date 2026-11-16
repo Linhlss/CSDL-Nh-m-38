@@ -1,11 +1,13 @@
 # 10 CÂU HỎI VÀ BIỂU THỨC ĐẠI SỐ QUAN HỆ (QRA01–QRA10)
 
 > **Nguồn lời giải:** TV3 · **Reviewer kỹ thuật:** TV1 · **Phiên bản:** v0.2 (bàn giao tuần 1, cập nhật 15/11/2026)
-> **Căn cứ:** `sql/01_schema.sql` v1-candidate (cấu trúc giữ nguyên v0) và mục 6 của `docs/01_de_cuong.md`.
+> **Căn cứ:** `sql/01_schema.sql` v1 (cấu trúc giữ nguyên v0) và mục 6 của `docs/01_de_cuong.md`.
 > **Phân công nhóm:** TV3 — Trần Bùi Tùng Linh, MSSV 20227057. Phần bổ sung ngày 15/11 do agent hỗ trợ kỹ thuật theo yêu cầu chủ repo; không thay lời xác nhận của thành viên hoặc suy ra chủ tài khoản GitHub từ tên người.
 > **Phạm vi:** lời giải, quy ước và đáp án trên fixture kiểm chứng tuần 1; phần kết quả chính thức/ảnh của Chương 4 tiếp tục đối soát trong tuần 2–3. Nếu đổi schema sau Gate 1, phải cập nhật đồng thời công thức, SQL kiểm chứng và expected.
 
 ---
+
+Thiết kế v1 chốt theo xác nhận chủ repo tiếp nhận16/11/2026; nguồn ở [Gate 1](../meetings/decision_log.md#gate1). Công thức/SQL kiểm chứng giữ nguyên.
 
 ## 0. Ký hiệu, quy ước và quan hệ chuẩn bị
 
@@ -26,7 +28,7 @@
 
 Đại số quan hệ cổ điển **không dùng** `COUNT`, `GROUP BY`, `ORDER BY`. Các phép `∪`, `∩`, `−` chỉ áp dụng cho hai quan hệ **khả hợp**, tức là cùng số thuộc tính và cùng miền giá trị.
 
-### 0.2. Lược đồ quan hệ (theo `01_schema.sql` v1-candidate, cấu trúc như v0)
+### 0.2. Lược đồ quan hệ (theo `01_schema.sql` v1, cấu trúc như v0)
 
 ```text
 TO_DAN_PHO(ma_to, ten_to, ghi_chu)

@@ -6,7 +6,7 @@ Hoàn thiện kỹ thuật16/11/2026 bởi agent theo yêu cầu chủ repo, ti�
 
 ## 1. Môi trường và quy ước
 
-[Môi trường chung](../tests/week1_environment.md): PostgreSQL17.11/psql, Python3.13.5, container biệt lập; [expected/actual và hash](../tests/week1_execution_results.json). Chưa có OS/công cụ/SELECT version() từ máy cá nhân TV2.
+[Môi trường chung](../tests/week1_environment.md): PostgreSQL17.11/psql, Python3.13.5, container biệt lập; [expected/actual và hash](../tests/week1_execution_results.json). Chủ repo xác nhận TV2 dùng Windows ngày16/11; phiên bản PostgreSQL, công cụ quản trị và kết quả kết nối cá nhân chưa có, hoãn từ W1-T2-01 sang W2-T2-01 để bổ sung khi sử dụng.
 
 Giữ7bảng/35cột của [DDL](../sql/01_schema.sql), không đổi khóa/quan hệ. d=`2026-11-20`; ngày cuối bao gồm. Đang ở khi bắt đầu<=d và (kết thúc NULL hoặc>=d); NULL không làm tương lai hiệu lực sớm. QSQL05/06 xét toàn bộ đợt đã ghi nhận; QSQL07 đòi đợt đã bắt đầu trước/đúngd rồi loại người còn đợt hiệu lực. Phân biệt chưa có đợt với chỉ có tương lai. DISTINCT theo mã, không theo họ tên; QSQL01 phân biệt cả loại, COUNT người dùng COUNT DISTINCT mã.
 
@@ -54,7 +54,7 @@ C1/C2 trùng tên và sinh đúng/sau ngày cắt tuổi; H1 có C1–C4, C3 có
 
 [Ma trận S01–S21](../tests/test_scenarios.md) ghi ID/expected/actual/đối chứng. TV1 chủ trì17–19; TV3 chủ trì20–21; TV2 hỗ trợ dữ liệu/log. Test cơ bản không chứng minh trigger/transaction nâng cao tuần 2 đã hoàn tất.
 
-Review kỹ thuật hỗ trợ TV2: C→Q→H→D→T, hai nhánh cũ/mới, hộ rỗng và địa chỉ không hộ đều biểu diễn được; không thiếu cột cho10SQL. Giữ E1/schema, validation0 dòng; C1 dùng ngày kết thúc làm nguồn sự thật. Xác nhận chính thức TV2/Gate1 vẫn tách riêng.
+Review kỹ thuật hỗ trợ TV2: C→Q→H→D→T, hai nhánh cũ/mới, hộ rỗng và địa chỉ không hộ đều biểu diễn được; không thiếu cột cho10SQL. Giữ E1/schema, validation0 dòng; C1 dùng ngày kết thúc làm nguồn sự thật. Gate 1 và thiết kế v1 đã được cả nhóm đồng ý theo xác nhận chủ repo tiếp nhận16/11; nguồn ở [nhật ký](../meetings/decision_log.md#gate1), tách khỏi kết quả chạy của agent.
 
 ## 5. Tiến độ và bàn giao
 

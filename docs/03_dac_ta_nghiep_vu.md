@@ -1,7 +1,7 @@
 # ĐẶC TẢ NGHIỆP VỤ — BỘ BÀN GIAO THIẾT KẾ v1
 
 **Đề tài 17:** Xây dựng cơ sở dữ liệu quản lý cư dân và biến động cư trú tại một phường mô phỏng.  
-**Owner:** TV1. **Ngày:** 11/11/2026. **Trạng thái:** hoàn thiện nội dung để bàn giao; chờ TV2/TV3 xác nhận Gate 1.  
+**Owner:** TV1. **Ngày:** 11/11/2026. **Trạng thái hiện hành:** thiết kế v1, Gate 1 PASS theo xác nhận chủ repo tiếp nhận 16/11/2026; [nguồn xác nhận](../meetings/decision_log.md#gate1).
 **Cấu trúc dữ liệu:** `sql/01_schema.sql`. **Từ điển và chuẩn hóa:** `04_data_dictionary_va_chuan_hoa.md`.
 
 **Làm rõ C1 ngày 15/11/2026:** agent hỗ trợ TV1 cập nhật phạm vi chức năng 3.2/P3 theo yêu cầu chủ repo; giữ nguyên schema. Đây là nội dung kỹ thuật để nhóm tiếp nhận, không phải xác nhận hoặc chữ ký Gate 1 thay thành viên.

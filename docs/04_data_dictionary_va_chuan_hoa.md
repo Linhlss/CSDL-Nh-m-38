@@ -1,6 +1,6 @@
 # LƯỢC ĐỒ, TỪ ĐIỂN DỮ LIỆU VÀ CHUẨN HÓA — v1
 
-**Owner:** TV1. **Ngày bàn giao:** 11/11/2026. **Phiên bản:** ứng viên v1, cấu trúc tương thích v0; chờ review chéo Gate 1.  
+**Owner:** TV1. **Ngày bàn giao:** 11/11/2026. **Phiên bản hiện hành:** v1, cấu trúc tương thích v0; Gate 1 PASS theo xác nhận chủ repo tiếp nhận 16/11/2026. [Nguồn xác nhận](../meetings/decision_log.md#gate1).
 **Nguồn cấu trúc:** `../sql/01_schema.sql`. **Nguồn ngữ nghĩa:** `03_dac_ta_nghiep_vu.md` (B01–B18).
 
 **Cập nhật kỹ thuật 15/11/2026:** agent hỗ trợ TV1 làm rõ C1 về đợt kết thúc không kèm sự kiện và giữ phạm vi kết luận chuẩn hóa nháp tuần 1. Việc rà soát này không thay xác nhận Gate 1 của thành viên.

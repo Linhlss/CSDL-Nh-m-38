@@ -2,11 +2,13 @@
 
 > **Nguồn nội dung:** TV3 · **Reviewer kỹ thuật theo phân công:** TV2 · **Phiên bản:** v0.3 (bàn giao tuần 1, cập nhật 15/11/2026)
 > **Script đi kèm:** `sql/05_security.sql`
-> **Căn cứ:** mục 8 của `docs/01_de_cuong.md`, schema `sql/01_schema.sql` v1-candidate (cấu trúc giữ nguyên v0).
+> **Căn cứ:** mục 8 của `docs/01_de_cuong.md`, schema `sql/01_schema.sql` v1 (cấu trúc giữ nguyên v0).
 > Tệp này là nguồn để viết **Chương 6 – Bảo mật CSDL** của báo cáo.
 > **Phân công nhóm:** TV3 — Trần Bùi Tùng Linh, MSSV 20227057. Cập nhật 15/11 do agent hỗ trợ theo yêu cầu chủ repo; lời xác nhận thật TV3 ngày 13/11 giữ nguyên trong phiếu review, không suy ra tài khoản GitHub tương ứng với người này.
 
 ---
+
+Thiết kế v1 chốt theo xác nhận chủ repo tiếp nhận16/11/2026; nguồn ở [Gate 1](../meetings/decision_log.md#gate1). Nghiệm thu bảo mật/ảnh cuối vẫn theo kế hoạch tuần 2–3.
 
 ## 1. Mục tiêu và phạm vi
 

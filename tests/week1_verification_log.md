@@ -3,6 +3,7 @@
 **Lệnh đã chạy:** `python3 scripts/verify_week1.py --record` từ thư mục gốc.
 **Python thực tế:** 3.13.5. **Hệ điều hành:** Darwin 25.6.0.
 **Phạm vi:** kiểm tra tệp và đối chiếu cấu trúc/tài liệu, không kết nối PostgreSQL.
+**Trạng thái đọc từ nhật ký:** Gate 1 PASS; thiết kế v1. Ngày tiếp nhận: 16/11/2026; nguồn: Chủ repo xác nhận trong chat ngày 16/11/2026.
 
 | Kiểm tra | Kết quả | Bằng chứng / phạm vi |
 |---|---|---|
@@ -12,11 +13,11 @@
 | Editable diagrams | PASS | ERD: 7 entities, 35 attributes, 7 FK roles; function tree: 1 root + 6 groups + 14 leaves |
 | PNG exports | PASS | 2 valid 2300×1626 PNGs, A4 landscape proportions, all PNG chunk CRCs valid |
 | Question/rule/case coverage | PASS | 10 RA + 10 SQL design mappings; 30 design cases; 18 business rules; 10 review notes |
-| Report and task handoff | PASS | Chapters 1–3 filled; all 20 TV1 tasks traced; peer-review and DB-test limits explicit |
-| Local file links | PASS | 161 local Markdown file links resolve (anchors and external URLs are not network-tested) |
+| Report and task handoff | PASS | Chapters 1–3 filled; all 20 TV1 tasks traced; Gate 1 PASS / v1; confirmation source and DB-test limits explicit |
+| Local file links | PASS | 171 local Markdown file links resolve (anchors and external URLs are not network-tested) |
 | SQL compatibility | PASS | Executable SQL unchanged from GitHub main d20b394; only comments differ |
 | Utility syntax | PASS | Python utility sources parse successfully; no cache files written |
-| Week1 task trace | PASS | 142 unique project IDs; shared ledger: 53 week1 IDs, 46 technical checks complete, 7 source/personal/group confirmations explicit |
+| Week1 task trace | PASS | 142 unique project IDs; shared ledger: 53 week1 IDs, 52 completed, 1 deferred to week2, 0 awaiting confirmation; deferred tasks stay unchecked |
 | Recorded runtime evidence | PASS | 96/96 recorded PostgreSQL checks; exact input hashes and all 20 SQL/counterpart query hashes verified (DB not rerun) |
 | LF text policy | PASS | LF policy and repository text verified; PNG/binary content unchanged; no unperformed Windows test claimed |
 
@@ -32,7 +33,7 @@ Lần dựng sơ đồ tuần 1 đã mở và xem cả hai ảnh PNG: tên/thu�
 
 - Lệnh kiểm tra tệp này không chạy DDL hoặc S01–S21 trên PostgreSQL. Nguồn và phạm vi kiểm chứng độc lập nằm trong [nhật ký chung](../meetings/decision_log.md), [log146](tv3_review_results.json) và [log96](week1_execution_results.json); không dùng biên bản tĩnh này làm bằng chứng chạy DB mới.
 - Lệnh này không nghiệm thu cơ chế tuần 2 trong constraints/seed/query/security; xem sản phẩm và kết quả của từng owner. Ca D01–D30 là đối chiếu thiết kế với đáp án kỳ vọng, không là kết quả DB PASS.
-- Lệnh này không tự xác nhận review của TV2/TV3 hoặc Gate 1 PASS; xem meetings/decision_log.md và báo cáo review mới nhất. Phân tích chuẩn hóa công bố điểm dư thừa ngày sự kiện và phần cần chốt tuần 2.
+- Trạng thái Gate 1 ở trên được đọc từ xác nhận đã lưu trong meetings/decision_log.md; script không tạo lời đồng ý hoặc chữ ký của thành viên. Phân tích chuẩn hóa công bố điểm dư thừa ngày sự kiện và phần cần chốt tuần 2.
 - Biên bản này chỉ kiểm tra tệp; trạng thái tích hợp PR, commit, bảng53mã và xác nhận còn thiếu tập trung tại meetings/decision_log.md. Merge không thay thế xác nhận Gate 1; lịch tuần 2 nằm trong checklist hiện hành.
 
 ## Kiểm tra lại
