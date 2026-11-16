@@ -1,6 +1,6 @@
 # KẾ HOẠCH DỮ LIỆU, SQL VÀ KIỂM THỬ — TUẦN 1
 
-**Nhóm38, lớp174356, ThS. Nguyễn Thị Thanh Huyền.** TV1 Dương Ngọc Ninh20237469; TV2 Trần Tuấn Ngọc20227064; TV3 Trần Bùi Tùng Linh20227057.
+**Nhóm 38, lớp 174356, ThS. Nguyễn Thị Thanh Huyền.** TV1 Dương Ngọc Ninh — 20237469; TV2 Trần Tuấn Ngọc — 20227064; TV3 Trần Bùi Tùng Linh — 20227057.
 
 Hoàn thiện kỹ thuật16/11/2026 bởi agent theo yêu cầu chủ repo, tiếp nối PR #3 tại63388b3. Review hỗ trợ không thay chữ ký, xác nhận máy cá nhân hay cuộc họp của thành viên.
 
@@ -52,11 +52,11 @@ psql -U postgres -d csdl17_cu_tru_demo -v ON_ERROR_STOP=1 -f sql/04_queries.sql
 
 C1/C2 trùng tên và sinh đúng/sau ngày cắt tuổi; H1 có C1–C4, C3 có2loại. C5 chuyển H1/T1→H2/T2 ngày15/11, C6 chưa đợt,C7 đi06/11. H3rỗng,địa chỉ3 không hộ,T3rỗng,TK2 không sự kiện. Q1=5tuple;Q2 H1=4;Q3 T1=4/T2=1/T3=0;Q4 địa chỉ3;Q5 C5/sốhộ2;Q6 C3,C5;Q7 C7;Q8 ba loại tháng11 mỗi loại1;Q9 sự kiện2/C5;Q10 TK1=3/TK2=0. Future-only/cùng tổ/hết hạn không sự kiện thử thêm trong transaction rollback, không tăng baseline29.
 
-[Ma trận S01–S21](../tests/test_scenarios.md) ghi ID/expected/actual/đối chứng. TV1 chủ trì17–19; TV3 chủ trì20–21; TV2 hỗ trợ dữ liệu/log. Test cơ bản không chứng minh trigger/transaction nâng cao tuần2 đã hoàn tất.
+[Ma trận S01–S21](../tests/test_scenarios.md) ghi ID/expected/actual/đối chứng. TV1 chủ trì17–19; TV3 chủ trì20–21; TV2 hỗ trợ dữ liệu/log. Test cơ bản không chứng minh trigger/transaction nâng cao tuần 2 đã hoàn tất.
 
 Review kỹ thuật hỗ trợ TV2: C→Q→H→D→T, hai nhánh cũ/mới, hộ rỗng và địa chỉ không hộ đều biểu diễn được; không thiếu cột cho10SQL. Giữ E1/schema, validation0 dòng; C1 dùng ngày kết thúc làm nguồn sự thật. Xác nhận chính thức TV2/Gate1 vẫn tách riêng.
 
-## 5. Đối chiếu 14 mã tuần1 TV2
+## 5. Đối chiếu 14 mã tuần 1 TV2
 
 | Mã | Đầu ra/bằng chứng | Trạng thái |
 |---|---|---|
@@ -71,6 +71,6 @@ Review kỹ thuật hỗ trợ TV2: C→Q→H→D→T, hai nhánh cũ/mới, h�
 | W1-T2-09 | Seed20261110,hai lần khớp byte | Đã kiểm chứng |
 | W1-T2-10 | Fixture29/expectedtay | Đã kiểm chứng |
 | W1-T2-11 | Ma trận S01–S16 | Đã có dữ liệu/expected/actual |
-| W1-T2-12 | S17–21 phân công/testcơbản | Đã có; nâng cao tuần2 |
+| W1-T2-12 | S17–21 phân công/testcơbản | Đã có; nâng cao tuần 2 |
 | W1-T2-13 | Review ERD/dữ liệu kỹ thuật | Đã có review hỗ trợ |
 | W1-T2-14 | Bộ hồ sơ này/fixture/matrix/env | Sẵn sàng; chờ xác nhận cá nhânTV2/Gate1 |

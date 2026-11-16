@@ -49,6 +49,6 @@ C1 đã được làm rõ trong P3: nhập/hiệu chỉnh lịch sử hoặc h�
 | S10 | C6 | C80 có đợt tương lai không được coi là chưa có đợt; QRA06 đúng |
 | S13 | Sự kiện2/C5/Tổ01→02 | Cùng tổ trong rollback bị loại; chiếu người QSQL09 khớp QRA10 |
 
-Đối chiếu đủ tuple 10 SQL trên tiny29 bằng expected tay, trên seed636 bằng bộ tính Python độc lập; sáu cặp RA/SQL tương thích được so theo đúng mức hạt và bốn QRA còn lại có đáp án tay trên tiny. VIEW khớp đầy đủ từng dòng QSQL03 trên hai DB; B1/B2 thử bằng role đăng nhập trực tiếp. S17–S19 mới là FK/CHECK cơ bản, không chứng minh trigger tuần2. Đây là kết quả của agent hỗ trợ, không gán thành lần chạy hoặc chữ ký của sinh viên.
+Đối chiếu đủ tuple 10 SQL trên tiny29 bằng expected tay, trên seed636 bằng bộ tính Python độc lập; sáu cặp RA/SQL tương thích được so theo đúng mức hạt và bốn QRA còn lại có đáp án tay trên tiny. VIEW khớp đầy đủ từng dòng QSQL03 trên hai DB; B1/B2 thử bằng role đăng nhập trực tiếp. S17–S19 mới là FK/CHECK cơ bản, không chứng minh trigger tuần 2. Đây là kết quả của agent hỗ trợ, không gán thành lần chạy hoặc chữ ký của sinh viên.
 
 Các kiểm tra trên đã đạt: W1-T3-13 có đầu ra review kỹ thuật và W1-T3-14 có bộ 06a/06b, ma trận phép toán, biểu thức khó, kế hoạch B1/B2 cùng phiếu review. Ảnh bảo mật chính thức, Chương 4/6 đầy đủ, S17–S21 và nghiệm thu seed cuối là phần tiếp theo theo lịch. Gate 1 chung và xác nhận của người thật được quản lý tại biên bản nhóm, không ký thay trong tài liệu này.

@@ -33,6 +33,9 @@ REQUIRED = ["README.md", ".gitignore", "docs/03_dac_ta_nghiep_vu.md", "docs/04_d
             "scripts/render_week1_diagrams.py", "scripts/verify_week1.py"]
 REQUIRED += [f"diagrams/{name}.{ext}" for name in ("erd_v1", "phan_ra_chuc_nang")
              for ext in ("drawio", "png", "svg")]
+REQUIRED += [".gitattributes", "docs/05_ke_hoach_du_lieu_va_sql.md", "docs/BAN_GIAO_TUAN_1.md",
+             "tests/week1_fixture.sql", "tests/week1_expected.json", "tests/week1_environment.md",
+             "tests/week1_execution_results.json", "scripts/verify_week1_runtime.py"]
 RESULTS = []
 
 
@@ -228,11 +231,54 @@ def python_syntax():
 
 
 def files_for_manifest():
-    files = [ROOT/"README.md",ROOT/".gitignore"]
+    files = [ROOT/"README.md",ROOT/".gitignore",ROOT/".gitattributes"]
     for directory in ("docs","diagrams","sql","scripts","tests","meetings","data","report","evidence"):
         files.extend(p for p in (ROOT/directory).rglob("*") if p.is_file()
                      and p.name != ".DS_Store" and "__pycache__" not in p.parts and p != MANIFEST)
     return sorted(set(files))
+
+
+def week1_handoff():
+    expected = {f"W1-T{person}-{n:02}" for person, count in [(1,20),(2,14),(3,14)]
+                for n in range(1,count+1)} | {f"W1-G-{n:02}" for n in range(1,6)}
+    rows = re.findall(r"^\| (W1-(?:T[123]|G)-\d\d) \|", read("docs/BAN_GIAO_TUAN_1.md"), re.M)
+    assert len(rows)==53 and set(rows)==expected, "Week1 handoff must trace all 53 unique IDs"
+    boxes = re.findall(r"^- \[([ x])\] \*\*(W1-(?:T[123]|G)-\d\d)",read("docs/03_CHECKLIST_DU_AN.md"),re.M)
+    assert len(boxes)==53 and {key for _,key in boxes}==expected
+    ledger = [line.split("|") for line in read("docs/BAN_GIAO_TUAN_1.md").splitlines()
+              if re.match(r"^\| W1-(?:T[123]|G)-\d\d \|",line)]
+    ready = {cells[1].strip() for cells in ledger if cells[-2].strip().startswith("Đạt")}
+    marked = {key for mark,key in boxes if mark=="x"}
+    assert marked==ready, "Checklist boxes must agree with the evidence ledger, not an assumed completion count"
+    done = len(marked)
+    for name, sid in [("Dương Ngọc Ninh","20237469"),("Trần Tuấn Ngọc","20227064"),("Trần Bùi Tùng Linh","20227057")]:
+        assert name in read("docs/BAN_GIAO_TUAN_1.md") and sid in read("docs/BAN_GIAO_TUAN_1.md")
+    return f"53 unique week1 IDs; {done} technical checks complete, {53-done} source/personal/group confirmations explicit"
+
+
+def runtime_evidence():
+    result=json.loads(read("tests/week1_execution_results.json"))
+    assert result["summary"]["failed"]==0 and result["summary"]["passed"]==len(result["checks"])
+    keys={item["test"] for item in result["checks"] if item["status"]=="PASS"}
+    assert all(f"{db}/QSQL{n:02}/full-tuples" in keys for db in ("w1_tiny","w1_seed") for n in range(1,11))
+    for path,digest in result["files_sha256"].items():
+        assert sha(ROOT/path)==digest, f"Runtime-tested input changed: {path}"
+    clean=lambda s:re.sub(r"--[^\n]*","",s).strip().rstrip(";")
+    parts=re.split(r"^-- (QSQL\d{2})\.[^\n]*\n",read("sql/04_queries.sql"),flags=re.M)
+    sql={parts[i]:clean(parts[i+1]) for i in range(1,len(parts),2)}
+    blocks=re.findall(r"```sql\n(.*?)```",read("docs/06a_dai_so_quan_he.md"),re.S)
+    assert len(blocks)==11
+    sql.update({f"QRA{i:02}":clean(s) for i,s in enumerate(blocks[1:],1)})
+    assert {k:hashlib.sha256(v.encode()).hexdigest() for k,v in sql.items()}==result["query_sha256"]
+    return f"{result['summary']['passed']}/{len(result['checks'])} recorded PostgreSQL checks; exact input hashes and all 20 SQL/counterpart query hashes verified (DB not rerun)"
+
+
+def newline_policy():
+    assert "* text=auto eol=lf" in read(".gitattributes")
+    for path in files_for_manifest():
+        if path.suffix in (".md",".py",".sql",".csv",".json",".drawio",".svg"):
+            assert b"\r" not in path.read_bytes(), f"Expected LF text: {path.relative_to(ROOT)}"
+    return "LF policy and repository text verified; PNG/binary content unchanged; no unperformed Windows test claimed"
 
 
 def check_manifest():
@@ -279,7 +325,8 @@ Nhận bản mới bằng `git pull --ff-only origin main` trên nhánh main, r�
 """,encoding="utf-8")
     entries = [{"path":str(p.relative_to(ROOT)),"bytes":p.stat().st_size,"sha256":sha(p)} for p in files_for_manifest()]
     MANIFEST.write_text(json.dumps({"version":"v1-candidate","recorded_date":recorded_date.isoformat(),
-                                    "scope":"static_handoff_checks_only",
+                                    "scope":"static_handoff_and_recorded_runtime_evidence",
+                                    "runtime_evidence_available":True,"week1_technical_complete":True,
                                     "database_executed":False,"group_gate1_approved":False,"files":entries},
                                    ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
 
@@ -292,7 +339,8 @@ def main():
                           ("Data dictionary",dictionary),("Editable diagrams",diagrams),("PNG exports",png_exports),
                           ("Question/rule/case coverage",coverage),("Report and task handoff",report_and_handoff),
                           ("Local file links",lambda:local_links(args.record)),("SQL compatibility",sql_compatibility),
-                          ("Utility syntax",python_syntax)]:
+                          ("Utility syntax",python_syntax),("Week1 task trace",week1_handoff),
+                          ("Recorded runtime evidence",runtime_evidence),("LF text policy",newline_policy)]:
         check(name,function)
     if all(state == "PASS" for _,state,_ in RESULTS):
         if args.record:

@@ -19,6 +19,7 @@
 | DEC10 | Phạm vi lịch sử | QRA04/07 và QSQL05/06 xét toàn bộ dữ liệu đã ghi nhận; QRA09/QSQL07 có điều kiện đã bắt đầu <=d | Tránh vô tình dùng hai nghĩa thời gian khi đối soát |
 | DEC11 | Nơi lưu sản phẩm | Dùng tên file bảng A2 của checklist; tài liệu TV3 hiện có trên PR giữ tên 06a/06b | README và đề cương dẫn về bộ bàn giao này |
 | DEC12 | Chuẩn hóa | Hoàn thiện phân tích khóa/FD; công bố riêng điểm dư thừa ngày sự kiện theo B09 | Không tuyên bố tuyệt đối 3NF cho mọi phụ thuộc có điều kiện; reviewer chốt luận chứng cuối tuần 2 |
+| DEC13 | C1 / kết thúc đợt, 16/11 | Nhập/hiệu chỉnh lịch sử hoặc hết hạn tạm trú không phát sinh chuyển chỗ có thể kết thúc đợt không CHUYEN_DI; chuyển thực tế vẫn dùng P4/P5 và giữ B08–B09 | QRA09/QSQL07 dựa vào ngày của đợt; các ca C1 trong log tuần1 đã chạy |
 
 Các quyết định là phương án TV1 đã hiện thực trong tài liệu local để bàn giao. Nhóm có thể yêu cầu điều chỉnh khi review; chưa ghi là cả ba đã đồng ý. Thông tin mã lớp, họ tên/MSSV, giảng viên và thông báo gốc còn chờ nhóm cung cấp; không ngăn việc đọc/triển khai kỹ thuật theo ứng viên v1.
 
@@ -100,3 +101,12 @@ Do TV3 ghi. Chi tiết ở `../docs/REVIEW_TV3_ERD_TUAN_1.md` mục 6–9.
 - **Xác nhận triển khai hai demo bảo mật** B1 và B2 theo `sql/05_security.sql`, `docs/06b_bao_mat.md`. Ảnh minh chứng và chạy trên seed chính thức làm trong tuần 2–3.
 - TV3 đã sửa tên tác nhân trong `docs/06b_bao_mat.md` cho khớp đặc tả mục 3 (C2).
 - **Phía TV3 không còn điều kiện chặn Gate 1.** Đây là ý kiến ghi trong tài liệu, chưa phải chữ ký biên bản họp. Gate 1 chung vẫn **CHỜ REVIEW** vì còn thiếu xác nhận của TV2.
+
+## 9. Hoàn thiện sản phẩm kỹ thuật tuần 1 — 16/11/2026
+
+- Thông tin do chủ repo cung cấp: nhóm38/lớp174356, ThS. Nguyễn Thị Thanh Huyền; TV1 Dương Ngọc Ninh20237469, TV2 Trần Tuấn Ngọc20227064, TV3 Trần Bùi Tùng Linh20227057, theo thứ tự dưới lên của ảnh danh sách. Không suy từ username GitHub để đổi vai trò này.
+- C1 đã chốt ở DEC13/P3, không thay schema. Chuẩn hóa nháp giữ giới hạn DEC12, chưa tuyên bố hoàn tất luận chứng cuối tuần2.
+- PR #2 xác nhận TV3 đã merge tại2f46a0f; PR #3 dữ liệu/hồ sơ đã merge tại921b18a. Giữ nguyên lời xác nhận thật trong PR2; phần agent bổ sung được ghi đúng nguồn hỗ trợ kỹ thuật.
+- Dữ liệu636 đã sửa54vi phạm B15, giữ RNG/ID/ngày cư trú/sự kiện. Fixture nhỏ29dòng và expectedtay, ma trận S01–S21, môi trường chung,10SQL/review dữ liệu TV3 đã có. Log tuần1 đạt96/96, gồm95chức năng+1tái hiện; kiểm tra tệp/hashes/53mã/LF đạt14/14.
+- [Bàn giao chung](../docs/BAN_GIAO_TUAN_1.md) đối chiếu53mã:46mục đủ sản phẩm và review kỹ thuật;7mục còn chờ nguồn/xác nhận cụ thể. Quyền repo16/11: Linhlss admin,Ngocdeezet write,ninhdn07 write.
+- **Gate1 chung: CHỜ REVIEW hồ sơ/xác nhận còn thiếu. Kỹ thuật tuần1: ĐẠT.** Không tạo giả cuộc họp, người ký, điểm đánh giá, xác nhận máy cá nhân TV2 hoặc lời phê duyệt cả nhóm. Thông báo yêu cầu gốc chưa lưu đối chiếu; nguồn ảnh hiện có là danh sách nhóm.

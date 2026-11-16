@@ -2,8 +2,8 @@
 
 > **Chủ đề được giao:** 17 – Quản lý cư dân ở một địa phương  
 > **Tên đề tài đề xuất:** **Xây dựng cơ sở dữ liệu quản lý cư dân và biến động cư trú tại một phường**  
-> **Nhóm:** [Số thứ tự nhóm] — **Mã lớp:** [Mã lớp]  
-> **Thành viên:** TV1 – [Họ tên, MSSV]; TV2 – [Họ tên, MSSV]; TV3 – [Họ tên, MSSV]  
+> **Nhóm:** 38 — **Mã lớp:** 174356 — **Giảng viên:** ThS. Nguyễn Thị Thanh Huyền
+> **Thành viên:** TV1 – Dương Ngọc Ninh, 20237469; TV2 – Trần Tuấn Ngọc, 20227064; TV3 – Trần Bùi Tùng Linh, 20227057
 > **Ngày lập kế hoạch:** 10/11/2026  
 > **Hạn nộp theo thông báo:** **Thứ Sáu 27/11/2026, tiết 3**; lịch/bắt đầu báo cáo: 27/11/2026 (thứ tự cụ thể do giảng viên thông báo).  
 > **Mốc nội bộ:** Hoàn thiện toàn bộ vào **tối 25/11**; **26/11** dành cho kiểm thử cuối, in ấn và bàn giao.  
@@ -994,3 +994,5 @@ BTL_CSDL_DE_TAI_17/
 **4 mốc không được bỏ:** **15/11 chốt schema**, **22/11 chốt kỹ thuật sơ bộ**, **24/11 nghiệm thu 20 truy vấn + 2 demo**, **26/11 sẵn sàng bản nộp**, **27/11 nộp đúng tiết 3**.
 
 **Điều kiện nhóm coi là xong:** Mọi mục Y1–Y8 có tệp/ảnh/chứng cứ, không còn lỗi test nghiêm trọng, 3 người đã review và ký trang cuối, bản mềm/bản cứng đúng định dạng.
+
+**Cập nhật 16/11/2026:** [Bàn giao tuần 1 chung](BAN_GIAO_TUAN_1.md) là nơi theo dõi sản phẩm/kiểm chứng và 53 mã tuần 1 hiện hành; các đoạn dự kiến khởi tạo phía trên giữ để truy lịch sử.

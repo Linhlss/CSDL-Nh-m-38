@@ -8,10 +8,10 @@
 
 ## TRANG BÌA
 
-- Mã lớp: [TODO]
-- Số thứ tự nhóm: [TODO]
-- Giảng viên: [TODO]
-- Thành viên: TV1 [Họ tên – MSSV]; TV2 [...]; TV3 [...]
+- Mã lớp: 174356
+- Số thứ tự nhóm: 38
+- Giảng viên: ThS. Nguyễn Thị Thanh Huyền
+- Thành viên: TV1 Dương Ngọc Ninh — 20237469; TV2 Trần Tuấn Ngọc — 20227064; TV3 Trần Bùi Tùng Linh — 20227057
 - Ngày nộp: 27/11/2026
 
 ## MỤC LỤC
@@ -196,6 +196,6 @@ TV1 đã chuẩn bị 30 tình huống kiểm tra thiết kế với đầu ra k
 
 | STT | Họ tên | MSSV | Công việc thực tế | Xếp loại A/B/C... | Chữ ký |
 |---|---|---|---|---|---|
-| 1 | [TV1] | [...] | [TODO] | [...] | [...] |
-| 2 | [TV2] | [...] | [TODO] | [...] | [...] |
-| 3 | [TV3] | [...] | [TODO] | [...] | [...] |
+| 1 | Dương Ngọc Ninh | 20237469 | Theo hồ sơ bàn giao tuần 1; cập nhật cuối kỳ | Chờ nhóm đánh giá | Chờ ký |
+| 2 | Trần Tuấn Ngọc | 20227064 | Theo hồ sơ bàn giao tuần 1; cập nhật cuối kỳ | Chờ nhóm đánh giá | Chờ ký |
+| 3 | Trần Bùi Tùng Linh | 20227057 | Theo hồ sơ bàn giao tuần 1; cập nhật cuối kỳ | Chờ nhóm đánh giá | Chờ ký |

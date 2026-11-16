@@ -14,4 +14,4 @@ python3 scripts/verify_week1_runtime.py --container csdl17-week1-test --client-d
 docker rm --force csdl17-week1-test
 ```
 
-Chạy một lần trên mỗi container mới. Kết quả hiện tại **96/96 đạt**, gồm95kiểm tra chức năng và1tái hiện B15 bản cũ. Bộ chạy so generator2lần theo byte, tiny29/expectedtay, seed636/oraclePython độc lập, reload/sequence, RA/SQL, C1, quyền và FK/CHECK cơ bản. Chưa nghiệm thu nâng cao hay toàn đồ án. TV2 cần bổ sung OS/công cụ/SELECT version từ máy cá nhân nếu nhóm dùng làm tiêu chí xác nhận; không điền giả phần đó.
+Chạy một lần trên mỗi container mới. Kết quả hiện tại **96/96 đạt**, gồm95 kiểm tra chức năng và1tái hiện B15 bản cũ. Bộ chạy so generator2lần theo byte, tiny29/expectedtay, seed636/oraclePython độc lập, reload/sequence, RA/SQL, C1, quyền và FK/CHECK cơ bản. Chưa nghiệm thu nâng cao hay toàn đồ án. TV2 cần bổ sung OS/công cụ/SELECT version từ máy cá nhân nếu nhóm dùng làm tiêu chí xác nhận; không điền giả phần đó.
