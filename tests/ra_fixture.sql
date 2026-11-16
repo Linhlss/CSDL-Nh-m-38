@@ -7,6 +7,7 @@
 -- sau khi sửa Q_d theo RV08: 11/11 kết quả khớp (Q_d, QRA01–10, VIEW dưới role report).
 -- Sửa qua review TV1, 12/11/2026: ngày CHUYEN_DI của đợt 6 là 2025-07-01
 -- để khớp B09 (đợt cũ kết thúc 2025-06-30). Không đổi đáp án QRA tại d.
+-- Bổ sung 16/11/2026: kiểm tra cách viết phép chia của QRA07 (12 kết quả).
 --
 -- Chạy:  psql -U postgres -d csdl17_cu_tru_demo -f tests/ra_fixture.sql
 -- Yêu cầu: 7 bảng ĐANG RỖNG (dùng mã cố định 1, 2, 3...); đã chạy 05_security.sql
@@ -157,6 +158,23 @@ WHERE c.ma_cu_dan IN (
     SELECT ma_cu_dan FROM qua_trinh_cu_tru WHERE loai_cu_tru = 'THUONG_TRU'
     INTERSECT
     SELECT ma_cu_dan FROM qua_trinh_cu_tru WHERE loai_cu_tru = 'TAM_TRU'
+)
+ORDER BY c.ma_cu_dan;
+
+-- ----- QRA07 cách 2 (phép chia) · MONG ĐỢI: ma_cu_dan 4, giống cách 1
+-- π ma_cu_dan, loai_cu_tru (QUA_TRINH_CU_TRU) ÷ LOAI, với LOAI = {THUONG_TRU, TAM_TRU}.
+-- Phép chia viết bằng hai NOT EXISTS lồng nhau: không có loại nào mà người đó thiếu.
+\echo '===== QRA07 (phep chia) | mong doi: ma_cu_dan 4'
+SELECT c.ma_cu_dan, c.ho_ten
+FROM cu_dan c
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM (VALUES ('THUONG_TRU'), ('TAM_TRU')) AS loai(loai_cu_tru)
+    WHERE NOT EXISTS (
+        SELECT 1 FROM qua_trinh_cu_tru q
+        WHERE q.ma_cu_dan = c.ma_cu_dan
+          AND q.loai_cu_tru = loai.loai_cu_tru
+    )
 )
 ORDER BY c.ma_cu_dan;
 
