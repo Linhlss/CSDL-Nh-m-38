@@ -1,6 +1,6 @@
 {
   "version": "v1-candidate",
-  "recorded_date": "2026-11-13",
+  "recorded_date": "2026-11-16",
   "scope": "static_handoff_checks_only",
   "database_executed": false,
   "group_gate1_approved": false,
@@ -87,13 +87,13 @@
     },
     {
       "path": "docs/06a_dai_so_quan_he.md",
-      "bytes": 27838,
-      "sha256": "aabb1cb2f566d93265103a2d342566ec3dc02a257f53660b819563fe9b143066"
+      "bytes": 30620,
+      "sha256": "ce2977eb046abccf57d1c862e5c3d4adbc3fc9ca57839abc839852f336958c06"
     },
     {
       "path": "docs/06b_bao_mat.md",
-      "bytes": 20651,
-      "sha256": "5269323e4a101787cadf2de607588e722a5a9122bdf5c7ac0577c3a451244901"
+      "bytes": 23026,
+      "sha256": "7a94f19b34866fa9d3710127a8b76f3a204926934621c70bf5bc813b656c9679"
     },
     {
       "path": "docs/07_ma_tran_truy_van_va_review.md",
@@ -111,14 +111,19 @@
       "sha256": "6d862b291d13b34aaf98e9d9e9f20bfd607e90042d7b7e5308f373708d3d1d86"
     },
     {
+      "path": "docs/REVIEW_DU_LIEU_TV2_TUAN_1.md",
+      "bytes": 6414,
+      "sha256": "4ac9fb91fb71f673b4ca91f1601db5e37fbdd5dc2dd2aac15ab64b3ad13db09e"
+    },
+    {
       "path": "docs/REVIEW_TV3_CHI_TIET.md",
       "bytes": 20994,
       "sha256": "270704dd64eda24e78ab8f8450fd6c43424a3d4882ff0826a9ba8201c15e2a02"
     },
     {
       "path": "docs/REVIEW_TV3_ERD_TUAN_1.md",
-      "bytes": 6308,
-      "sha256": "ba29416f3c71bb096f78ee895e08eff7191a4723ac1c762aaa14136104f8fa15"
+      "bytes": 13556,
+      "sha256": "5847d832b9bc23506cee0b293866f3a9217e6cb7cc215847fa437f512766283b"
     },
     {
       "path": "evidence/security/.gitkeep",
@@ -132,8 +137,8 @@
     },
     {
       "path": "meetings/decision_log.md",
-      "bytes": 10924,
-      "sha256": "eea80c23e94c2dc92d5f6bb87f09f978821c60ad3b04d0bc7224666c3ce1946b"
+      "bytes": 12458,
+      "sha256": "2ab14901b9e287260788e930ea2d4fbe9f596061c539afaf96ad69f4362e3047"
     },
     {
       "path": "report/.gitkeep",
@@ -223,7 +228,7 @@
     {
       "path": "tests/week1_verification_log.md",
       "bytes": 3535,
-      "sha256": "5b3b5613aed676d549b02e2c7fc60b134abbcd5d0cce37c2f54532af97c29c1a"
+      "sha256": "5ff1507b8775d995960181f196fb635c21a8b4ef438594bf8136b0cc57d76f8f"
     }
   ]
 }
