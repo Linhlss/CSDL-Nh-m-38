@@ -4,6 +4,8 @@
 
 > TV1 đã viết nội dung thiết kế Chương 1–3 và mở đầu ngày 11/11/2026. Chưa là báo cáo cuối: chờ review chéo, dữ liệu, truy vấn, demo và minh chứng thực thi của tuần 2–3. Thông tin bìa phải được nhóm cung cấp; không suy đoán họ tên/MSSV/mã lớp.
 
+> Cập nhật 15/11/2026 bởi agent hỗ trợ TV1: làm rõ C1 ở P3/chức năng 3.2, đồng bộ ý nghĩa đợt–sự kiện và phạm vi chuẩn hóa nháp. Giữ nguyên schema; không thay lời xác nhận hoặc chữ ký của thành viên.
+
 ## TRANG BÌA
 
 - Mã lớp: [TODO]
@@ -40,7 +42,7 @@ Cán bộ quản lý cập nhật danh mục, hồ sơ, đợt và sự kiện. 
 |---|---|---|
 | P1 — Địa bàn và hộ | Tạo tổ, địa chỉ và nhóm hộ theo đúng bản ghi cha | Không trùng tên tổ/cặp tổ+địa chỉ; hộ có địa chỉ cố định |
 | P2 — Hồ sơ cư dân | Tạo/sửa họ tên, ngày sinh, giới tính theo mã người | Trùng họ tên được phép; không lưu địa chỉ hiện tại ở hồ sơ |
-| P3 — Đợt cư trú | Tạo đợt người–hộ–loại–khoảng ngày | FK hợp lệ, ngày đúng, không chồng cùng loại; nhập lịch sử có thể chưa có nhật ký |
+| P3 — Đợt cư trú | Tạo/hiệu chỉnh đợt người–hộ–loại–khoảng ngày; ghi kết thúc theo C1 | FK hợp lệ, ngày đúng, không chồng cùng loại; nhập/sửa lịch sử hoặc hết hạn tạm trú có thể không có nhật ký; giữ B08–B09 nếu đã có sự kiện tham chiếu |
 | P4 — Chuyển đến | Tạo đợt mới và sự kiện chỉ tham chiếu đợt mới | Ngày bắt đầu mới bằng ngày sự kiện; một giao dịch |
 | P5 — Chuyển đi/nội bộ | Đóng đợt cũ; nếu nội bộ tạo đợt mới; ghi sự kiện | Nội bộ cùng người/khác hộ; cũ kết thúc trước ngày chuyển một ngày; rollback khi lỗi |
 | P6 — Tra cứu/thống kê | Danh sách theo ngày và thống kê người/sự kiện | Đúng ngày tham chiếu, đếm mã người phân biệt, giữ nhóm 0 khi câu hỏi yêu cầu |
@@ -53,6 +55,8 @@ Cán bộ quản lý cập nhật danh mục, hồ sơ, đợt và sự kiện. 
 
 Sơ đồ có sáu nhóm chức năng và 14 chức năng cấp 2. Quan hệ nối thể hiện chức năng con thuộc chức năng cha; không thể hiện trình tự thực hiện. Bảng chức năng → dữ liệu đọc/ghi nằm trong mục 4 của đặc tả nghiệp vụ, giúp đối chiếu mỗi chức năng với dữ liệu được mô hình hóa.
 
+Chức năng **3.2 Kết thúc đợt** dùng cho nhập/hiệu chỉnh lịch sử hoặc hết hạn tạm trú không phát sinh hành vi chuyển chỗ ở; khi đó không bắt buộc tạo `CHUYEN_DI` (C1). Các chuyển đến/đi/nội bộ thực tế vẫn do nhóm chức năng 4 và P4/P5 ghi sự kiện trong cùng giao dịch. C1 phân định phạm vi hai nhóm chức năng, không cho phép bỏ nhật ký của thao tác chuyển thực tế.
+
 ### 1.5. Quy tắc nghiệp vụ trọng tâm
 
 Một đợt có hiệu lực tại d khi đã bắt đầu và chưa kết thúc trước d. Ngày kết thúc được tính bao gồm; NULL là chưa ghi nhận ngày kết thúc. Vì vậy đợt tương lai với kết thúc NULL vẫn chưa có hiệu lực. Hai đợt cùng người/cùng loại không được giao nhau; hai loại khác nhau đồng thời được cho phép trong phạm vi mô phỏng và thống kê phải tránh đếm trùng.
@@ -60,6 +64,8 @@ Một đợt có hiệu lực tại d khi đã bắt đầu và chưa kết thú
 Với ngày chuyển t, đợt cũ kết thúc t−1, đợt mới bắt đầu t. Sự kiện đến chỉ có đợt mới; đi chỉ có đợt cũ; nội bộ có hai đợt của cùng cư dân và khác hộ. Ví dụ cũ ở H-A tới hết 14/11, mới ở H-B từ 15/11 thì sự kiện chuyển ghi ngày 15/11. Nhiều thao tác phải cùng một giao dịch để không xuất hiện lịch sử đã đóng nhưng thiếu nơi mới hoặc thiếu sự kiện.
 
 Không đổi liên kết hộ–địa chỉ/tổ đã được lịch sử dùng để biểu diễn chuyển nơi ở. Nhật ký không sao chép tên người hoặc địa chỉ. Quy tắc B01–B18 và các giới hạn thực thi hiện tại được công bố trong đặc tả; chưa coi các trigger/transaction dự kiến là đã chạy.
+
+Một người chỉ có đợt tạm trú 01/11–19/11/2026 đã hết hạn, không có `CHUYEN_DI`, vẫn thuộc QRA09/QSQL07 tại ngày 20/11; ngày 19/11 đợt còn hiệu lực nên người đó không thuộc kết quả này. Điều kiện truy vấn dựa vào khoảng ngày, không bắt buộc có sự kiện chuyển đi. Người chưa có đợt hoặc chỉ có đợt tương lai vẫn bị loại đúng theo B16.
 
 ## CHƯƠNG 2 — MÔ HÌNH THỰC THỂ LIÊN KẾT
 
@@ -91,7 +97,7 @@ ERD thể hiện đủ 35 cột và 7 FK. Ký hiệu ? là cột cho phép NULL.
 
 Nếu đặt hộ hiện tại trong `cu_dan`, mỗi lần chuyển phải ghi đè giá trị cũ, khiến câu hỏi “người này ở đâu ngày 14/11?” không trả lời được. `qua_trinh_cu_tru` lưu từng khoảng riêng, cho phép trở lại cùng hộ sau một thời gian. Địa chỉ được suy ra qua đợt → hộ → địa chỉ → tổ.
 
-`bien_dong_cu_tru` có mục đích khác: lưu sự kiện và người ghi nhận. Đợt cư trú không mặc nhiên phải có nhật ký khi nhập lịch sử ban đầu. Khi sửa đợt đã được nhật ký tham chiếu, phải kiểm lại tính nhất quán sự kiện; khi chuyển cả hộ, mô hình dùng hộ mới thay vì thay địa chỉ của hộ cũ.
+`bien_dong_cu_tru` có mục đích khác: lưu sự kiện và người ghi nhận. Đợt nhập/hiệu chỉnh lịch sử hoặc tạm trú hết hạn không mặc nhiên phải có nhật ký theo C1. Khi sửa đợt đã được nhật ký tham chiếu, phải kiểm lại B08–B09; khi chuyển cả hộ, mô hình dùng hộ mới thay vì thay địa chỉ của hộ cũ. Cardinality DB 0..N giữ nguyên; validation E1 yêu cầu xử lý các sự kiện trùng cùng vai trò trước nghiệm thu.
 
 ## CHƯƠNG 3 — THIẾT KẾ CSDL QUAN HỆ
 
@@ -142,9 +148,11 @@ Với tập phụ thuộc đã công bố, sáu bảng danh mục/hồ sơ/lịc
 
 Riêng ngày biến động có thể suy ra từ biên ngày của đợt theo quy tắc đã chọn. Khi FK nullable và một đợt được nhiều sự kiện tham chiếu, xuất hiện phụ thuộc có điều kiện trên các tập con. Bản nháp ghi nhận đây là điểm dư thừa có kiểm soát cần review; không khẳng định toàn bộ mô hình đạt 3NF tuyệt đối chỉ dựa trên PK. Phân tích đầy đủ, phạm vi kết luận và việc chốt tuần 2 được ghi ở mục 5 của tài liệu chuẩn hóa.
 
+Quyết định C1 không đổi tập khóa/FD đã công bố và không làm đợt–sự kiện thành quan hệ bắt buộc một–một. Bản nháp tuần 1 đã có nội dung phân tích để review; luận chứng chuẩn hóa cuối theo DEC12 và cơ chế ràng buộc xuyên bảng vẫn là phần hoàn thiện tuần 2.
+
 ### 3.5. Kế hoạch dữ liệu và kiểm tra
 
-**Chờ TV2 triển khai tuần 2.** Dữ liệu mục tiêu gồm 8 tổ, 50 địa chỉ, 60 hộ, 200 cư dân, khoảng 250 đợt, 70 sự kiện và 5 tài khoản; có thể điều chỉnh theo độ phủ kiểm thử. Nạp theo thứ tự FK, dùng seed cố định và bộ ví dụ nhỏ có đáp án tay. Không ghi các con số mục tiêu thành số liệu đã nạp.
+**Phạm vi bàn giao tuần 1:** TV2 chuẩn bị kế hoạch dữ liệu/SQL, fixture nhỏ có đáp án tay và ma trận kịch bản; việc nghiệm thu bộ dữ liệu lớn là bước riêng của tuần 2. Quy mô tham khảo gồm 8 tổ, 50 địa chỉ, 60 hộ, 200 cư dân, khoảng 250 đợt, 70 sự kiện và 5 tài khoản; có thể điều chỉnh theo độ phủ kiểm thử. Nạp theo thứ tự FK, dùng seed cố định và ghi số liệu thực tế trong log của lần chạy. Không ghi các con số mục tiêu thành số liệu đã nạp.
 
 TV1 đã chuẩn bị 30 tình huống kiểm tra thiết kế với đầu ra kỳ vọng trong `tests/week1_design_cases.md` và ma trận 20 câu hỏi. Kết quả thực thi PostgreSQL, S01–S21, ảnh SQL và kiểm chứng dữ liệu chính thức sẽ được bổ sung sau; tự kiểm tra tài liệu không thay thế kiểm thử DB.
 
