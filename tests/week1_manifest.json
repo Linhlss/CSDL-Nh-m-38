@@ -87,13 +87,13 @@
     },
     {
       "path": "docs/06a_dai_so_quan_he.md",
-      "bytes": 30620,
-      "sha256": "ce2977eb046abccf57d1c862e5c3d4adbc3fc9ca57839abc839852f336958c06"
+      "bytes": 27838,
+      "sha256": "aabb1cb2f566d93265103a2d342566ec3dc02a257f53660b819563fe9b143066"
     },
     {
       "path": "docs/06b_bao_mat.md",
-      "bytes": 23026,
-      "sha256": "7a94f19b34866fa9d3710127a8b76f3a204926934621c70bf5bc813b656c9679"
+      "bytes": 21295,
+      "sha256": "f2e7fa4f5ff8f3cda38a3e70a1f34119466ca17d2d46c0e75819fe28bfbaf2ab"
     },
     {
       "path": "docs/07_ma_tran_truy_van_va_review.md",
@@ -109,11 +109,6 @@
       "path": "docs/KE_HOACH_TV1_TUAN_1.md",
       "bytes": 14067,
       "sha256": "6d862b291d13b34aaf98e9d9e9f20bfd607e90042d7b7e5308f373708d3d1d86"
-    },
-    {
-      "path": "docs/REVIEW_DU_LIEU_TV2_TUAN_1.md",
-      "bytes": 6414,
-      "sha256": "4ac9fb91fb71f673b4ca91f1601db5e37fbdd5dc2dd2aac15ab64b3ad13db09e"
     },
     {
       "path": "docs/REVIEW_TV3_CHI_TIET.md",
@@ -228,7 +223,7 @@
     {
       "path": "tests/week1_verification_log.md",
       "bytes": 3535,
-      "sha256": "5ff1507b8775d995960181f196fb635c21a8b4ef438594bf8136b0cc57d76f8f"
+      "sha256": "d353b0ad5e99371d7c119291959ac6dae2f783abc4120654d8a5b79a15ba44a3"
     }
   ]
 }
