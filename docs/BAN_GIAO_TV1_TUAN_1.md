@@ -64,3 +64,10 @@ Nếu nhập ID gán tay rồi tiếp tục dùng ID tự sinh, đồng bộ seq
 - Kiểm chứng: script kiểm nhất quán, biên bản kết quả và manifest SHA-256 trong `tests/week1_manifest.json`; lịch sử commit trên main xác định phiên bản bàn giao.
 
 TV2/TV3 ghi phản hồi và xác nhận thực tế trong biên bản, xử lý mâu thuẫn ảnh hưởng thiết kế rồi mới gọi đây là schema v1 đã được cả nhóm duyệt. Người nhận có thể đọc, review và chuẩn bị phần mình ngay trên ứng viên này.
+
+
+## 6. Cập nhật hoàn thiện tuần 1 — 16/11/2026
+
+Xem [bàn giao chung cả ba thành viên](BAN_GIAO_TUAN_1.md) để nhận phiên bản hiện hành. C1 đã làm rõ ở P3, PR #2 đã tiếp nhận xác nhận TV3, PR #3 đã có dữ liệu sửa B15, fixture29 và hồ sơ TV2. Nhóm38/lớp174356, ThS. Nguyễn Thị Thanh Huyền; danh tính TV1–TV3 đã điền từ nguồn chủ repo cung cấp. Log mới96/96 và kiểm tra14/14 là các phạm vi khác nhau; không đồng nhất thành nghiệm thu toàn đồ án.
+
+Bản v1-candidate giữ nguyên giao diện. 46 mục tuần1 đã đủ sản phẩm/review kỹ thuật hỗ trợ; 7 mục chờ đối chiếu thông báo, máy cá nhân hoặc phê duyệt/biên bản thật. Các dòng có mốc11–13/11 phía trên giữ lịch sử; trạng thái hiện hành xem bàn giao chung.

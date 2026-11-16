@@ -6,16 +6,19 @@
 
 | Kiểm tra | Kết quả | Bằng chứng / phạm vi |
 |---|---|---|
-| Required artifacts | PASS | 20 required artifacts exist and are nonempty |
+| Required artifacts | PASS | 28 required artifacts exist and are nonempty |
 | DDL contract | PASS | 7 tables / 35 columns / 7 PK / 7 FK / 3 UNIQUE / 6 CHECK / 5 indexes |
 | Data dictionary | PASS | 35 dictionary rows match DDL names, types, NULL, PK/FK, inline UNIQUE and defaults |
 | Editable diagrams | PASS | ERD: 7 entities, 35 attributes, 7 FK roles; function tree: 1 root + 6 groups + 14 leaves |
 | PNG exports | PASS | 2 valid 2300×1626 PNGs, A4 landscape proportions, all PNG chunk CRCs valid |
 | Question/rule/case coverage | PASS | 10 RA + 10 SQL design mappings; 30 design cases; 18 business rules; 10 review notes |
 | Report and task handoff | PASS | Chapters 1–3 filled; all 20 TV1 tasks traced; peer-review and DB-test limits explicit |
-| Local file links | PASS | 45 local Markdown file links resolve (anchors and external URLs are not network-tested) |
+| Local file links | PASS | 154 local Markdown file links resolve (anchors and external URLs are not network-tested) |
 | SQL compatibility | PASS | Executable SQL unchanged from GitHub main d20b394; only comments differ |
 | Utility syntax | PASS | Python utility sources parse successfully; no cache files written |
+| Week1 task trace | PASS | 53 unique week1 IDs; 46 technical checks complete, 7 source/personal/group confirmations explicit |
+| Recorded runtime evidence | PASS | 96/96 recorded PostgreSQL checks; exact input hashes and all 20 SQL/counterpart query hashes verified (DB not rerun) |
+| LF text policy | PASS | LF policy and repository text verified; PNG/binary content unchanged; no unperformed Windows test claimed |
 
 ## Kiểm tra trực quan
 

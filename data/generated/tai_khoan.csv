@@ -1,0 +1,6 @@
+ma_tai_khoan,ten_dang_nhap,ten_hien_thi,vai_tro,trang_thai
+1,admin_demo,Quản trị viên Hệ thống,QUAN_TRI,HOAT_DONG
+2,canbo_01,Cán bộ Cư trú 01,CAN_BO,HOAT_DONG
+3,canbo_02,Cán bộ Cư trú 02,CAN_BO,HOAT_DONG
+4,thongke_01,Cán bộ Tổng hợp 01,THONG_KE,HOAT_DONG
+5,canbo_duphong,Cán bộ Dự phòng (0 sự kiện),CAN_BO,HOAT_DONG

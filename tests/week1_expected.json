@@ -1,0 +1,18 @@
+{
+  "QSQL01": [
+    {"ma_cu_dan": 1, "ho_ten": "Nguyễn Văn An", "loai_cu_tru": "THUONG_TRU"},
+    {"ma_cu_dan": 2, "ho_ten": "Nguyễn Văn An", "loai_cu_tru": "THUONG_TRU"},
+    {"ma_cu_dan": 3, "ho_ten": "Lê Thị Bình", "loai_cu_tru": "THUONG_TRU"},
+    {"ma_cu_dan": 3, "ho_ten": "Lê Thị Bình", "loai_cu_tru": "TAM_TRU"},
+    {"ma_cu_dan": 4, "ho_ten": "Phạm Văn Chiến", "loai_cu_tru": "THUONG_TRU"}
+  ],
+  "QSQL02": [{"ma_ho": 1, "so_cu_dan": 4}],
+  "QSQL03": [{"ma_to": 1, "ten_to": "Tổ 01", "so_cu_dan": 4}, {"ma_to": 2, "ten_to": "Tổ 02", "so_cu_dan": 1}, {"ma_to": 3, "ten_to": "Tổ 03", "so_cu_dan": 0}],
+  "QSQL04": [{"ma_dia_chi": 3, "dia_chi_chuan": "Địa chỉ thử 03"}],
+  "QSQL05": [{"ma_cu_dan": 5, "ho_ten": "Trần Thị Dung", "so_ho": 2}],
+  "QSQL06": [{"ma_cu_dan": 3, "ho_ten": "Lê Thị Bình"}, {"ma_cu_dan": 5, "ho_ten": "Trần Thị Dung"}],
+  "QSQL07": [{"ma_cu_dan": 7, "ho_ten": "Vũ Thị Hà"}],
+  "QSQL08": [{"thang": "2026-11", "loai_bien_dong": "CHUYEN_DEN", "so_su_kien": 1}, {"thang": "2026-11", "loai_bien_dong": "CHUYEN_DI", "so_su_kien": 1}, {"thang": "2026-11", "loai_bien_dong": "CHUYEN_NOI_BO", "so_su_kien": 1}],
+  "QSQL09": [{"ma_bien_dong": 2, "ma_cu_dan": 5, "ma_to_cu": 1, "ma_to_moi": 2, "ngay_bien_dong": "2026-11-15"}],
+  "QSQL10": [{"ma_tai_khoan": 1, "ten_hien_thi": "Cán bộ thử", "so_su_kien": 3}, {"ma_tai_khoan": 2, "ten_hien_thi": "Báo cáo thử", "so_su_kien": 0}]
+}

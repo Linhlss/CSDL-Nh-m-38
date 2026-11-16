@@ -2,7 +2,13 @@
 
 **Tên đề tài:** Xây dựng cơ sở dữ liệu quản lý cư dân và biến động cư trú tại một phường mô phỏng.  
 **Hạn nộp theo kế hoạch nhóm:** Thứ Sáu 27/11/2026, tiết 3.  
-**Thông tin hành chính:** chờ nhóm điền STT nhóm, mã lớp, giảng viên và họ tên/MSSV thật của ba thành viên.
+**Nhóm 38 — lớp 174356 — ThS. Nguyễn Thị Thanh Huyền.**
+
+- **TV1:** Dương Ngọc Ninh — 20237469.
+- **TV2:** Trần Tuấn Ngọc — 20227064.
+- **TV3:** Trần Bùi Tùng Linh — 20227057.
+
+**Bàn giao 16/11/2026:** [Bộ tuần 1 của cả ba thành viên](docs/BAN_GIAO_TUAN_1.md) đã có đầy đủ sản phẩm kỹ thuật, fixture 29, seed 636, 10 SQL và review RA/dữ liệu. PostgreSQL: **96/96** đạt (95 chức năng, 1 tái hiện lỗi cũ). Bảng 53 mã tuần 1 có **46 mục đủ sản phẩm/review kỹ thuật**, 7 mục chờ nguồn hoặc xác nhận cá nhân/nhóm; không tự ký Gate 1 PASS. PR #2 và #3 đã tích hợp vào main.
 
 ## Bắt đầu từ bộ bàn giao tuần 1
 
@@ -38,9 +44,9 @@ python3 scripts/verify_week1.py
 
 ## Tiến độ và phần tiếp theo
 
-- **Tuần 1 (10–15/11):** đã chuẩn bị nghiệp vụ, sơ đồ, ánh xạ, 35 cột, chuẩn hóa nháp, review khả năng đáp ứng truy vấn và Chương 1–3. Chờ review chéo/Gate 1; điểm dư thừa ngày sự kiện được công bố trong tài liệu chuẩn hóa.
-- **Tuần 2 (16–22/11):** TV1 tiếp tục ràng buộc/transaction và test; TV2 làm seed, 10 SQL/kết quả. TV3 đã có 10 RA/SQL kiểm chứng và script bảo mật chạy trên fixture nhỏ; còn đối soát seed chính thức và hai demo/ảnh cuối. Script 02–04 còn TODO đúng phân công.
-- **Tuần 3 (23–27/11):** test DB trắng, ảnh minh chứng, báo cáo, in/nộp. `report/`, `evidence/`, `data/generated/` chưa có sản phẩm cuối kỳ.
+- **Tuần 1 (10–15/11, hoàn thiện hồ sơ 16/11):** sản phẩm kỹ thuật đạt; 53 mã có đầy đủ đường dẫn/giới hạn xác nhận. C1 được chốt, B15 đã sửa, môi trường chung và kiểm chứng có log/hash. Xem bàn giao chung cho 7 mục còn chờ nguồn/xác nhận.
+- **Tuần 2 (16–22/11):** TV1 thực thi ràng buộc/transaction nâng cao và chốt luận chứng chuẩn hóa; TV2/TV3 tiếp tục nghiệm thu dữ liệu/SQL/RA đã có và phần báo cáo. Script 02 còn TODO theo kế hoạch; seed/10 SQL và bảo mật đã có mã kiểm chứng.
+- **Tuần 3 (23–27/11):** rebuild cuối, ảnh, báo cáo, in/nộp. Data đã có; report/evidence cuối và chữ ký vẫn chờ thực hiện.
 
 [Đề cương](docs/01_de_cuong.md) giữ kế hoạch toàn dự án; [checklist](docs/03_CHECKLIST_DU_AN.md) giữ mã việc và trách nhiệm. Khi khác với phần thiết kế khởi tạo trong đề cương, bộ bàn giao v1 là nguồn kỹ thuật hiện hành cho review.
 
