@@ -128,7 +128,10 @@ KQ = π ma_cu_dan, ho_ten (CU_DAN ⋈ R2)
 - R2: nối các đợt có hiệu lực tại d với R1 theo `ma_ho`, được mã cư dân đang ở các hộ đó.
 - KQ: nối với `CU_DAN` theo `ma_cu_dan` để lấy họ tên. R2 chỉ còn `ma_cu_dan`, nên phép nối không bị vướng cột `ghi_chu`.
 
-**(6) Kết quả mong đợi:** Trả về các cư dân của kịch bản S01. Danh sách mã cụ thể: [CẦN ĐIỀN sau khi có seed].
+**(6) Kết quả mong đợi:** Trả về các cư dân của kịch bản S01.
+
+- Fixture `tests/ra_fixture.sql`: mã 1, 7, 9, 10 (1 và 10 trùng họ tên, vẫn là 2 bộ).
+- Seed636 (log tuần 1, kiểm tra `w1_seed/QRA01-vs-QSQL01`): 34 bộ: 1, 2, 3, 4, 5, 6, 41, 49, 56, 68, 73, 74, 76, 81, 85, 92, 99, 100, 102, 107, 109, 118, 122, 129, 136, 140, 143, 158, 168, 177, 180, 185, 193, 195. Mã 4 và 5 trùng họ tên nhưng vẫn là 2 bộ.
 
 **(7) SQL kiểm chứng:**
 
@@ -170,7 +173,10 @@ KQ = π ma_cu_dan, ho_ten (CU_DAN ⋈ R2)
 - Cấu trúc giống QRA01, chỉ thêm điều kiện loại cư trú.
 - Phép chọn `loai_cu_tru='TAM_TRU'` đặt ngay trên `Q_d`, nên người thường trú ở Tổ 02 bị loại trước khi nối, giảm số bộ trung gian.
 
-**(6) Kết quả mong đợi:** Có ít nhất một cư dân tạm trú ở Tổ 02 (kịch bản S02). Cư dân thường trú ở Tổ 01 **không** được xuất hiện. [CẦN ĐIỀN mã cụ thể].
+**(6) Kết quả mong đợi:** Có ít nhất một cư dân tạm trú ở Tổ 02 (kịch bản S02). Cư dân thường trú ở Tổ 01 **không** được xuất hiện.
+
+- Fixture `tests/ra_fixture.sql`: mã 2.
+- Seed636 (chạy bổ sung 16/11, [tests/seed636_qra02_03_06_08.sql](../tests/seed636_qra02_03_06_08.sql)): 10 bộ: 7, 8, 32, 42, 62, 77, 88, 162, 178, 190.
 
 **(7) SQL kiểm chứng:**
 
@@ -212,7 +218,10 @@ KQ = π ma_cu_dan, ho_ten, ngay_sinh (R3 ⋈ R2)        (R2 như QRA01)
 - R3: chọn cư dân có ngày sinh không muộn hơn ngày cắt.
 - KQ: nối tự nhiên với R2 qua thuộc tính chung duy nhất `ma_cu_dan`, rồi chiếu 3 thuộc tính cần hiển thị. Chỉ giữ người vừa đủ tuổi vừa đang ở Tổ 01.
 
-**(6) Kết quả mong đợi:** Trả về cư dân của kịch bản S03 (ít nhất một người từ 60 tuổi ở Tổ 01). Người 60 tuổi nhưng ở tổ khác, hoặc đã chuyển đi trước d, không được xuất hiện. [CẦN ĐIỀN].
+**(6) Kết quả mong đợi:** Trả về cư dân của kịch bản S03 (ít nhất một người từ 60 tuổi ở Tổ 01). Người 60 tuổi nhưng ở tổ khác, hoặc đã chuyển đi trước d, không được xuất hiện.
+
+- Fixture `tests/ra_fixture.sql`: mã 1 (cư dân 3 đủ 60 tuổi nhưng ở Tổ 02 nên bị loại).
+- Seed636 (chạy bổ sung 16/11, [tests/seed636_qra02_03_06_08.sql](../tests/seed636_qra02_03_06_08.sql)): 2 bộ: 1, 2. Cả hai đều thuộc kết quả QRA01.
 
 **(7) SQL kiểm chứng:**
 
@@ -257,7 +266,10 @@ KQ = π ma_cu_dan, ho_ten (CU_DAN ⋈ R1)
 - Điều kiện `Q1.ma_cu_dan = Q2.ma_cu_dan` ghép mọi cặp đợt của **cùng một người**; điều kiện `Q1.ma_ho ≠ Q2.ma_ho` chỉ giữ các cặp mà hai đợt thuộc hai hộ khác nhau.
 - Chiếu lấy mã cư dân. Phép chiếu loại bộ trùng, nên mỗi người chỉ xuất hiện một lần dù có nhiều cặp thỏa mãn.
 
-**(6) Kết quả mong đợi:** Trả về đúng cư dân của kịch bản S06. Người có hai đợt **trong cùng một hộ** không được trả về. [CẦN ĐIỀN].
+**(6) Kết quả mong đợi:** Trả về đúng cư dân của kịch bản S06. Người có hai đợt **trong cùng một hộ** không được trả về.
+
+- Fixture `tests/ra_fixture.sql`: mã 4, 9 (cư dân 7 có 2 đợt cùng hộ 1 nên bị loại).
+- Seed636 (log tuần 1, kiểm tra `w1_seed/QRA04-vs-QSQL05`): 54 bộ: 6, 15, 16, 28, 29, 41, 42, 47, 51, 52, 54, 55, 60, 62, 65, 69, 75, 76, 79, 81, 82, 83, 88, 89, 92, 93, 99, 107, 118, 120, 122, 126, 134, 140, 144, 145, 146, 149, 151, 152, 158, 160, 162, 163, 165, 169, 176, 177, 178, 188, 190, 192, 193, 195.
 
 **(7) SQL kiểm chứng:**
 
@@ -294,7 +306,10 @@ KQ = π ma_dia_chi, dia_chi_chuan (DIA_CHI ⋈ R1)
 - Lấy toàn bộ mã địa chỉ, trừ đi tập mã địa chỉ đã xuất hiện trong bảng nhóm hộ. Hai vế đều có một thuộc tính `ma_dia_chi` cùng miền giá trị, nên khả hợp.
 - Nối lại với `DIA_CHI` (thuộc tính chung duy nhất là `ma_dia_chi`) để hiển thị địa chỉ chuẩn.
 
-**(6) Kết quả mong đợi:** Trả về địa chỉ của kịch bản S04. Địa chỉ của S05 (có hộ nhưng hiện không ai ở) **không** được trả về, vì địa chỉ đó vẫn có trong `HO_CU_TRU`. [CẦN ĐIỀN].
+**(6) Kết quả mong đợi:** Trả về địa chỉ của kịch bản S04. Địa chỉ của S05 (có hộ nhưng hiện không ai ở) **không** được trả về, vì địa chỉ đó vẫn có trong `HO_CU_TRU`.
+
+- Fixture `tests/ra_fixture.sql`: mã `ma_dia_chi` 5 (địa chỉ 1 có hộ 5 không người ở nhưng vẫn bị loại).
+- Seed636 (log tuần 1, kiểm tra `w1_seed/QRA05-vs-QSQL04`): 4 bộ: `ma_dia_chi` 47, 48, 49, 50.
 
 **(7) SQL kiểm chứng:**
 
@@ -330,7 +345,10 @@ KQ = π ma_cu_dan, ho_ten (CU_DAN ⋈ R1)
 
 **(5) Diễn giải:** Tập mọi mã cư dân, trừ tập mã cư dân đã xuất hiện trong ít nhất một đợt cư trú. Sau đó nối với `CU_DAN` để lấy họ tên. So sánh theo **mã** chứ không theo họ tên, nên hai người trùng tên (S16) không bị gộp nhầm.
 
-**(6) Kết quả mong đợi:** Trả về cư dân của kịch bản S10. [CẦN ĐIỀN].
+**(6) Kết quả mong đợi:** Trả về cư dân của kịch bản S10.
+
+- Fixture `tests/ra_fixture.sql`: mã 6.
+- Seed636 (chạy bổ sung 16/11, [tests/seed636_qra02_03_06_08.sql](../tests/seed636_qra02_03_06_08.sql)): 8 bộ: 25, 26, 27, 196, 197, 198, 199, 200.
 
 **(7) SQL kiểm chứng:**
 
@@ -382,7 +400,10 @@ KQ   = π ma_cu_dan, ho_ten (CU_DAN ⋈ R3)
 - **Không** thể viết thành `σ loai_cu_tru='THUONG_TRU' ∧ loai_cu_tru='TAM_TRU' (...)`. Một bộ (một đợt) chỉ có một giá trị `loai_cu_tru`, nên điều kiện đó luôn sai và kết quả luôn rỗng.
 - Hai cách cho cùng kết quả trên bộ dữ liệu thử (`tests/ra_fixture.sql`).
 
-**(6) Kết quả mong đợi:** Trả về cư dân của S07. Cư dân của S08 (chỉ có một loại cư trú) bị loại. [CẦN ĐIỀN].
+**(6) Kết quả mong đợi:** Trả về cư dân của S07. Cư dân của S08 (chỉ có một loại cư trú) bị loại.
+
+- Fixture `tests/ra_fixture.sql`: mã 4 cho cả hai cách (cư dân 7, 9 chỉ có thường trú nên bị loại).
+- Seed636 (log tuần 1, kiểm tra `w1_seed/QRA07-vs-QSQL06`): 31 bộ: 6, 17, 18, 41, 42, 51, 52, 54, 55, 60, 62, 75, 76, 81, 82, 83, 88, 89, 92, 99, 107, 118, 126, 140, 145, 146, 160, 163, 177, 192, 193. Cách 2 (phép chia) cho cùng tập mã, kiểm tra bổ sung ngày 16/11.
 
 **(7) SQL kiểm chứng:**
 
@@ -441,7 +462,10 @@ KQ = R1 ∪ R2
 - `R1 ∪ R2`: hợp hai tập, loại phần tử trùng. Một người thuộc cả hai tập (nếu có, ví dụ thường trú ở Tổ 01 và tạm trú ở Tổ 02) chỉ xuất hiện một lần.
 - Có thể viết gọn bằng một phép chọn với điều kiện `ten_to = 'Tổ 01' ∨ ten_to = 'Tổ 02'`. Ở đây cố ý dùng `∪` để minh họa phép hợp.
 
-**(6) Kết quả mong đợi:** Bằng hợp của kết quả QRA01 (phần mã cư dân) và tập cư dân Tổ 02 tại d (cả thường trú lẫn tạm trú). [CẦN ĐIỀN].
+**(6) Kết quả mong đợi:** Bằng hợp của kết quả QRA01 (phần mã cư dân) và tập cư dân Tổ 02 tại d (cả thường trú lẫn tạm trú).
+
+- Fixture `tests/ra_fixture.sql`: mã 1, 2, 3, 7, 9, 10.
+- Seed636 (chạy bổ sung 16/11, [tests/seed636_qra02_03_06_08.sql](../tests/seed636_qra02_03_06_08.sql)): 61 bộ = 34 (Tổ 01) + 29 (Tổ 02) − 2 (có mặt ở cả hai tổ): 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 16, 32, 35, 41, 42, 44, 49, 56, 60, 62, 67, 68, 73, 74, 76, 77, 79, 81, 85, 88, 92, 95, 99, 100, 102, 107, 109, 112, 118, 122, 129, 133, 136, 140, 143, 151, 154, 158, 162, 168, 169, 170, 177, 178, 180, 181, 185, 190, 193, 195.
 
 **(7) SQL kiểm chứng:**
 
@@ -489,7 +513,10 @@ KQ = π ma_cu_dan, ho_ten (CU_DAN ⋈ R3)
 - Phép hiệu cho ra người đã từng ở nhưng tại d không còn đợt nào hiệu lực (đã chuyển đi hoặc mọi đợt đã kết thúc).
 - So với QRA06: QRA06 là người **chưa từng** có đợt nào; QRA09 là người **từng có** nhưng nay không còn.
 
-**(6) Kết quả mong đợi:** Trả về cư dân của S09 (ví dụ người có sự kiện `CHUYEN_DI` trước d). Không trả về người của S10. [CẦN ĐIỀN].
+**(6) Kết quả mong đợi:** Trả về cư dân của S09 (ví dụ người có sự kiện `CHUYEN_DI` trước d). Không trả về người của S10.
+
+- Fixture `tests/ra_fixture.sql`: mã 5 (cư dân 8 chỉ có đợt bắt đầu 2027-01-01 nên bị loại).
+- Seed636 (log tuần 1, kiểm tra `w1_seed/QRA09-vs-QSQL07`): 17 bộ: 19, 20, 21, 22, 46, 53, 57, 59, 61, 86, 91, 117, 119, 121, 141, 161, 174. Không giao với kết quả QRA06.
 
 **(7) SQL kiểm chứng:**
 
@@ -540,7 +567,10 @@ KQ  = π ma_cu_dan, ho_ten (CU_DAN ⋈ R2)
 - Điều kiện `CU.ma_to ≠ MOI.ma_to`: chỉ giữ sự kiện mà tổ cũ khác tổ mới.
 - Đây là câu dùng nhiều phép nhất: chọn, chiếu, nối nhiều lần và đổi tên để dùng một quan hệ ở hai vai trò.
 
-**(6) Kết quả mong đợi:** Trả về cư dân của S13 nếu sự kiện S13 được thiết kế là chuyển **khác tổ**. Đề nghị TV2 tạo ít nhất một sự kiện chuyển nội bộ khác tổ và một sự kiện **cùng tổ, khác hộ**, để chứng minh phép chọn `≠` hoạt động. [CẦN ĐIỀN].
+**(6) Kết quả mong đợi:** Trả về cư dân của S13 (chuyển nội bộ **khác tổ**). Sự kiện chuyển nội bộ **cùng tổ, khác hộ** phải bị loại để chứng minh điều kiện `≠` hoạt động.
+
+- Fixture `tests/ra_fixture.sql`: mã 4 (cư dân 9 chuyển nội bộ hộ 1 → hộ 2 cùng Tổ 01 nên bị loại).
+- Seed636 (log tuần 1, kiểm tra `w1_seed/QRA10-vs-QSQL09`): 22 bộ: 15, 28, 29, 47, 65, 69, 79, 92, 93, 122, 134, 140, 144, 149, 151, 158, 169, 176, 178, 188, 190, 195.
 
 **(7) SQL kiểm chứng:**
 
