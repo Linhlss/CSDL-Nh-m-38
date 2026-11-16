@@ -24,16 +24,17 @@ from xml.etree import ElementTree as ET
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "tests/week1_manifest.json"
 LOG = ROOT / "tests/week1_verification_log.md"
+LEDGER = "meetings/decision_log.md"
 TABLES = {"to_dan_pho": 3, "dia_chi": 4, "ho_cu_tru": 4, "cu_dan": 5,
           "qua_trinh_cu_tru": 6, "tai_khoan": 5, "bien_dong_cu_tru": 8}
 REQUIRED = ["README.md", ".gitignore", "docs/03_dac_ta_nghiep_vu.md", "docs/04_data_dictionary_va_chuan_hoa.md",
             "docs/02_bao_cao_suon.md", "docs/07_ma_tran_truy_van_va_review.md",
-            "docs/BAN_GIAO_TV1_TUAN_1.md", "meetings/decision_log.md", "sql/01_schema.sql",
+            LEDGER, "sql/01_schema.sql",
             "sql/02_constraints.sql", "tests/week1_design_cases.md", "tests/week1_sql_compatibility.json",
             "scripts/render_week1_diagrams.py", "scripts/verify_week1.py"]
 REQUIRED += [f"diagrams/{name}.{ext}" for name in ("erd_v1", "phan_ra_chuc_nang")
              for ext in ("drawio", "png", "svg")]
-REQUIRED += [".gitattributes", "docs/05_ke_hoach_du_lieu_va_sql.md", "docs/BAN_GIAO_TUAN_1.md",
+REQUIRED += [".gitattributes", "docs/05_ke_hoach_du_lieu_va_sql.md",
              "tests/week1_fixture.sql", "tests/week1_expected.json", "tests/week1_environment.md",
              "tests/week1_execution_results.json", "scripts/verify_week1_runtime.py"]
 RESULTS = []
@@ -192,11 +193,11 @@ def report_and_handoff():
     assert "[TODO" not in part and "[CHÈN HÌNH" not in part
     for n in range(1,4):
         assert len(re.findall(rf"^### {n}\.\d+\.",part,re.M)) >= 4
-    ids = re.findall(r"^\| (W1-T1-\d\d) \|",read("meetings/decision_log.md"),re.M)
+    ids = re.findall(r"^\| (W1-T1-\d\d) \|",read(LEDGER),re.M)
     assert len(ids) == 20 and set(ids) == {f"W1-T1-{n:02}" for n in range(1,21)}
-    assert "CHỜ REVIEW" in read("meetings/decision_log.md")
+    assert "CHỜ REVIEW" in read(LEDGER)
     assert "dư thừa" in read("docs/04_data_dictionary_va_chuan_hoa.md")
-    assert "kiểm tra tệp không thay test DB" in read("docs/BAN_GIAO_TV1_TUAN_1.md")
+    assert "kiểm tra tệp không thay test DB" in read(LEDGER)
     return "Chapters 1–3 filled; all 20 TV1 tasks traced; peer-review and DB-test limits explicit"
 
 
@@ -241,19 +242,28 @@ def files_for_manifest():
 def week1_handoff():
     expected = {f"W1-T{person}-{n:02}" for person, count in [(1,20),(2,14),(3,14)]
                 for n in range(1,count+1)} | {f"W1-G-{n:02}" for n in range(1,6)}
-    rows = re.findall(r"^\| (W1-(?:T[123]|G)-\d\d) \|", read("docs/BAN_GIAO_TUAN_1.md"), re.M)
+    text = read(LEDGER)
+    rows = re.findall(r"^\| (W1-(?:T[123]|G)-\d\d) \|", text, re.M)
     assert len(rows)==53 and set(rows)==expected, "Week1 handoff must trace all 53 unique IDs"
-    boxes = re.findall(r"^- \[([ x])\] \*\*(W1-(?:T[123]|G)-\d\d)",read("docs/03_CHECKLIST_DU_AN.md"),re.M)
+    checklist = read("docs/03_CHECKLIST_DU_AN.md")
+    counts = {1: (20,14,14,5), 2: (15,16,13,3), 3: (15,11,11,5)}
+    project_ids = {f"W{week}-{owner}-{n:02}"
+                   for week, sizes in counts.items()
+                   for owner, size in zip(("T1","T2","T3","G"),sizes)
+                   for n in range(1,size+1)}
+    all_boxes = re.findall(r"^- \[([ x])\] \*\*(W[123]-(?:T[123]|G)-\d\d)",checklist,re.M)
+    assert len(all_boxes)==142 and {key for _,key in all_boxes}==project_ids, "Checklist must retain all 142 unique project IDs"
+    boxes = [(mark,key) for mark,key in all_boxes if key.startswith("W1-")]
     assert len(boxes)==53 and {key for _,key in boxes}==expected
-    ledger = [line.split("|") for line in read("docs/BAN_GIAO_TUAN_1.md").splitlines()
+    ledger = [line.split("|") for line in text.splitlines()
               if re.match(r"^\| W1-(?:T[123]|G)-\d\d \|",line)]
     ready = {cells[1].strip() for cells in ledger if cells[-2].strip().startswith("Đạt")}
     marked = {key for mark,key in boxes if mark=="x"}
     assert marked==ready, "Checklist boxes must agree with the evidence ledger, not an assumed completion count"
     done = len(marked)
     for name, sid in [("Dương Ngọc Ninh","20237469"),("Trần Tuấn Ngọc","20227064"),("Trần Bùi Tùng Linh","20227057")]:
-        assert name in read("docs/BAN_GIAO_TUAN_1.md") and sid in read("docs/BAN_GIAO_TUAN_1.md")
-    return f"53 unique week1 IDs; {done} technical checks complete, {53-done} source/personal/group confirmations explicit"
+        assert name in text and sid in text
+    return f"142 unique project IDs; shared ledger: 53 week1 IDs, {done} technical checks complete, {53-done} source/personal/group confirmations explicit"
 
 
 def runtime_evidence():
@@ -294,7 +304,7 @@ def check_manifest():
 def record_evidence():
     recorded_date = date.today()
     rows = "\n".join(f"| {name} | {state} | {detail} |" for name,state,detail in RESULTS)
-    LOG.write_text(f"""# BIÊN BẢN TỰ KIỂM TRA BỘ BÀN GIAO TV1 — {recorded_date:%d/%m/%Y}
+    LOG.write_text(f"""# BIÊN BẢN KIỂM TRA TỆP DỰ ÁN — {recorded_date:%d/%m/%Y}
 
 **Lệnh đã chạy:** `python3 scripts/verify_week1.py --record` từ thư mục gốc.
 **Python thực tế:** {platform.python_version()}. **Hệ điều hành:** {platform.system()} {platform.release()}.
@@ -306,18 +316,18 @@ def record_evidence():
 
 ## Kiểm tra trực quan
 
-Đã mở và xem cả hai ảnh PNG sau khi dựng: tên/thuộc tính đọc được, không cắt bảng hoặc chữ; hai vai trò cũ/mới tách riêng; cây chức năng đủ ba cấp. PNG là 2300×1626, tỷ lệ A4 ngang. SVG và drawio được kiểm XML; việc xem ảnh không thay việc TV2/TV3 review nội dung.
+Lần dựng sơ đồ tuần 1 đã mở và xem cả hai ảnh PNG: tên/thuộc tính đọc được, không cắt bảng hoặc chữ; hai vai trò cũ/mới tách riêng; cây chức năng đủ ba cấp. Lần kiểm tra tệp này kiểm PNG 2300×1626, CRC và XML của SVG/drawio, không tự nhận là một lần review hình ảnh mới hoặc thay review nội dung của TV2/TV3.
 
 ## Kiểm tra tương thích
 
-`week1_sql_compatibility.json` lưu URL phiên bản gốc và SHA-256 SQL chuẩn hóa. Đã đọc bản GitHub tại d20b394, bỏ chú thích dòng và gộp khoảng trắng để so với local; không thay đổi câu lệnh tạo bảng/chỉ mục.
+`week1_sql_compatibility.json` lưu URL phiên bản gốc tại d20b394 và SHA-256 SQL chuẩn hóa đã đối chiếu. Lần kiểm tra này bỏ chú thích dòng, gộp khoảng trắng và so với hash đã ghi; không tự nhận đã tải lại nguồn GitHub. Không thay đổi câu lệnh tạo bảng/chỉ mục.
 
 ## Những điều chưa được xác nhận
 
-- Lệnh kiểm tra tệp này không chạy DDL hoặc S01–S21 trên PostgreSQL. Kiểm chứng DB độc lập (nếu đã có) được ghi riêng trong docs/REVIEW_TV3_CHI_TIET.md; không dùng log này làm bằng chứng DB.
+- Lệnh kiểm tra tệp này không chạy DDL hoặc S01–S21 trên PostgreSQL. Nguồn và phạm vi kiểm chứng độc lập nằm trong [nhật ký chung](../meetings/decision_log.md), [log146](tv3_review_results.json) và [log96](week1_execution_results.json); không dùng biên bản tĩnh này làm bằng chứng chạy DB mới.
 - Lệnh này không nghiệm thu cơ chế tuần 2 trong constraints/seed/query/security; xem sản phẩm và kết quả của từng owner. Ca D01–D30 là đối chiếu thiết kế với đáp án kỳ vọng, không là kết quả DB PASS.
 - Lệnh này không tự xác nhận review của TV2/TV3 hoặc Gate 1 PASS; xem meetings/decision_log.md và báo cáo review mới nhất. Phân tích chuẩn hóa công bố điểm dư thừa ngày sự kiện và phần cần chốt tuần 2.
-- Biên bản này chỉ kiểm tra tệp; trạng thái tích hợp PR và commit xem docs/REVIEW_TV3_CHI_TIET.md, meetings/decision_log.md và lịch sử main trên GitHub. Merge không thay thế xác nhận Gate 1.
+- Biên bản này chỉ kiểm tra tệp; trạng thái tích hợp PR, commit, bảng53mã và xác nhận còn thiếu tập trung tại meetings/decision_log.md. Merge không thay thế xác nhận Gate 1; lịch tuần 2 nằm trong checklist hiện hành.
 
 ## Kiểm tra lại
 

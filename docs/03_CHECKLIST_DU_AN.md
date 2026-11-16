@@ -7,17 +7,16 @@
 > **TV3:** Trần Bùi Tùng Linh — 20227057 (Đại số quan hệ, bảo mật, kiểm chứng).
 > **Thời gian:** 10–27/11/2026 · **Hạn nộp:** Thứ Sáu 27/11/2026, tiết 3 (theo ảnh thông báo của giảng viên).  
 > **Ngày tham chiếu cố định để so sánh kết quả truy vấn:** `2026-11-20`.  
-> **Dự kiến:** PostgreSQL >= 15, mô hình 7 bảng, dữ liệu giả lập 100%, khoảng 643 bản ghi (không phải yêu cầu bắt buộc của cô).  
-> **Vị trí đề xuất trong repository:** `docs/07_checklist_toan_du_an.md`.  
-> **Phiên bản:** 1.0 — lập 10/11/2026. Đây là **checklist kế hoạch**, không tự xác nhận công việc kỹ thuật đã hoàn thành.
+> **Nền kỹ thuật:** PostgreSQL >= 15, mô hình 7 bảng; seed hiện hành 636 dòng giả lập 100%. ~643 là dự kiến ban đầu, không phải yêu cầu bắt buộc.
+> **Cập nhật điều hành:** 16/11/2026. Giữ 142 mã việc gốc; bằng chứng kỹ thuật và phê duyệt nhóm được ghi riêng.
 
-> **Cập nhật sản phẩm TV1, 11/11/2026:** Bộ thiết kế tuần 1 đã có đầu ra để bàn giao review; xem [hướng dẫn bàn giao](BAN_GIAO_TV1_TUAN_1.md), [đối chiếu đủ 20 mã việc và Gate 1](../meetings/decision_log.md), [biên bản tự kiểm tra](../tests/week1_verification_log.md). Các checkbox nghiệm thu bên dưới giữ nguyên cho tới khi có reviewer thực tế. Hồ sơ Gate 1 và ứng viên v1 đã chuẩn bị; chưa ký/xác nhận thay TV2/TV3. Phần chuẩn hóa tuần 1 là bản nháp có công bố điểm ngày sự kiện cần chốt ở tuần 2.
+> **Tuần 1 đã hoàn thiện kỹ thuật:** 46/53 mục đủ sản phẩm/review hỗ trợ; 7 mục chờ nguồn hoặc xác nhận. [Nhật ký chung](../meetings/decision_log.md#week1-ledger) là bảng đối chiếu duy nhất; không tự ký Gate 1 PASS. [Phần tuần 2](#tuan-2-hien-hanh) bên dưới nêu việc tiếp theo.
 
 ---
 
 ## A. HƯỚNG DẪN SỬ DỤNG — QUY ƯỚC HOÀN THÀNH
 
-- Dấu `[ ]`: CHƯA được nghiệm thu; `[x]`: **có file/commit thực tế, kiểm tra đạt và reviewer xác nhận**. Không tích vì chỉ có tên file hoặc nội dung TODO.
+- Dấu `[ ]`: chưa đủ điều kiện nghiệm thu của mục; `[x]`: có sản phẩm, kiểm chứng và nguồn review được ghi rõ. Tuần 1 dùng kết luận review kỹ thuật hỗ trợ trong nhật ký; checkbox này không thay phê duyệt cá nhân hoặc Gate của nhóm. Tuần 2–3 chưa tự tích chỉ vì có mã hoặc nháp.
 - Mã công việc có dạng `W1-T1-01` = tuần 1, thành viên 1, việc 01. **Owner** là người làm và sửa lỗi; **Reviewer** được ghi theo cụm công việc; làm xong phải gửi đường dẫn commit/PR hoặc file và kết quả kiểm tra.
 - Trạng thái nên ghi tại GitHub Issues/PR: `TODO → DOING → REVIEW → DONE`, hoặc ghi trong `meetings/decision_log.md`. Checklist này vẫn dùng `[ ] / [x]` để hoạt động ngay trên GitHub.
 - **Mỗi người tự viết phần báo cáo của mình**, TV1 kiểm tra định dạng và tích hợp; không đẩy phần viết chương 4–6 sang TV1.
@@ -26,33 +25,26 @@
 - **Tối thiểu phải hoàn thành**: bài toán + chức năng + ERD + lược đồ quan hệ/ràng buộc + 10 đại số quan hệ + 10 SQL + 2 ví dụ bảo mật + báo cáo đúng quy định + bản mềm/bản in. Giao diện web, ứng dụng và AI **không** thuộc phạm vi.
 - Mọi bài kiểm thử âm (dự kiến lỗi) phải chạy trong `ROLLBACK` hoặc transaction riêng để không làm bẩn CSDL.
 
-### A1. Những thứ ĐÃ CÓ trong bộ khung, nhưng chưa được tính là nghiệm thu chuyên môn
+### A1. Đầu vào hiện có để tiếp tục
 
-- [x] Chọn chủ đề số 17, tên đề tài và giới hạn **một phường mô phỏng**.
-- [x] Thống nhất dữ liệu được **giả lập 100%**.
-- [x] Lập kế hoạch 3 tuần và chia ba vai trò chính.
-- [x] Khởi tạo GitHub repository và có các tài liệu `README.md`, `docs/01_de_cuong.md`, `docs/02_bao_cao_suon.md`, `docs/03_CHECKLIST_DU_AN.md`.
-- [x] Có bản **DDL dự thảo v0** `sql/01_schema.sql` cho 7 bảng; đây KHÔNG phải schema đã khóa/đã kiểm thử.
-- [x] Có danh sách **10 câu RA** trong đề cương, **10 slot SQL** trong `sql/04_queries.sql`, khung **21 test S01–S21** và kế hoạch **2 demo bảo mật**; chưa có nghĩa đã viết/chạy xong.
+Schema/ERD/từ điển đã thống nhất về cấu trúc 7 bảng/35 cột. Có seed636, fixture29/đáp án tay, 10 SQL, 10 RA, B1/B2 và nháp Chương 1–4/6. Log tuần 1 đạt96/96; ràng buộc/transaction nâng cao và Chương 5 còn cần hoàn thiện. Trạng thái từng mã, nguồn review và xác nhận còn thiếu ở nhật ký chung; không làm lại sản phẩm đã có chỉ vì chuyển tuần.
 
-> Các mục `[x]` trên chỉ xác nhận **sự tồn tại của đầu vào/bản nháp** theo trao đổi và bộ khung; các mục tuần 1–3 bên dưới vẫn để `[ ]` cho đến khi **thành viên rà soát và nghiệm thu**. Nếu nhánh GitHub khác bản dự thảo, cập nhật theo bản thực tế sau khi kiểm tra.
+### A2. Nơi lưu sản phẩm hiện hành
 
-### A2. Nơi lưu sản phẩm — tránh đặt trùng/tên không nhất quán
-
-| Đường dẫn đề nghị | Owner | Nội dung bắt buộc |
+| Đường dẫn | Owner | Nội dung |
 |---|---|---|
 | `docs/03_dac_ta_nghiep_vu.md` | TV1 | Bài toán, phạm vi, tác nhân, P1–P6, quy tắc nghiệp vụ |
 | `diagrams/phan_ra_chuc_nang.drawio` và `.png` | TV1 | Sơ đồ phân rã chức năng chính thức |
 | `diagrams/erd_v1.drawio` và `.png` | TV1 | Mô hình ER chính thức, 7 thực thể/quan hệ |
 | `docs/04_data_dictionary_va_chuan_hoa.md` | TV1 | 7 bảng, thuộc tính, PK/FK/CK, ánh xạ, phụ thuộc hàm, 3NF |
-| `sql/01_schema.sql` | TV1 | CREATE TABLE bản đã duyệt |
+| `sql/01_schema.sql` | TV1 | CREATE TABLE hiện hành, v1-candidate chờ phê duyệt nhóm |
 | `sql/02_constraints.sql` | TV1 | Ràng buộc liên bảng và thời gian, kèm giải thích/SQL kiểm thử |
 | `docs/05_ke_hoach_du_lieu_va_sql.md` | TV2 | 10 câu SQL, dữ liệu cần cho từng câu, kịch bản sinh dữ liệu |
 | `scripts/generate_data.py` | TV2 | Sinh dữ liệu giả lập có seed cố định và kiểm tra quan hệ |
 | `data/generated/` | TV2 | CSV giả lập, không chứa thông tin thật |
-| `sql/03_seed.sql` | TV2 | Nạp dữ liệu hoặc chỉ dẫn nạp CSV tái tạo được, không nạp trùng |
+| `sql/03_seed.sql` | TV2 | Nạp INSERT tái lập; CSV chỉ đối chiếu, không nạp thêm |
 | `sql/04_queries.sql` | TV2 | 10 truy vấn SQL chạy được |
-| `docs/06_dai_so_quan_he_va_bao_mat.md` | TV3 | 10 bài RA và kế hoạch bảo mật, có thể tách hai file nếu quá dài |
+| `docs/06a_dai_so_quan_he.md` và `docs/06b_bao_mat.md` | TV3 | 10 RA/SQL kiểm chứng và kế hoạch B1/B2 |
 | `sql/05_security.sql` | TV3 | Roles, quyền, VIEW và 2 ca demo bảo mật |
 | `sql/06_validation.sql` | TV1 chính; TV2/TV3 góp | Test tính toàn vẹn và kiểm tra số bản ghi, kết quả |
 | `tests/test_scenarios.md` | TV2 chính; TV1/TV3 góp | 21 tình huống có dữ liệu, kết quả, reviewer |
@@ -61,7 +53,7 @@
 | `meetings/decision_log.md` | TV1 | Các quyết định, thay đổi schema, duyệt Gate 1–4 |
 | `report/` | TV1 tích hợp | Bản báo cáo nguồn và PDF cuối cùng |
 
-**Lưu ý:** Các file `docs/03...`, `04...`, `05...`, `06...` bên trên là **đề xuất tạo mới**; không tự thay thế/ghi đè `docs/01_de_cuong.md` và `docs/02_bao_cao_suon.md` đang có. Nếu nhóm đổi tên, sửa tất cả đường dẫn trong checklist.
+**Nguồn dùng chung:** README dẫn vào sản phẩm; checklist giữ mã/owner/reviewer; nhật ký giữ quyết định, review và bảng đối chiếu tuần 1. Sửa các liên kết khi đổi tên file; không tạo bản hướng dẫn trùng.
 
 ### A3. Hạn nội bộ và điều kiện đi tiếp
 
@@ -78,7 +70,7 @@
 
 # TUẦN 1 — 10–15/11: ĐẶC TẢ, THIẾT KẾ VÀ KHÓA SCHEMA (G1)
 
-**Trọng tâm:** Chưa lao vào sinh 643 bản ghi hoặc viết 20 lời giải khi chưa khóa thiết kế. Mỗi việc phải có **tài liệu/sơ đồ cụ thể**, không chỉ trao đổi miệng.
+**Kết quả kỹ thuật đã chốt ngày 16/11:** thiết kế, tài liệu và kiểm chứng đã có; giữ nguyên 53 mã cùng trạng thái theo nhật ký. Các mục chưa tích dưới đây còn chờ nguồn/xác nhận; phần triển khai tiếp theo nằm ở tuần 2.
 
 ## W1 / TV1 — Trưởng nhóm, nghiệp vụ, ERD, lược đồ quan hệ
 
@@ -159,7 +151,32 @@
 
 ---
 
+<a id="tuan-2-hien-hanh"></a>
+
 # TUẦN 2 — 16–22/11: TRIỂN KHAI CSDL, DỮ LIỆU, 20 TRUY VẤN VÀ BẢO MẬT SƠ BỘ (G2)
+
+**Đích 22/11:** các ràng buộc/transaction, seed, 10 SQL, 10 RA và B1/B2 cùng chạy được trên DB sạch; có đối chiếu expected/actual, bản nháp đủ nội dung và danh sách lỗi còn lại có owner/hạn. Có 47 mã tuần 2; các checkbox bên dưới dành cho nghiệm thu tuần 2, bảng sau ghi hiện trạng để tránh làm lại.
+
+| Nhóm việc / mã gốc | Đã có trên main | Việc cần làm để bàn giao tuần 2 | Reviewer |
+|---|---|---|---|
+| TV1: W2-T1-01–03 | Schema đã tạo trên DB thử; log có kiểm tra cơ bản | Dựng lại DB tuần 2, xác nhận đủ PK/FK/UNIQUE/NOT NULL/CHECK và lưu lỗi đúng; không nhận kết quả tuần 1 là kiểm chứng ràng buộc mới | TV2 + TV3 |
+| TV1: W2-T1-04–09,11–12 | Đặc tả B06/B08–B11/B14, validation E1/B09 và ca D01–D30 | **Ưu tiên:** viết 02_constraints.sql đang TODO; chống chồng lấn, kiểm tra hai đợt/ngày và chiều sửa đợt, bảo vệ lịch sử, tài khoản ghi; transaction chuyển nội bộ và rollback. Test hợp lệ, vi phạm và trạng thái trước/sau | TV2 + TV3 |
+| TV1: W2-T1-10,13–15 | Review seed sửa B15; Chương 1–3 và luận chứng chuẩn hóa nháp | Soát lại dữ liệu dưới ràng buộc mới, chốt FD/3NF với giới hạn ngày sự kiện; hoàn thiện Chương 1–3 và kiểm tra Gate 2 | TV2 + TV3 |
+| TV2: W2-T2-01–06 | Generator/seed636/fixture29, hướng dẫn nạp, reload và sequence đã kiểm chứng | Bổ sung xác nhận môi trường cá nhân nếu dùng; chạy nạp/reset/validation khi có ràng buộc mới, ghi bản ghi từng bảng và kết quả vào final_test_log | TV1 + TV3 |
+| TV2: W2-T2-07–14 | 10 SQL đầy đủ, tuple khớp tiny29/seed636; sáu cặp RA/SQL đã đối soát | Rà đủ S01–S21, ca bị loại đúng và expected/actual; chạy lại sau tích hợp, xử lý lỗi và review chéo. Không viết lại 10 SQL chỉ để đổi tuần | TV1 + TV3 |
+| TV2: W2-T2-15–16 | Dữ liệu/SQL có thể dùng làm nguồn báo cáo; Chương 5 còn TODO | Viết Chương 3.5/5: câu hỏi, SQL, kết quả và nhận xét; dọn dữ liệu âm, chốt phiên bản dữ liệu/SQL cho Gate 2 | TV1 + TV3 |
+| TV3: W2-T3-01–07,11 | 10 RA/SQL kiểm chứng, review dữ liệu; sáu cặp seed636 khớp, bốn QRA khác đã đúng trên tiny29 | Lưu đủ kết quả **QRA02/03/06/08 trên seed636**; hoàn thiện bảng 10 câu và chuẩn hóa cùng mức hạt; review độ phủ S01–S16 | TV1 + TV2 |
+| TV3: W2-T3-08–10,12–13 | B1/B2, guard role/rollback có log; nháp Chương 4/6 đã merge PR #4 | Chạy lại quyền khi tích hợp tuần 2, cập nhật kết quả Chương 4/6; bàn giao RA/demo và lỗi còn lại. Chuẩn bị danh sách ảnh; chụp chính thức theo Gate 3 ngày24/11 | TV2; TV1 review RA/cấu hình |
+| Cả nhóm: W2-G-01–03 | Sản phẩm nền đã có, chưa có xác nhận Gate 2 | Chạy chuỗi tích hợp có 02_constraints, xử lý lỗi và ghi biên bản duyệt thật ngày22/11 | Cả ba |
+
+| Lịch phối hợp | TV1 | TV2 | TV3 |
+|---|---|---|---|
+| 16–18/11 | Triển khai ràng buộc ưu tiên | Viết Chương 3.5/5 từ dữ liệu/SQL đã có | Bổ sung bốn kết quả RA và rà bảng đối soát |
+| 19–20/11 | Transaction và test ràng buộc/rollback | Chạy dữ liệu/SQL cùng ràng buộc mới, ghi expected/actual | Kiểm tra RA/VIEW/quyền trong bản tích hợp |
+| 21–22/11 | Sửa lỗi, chốt chuẩn hóa/Chương 1–3 | Chốt dữ liệu/SQL/Chương 5 | Chốt 10 RA/demo/Chương 4–6 |
+| 22/11 | Cả nhóm review Gate 2: minh chứng, lỗi, owner, hạn sửa trước24/11 | Cùng xác nhận | Cùng xác nhận |
+
+Ảnh chính thức, rebuild nghiệm thu cuối, PDF, in/nộp tiếp tục ở tuần 3; kiểm chứng kỹ thuật hoặc bản nháp đã merge không tự tạo chữ ký nhóm.
 
 ## W2 / TV1 — DDL, ràng buộc nâng cao và kiểm soát chất lượng thiết kế
 
@@ -449,4 +466,4 @@ Quyết định: PASS / PASS CÓ ĐIỀU KIỆN / FAIL
 - DDL hiện có: `sql/01_schema.sql`; các phần còn TODO: `sql/02_constraints.sql`, `sql/03_seed.sql`, `sql/04_queries.sql`, `sql/05_security.sql`.
 - Yêu cầu chính thức về bài tập lớn, bản in và thời hạn: **ảnh thông báo giảng viên do nhóm cung cấp**. Nếu cô cập nhật yêu cầu, ưu tiên thông báo mới nhất.
 
-**Cập nhật 16/11/2026:** đã đối chiếu53mã tuần1:46mục đủ sản phẩm và review kỹ thuật hỗ trợ theo yêu cầu chủ repo;7mục giữchờ nguồn/xác nhận cụ thể. Chi tiết và bằng chứng ở [bàn giao chung](BAN_GIAO_TUAN_1.md). Checkbox kỹ thuật không thay lời xác nhận cá nhân hay Gate1 chung. Tuần2–3 giữ nguyên.
+**Cập nhật 16/11/2026:** tuần 1 hoàn thiện kỹ thuật, bảng đối chiếu53mã và các xác nhận còn chờ tập trung tại [nhật ký chung](../meetings/decision_log.md#week1-ledger). Tuần2 có bảng hiện trạng/lịch phối hợp ở trên; 142 mã và checkbox gốc được giữ, không tự nghiệm thu thay nhóm.

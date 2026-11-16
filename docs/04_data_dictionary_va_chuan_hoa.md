@@ -203,4 +203,4 @@ Thứ tự nạp: tổ → địa chỉ → hộ; cư dân và tài khoản → 
 
 ## 8. Kiểm tra trước khi dùng bộ thiết kế
 
-Đọc cùng `../tests/week1_design_cases.md`. Kiểm tra đủ 35 cột, 7 quan hệ FK, ba cấu hình sự kiện và các cặp NULL. Người nhận chạy `python3 scripts/verify_week1.py` để kiểm tra nhất quán tệp; kết quả kiểm tra tệp ở `../tests/week1_verification_log.md` không phải log tạo bảng hoặc chạy truy vấn PostgreSQL. Các lần kiểm chứng DB đã có, phạm vi và hash đầu vào được ghi riêng trong [báo cáo review TV3](REVIEW_TV3_CHI_TIET.md).
+Đọc cùng `../tests/week1_design_cases.md`. Kiểm tra đủ 35 cột, 7 quan hệ FK, ba cấu hình sự kiện và các cặp NULL. Người nhận chạy `python3 scripts/verify_week1.py` để kiểm tra nhất quán tệp; kết quả kiểm tra tệp ở `../tests/week1_verification_log.md` không phải log tạo bảng hoặc chạy truy vấn PostgreSQL. Các lần kiểm chứng DB đã có, phạm vi và hash đầu vào được ghi riêng trong [review TV3 trong nhật ký](../meetings/decision_log.md#review-tv3).

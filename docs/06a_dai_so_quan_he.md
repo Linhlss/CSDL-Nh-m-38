@@ -572,7 +572,7 @@ So sánh **tập khóa** kết quả (`ma_cu_dan` hoặc `ma_dia_chi`), không s
 
 Các mục W1-T3-01–12 đã có nguồn: 10 câu hỏi, ma trận toán tử, quy ước tập hợp/thời gian, biểu thức đầy đủ QRA04/QRA09/QRA10, kế hoạch B1/B2 và phiếu review ERD. Hai file 06a/06b là bộ bàn giao tách đôi theo DEC11; không tạo một bản sao lời giải thứ hai chỉ để khớp tên file đề xuất trong checklist.
 
-Review dữ liệu tuần 1 cho W1-T3-13 và đối chiếu sản phẩm W1-T3-14 được lưu tại [review dữ liệu TV2](REVIEW_DU_LIEU_TV2_TUAN_1.md). Xác nhận thực tế do TV3 ghi ngày 13/11 được giữ nguyên trong [phiếu review ERD](REVIEW_TV3_ERD_TUAN_1.md), mục 6–9. Agent thực hiện kiểm tra kỹ thuật mới; không ký Gate 1 thay thành viên.
+Review dữ liệu tuần 1 cho W1-T3-13 và đối chiếu sản phẩm W1-T3-14 được lưu tại [review dữ liệu trong nhật ký](../meetings/decision_log.md#review-data). Xác nhận thực tế do TV3 ghi ngày 13/11 và nguồn PR #2 được giữ trong [nhật ký review TV3](../meetings/decision_log.md#review-tv3). Agent thực hiện kiểm tra kỹ thuật mới; không ký Gate 1 thay thành viên.
 
 | RA | Đối chiếu phù hợp | Cách chuẩn hóa kết quả |
 |---|---|---|
@@ -589,4 +589,4 @@ Review dữ liệu tuần 1 cho W1-T3-13 và đối chiếu sản phẩm W1-T3-1
 
 QSQL02, QSQL03, QSQL08 và QSQL10 có thống kê mà đại số cổ điển ở đây không biểu diễn bằng COUNT/GROUP BY. Đối chiếu chúng với đáp án tính tay; riêng QSQL03 so đầy đủ từng tổ với VIEW B2 theo cùng d. Không ghi “10 RA = 10 SQL” khi hai bên khác câu hỏi hoặc mức hạt kết quả.
 
-**Kết quả tích hợp tuần 1, 16/11/2026:** review hỗ trợ kỹ thuật đã có trong [review dữ liệu TV2](REVIEW_DU_LIEU_TV2_TUAN_1.md), cùng expected/actual và môi trường. Xác nhận thành viên và nghiệm thu báo cáo cuối được quản lý riêng.
+**Kết quả tích hợp tuần 1, 16/11/2026:** review hỗ trợ kỹ thuật đã có trong [review dữ liệu trong nhật ký](../meetings/decision_log.md#review-data), cùng expected/actual và môi trường. Xác nhận thành viên và nghiệm thu báo cáo cuối được quản lý riêng.

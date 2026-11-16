@@ -1,4 +1,4 @@
-# KẾ HOẠCH DỮ LIỆU, SQL VÀ KIỂM THỬ — TUẦN 1
+# DỮ LIỆU, SQL VÀ KIỂM THỬ — HỒ SƠ KỸ THUẬT
 
 **Nhóm 38, lớp 174356, ThS. Nguyễn Thị Thanh Huyền.** TV1 Dương Ngọc Ninh — 20237469; TV2 Trần Tuấn Ngọc — 20227064; TV3 Trần Bùi Tùng Linh — 20227057.
 
@@ -56,21 +56,6 @@ C1/C2 trùng tên và sinh đúng/sau ngày cắt tuổi; H1 có C1–C4, C3 có
 
 Review kỹ thuật hỗ trợ TV2: C→Q→H→D→T, hai nhánh cũ/mới, hộ rỗng và địa chỉ không hộ đều biểu diễn được; không thiếu cột cho10SQL. Giữ E1/schema, validation0 dòng; C1 dùng ngày kết thúc làm nguồn sự thật. Xác nhận chính thức TV2/Gate1 vẫn tách riêng.
 
-## 5. Đối chiếu 14 mã tuần 1 TV2
+## 5. Tiến độ và bàn giao
 
-| Mã | Đầu ra/bằng chứng | Trạng thái |
-|---|---|---|
-| W1-T2-01 | Môi trường chung, SELECT version/log | Đạt kỹ thuật chung; chờ máy cá nhânTV2 |
-| W1-T2-02 | Mục1 và review ERD mục4 | Đã review kỹ thuật |
-| W1-T2-03 | Mục2,10SQL | Đã có |
-| W1-T2-04 | Ma trận mục2 | Đã có |
-| W1-T2-05 | Mục1 và đầu ra mục2 | Đã có |
-| W1-T2-06 | DISTINCT/COUNT theo mã,fixture29 | Đã kiểm chứng |
-| W1-T2-07 | Quy mô636,độ phủ mục3 | Đã có |
-| W1-T2-08 | SeedINSERT,FK/reset/sequence | Đã kiểm chứng |
-| W1-T2-09 | Seed20261110,hai lần khớp byte | Đã kiểm chứng |
-| W1-T2-10 | Fixture29/expectedtay | Đã kiểm chứng |
-| W1-T2-11 | Ma trận S01–S16 | Đã có dữ liệu/expected/actual |
-| W1-T2-12 | S17–21 phân công/testcơbản | Đã có; nâng cao tuần 2 |
-| W1-T2-13 | Review ERD/dữ liệu kỹ thuật | Đã có review hỗ trợ |
-| W1-T2-14 | Bộ hồ sơ này/fixture/matrix/env | Sẵn sàng; chờ xác nhận cá nhânTV2/Gate1 |
+Bảng đối chiếu 14 mã TV2 nằm trong [ledger chung tuần 1](../meetings/decision_log.md#week1-ledger); không duy trì một bản trạng thái thứ hai. [Checklist tuần 2](03_CHECKLIST_DU_AN.md#tuan-2-hien-hanh) ghi việc còn lại: kiểm thử cùng ràng buộc mới, Chương 3.5/5 và phiên bản dữ liệu/SQL cho Gate 2.

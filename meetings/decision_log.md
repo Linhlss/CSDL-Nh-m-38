@@ -1,9 +1,24 @@
-# HỒ SƠ QUYẾT ĐỊNH VÀ GATE 1 — BỘ BÀN GIAO TV1
+# NHẬT KÝ QUYẾT ĐỊNH, REVIEW VÀ NGHIỆM THU — NHÓM 38
 
-**Ngày chuẩn bị:** 11/11/2026. **Mốc Gate 1 theo kế hoạch:** 15/11/2026.  
-Đây là hồ sơ kỹ thuật TV1 chuẩn bị để người tiếp theo review, không phải biên bản giả định một cuộc họp đã diễn ra. Chưa có xác nhận hoặc chữ ký thay TV2/TV3.
+**Cập nhật:** 16/11/2026. **Lớp 174356 — ThS. Nguyễn Thị Thanh Huyền.** Đề tài 17: quản lý cư dân và biến động cư trú tại một phường mô phỏng.
 
-## 1. Quyết định áp dụng cho bộ bàn giao local
+| Vai trò | Họ tên | MSSV | Phần chính | Dự phòng kỹ thuật |
+|---|---|---|---|---|
+| TV1 | Dương Ngọc Ninh | 20237469 | Thiết kế, nghiệp vụ, tích hợp | TV3 |
+| TV2 | Trần Tuấn Ngọc | 20227064 | Dữ liệu, SQL, kiểm thử | TV1 |
+| TV3 | Trần Bùi Tùng Linh | 20227057 | Đại số quan hệ, bảo mật, review | TV2 |
+
+Danh tính và thứ tự TV do chủ repo cung cấp, không suy từ tài khoản GitHub. Phân công dự phòng không thay chữ ký cá nhân. Nhật ký này là nơi duy nhất đối chiếu 53 mã tuần 1 và kết luận các hồ sơ đã gộp. [Checklist](../docs/03_CHECKLIST_DU_AN.md) quản lý 142 mã toàn dự án; [README](../README.md) hướng dẫn bắt đầu.
+
+## 1. Trạng thái hiện hành
+
+- **Kỹ thuật tuần 1: ĐẠT.** Có thiết kế, fixture29, seed636 sửa B15, 10 SQL, 10 RA, bảo mật và review dữ liệu. Bảng tuần 1 có **46 mục đủ sản phẩm/review kỹ thuật hỗ trợ**, 7 mục chờ nguồn hoặc xác nhận ở mục 6.
+- **Gate 1 chung: CHỜ REVIEW** các xác nhận còn thiếu; schema vẫn `v1-candidate`. Không tự tạo ngày họp, người duyệt, điểm đánh giá hoặc chữ ký. Có thể tiếp tục triển khai kỹ thuật tuần 2 trên giao diện hiện hành.
+- Kiểm chứng độc lập do agent hỗ trợ theo yêu cầu chủ repo: **146/146** trước PR #1 (144 chức năng + 2 tái hiện), **96/96** tuần 1 (95 chức năng + 1 tái hiện B15). Phép tái hiện PASS xác nhận lỗi/giới hạn cũ, không có nghĩa lỗi đó hợp lệ.
+- PR #1–#4 đã merge. [PR #4](https://github.com/Linhlss/CSDL-Nh-m-38/pull/4) tích hợp nháp Chương 4/6 tại `12994f106ad9993c0ddf0ff9069bf21268352bd8`. Các nhánh phụ đã dọn; hướng dẫn hiện hành dùng `main`.
+- Tuần 2 ưu tiên ràng buộc/transaction của TV1, Chương 3.5/5 của TV2 và bốn kết quả RA còn thiếu trên seed636 của TV3. Lịch và người review nằm trong checklist; ảnh chính thức theo lịch 24/11.
+
+## 2. Quyết định kỹ thuật hiện hành
 
 | ID | Chủ đề | Quyết định kỹ thuật đã dùng | Ảnh hưởng / căn cứ |
 |---|---|---|---|
@@ -21,92 +36,188 @@
 | DEC12 | Chuẩn hóa | Hoàn thiện phân tích khóa/FD; công bố riêng điểm dư thừa ngày sự kiện theo B09 | Không tuyên bố tuyệt đối 3NF cho mọi phụ thuộc có điều kiện; reviewer chốt luận chứng cuối tuần 2 |
 | DEC13 | C1 / kết thúc đợt, 16/11 | Nhập/hiệu chỉnh lịch sử hoặc hết hạn tạm trú không phát sinh chuyển chỗ có thể kết thúc đợt không CHUYEN_DI; chuyển thực tế vẫn dùng P4/P5 và giữ B08–B09 | QRA09/QSQL07 dựa vào ngày của đợt; các ca C1 trong log tuần1 đã chạy |
 
-Các quyết định là phương án TV1 đã hiện thực trong tài liệu local để bàn giao. Nhóm có thể yêu cầu điều chỉnh khi review; chưa ghi là cả ba đã đồng ý. Thông tin mã lớp, họ tên/MSSV, giảng viên và thông báo gốc còn chờ nhóm cung cấp; không ngăn việc đọc/triển khai kỹ thuật theo ứng viên v1.
+Các quyết định trên là cơ sở triển khai đã dùng trong repo; chưa thay phê duyệt cả nhóm. Quy tắc và tên cột chi tiết nằm ở [đặc tả](../docs/03_dac_ta_nghiep_vu.md), [từ điển/chuẩn hóa](../docs/04_data_dictionary_va_chuan_hoa.md) và [ma trận 20 câu hỏi](../docs/07_ma_tran_truy_van_va_review.md).
 
-## 2. Ma trận khả năng đáp ứng câu hỏi và review
+<a id="week1-ledger"></a>
 
-Đã tự đối chiếu 20/20 câu hỏi với trường dữ liệu và FK trong `../docs/07_ma_tran_truy_van_va_review.md`. Đã đọc tài liệu RA của PR #1 tại commit c0f3580 và lưu RV01–RV10; không nhận xét thay rằng phần RA đã được duyệt cuối hoặc chạy lại DB thành công. RV08 về NULL/đại số cổ điển là nội dung TV3 cần xử lý tiếp; không đòi đổi schema.
+## 3. Đối chiếu đủ 53 mã tuần 1
 
-## 3. Đối chiếu đủ 20 mã việc của TV1
+Mỗi mã chỉ có một dòng. Trạng thái giữ nguyên khi gộp; reviewer kỹ thuật hỗ trợ là agent, xác nhận thật của TV3 truy được qua PR #2. Checkbox tuần 1 ở checklist phản ánh các dòng bắt đầu bằng “Đạt”; không tự thay lời phê duyệt của thành viên.
 
-“Sẵn sàng review” nghĩa là phần sản phẩm của TV1 đã có và đã tự kiểm tra, chưa tương đương checkbox nghiệm thu có reviewer ở checklist gốc.
+| Mã | Người phụ trách | Nội dung | Sản phẩm / bằng chứng | Trạng thái |
+|---|---|---|---|---|
+| W1-T1-01 | TV1 | 10/11 · Xác nhận đầu vào | [01_de_cuong.md](../docs/01_de_cuong.md); [03_dac_ta_nghiep_vu.md](../docs/03_dac_ta_nghiep_vu.md) | Chờ đối chiếu thông báo gốc; đề cương và phạm vi đã có |
+| W1-T1-02 | TV1 | 10/11 · Chốt thuật ngữ | [03_dac_ta_nghiep_vu.md](../docs/03_dac_ta_nghiep_vu.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T1-03 | TV1 | 10–11/11 · Mô tả bối cảnh và tác nhân | [03_dac_ta_nghiep_vu.md](../docs/03_dac_ta_nghiep_vu.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T1-04 | TV1 | 11/11 · Đặc tả P1–P6 | [03_dac_ta_nghiep_vu.md](../docs/03_dac_ta_nghiep_vu.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T1-05 | TV1 | 11/11 · Quy tắc nghiệp vụ 1–N | [03_dac_ta_nghiep_vu.md](../docs/03_dac_ta_nghiep_vu.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T1-06 | TV1 | 11–12/11 · Quy tắc thời gian | [03_dac_ta_nghiep_vu.md](../docs/03_dac_ta_nghiep_vu.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T1-07 | TV1 | 11–12/11 · Quy tắc biến động | [03_dac_ta_nghiep_vu.md](../docs/03_dac_ta_nghiep_vu.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T1-08 | TV1 | 12/11 · Vẽ cây chức năng | [phan_ra_chuc_nang.png](../diagrams/phan_ra_chuc_nang.png); [review TV3](decision_log.md#review-tv3) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T1-09 | TV1 | 12/11 · Liệt kê đủ 7 thực thể | [erd_v1.png](../diagrams/erd_v1.png); [04_data_dictionary_va_chuan_hoa.md](../docs/04_data_dictionary_va_chuan_hoa.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T1-10 | TV1 | 12–13/11 · Vẽ ERD chuẩn | [erd_v1.png](../diagrams/erd_v1.png); [04_data_dictionary_va_chuan_hoa.md](../docs/04_data_dictionary_va_chuan_hoa.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T1-11 | TV1 | 12–13/11 · Soát 2 liên kết đặc biệt | [erd_v1.png](../diagrams/erd_v1.png); [04_data_dictionary_va_chuan_hoa.md](../docs/04_data_dictionary_va_chuan_hoa.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T1-12 | TV1 | 13/11 · Ánh xạ ER → quan hệ | [04_data_dictionary_va_chuan_hoa.md](../docs/04_data_dictionary_va_chuan_hoa.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T1-13 | TV1 | 13/11 · Từ điển dữ liệu | [04_data_dictionary_va_chuan_hoa.md](../docs/04_data_dictionary_va_chuan_hoa.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T1-14 | TV1 | 13/11 · Phụ thuộc hàm và 3NF | [04_data_dictionary_va_chuan_hoa.md](../docs/04_data_dictionary_va_chuan_hoa.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T1-15 | TV1 | 13–14/11 · Soát DDL v0 | [01_schema.sql](../sql/01_schema.sql); [week1_sql_compatibility.json](../tests/week1_sql_compatibility.json) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T1-16 | TV1 | 14/11 · Kiểm tra các ràng buộc còn thiếu | [02_constraints.sql](../sql/02_constraints.sql); [week1_design_cases.md](../tests/week1_design_cases.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T1-17 | TV1 | 14/11 · Đối chiếu truy vấn | [07_ma_tran_truy_van_va_review.md](../docs/07_ma_tran_truy_van_va_review.md); [05_ke_hoach_du_lieu_va_sql.md](../docs/05_ke_hoach_du_lieu_va_sql.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T1-18 | TV1 | 14–15/11 · Hoàn thiện Chương 1–3 dạng bản nháp | [02_bao_cao_suon.md](../docs/02_bao_cao_suon.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T1-19 | TV1 | 15/11 · Tổ chức Gate 1 | [decision_log.md](../meetings/decision_log.md) | Hồ sơ họp đã chuẩn bị; chờ biên bản/xác nhận thực tế |
+| W1-T1-20 | TV1 | 15/11 · Phát hành schema v1 | [phiên bản và Gate 1](decision_log.md#gate1) | Bộ v1-candidate sẵn sàng; chờ đồng ý chung để khóa v1 |
+| W1-T2-01 | TV2 | 10–11/11 · Thiết lập máy | [week1_environment.md](../tests/week1_environment.md); [week1_execution_results.json](../tests/week1_execution_results.json) | Môi trường chung đã đạt; chờ xác nhận máy cá nhân TV2 |
+| W1-T2-02 | TV2 | 11/11 · Đọc schema v0 | [05_ke_hoach_du_lieu_va_sql.md](../docs/05_ke_hoach_du_lieu_va_sql.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T2-03 | TV2 | 11/11 · Chốt danh sách QSQL01–10 | [05_ke_hoach_du_lieu_va_sql.md](../docs/05_ke_hoach_du_lieu_va_sql.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T2-04 | TV2 | 11–12/11 · Ma trận truy vấn–bảng | [05_ke_hoach_du_lieu_va_sql.md](../docs/05_ke_hoach_du_lieu_va_sql.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T2-05 | TV2 | 12/11 · Quy ước ngày và kết quả | [05_ke_hoach_du_lieu_va_sql.md](../docs/05_ke_hoach_du_lieu_va_sql.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T2-06 | TV2 | 12/11 · Chống trùng bản ghi | [05_ke_hoach_du_lieu_va_sql.md](../docs/05_ke_hoach_du_lieu_va_sql.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T2-07 | TV2 | 12–13/11 · Kế hoạch sinh dữ liệu | [05_ke_hoach_du_lieu_va_sql.md](../docs/05_ke_hoach_du_lieu_va_sql.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T2-08 | TV2 | 13/11 · Thứ tự sinh/nạp | [03_seed.sql](../sql/03_seed.sql); [README.md](../data/README.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T2-09 | TV2 | 13/11 · Sinh dữ liệu tái lập | [generate_data.py](../scripts/generate_data.py); [week1_execution_results.json](../tests/week1_execution_results.json) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T2-10 | TV2 | 13–14/11 · Bộ dữ liệu kiểm chứng nhỏ | [week1_fixture.sql](../tests/week1_fixture.sql); [week1_expected.json](../tests/week1_expected.json) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T2-11 | TV2 | 13–14/11 · Ma trận S01–S16 | [test_scenarios.md](../tests/test_scenarios.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T2-12 | TV2 | 14/11 · Lập kế hoạch test S17–S21 | [test_scenarios.md](../tests/test_scenarios.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T2-13 | TV2 | 14/11 · Review ERD với TV1 | [05_ke_hoach_du_lieu_va_sql.md](../docs/05_ke_hoach_du_lieu_va_sql.md); [review dữ liệu](decision_log.md#review-data) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T2-14 | TV2 | 15/11 · Bàn giao kế hoạch | [05_ke_hoach_du_lieu_va_sql.md](../docs/05_ke_hoach_du_lieu_va_sql.md) | Đủ bộ bàn giao; chờ xác nhận cá nhân TV2/Gate1 |
+| W1-T3-01 | TV3 | 10–11/11 · Đọc đề bài và schema | [06a_dai_so_quan_he.md](../docs/06a_dai_so_quan_he.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T3-02 | TV3 | 11/11 · Chốt QRA01–10 | [06a_dai_so_quan_he.md](../docs/06a_dai_so_quan_he.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T3-03 | TV3 | 11–12/11 · Ma trận toán tử | [06a_dai_so_quan_he.md](../docs/06a_dai_so_quan_he.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T3-04 | TV3 | 12/11 · Kiểm tra kiểu tập hợp | [06a_dai_so_quan_he.md](../docs/06a_dai_so_quan_he.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T3-05 | TV3 | 12/11 · Quy ước thời gian cho RA | [06a_dai_so_quan_he.md](../docs/06a_dai_so_quan_he.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T3-06 | TV3 | 12–13/11 · Làm thử 2 câu khó | [06a_dai_so_quan_he.md](../docs/06a_dai_so_quan_he.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T3-07 | TV3 | 13/11 · Rà soát câu QRA10 | [06a_dai_so_quan_he.md](../docs/06a_dai_so_quan_he.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T3-08 | TV3 | 13/11 · Lý thuyết bảo mật trọng tâm | [06b_bao_mat.md](../docs/06b_bao_mat.md); [05_security.sql](../sql/05_security.sql) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T3-09 | TV3 | 13–14/11 · Kịch bản B1 | [06b_bao_mat.md](../docs/06b_bao_mat.md); [05_security.sql](../sql/05_security.sql) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T3-10 | TV3 | 13–14/11 · Kịch bản B2 | [06b_bao_mat.md](../docs/06b_bao_mat.md); [05_security.sql](../sql/05_security.sql) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T3-11 | TV3 | 14/11 · Xác minh tính khả thi PG | [06b_bao_mat.md](../docs/06b_bao_mat.md); [05_security.sql](../sql/05_security.sql) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T3-12 | TV3 | 14/11 · Review ERD độc lập | [review TV3](decision_log.md#review-tv3) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T3-13 | TV3 | 14–15/11 · Review test dữ liệu TV2 | [review dữ liệu](decision_log.md#review-data); [week1_execution_results.json](../tests/week1_execution_results.json) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T3-14 | TV3 | 15/11 · Bàn giao đặc tả | [06a_dai_so_quan_he.md](../docs/06a_dai_so_quan_he.md); [06b_bao_mat.md](../docs/06b_bao_mat.md); [review TV3](decision_log.md#review-tv3) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-G-01 | Cả nhóm | Kickoff, vai trò và thông tin nhóm | [02_bao_cao_suon.md](../docs/02_bao_cao_suon.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-G-02 | Cả nhóm | Repo và quyền cộng tác | [README.md](../README.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-G-03 | Cả nhóm | Đối soát chung 10 RA/10 SQL | [week1_execution_results.json](../tests/week1_execution_results.json); [decision_log.md](../meetings/decision_log.md) | Đối soát kỹ thuật đạt; chờ xác nhận cuộc review chung |
+| W1-G-04 | Cả nhóm | Biên bản Gate 1 | [decision_log.md](../meetings/decision_log.md) | Biên bản kỹ thuật sẵn sàng; chờ phê duyệt Gate1 thật |
+| W1-G-05 | Cả nhóm | Bàn giao giao diện dữ liệu | [phiên bản và Gate 1](decision_log.md#gate1); [05_ke_hoach_du_lieu_va_sql.md](../docs/05_ke_hoach_du_lieu_va_sql.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
 
-| Mã | Đầu ra đã chuẩn bị | Trạng thái bàn giao |
+<a id="review-tv3"></a>
+
+## 4. Kết luận review TV3 và lịch sử tiếp nhận
+
+### 4.1. Xác nhận do TV3 ghi
+
+Nguồn: [PR #2](https://github.com/Linhlss/CSDL-Nh-m-38/pull/2), commit `a5fd76dd3dc2b6520fa2948b2375e1cfda2a231f`, merge `2f46a0f81e24760239659c7833a4a6f865c7f2ae`. Đây là lời xác nhận của TV3 ngày 11–13/11, tách khỏi kiểm tra mới do agent thực hiện ngày 16/11.
+
+- TV3 xác nhận ERD/lược đồ đáp ứng 10 QRA, hai FK cũ/mới đúng vai trò; cây chức năng có 1 gốc, 6 nhóm, 14 chức năng cấp 2 và đủ nguồn/ảnh. Không cần thêm bảng lõi cho RA/B1/B2.
+- TV3 tiếp nhận F01–F05, câu trả lời E1, RV08 và triển khai B1/B2 theo script đã merge. TV3 báo cáo đã chạy lại tại `fa6c055`: fixture khớp lần 11/11 và security có đúng sáu lỗi quyền cố ý. Đây là kết quả thành viên báo cáo, không ghi thành lần chạy độc lập của agent.
+- Phía TV3 không còn điều kiện chặn Gate 1; chưa phải chữ ký của cả nhóm. C1 được TV1 giải quyết ngày 16/11 theo DEC13, không cần đổi schema.
+
+### 4.2. Phát hiện và trạng thái cuối
+
+| Mã | Phát hiện / quyết định | Kết quả và phần tiếp theo |
 |---|---|---|
-| W1-T1-01 | Phạm vi và đối chiếu yêu cầu học thuật trong đặc tả mục 1 | Sẵn sàng review; yêu cầu chính thức hiện dựa trên đề cương, thông báo gốc chưa có trong workspace |
-| W1-T1-02 | Bảng thuật ngữ, đặc tả mục 2 | Sẵn sàng review |
-| W1-T1-03 | Bài toán, giới hạn, tác nhân, đặc tả mục 1/3 | Sẵn sàng review |
-| W1-T1-04 | P1–P6 có đầu vào/điều kiện/xử lý/đọc ghi/đầu ra/lỗi, mục 6 | Sẵn sàng review |
-| W1-T1-05 | B01–B03, bảng cardinality trong từ điển | Sẵn sàng review |
-| W1-T1-06 | B04–B06, ví dụ và D04–D10 | Sẵn sàng review |
-| W1-T1-07 | B07–B10, P4/P5 và D12–D22 | Sẵn sàng review |
-| W1-T1-08 | Sơ đồ chức năng .drawio/.png/.svg | Sẵn sàng review; đã xem ảnh xuất |
-| W1-T1-09 | Bảng 7 thực thể Chương 2 và ERD | Sẵn sàng review |
-| W1-T1-10 | ERD đủ thuộc tính, khóa, cardinality và tính tùy chọn | Sẵn sàng review; đã xem ảnh xuất |
-| W1-T1-11 | Hai FK vai trò cũ/mới và D12–D18 | Sẵn sàng review |
-| W1-T1-12 | Ánh xạ 7 quan hệ, từ điển mục 2 | Sẵn sàng review |
-| W1-T1-13 | 35 cột đầy đủ kiểu, NULL, khóa, miền, default và mô tả | Sẵn sàng review |
-| W1-T1-14 | Khóa ứng viên, FD, phân tích 1NF–3NF và giới hạn kết luận | Bản nháp tuần 1 sẵn sàng review; điểm ngày sự kiện đã công bố, cần chốt luận chứng tuần 2 |
-| W1-T1-15 | DDL đối chiếu ERD/từ điển; cấu trúc giữ nguyên v0 | Sẵn sàng review; chưa là log chạy PostgreSQL |
-| W1-T1-16 | Ma trận cơ chế ràng buộc và ca thiết kế | Sẵn sàng triển khai tuần 2 |
-| W1-T1-17 | Ma trận 20 câu hỏi; RV01–RV10 từ đọc tài liệu RA | Tự đối chiếu xong; chờ TV2/TV3 phản hồi bộ thiết kế |
-| W1-T1-18 | Mở đầu và Chương 1–3 trong bản báo cáo nháp | Sẵn sàng review; phần dữ liệu TV2 vẫn được ghi đang chờ |
-| W1-T1-19 | Hồ sơ quyết định, tiêu chí và phiếu Gate 1 | Đã chuẩn bị cho bàn giao; chờ cuộc review/xác nhận thật của nhóm |
-| W1-T1-20 | Gói `v1-candidate`, hướng dẫn bàn giao và manifest | Đã chuẩn bị ứng viên; chưa gắn trạng thái schema v1 đã được cả nhóm duyệt |
+| F01 / B09 | Fixture đợt 6 kết thúc 30/06/2025 nhưng chuyển đi cùng ngày | Đã sửa ngày chuyển thành 01/07/2025 tại `355aa6e`; V_B09 trả 0. Cả 10 truy vấn đúng chưa đủ phát hiện lỗi ngày nên giữ validation riêng. |
+| F02 / E1 | Trùng FK đợt trong cùng vai trò có thể làm sai đếm sự kiện | DEC06 giữ schema, không thêm UNIQUE; V_E1_CU/V_E1_MOI phải 0 trước nghiệm thu. Một đợt dùng một lần ở mỗi vai trò hợp lệ; DB vẫn có thể nhận trùng. Không dùng DISTINCT cư dân để che lỗi sự kiện. TV1/TV2 xử lý nếu phát sinh. |
+| F03 | Role demo có sẵn có thể vượt quyền mong đợi | Đã sửa preflight trước mọi thay đổi role/VIEW/ACL: từ chối đặc quyền, NOLOGIN, ownership trong database/public và membership sang role khác. Cho phép chiều người cài đặt nhận role demo. Thiết lập transaction, psql ON_ERROR_STOP; lỗi dừng và rollback. GUI chạy trọn BEGIN..COMMIT trước demo. |
+| F04 | Fixture chỉ in kết quả, psql exit 0 chưa chứng minh đáp án đúng | Giữ giới hạn fixture; bộ `review_tv3.py` ASSERT đầy đủ tập dòng/cột và ca biên. Không dùng riêng exit code làm nghiệm thu. |
+| F05 / RV10 | Tên file và quy ước Q_d trong mô tả PR cũ | Đã cập nhật PR #1 sang 06a/06b và Q_d hiện hành trước merge. |
+| RV08 | NULL không thuộc đại số quan hệ cổ điển | Đã sửa: SQL chuẩn bị đợt hiệu lực theo B05, bỏ ngay_ket_thuc rồi dùng Q_d trong các biểu thức. Không thêm bảng lõi; không coi phép hiệu là cách tự loại NULL. |
+| E2 | Tài khoản nghiệp vụ và role PostgreSQL dễ bị hiểu là đồng bộ | Đã làm rõ hai tầng độc lập trong 06b; sửa trạng thái tai_khoan không tự đổi quyền DB. |
+| C1 | Chưa rõ khi nào kết thúc đợt không có CHUYEN_DI | Đã chốt DEC13/P3; lịch sử/hết hạn tạm trú không chuyển chỗ có thể không có sự kiện, chuyển thực tế vẫn P4/P5 và B08–B09. |
+| C2 | Tên tác nhân ở 06b chưa khớp đặc tả | Đã sửa: reader/report phục vụ Cán bộ tổng hợp ở hai mức; postgres là quản trị. Chú thích “cán bộ tra cứu” còn trong SQL cũ không ảnh hưởng thực thi, giữ nguyên byte để bảo toàn bằng chứng và rà lại cùng đợt sửa SQL tuần 2. |
 
-## 4. Phiếu Gate 1
+### 4.3. Đối chiếu 10 QRA trên fixture TV3
 
-| Hạng mục | Tự kiểm tra của TV1 | Xác nhận chéo |
+Nguồn ban đầu `7abe4d54f7e7cc96ac086b7e1127073493152e24`; fixture đã sửa F01 tại `355aa6e`. Bảng dưới giữ kết luận review và tập khóa tóm tắt. Bộ chạy thực tế so đầy đủ cột; không phải chứng minh hình thức biểu thức đúng trên mọi dữ liệu. RV01–RV07/RV09 đã soát; RV08/RV10 đã xử lý như trên.
+
+| Câu | Nội dung soát / kết luận | Khóa expected = actual trên fixture nhỏ | Ca bổ sung đã đạt |
+|---|---|---|---|
+| QRA01 | Đường nối Q_d → hộ → địa chỉ → tổ đầy đủ; chiếu theo mã người tránh gộp trùng tên | 1, 7, 9, 10 | Bắt đầu đúng d/kết thúc đúng d được lấy; kết thúc d−1 và bắt đầu d+1 bị loại; hai loại cùng tổ không nhân dòng |
+| QRA02 | Theta join và lọc TAM_TRU đúng; Q là bí danh Q_d trong quy ước đầu vào | 2 | Người vừa thường trú Tổ 01 vừa tạm trú Tổ 02 vẫn được lấy ở Tổ 02; người thường trú Tổ 02 bị loại |
+| QRA03 | So ngày sinh <=20/11/1966 kết hợp hiệu lực/Tổ 01 đúng | 1 | Sinh đúng ngày cắt được lấy; sinh 21/11/1966 bị loại; đủ tuổi tổ khác/đợt hết hạn bị loại |
+| QRA04 | Đổi tên mã hộ A/B, tự nối cùng mã cư dân và so hai hộ khác nhau đúng | 4, 9 | Hai đợt cùng hộ của người 7 không đủ điều kiện; hai hộ của người 15/17 được lấy |
+| QRA05 | Hiệu hai quan hệ cùng thuộc tính ma_dia_chi, rồi nối lại lấy địa chỉ chuẩn đúng | Địa chỉ 5 | Phân biệt địa chỉ không hộ với hộ không người; hộ 5 rỗng không làm địa chỉ 1 lọt kết quả |
+| QRA06 | Hiệu mã cư dân trừ mã người trong mọi đợt đúng | 6 | Người chỉ có đợt tương lai không được coi là chưa từng có bản ghi đợt |
+| QRA07 | Giao hai tập ma_cu_dan theo từng loại đúng; không lọc hai loại trên cùng một dòng | 4 | Hai loại khác thời kỳ của người 17 vẫn được lấy; người chỉ một loại bị loại |
+| QRA08 | Hợp hai tập khóa cùng miền; Q_d đã lọc thời gian đúng | 1, 2, 3, 7, 9, 10 | Người 15 thuộc cả hai tổ chỉ xuất hiện một lần trong hợp |
+| QRA09 | Tập đã bắt đầu <=d trừ tập đang ở, phân biệt rõ với QRA06 | 5 | Người 13/17 đã hết mọi đợt được lấy; người 6 chưa có đợt và người 8/14 chỉ có tương lai bị loại |
+| QRA10 | Đổi tên hai vai trò đợt cũ/mới; natural join còn buộc cùng mã cư dân; lọc khác tổ đúng | 4 | Người 9 chuyển cùng tổ bị loại; sự kiện cố tình ghép hai người khác nhau cũng bị loại |
+
+Q_d fixture có bảy đợt 1,2,3,5,8,11,12. VIEW trên fixture cho Tổ01/02/03 = 4/2/1; ca bổ sung = 7/3/1/0. Người cùng tổ có hai loại đếm một; người ở hai tổ đếm ở từng tổ. B1/B2 đạt bằng SET ROLE và đăng nhập trực tiếp: reader SELECT được, ghi và đọc tai_khoan bị chặn; report đọc VIEW được, đọc bảng gốc bị chặn đúng SQLSTATE 42501; admin đối chứng ghi trong ROLLBACK; dữ liệu 7 bảng không đổi.
+
+### 4.4. Phạm vi kiểm tra preflight và rollback trước PR #1
+
+Đầu vào kiểm chứng được lưu tại [52f5c6e](https://github.com/Linhlss/CSDL-Nh-m-38/commit/52f5c6e2514cee19c966ed4451a549fae2c7ceb4); log có commit nền và hash byte đầu vào. PR #1 merge `d84571e544b480c9c4ba4a421d5d5435b33faac8`, HEAD nguồn `3414131a66bff6f39d7094225bf5a858beb3421f`. 146 kiểm tra bao gồm 2 tái hiện: B09 fixture cũ và fixture đứng riêng chưa ASSERT.
+
+| Nhóm test mới | Kết quả |
+|---|---|
+| SUPERUSER, CREATEDB, CREATEROLE, REPLICATION, BYPASSRLS, NOLOGIN trên từng role admin/reader/report | Đủ 18 ca, mỗi ca dừng đúng 42501/CSDL17_PREFLIGHT và trạng thái không đổi |
+| Owner database, public schema, bảng, VIEW, sequence trong public | Cả 5 ca bị từ chối, trạng thái không đổi |
+| Membership INHERIT TRUE/SET FALSE và INHERIT FALSE/SET TRUE | Cả hai bị từ chối; không dựa vào việc quyền có đang được kế thừa ngay hay không |
+| Reader không phù hợp trong khi hai tên role còn lại chưa tồn tại | Dừng trước CREATE ROLE; không tạo thêm role |
+| Người cài đặt nhận role reader (chiều ngược) | Thiết lập được; phiên đăng nhập riêng của người cài đặt SET ROLE reader được |
+| Gây lỗi chia 0 ngay trước COMMIT sau thay đổi VIEW/ACL | Dừng 22012; rollback khôi phục chính xác trạng thái trước thiết lập |
+| Role mới, role an toàn có sẵn, chạy lại và sau các test âm | Thiết lập/demo tiếp tục đúng sáu lỗi quyền cố ý |
+
+Expected/actual gồm hash dữ liệu 7 bảng, role/membership, owner/ACL database/schema/quan hệ, định nghĩa VIEW và sequence; xem [log 146](../tests/tv3_review_results.json). Đây là kiểm soát phạm vi demo, không phải audit toàn cluster. Kết quả cũ ngày 12/11 là 89/89 (86 chức năng + 3 tái hiện), còn trong [lịch sử 30f557f](https://github.com/Linhlss/CSDL-Nh-m-38/tree/30f557f3762c43831a5d10b8b11e4acf8f080412).
+
+<a id="review-data"></a>
+
+## 5. Review dữ liệu TV2 và bằng chứng kiểm chứng
+
+Đầu vào TV2 ở [PR #3](https://github.com/Linhlss/CSDL-Nh-m-38/pull/3), nền `63388b394095da137a460ca2f439082bef2077f5`; bản sửa đã merge tại `921b18a5c8d55231bf2d83e72d5d01e264c99340`. Tìm thấy 54/250 đợt vi phạm B15 do lập hộ sau ngày bắt đầu cư trú; sửa ngày lập hộ thành min(ngày gốc, ngày bắt đầu sớm nhất). Giữ RNG, ID, ngày cư trú/sự kiện và dữ liệu khác. Bộ sinh từ chối dữ liệu lỗi trước ghi file; sinh hai lần khớp byte, seed nạp lại giữ đáp án và 7 sequence đúng ID tiếp theo.
+
+Seed có **636 dòng**: 8 tổ + 50 địa chỉ + 60 hộ + 200 người + 250 đợt + 63 sự kiện + 5 tài khoản. Fixture29 có 3 tổ + 3 địa chỉ + 3 hộ + 7 người + 8 đợt + 2 tài khoản + 3 sự kiện; fixture RA cũ có 40 dòng tổng, không dùng “10 cư dân” thay tiêu chí 15–30 bản ghi.
+
+| Ca | ID tiny29 / expected | Đối chứng và actual |
 |---|---|---|
-| Đặc tả và cây chức năng | Có sản phẩm | TV3 13/11: đồng ý; câu hỏi C1 về chức năng 3.2 không chặn. Chờ TV2 |
-| ERD, lược đồ, từ điển, chuẩn hóa nháp | Có sản phẩm; công bố điểm chuẩn hóa cần chốt tiếp | TV3 11/11: đồng ý ERD/lược đồ; chuẩn hóa để chốt tuần 2. Chờ TV2 |
-| Khả năng đáp ứng 10 RA + 10 SQL | Đã đối chiếu thiết kế 20 câu | TV3 13/11: đồng ý phần 10 RA. Chờ TV2 phần 10 SQL |
-| Phương án 2 demo bảo mật | Đã có yêu cầu role/VIEW trong kế hoạch; không cần đổi bảng lõi | TV3 13/11: xác nhận triển khai B1/B2 theo script trên main |
-| DDL, sơ đồ và tài liệu thống nhất | Chạy bộ tự kiểm tra ở `tests/week1_verification_log.md` | Chờ TV2 |
-| Quyết định / phiên bản chung | Ứng viên v1 sẵn sàng | Chưa có đồng ý của cả ba |
+| S04 | Địa chỉ3 | Địa chỉ1 có hộ3 rỗng không lọt; QSQL04/QRA05 khớp |
+| S06 | C5, hai hộ | C3 hai đợt cùngH1 bị loại; QSQL05/QRA04 khớp |
+| S07 | C3,C5 | C1,C2 một loại bị loại; QSQL06/QRA07 khớp |
+| S09 | C7 | Loại C6 chưa có đợt, C80 chỉ tương lai; ca C1 hết hạn không sự kiện cũng đạt |
+| S10 | C6 | C80 có đợt tương lai không được coi là chưa có đợt; QRA06 đúng |
+| S13 | Sự kiện2/C5/Tổ01→02 | Cùng tổ trong rollback bị loại; chiếu người QSQL09 khớp QRA10 |
 
-**Trạng thái:** SẢN PHẨM TV1 SẴN SÀNG BÀN GIAO REVIEW. **Gate 1 của cả nhóm:** CHỜ REVIEW, chưa PASS. Không điền ngày họp, chữ ký hoặc lời xác nhận thay người khác.
+10 SQL khớp đầy đủ tuple trên tiny29 với đáp án tay và trên seed636 với bộ tính Python độc lập. Sáu cặp QRA01/04/05/07/09/10 khớp SQL ở cùng mức hạt; QRA02/03/06/08 khớp đáp án tay tiny29, còn phải ghi đủ kết quả seed636 trong tuần 2. Quy tắc chiếu/DISTINCT theo từng cặp ở [06a](../docs/06a_dai_so_quan_he.md). VIEW khớp QSQL03 trên hai DB, có tổ 0 người. Các ca trùng tên, sát ngày sinh, ngày cuối, tương lai và C1 không sự kiện được kiểm tra; không biến kết thúc đợt thành sự kiện chuyển đi giả.
 
-## 5. Phiếu cho người nhận tiếp tục
+- [Log 96 expected/actual](../tests/week1_execution_results.json), [fixture29](../tests/week1_fixture.sql), [đáp án tay](../tests/week1_expected.json), [môi trường và lệnh tái lập](../tests/week1_environment.md). 95 kiểm tra chức năng + 1 tái hiện 54 lỗi B15 cũ; hash xác định đầu vào chính xác, git_head là commit nền. S17–S19 ở đây chỉ chứng minh FK/CHECK cơ bản, chưa chứng minh trigger/transaction tuần 2.
+- [Log 146](../tests/tv3_review_results.json) kiểm tra RA/Q_d/VIEW, ca biên, E1/B09, role mới/có sẵn và quyền SET ROLE/đăng nhập trực tiếp. PostgreSQL17.11, Python3.13.5/macOS arm64, image postgres:17.11 digest `sha256:ff87138949ad9a46f32ff23bd6852b52ce024a13dffe9b4087be98292cdd3b4f` ở lần chạy lịch sử.
+- [Log kiểm tra tệp](../tests/week1_verification_log.md) và [manifest](../tests/week1_manifest.json) là kiểm tra tĩnh: **kiểm tra tệp không thay test DB**. Đợt dọn tài liệu không chạy lại PostgreSQL, không gán kết quả agent thành lần chạy của sinh viên.
 
-| Người / thời điểm | Nội dung cần xác nhận | Kết quả |
+Tái lập bộ review146 trong container mới, riêng biệt; đợi pg_isready thành công rồi chạy Python (một lần mỗi container):
+
+```sh
+docker run --detach --rm --name csdl17-tv3-review --label csdl17.review=tv3 \
+  --network none --tmpfs /var/lib/postgresql/data:rw \
+  -e POSTGRES_HOST_AUTH_METHOD=trust postgres:17.11
+docker exec csdl17-tv3-review pg_isready -U postgres
+python3 scripts/review_tv3.py --container csdl17-tv3-review --tv3-root .
+docker rm --force csdl17-tv3-review
+```
+
+Container không publish cổng, dữ liệu tmpfs; bốn DB review riêng, chỉ nhận nhãn csdl17.review=tv3. Đăng nhập TCP loopback/trust bên trong container chứng minh phân quyền, không chứng minh mật khẩu/TLS. Lệnh Python ghi lại log nên chỉ chạy khi chủ động kiểm chứng, không dùng như kiểm tra tệp chỉ đọc. Không dùng dữ liệu hay DB hiện hữu của nhóm.
+
+<a id="gate1"></a>
+
+## 6. Xác nhận còn thiếu và các Gate tiếp theo
+
+| Mã còn chờ | Nguồn/xác nhận cần bổ sung |
+|---|---|
+| `W1-T1-01` | Đối chiếu thông báo yêu cầu gốc; ảnh danh sách nhóm chỉ chứng minh thông tin nhóm. |
+| `W1-T1-19` | Cuộc review/họp thật, người tham gia và ngày xác nhận. |
+| `W1-T1-20` | Đồng ý chung để khóa v1 từ v1-candidate. |
+| `W1-T2-01` | OS/công cụ/SELECT version từ máy cá nhân TV2; môi trường Docker chung đã có. |
+| `W1-T2-14` | TV2 xác nhận schema đủ cho dữ liệu/SQL và bộ bàn giao. |
+| `W1-G-03` | Nhóm xác nhận kết quả đối soát chung; kiểm chứng kỹ thuật đã có. |
+| `W1-G-04` | Người/ngày duyệt biên bản Gate 1. |
+
+Bảng này giải thích bảy mục còn chờ, không tạo một bảng ledger thứ hai. TV3 đã xác nhận ERD, cây chức năng, 10 RA/B1/B2; TV2 và phê duyệt chung vẫn chờ. Không điền giả thông báo, máy cá nhân hoặc lời đồng ý. Chuẩn hóa tuần 1 đã công bố dư thừa ngày sự kiện; chốt luận chứng cuối theo DEC12 ở tuần 2.
+
+| Gate | Hạn | Sản phẩm và người xác nhận |
 |---|---|---|
-| TV2 — sau khi đọc bộ bàn giao | Đủ cột/miền/quan hệ để sinh dữ liệu và viết 10 SQL; phản hồi câu hỏi còn mơ hồ | Chờ người nhận ghi |
-| TV3 — sau khi đọc bộ bàn giao | ERD biểu diễn đúng 10 RA; tiếp nhận RV08; hai demo bảo mật khả thi | 11/11/2026, TV3: xác nhận cả ba điểm; RV08 đã sửa trong `docs/06a_dai_so_quan_he.md` v0.1. Còn mở E1 (DEC06, chờ TV1 trả lời). `tests/ra_fixture.sql` chạy lại trên v1-candidate: 11/11 khớp. Chi tiết: `docs/REVIEW_TV3_ERD_TUAN_1.md`. Chưa ký PASS Gate 1 |
-| Cả nhóm — Gate 1 dự kiến 15/11 | Đồng ý hoặc yêu cầu sửa DEC01–DEC12; ghi phiên bản và lỗi còn mở | Chờ xác nhận thật |
+| G2 | 22/11 | Ràng buộc/transaction, dữ liệu, 10 SQL, 10 RA, B1/B2 và lỗi còn lại có owner/hạn; cả ba xác nhận. |
+| G3 | 24/11 | Rebuild DB sạch, đối soát, demo quyền thật, log và ảnh minh chứng. |
+| G4 | 26/11 | Báo cáo/PDF/bản in, đánh giá/chữ ký và tập dượt. |
+| Nộp | 27/11, tiết 3 | Theo kế hoạch nhóm; TV1 điều phối, đối chiếu thông báo gốc khi bổ sung. |
 
-Các Gate 2 (22/11), Gate 3 (24/11), Gate 4 (26/11) chưa được thực hiện trong gói tuần 1.
-
-## 6. Tiếp nhận review TV3 — 12/11/2026
-
-- TV1 đã đọc phiếu TV3 tại PR #1, commit `7abe4d5`: xác nhận đủ đường nối 10 RA/B1/B2 và tiếp nhận bản sửa RV08. Đây là lời xác nhận của TV3 trong nhánh của họ; giữ nguyên tác giả và không ký thay.
-- **E1: TV1 đã trả lời bằng DEC06 cập nhật.** Giữ schema để TV2/TV3 tiếp tục dùng giao diện đã bàn giao; không coi ghi trùng là hợp lệ về nghiệp vụ. Validation liệt kê đầy đủ các mã sự kiện trùng theo từng vai trò; TV2/TV1 xử lý nguồn nhập hoặc hiệu chỉnh trước nghiệm thu, rồi chạy lại tới 0 dòng.
-- B09 có truy vấn đối chiếu ngày và bộ test riêng; không thay thế trigger/transaction tuần 2.
-- Báo cáo độc lập và trạng thái từng phát hiện: [review TV3 chi tiết](../docs/REVIEW_TV3_CHI_TIET.md).
-- Gate 1 của cả nhóm **CHỜ REVIEW**: còn cần TV2 xác nhận và TV3 tiếp nhận phản hồi cuối; giải quyết E1 không tự tạo chữ ký PASS.
-
-## 7. Tích hợp kỹ thuật TV3 — 13/11/2026
-
-- Theo yêu cầu chủ repo, đã sửa F03 bằng preflight cho cả ba role có sẵn và transaction thiết lập; giữ nguyên schema/DEC06. F05 đã cập nhật mô tả PR sang đúng file và quy ước Q_d.
-- Kiểm chứng trước merge: 146/146 đạt, gồm 144 kiểm tra chức năng và 2 phép tái hiện; log/hash trong `tests/tv3_review_results.json`. Kiểm tra tệp sau merge 11/11 đạt.
-- PR #1 đã merge bằng merge commit `d84571e544b480c9c4ba4a421d5d5435b33faac8`, HEAD nguồn `3414131a66bff6f39d7094225bf5a858beb3421f`. Lịch sử TV3 được giữ; main đã chứa bộ RA/bảo mật cùng bản sửa.
-- Đây là tích hợp mã và tài liệu, không phải biên bản họp hay chữ ký nghiệm thu. Gate 1 **CHỜ REVIEW** những xác nhận còn thiếu; TV2/TV3 tiếp tục seed chính thức, đối soát, ảnh và báo cáo theo phân công.
-
-## 8. Xác nhận của TV3 — 13/11/2026
-
-Do TV3 ghi. Chi tiết ở `../docs/REVIEW_TV3_ERD_TUAN_1.md` mục 6–9.
-
-- **Review sơ đồ phân rã chức năng (W1-T1-08): đạt.** 1 nút gốc, 6 nhóm, 14 chức năng cấp 2; đủ `.drawio`/`.png`/`.svg`; mọi QRA và hai demo B1/B2 đều có chức năng tương ứng. Còn câu hỏi **C1** cho TV1: phạm vi của chức năng 3.2 Kết thúc đợt (khi nào được đóng đợt không kèm sự kiện). Không chặn Gate 1.
-- **Tiếp nhận phản hồi review của TV1:** đồng ý F01–F05 và câu trả lời E1 (DEC06 + `V_E1_CU`/`V_E1_MOI` phải 0 dòng). E1 đóng. TV3 đã chạy lại trên máy của mình tại `fa6c055`: `05_security.sql` ra đúng 6 lỗi quyền cố ý, `ra_fixture.sql` cho kết quả giống lần 11/11.
-- **Xác nhận triển khai hai demo bảo mật** B1 và B2 theo `sql/05_security.sql`, `docs/06b_bao_mat.md`. Ảnh minh chứng và chạy trên seed chính thức làm trong tuần 2–3.
-- TV3 đã sửa tên tác nhân trong `docs/06b_bao_mat.md` cho khớp đặc tả mục 3 (C2).
-- **Phía TV3 không còn điều kiện chặn Gate 1.** Đây là ý kiến ghi trong tài liệu, chưa phải chữ ký biên bản họp. Gate 1 chung vẫn **CHỜ REVIEW** vì còn thiếu xác nhận của TV2.
-
-## 9. Hoàn thiện sản phẩm kỹ thuật tuần 1 — 16/11/2026
-
-- Thông tin do chủ repo cung cấp: nhóm38/lớp174356, ThS. Nguyễn Thị Thanh Huyền; TV1 Dương Ngọc Ninh20237469, TV2 Trần Tuấn Ngọc20227064, TV3 Trần Bùi Tùng Linh20227057, theo thứ tự dưới lên của ảnh danh sách. Không suy từ username GitHub để đổi vai trò này.
-- C1 đã chốt ở DEC13/P3, không thay schema. Chuẩn hóa nháp giữ giới hạn DEC12, chưa tuyên bố hoàn tất luận chứng cuối tuần2.
-- PR #2 xác nhận TV3 đã merge tại2f46a0f; PR #3 dữ liệu/hồ sơ đã merge tại921b18a. Giữ nguyên lời xác nhận thật trong PR2; phần agent bổ sung được ghi đúng nguồn hỗ trợ kỹ thuật.
-- Dữ liệu636 đã sửa54vi phạm B15, giữ RNG/ID/ngày cư trú/sự kiện. Fixture nhỏ29dòng và expectedtay, ma trận S01–S21, môi trường chung,10SQL/review dữ liệu TV3 đã có. Log tuần1 đạt96/96, gồm95chức năng+1tái hiện; kiểm tra tệp/hashes/53mã/LF đạt14/14.
-- [Bàn giao chung](../docs/BAN_GIAO_TUAN_1.md) đối chiếu53mã:46mục đủ sản phẩm và review kỹ thuật;7mục còn chờ nguồn/xác nhận cụ thể. Quyền repo16/11: Linhlss admin,Ngocdeezet write,ninhdn07 write.
-- **Gate1 chung: CHỜ REVIEW hồ sơ/xác nhận còn thiếu. Kỹ thuật tuần1: ĐẠT.** Không tạo giả cuộc họp, người ký, điểm đánh giá, xác nhận máy cá nhân TV2 hoặc lời phê duyệt cả nhóm. Thông báo yêu cầu gốc chưa lưu đối chiếu; nguồn ảnh hiện có là danh sách nhóm.
+Quyền repo kiểm tra 16/11: Linhlss admin, Ngocdeezet write, ninhdn07 write. Chỉ giữ main sau tích hợp; không đếm nhiều nhánh chứa cùng commit thành đóng góp mới. Toàn bộ hồ sơ trước khi gộp có trong [lịch sử tại 12994f1](https://github.com/Linhlss/CSDL-Nh-m-38/tree/12994f106ad9993c0ddf0ff9069bf21268352bd8). Nhật ký giữ kết luận/nguồn và trạng thái; công thức, SQL, dữ liệu, fixture, log gốc và sơ đồ tiếp tục là sản phẩm kỹ thuật chính.

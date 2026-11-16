@@ -1,4 +1,4 @@
-# BÁO CÁO BTL MÔN CƠ SỞ DỮ LIỆU — BẢN NHÁP TUẦN 1
+# BÁO CÁO BTL MÔN CƠ SỞ DỮ LIỆU — BẢN NHÁP TÍCH HỢP
 
 **Chủ đề số 17** — Xây dựng cơ sở dữ liệu quản lý cư dân và biến động cư trú tại một phường.
 
@@ -364,7 +364,7 @@ Mười câu dùng đủ bảy phép cơ bản của đại số quan hệ:
 | QRA09 | ✓ | ✓ | ✓ | | | | | ✓ |
 | QRA10 | ✓ | ✓ | ✓ | | ✓ | | | |
 
-Mỗi câu có một SQL kiểm chứng viết riêng, khác với 10 câu SQL nghiệp vụ ở Chương 5. Trên bộ dữ liệu thử nhỏ đã biết đáp án (`tests/ra_fixture.sql`), cả 10 câu cho đúng đáp án tính tay. Lần review kỹ thuật độc lập hỗ trợ TV1 đạt **146/146**, gồm 144 kiểm tra chức năng và 2 phép tái hiện; không phải 146 phép thử riêng cho đại số quan hệ. Xem [báo cáo review TV3](REVIEW_TV3_CHI_TIET.md).
+Mỗi câu có một SQL kiểm chứng viết riêng, khác với 10 câu SQL nghiệp vụ ở Chương 5. Trên bộ dữ liệu thử nhỏ đã biết đáp án (`tests/ra_fixture.sql`), cả 10 câu cho đúng đáp án tính tay. Lần review kỹ thuật độc lập hỗ trợ TV1 đạt **146/146**, gồm 144 kiểm tra chức năng và 2 phép tái hiện; không phải 146 phép thử riêng cho đại số quan hệ. Xem [review TV3 trong nhật ký](../meetings/decision_log.md#review-tv3).
 
 Lần kiểm chứng tuần 1 ngày 16/11 đạt **96/96**, gồm 95 kiểm tra chức năng và 1 tái hiện B15 bản cũ. [Log đầy đủ](../tests/week1_execution_results.json) lưu expected/actual và hash đầu vào; [môi trường](../tests/week1_environment.md) nêu giới hạn lần chạy. Sáu cặp RA/SQL đã khớp đầy đủ các thuộc tính sau khi chuẩn hóa mức hạt trên seed636. QRA02/03/06/08 đã khớp đáp án tay trên tiny29; log này chưa lưu kết quả bốn câu đó trên seed636. Bảng đối soát trên seed hiện hành:
 
@@ -396,7 +396,7 @@ Khi đối soát, cần xử lý các khác biệt sau:
 
 ## CHƯƠNG 6 — BẢO MẬT CSDL
 
-> Người viết: TV3. Reviewer được phân công: TV2. Nháp ngày 16/11/2026. Bằng chứng kỹ thuật do agent hỗ trợ ghi: [review trước PR #1](REVIEW_TV3_CHI_TIET.md) và [log tuần 1 ngày 16/11](../tests/week1_execution_results.json) trên PostgreSQL 17.11, tiny29 và seed636 hiện hành. Đây không phải chữ ký review của TV2. Ảnh minh chứng sẽ chụp trên seed đã merge, hạn 24/11. Script: [sql/05_security.sql](../sql/05_security.sql). Kế hoạch chi tiết: [06b_bao_mat.md](06b_bao_mat.md).
+> Người viết: TV3. Reviewer được phân công: TV2. Nháp ngày 16/11/2026. Bằng chứng kỹ thuật do agent hỗ trợ ghi: [review TV3 trong nhật ký](../meetings/decision_log.md#review-tv3) và [log tuần 1 ngày 16/11](../tests/week1_execution_results.json) trên PostgreSQL 17.11, tiny29 và seed636 hiện hành. Đây không phải chữ ký review của TV2. Ảnh minh chứng sẽ chụp trên seed đã merge, hạn 24/11. Script: [sql/05_security.sql](../sql/05_security.sql). Kế hoạch chi tiết: [06b_bao_mat.md](06b_bao_mat.md).
 
 ### 6.1. Khái quát và các rủi ro
 

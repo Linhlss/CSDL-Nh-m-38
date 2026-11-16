@@ -61,10 +61,10 @@ Với RV08, quan hệ chuẩn bị tối thiểu có thể là `CU_TRU_HIEU_LUC_
 - TV3 kiểm tra hai vai trò FK trên ERD, bản số/NULL, mô hình đủ biểu diễn 10 câu; xử lý RV08 và thống nhất lược đồ `Q_d`.
 - Hai thành viên ghi phản hồi, tệp/phiên bản và ngày trong `../meetings/decision_log.md`. TV3 đã xác nhận 10 RA/B1/B2 tại commit `7abe4d5`; TV2 vẫn chờ xác nhận.
 
-## 5. Review tiếp nhận ngày 12/11/2026
+## 5. Lịch sử review ngày 12/11/2026
 
-RV01–RV07 và RV09 được kiểm tra lại trên `7abe4d5`; 10 SQL kiểm chứng khớp đầy đủ kết quả trên fixture nhỏ và các ca biên. **RV08 đã sửa đạt:** Q_d chuẩn bị bằng SQL, bỏ cột kết thúc trước khi dùng đại số cổ điển. **RV10 còn mở:** mô tả PR vẫn ghi tên cũ dù file thực tế đã đổi; TV3 cập nhật tham chiếu. E1 có quyết định giữ schema và bổ sung validation theo vai trò ở DEC06. Xem [báo cáo review độc lập](REVIEW_TV3_CHI_TIET.md) cho lệnh chạy, expected/actual, lỗi đã sửa và giới hạn role có sẵn. Không dùng kết quả fixture thay nghiệm thu seed chính thức.
+RV01–RV07 và RV09 được kiểm tra lại trên `7abe4d5`; 10 SQL kiểm chứng khớp đầy đủ kết quả trên fixture nhỏ và các ca biên. **RV08 đã sửa đạt:** Q_d chuẩn bị bằng SQL, bỏ cột kết thúc trước khi dùng đại số cổ điển. **Tại ngày 12/11, RV10 còn mở:** mô tả PR dùng tên cũ; đã xử lý ngày 13/11 ở mục 6. E1 có quyết định giữ schema và bổ sung validation theo vai trò ở DEC06. Xem [review TV3 trong nhật ký](../meetings/decision_log.md#review-tv3) cho lệnh chạy, expected/actual, lỗi đã sửa và giới hạn role có sẵn. Không dùng kết quả fixture thay nghiệm thu seed chính thức.
 
 ## 6. Cập nhật tích hợp ngày 13/11/2026
 
-PR #1 đã merge tại `d84571e` sau khi khóa HEAD `3414131`. **RV10/F05 đã xử lý:** mô tả PR dùng đúng 06a/06b và cách chuẩn bị Q_d. **F03 đã xử lý:** kiểm tra role có sẵn và transaction thiết lập, kiểm chứng đầy đủ điều kiện từ chối/rollback. Bộ kiểm chứng mới đạt 146/146 (144 chức năng, 2 tái hiện); cấu trúc và 20 câu hỏi giữ nguyên. Gate 1 vẫn chờ các xác nhận thành viên và lần đối soát seed chính thức là bước riêng. Xem mục 7–8 của báo cáo review để truy commit và expected/actual.
+PR #1 đã merge tại `d84571e` sau khi khóa HEAD `3414131`. **RV10/F05 đã xử lý:** mô tả PR dùng đúng 06a/06b và cách chuẩn bị Q_d. **F03 đã xử lý:** kiểm tra role có sẵn và transaction thiết lập, kiểm chứng đầy đủ điều kiện từ chối/rollback. Bộ kiểm chứng mới đạt 146/146 (144 chức năng, 2 tái hiện); cấu trúc và 20 câu hỏi giữ nguyên. Gate 1 vẫn chờ các xác nhận thành viên và lần đối soát seed chính thức là bước riêng. Xem [nhật ký review](../meetings/decision_log.md#review-tv3) và log146 để truy commit, expected/actual và phạm vi kiểm chứng.

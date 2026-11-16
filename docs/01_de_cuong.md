@@ -13,7 +13,7 @@
 
 ## 0. Hướng dẫn sử dụng tài liệu này
 
-**Cập nhật 11/11/2026:** TV1 đã chuẩn bị [bộ bàn giao tuần 1](BAN_GIAO_TV1_TUAN_1.md). Phần mô hình/DDL v0 và chuẩn hóa tổng quát bên dưới lưu lại định hướng khởi tạo; nguồn kỹ thuật hiện hành cho review là [đặc tả](03_dac_ta_nghiep_vu.md), [từ điển/chuẩn hóa](04_data_dictionary_va_chuan_hoa.md), [ERD](../diagrams/erd_v1.png) và DDL v1-candidate. Quy tắc ngày chuyển và giới hạn kết luận 3NF phải đọc theo bộ bàn giao mới. Gate 1 chưa có xác nhận chéo; [biên bản](../meetings/decision_log.md) ghi trạng thái thực tế.
+**Nguồn hiện hành, 16/11/2026:** [đặc tả](03_dac_ta_nghiep_vu.md), [từ điển/chuẩn hóa](04_data_dictionary_va_chuan_hoa.md), [ERD](../diagrams/erd_v1.png) và DDL là bộ kỹ thuật hiện hành. Các mô tả mô hình/DDL v0 bên dưới lưu định hướng khởi tạo; quyết định, review và trạng thái xác nhận theo [nhật ký chung](../meetings/decision_log.md). Xem [checklist tuần 2](03_CHECKLIST_DU_AN.md#tuan-2-hien-hanh) để tiếp tục, không dùng số liệu dự kiến làm kết quả đã chạy.
 
 Tài liệu giữ phạm vi và lịch điều hành toàn dự án; bộ bàn giao được dẫn ở trên giữ đặc tả kỹ thuật mới nhất. Đừng sao chép toàn bộ đề cương thành báo cáo: các phần đánh dấu **[CẦN HOÀN THIỆN]**, **[BẢNG/ẢNH CẦN BỔ SUNG]** là công việc theo từng tuần. Các sơ đồ trong đề cương là **đề xuất v0**; dùng sơ đồ xuất trong bộ bàn giao để review bản ứng viên v1.
 
@@ -994,5 +994,3 @@ BTL_CSDL_DE_TAI_17/
 **4 mốc không được bỏ:** **15/11 chốt schema**, **22/11 chốt kỹ thuật sơ bộ**, **24/11 nghiệm thu 20 truy vấn + 2 demo**, **26/11 sẵn sàng bản nộp**, **27/11 nộp đúng tiết 3**.
 
 **Điều kiện nhóm coi là xong:** Mọi mục Y1–Y8 có tệp/ảnh/chứng cứ, không còn lỗi test nghiêm trọng, 3 người đã review và ký trang cuối, bản mềm/bản cứng đúng định dạng.
-
-**Cập nhật 16/11/2026:** [Bàn giao tuần 1 chung](BAN_GIAO_TUAN_1.md) là nơi theo dõi sản phẩm/kiểm chứng và 53 mã tuần 1 hiện hành; các đoạn dự kiến khởi tạo phía trên giữ để truy lịch sử.

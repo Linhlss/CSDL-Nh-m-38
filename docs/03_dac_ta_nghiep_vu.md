@@ -146,4 +146,4 @@ Ví dụ C1: một người chỉ có đợt tạm trú 01/11–19/11/2026, hế
 - `07_ma_tran_truy_van_va_review.md`: đủ 20 câu hỏi và review tài liệu hiện có.
 - `../tests/week1_design_cases.md`: các tình huống thiết kế với đáp án kỳ vọng.
 - `../meetings/decision_log.md`: quyết định thiết kế và trạng thái Gate 1.
-- `BAN_GIAO_TV1_TUAN_1.md`: điểm bắt đầu cho người nhận bàn giao.
+- [Checklist tuần 2](03_CHECKLIST_DU_AN.md#tuan-2-hien-hanh): việc tiếp theo của từng người.
