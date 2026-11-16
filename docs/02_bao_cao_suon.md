@@ -150,9 +150,232 @@ TV1 đã chuẩn bị 30 tình huống kiểm tra thiết kế với đầu ra k
 
 ## CHƯƠNG 4 — ĐẠI SỐ QUAN HỆ (10 CÂU)
 
-4.1. Ký hiệu và quy ước [TODO – TV3]  
-4.2–4.11. QRA01–QRA10: câu hỏi, biểu thức, diễn giải, kết quả kiểm chứng [TODO – TV3]  
-4.12. Nhận xét [TODO – TV3]
+> Người viết: TV3. Người kiểm tra: TV1. Nháp ngày 16/11/2026. Các dòng "Kết quả trên seed chính thức" sẽ điền sau khi seed của TV2 (PR #3) được sửa và merge. SQL kiểm chứng của từng câu nằm trong [docs/06a_dai_so_quan_he.md](06a_dai_so_quan_he.md).
+
+### 4.1. Ký hiệu và quy ước
+
+| Ký hiệu | Phép toán | SQL tương ứng |
+|---|---|---|
+| `σ_{điều kiện}(R)` | Chọn | `WHERE` |
+| `π_{A, B}(R)` | Chiếu, kết quả là tập (không lặp) | `SELECT DISTINCT A, B` |
+| `R ⋈ S` | Kết nối tự nhiên theo các thuộc tính trùng tên | `JOIN ... USING (...)` |
+| `R ⋈_{điều kiện} S` | Kết nối theta | `JOIN ... ON ...` |
+| `R ∪ S`, `R ∩ S`, `R − S` | Hợp, giao, hiệu | `UNION`, `INTERSECT`, `EXCEPT` |
+| `ρ_{S(A1, A2, ...)}(R)` | Đổi tên quan hệ và thuộc tính | Bí danh `AS` |
+| `X ← biểu thức` | Gán kết quả trung gian | `WITH X AS (...)` |
+
+Nhóm thống nhất các quy ước sau.
+
+1. Đại số quan hệ làm việc trên tập, nên phép chiếu tự loại bộ trùng. SQL làm việc trên đa tập, vì vậy SQL kiểm chứng luôn dùng `DISTINCT` hoặc phép tập hợp, và hai bên được so theo tập mã khóa chứ không theo số dòng.
+2. Hai vế của `∪`, `∩`, `−` phải khả hợp, tức là cùng số thuộc tính và cùng miền. Mọi phép tập hợp trong chương này so trên `ma_cu_dan` hoặc `ma_dia_chi`. Hai người trùng họ tên vẫn là hai phần tử khác nhau.
+3. Cột `ghi_chu` có mặt ở năm bảng. Nối tự nhiên hai bảng gốc sẽ so cả `ghi_chu` và cho kết quả sai, nên mọi biểu thức đều chiếu bớt thuộc tính trước khi nối, để hai vế chỉ còn chung đúng thuộc tính khóa.
+4. Ngày tham chiếu là d = 20/11/2026. Theo quy tắc B05, một đợt có hiệu lực tại d khi `ngay_bat_dau ≤ d` và `ngay_ket_thuc` rỗng hoặc `ngay_ket_thuc ≥ d`. Cột `ngay_ket_thuc` được phép NULL, mà so sánh với NULL cần logic ba giá trị của SQL, nằm ngoài đại số quan hệ cổ điển. Nhóm tách việc này thành hai bước:
+   - Bước chuẩn bị bằng SQL: lấy các đợt có hiệu lực tại d theo B05 rồi bỏ cột `ngay_ket_thuc`, được
+     `Q_d(ma_qua_trinh, ma_cu_dan, ma_ho, loai_cu_tru, ngay_bat_dau)`.
+   - Bước đại số: dùng `Q_d` như một quan hệ đầu vào. Mọi thuộc tính của `Q_d` đều có giá trị, nên các biểu thức chỉ dùng phép toán cổ điển.
+5. QRA01, 02, 03, 08 xét tại d qua `Q_d`. QRA09 coi một người là đã từng cư trú khi người đó có đợt bắt đầu ≤ d. QRA04, 05, 06, 07, 10 xét toàn bộ dữ liệu đã ghi nhận (quy tắc B16).
+
+Lược đồ dùng trong chương (theo `sql/01_schema.sql`):
+
+```text
+TO_DAN_PHO(ma_to, ten_to, ghi_chu)
+DIA_CHI(ma_dia_chi, ma_to, dia_chi_chuan, ghi_chu)
+HO_CU_TRU(ma_ho, ma_dia_chi, ngay_lap, ghi_chu)
+CU_DAN(ma_cu_dan, ho_ten, ngay_sinh, gioi_tinh, ghi_chu)
+QUA_TRINH_CU_TRU(ma_qua_trinh, ma_cu_dan, ma_ho, loai_cu_tru, ngay_bat_dau, ngay_ket_thuc)
+BIEN_DONG_CU_TRU(ma_bien_dong, loai_bien_dong, ma_qua_trinh_cu, ma_qua_trinh_moi,
+                 ngay_bien_dong, ma_tai_khoan, thoi_diem_ghi, ghi_chu)
+```
+
+### 4.2. QRA01: Cư dân đang cư trú tại Tổ 01 tại ngày d
+
+Câu hỏi: liệt kê mã và họ tên cư dân đang cư trú tại một địa chỉ thuộc Tổ 01 vào ngày 20/11/2026.
+
+```text
+R1 ← π_{ma_to}(σ_{ten_to = 'Tổ 01'}(TO_DAN_PHO))
+R2 ← π_{ma_dia_chi}(π_{ma_dia_chi, ma_to}(DIA_CHI) ⋈ R1)
+R3 ← π_{ma_ho}(π_{ma_ho, ma_dia_chi}(HO_CU_TRU) ⋈ R2)
+R4 ← π_{ma_cu_dan}(π_{ma_cu_dan, ma_ho}(Q_d) ⋈ R3)
+KQ ← π_{ma_cu_dan, ho_ten}(CU_DAN ⋈ R4)
+```
+
+Biểu thức đi từ tổ xuống địa chỉ, hộ, rồi tới các đợt còn hiệu lực; mỗi bước nối chỉ có chung một thuộc tính khóa. R4 là tập mã cư dân, nối với `CU_DAN` để lấy họ tên. Hai người trùng tên vẫn cho hai bộ vì khác `ma_cu_dan`.
+
+Kết quả trên seed chính thức: [CHỜ SEED]
+
+### 4.3. QRA02: Cư dân đang tạm trú tại Tổ 02 tại ngày d
+
+Câu hỏi: liệt kê mã và họ tên cư dân đang tạm trú tại Tổ 02 vào ngày 20/11/2026.
+
+```text
+KQ ← π_{C.ma_cu_dan, C.ho_ten}(
+        σ_{T.ten_to = 'Tổ 02' ∧ Q.loai_cu_tru = 'TAM_TRU'}(
+            C ⋈_{C.ma_cu_dan = Q.ma_cu_dan} Q_d
+              ⋈_{Q.ma_ho = H.ma_ho} H
+              ⋈_{H.ma_dia_chi = D.ma_dia_chi} D
+              ⋈_{D.ma_to = T.ma_to} T ))
+```
+
+với C = `CU_DAN`, Q = `Q_d`, H = `HO_CU_TRU`, D = `DIA_CHI`, T = `TO_DAN_PHO`.
+
+Câu này dùng kết nối theta để minh họa cách viết thứ hai. Điều kiện nối nêu rõ cặp thuộc tính được so, nên cột `ghi_chu` trùng tên không ảnh hưởng. Mỗi `⋈_{điều kiện}` tương đương `σ_{điều kiện}(R × S)`. Có thể đẩy phép chọn vào trong, ví dụ `σ_{ten_to = 'Tổ 02'}(T)`, để giảm số bộ trung gian mà kết quả không đổi.
+
+Kết quả trên seed chính thức: [CHỜ SEED]
+
+### 4.4. QRA03: Cư dân từ 60 tuổi trở lên đang cư trú tại Tổ 01
+
+Câu hỏi: liệt kê mã, họ tên, ngày sinh của cư dân đủ 60 tuổi tại ngày d (sinh từ 20/11/1966 trở về trước) và đang cư trú tại Tổ 01.
+
+```text
+CAO_TUOI ← π_{ma_cu_dan, ho_ten, ngay_sinh}(σ_{ngay_sinh ≤ '1966-11-20'}(CU_DAN))
+KQ       ← CAO_TUOI ⋈ R4          (R4 như QRA01)
+```
+
+Đại số quan hệ không có hàm tính tuổi, nên điều kiện tuổi được viết thành so sánh ngày sinh với một ngày cắt cố định. Phép nối tự nhiên qua thuộc tính chung `ma_cu_dan` giữ lại người vừa đủ tuổi vừa đang ở Tổ 01.
+
+Kết quả trên seed chính thức: [CHỜ SEED]
+
+### 4.5. QRA04: Cư dân từng cư trú ở ít nhất hai nhóm hộ khác nhau
+
+Câu hỏi: liệt kê mã và họ tên cư dân từng có đợt cư trú ở ít nhất hai nhóm hộ khác nhau, xét toàn bộ lịch sử.
+
+```text
+QA ← ρ_{QA(ma_cu_dan, ma_ho_a)}(π_{ma_cu_dan, ma_ho}(QUA_TRINH_CU_TRU))
+QB ← ρ_{QB(ma_cu_dan, ma_ho_b)}(π_{ma_cu_dan, ma_ho}(QUA_TRINH_CU_TRU))
+R  ← π_{ma_cu_dan}(σ_{ma_ho_a ≠ ma_ho_b}(QA ⋈ QB))
+KQ ← π_{ma_cu_dan, ho_ten}(CU_DAN ⋈ R)
+```
+
+Đây là câu tự kết nối. Hai bản sao của cùng một quan hệ được đổi tên cột hộ thành `ma_ho_a`, `ma_ho_b` và giữ nguyên `ma_cu_dan`, nên `QA ⋈ QB` ghép mọi cặp đợt của cùng một người. Phép chọn giữ các cặp thuộc hai hộ khác nhau, vì vậy người có hai đợt trong cùng một hộ bị loại.
+
+Kết quả trên seed chính thức: [CHỜ SEED]
+
+### 4.6. QRA05: Địa chỉ chưa được gán cho nhóm hộ nào
+
+Câu hỏi: liệt kê mã và địa chỉ chuẩn của các địa chỉ chưa có nhóm hộ nào.
+
+```text
+R  ← π_{ma_dia_chi}(DIA_CHI) − π_{ma_dia_chi}(HO_CU_TRU)
+KQ ← π_{ma_dia_chi, dia_chi_chuan}(DIA_CHI ⋈ R)
+```
+
+Phép hiệu lấy tập mọi mã địa chỉ trừ tập mã địa chỉ đã có hộ. Hai vế cùng một thuộc tính `ma_dia_chi` nên khả hợp. Địa chỉ có hộ mà hộ không có người ở (S05) vẫn xuất hiện trong `HO_CU_TRU`, nên không thuộc kết quả.
+
+Kết quả trên seed chính thức: [CHỜ SEED]
+
+### 4.7. QRA06: Cư dân có hồ sơ nhưng chưa từng có đợt cư trú
+
+Câu hỏi: liệt kê mã và họ tên cư dân đã có hồ sơ nhưng chưa từng có đợt cư trú nào.
+
+```text
+R  ← π_{ma_cu_dan}(CU_DAN) − π_{ma_cu_dan}(QUA_TRINH_CU_TRU)
+KQ ← π_{ma_cu_dan, ho_ten}(CU_DAN ⋈ R)
+```
+
+Phép hiệu lấy trên toàn tập cư dân. Người chỉ có đợt tương lai vẫn có bản ghi trong `QUA_TRINH_CU_TRU`, nên không thuộc kết quả.
+
+Kết quả trên seed chính thức: [CHỜ SEED]
+
+### 4.8. QRA07: Cư dân từng có cả thường trú và tạm trú
+
+Câu hỏi: liệt kê mã và họ tên cư dân từng có cả đợt thường trú và đợt tạm trú, không nhất thiết cùng lúc.
+
+```text
+A  ← π_{ma_cu_dan}(σ_{loai_cu_tru = 'THUONG_TRU'}(QUA_TRINH_CU_TRU))
+B  ← π_{ma_cu_dan}(σ_{loai_cu_tru = 'TAM_TRU'}(QUA_TRINH_CU_TRU))
+KQ ← π_{ma_cu_dan, ho_ten}(CU_DAN ⋈ (A ∩ B))
+```
+
+Câu này dùng phép giao hai tập người. Một phép chọn với điều kiện `loai_cu_tru = 'THUONG_TRU' ∧ loai_cu_tru = 'TAM_TRU'` sẽ luôn cho kết quả rỗng, vì mỗi bộ chỉ có một giá trị loại cư trú.
+
+Kết quả trên seed chính thức: [CHỜ SEED]
+
+### 4.9. QRA08: Cư dân đang cư trú tại Tổ 01 hoặc Tổ 02 tại ngày d
+
+Câu hỏi: liệt kê mã cư dân đang cư trú tại Tổ 01 hoặc Tổ 02 vào ngày 20/11/2026.
+
+```text
+HO_TO ← π_{ma_ho, ma_to}(π_{ma_ho, ma_dia_chi}(HO_CU_TRU) ⋈ π_{ma_dia_chi, ma_to}(DIA_CHI))
+CD_TO ← π_{ma_cu_dan, ma_to}(π_{ma_cu_dan, ma_ho}(Q_d) ⋈ HO_TO)
+T1    ← π_{ma_cu_dan}(CD_TO ⋈ π_{ma_to}(σ_{ten_to = 'Tổ 01'}(TO_DAN_PHO)))
+T2    ← π_{ma_cu_dan}(CD_TO ⋈ π_{ma_to}(σ_{ten_to = 'Tổ 02'}(TO_DAN_PHO)))
+KQ    ← T1 ∪ T2
+```
+
+Phép hợp gộp hai tập mã cư dân. Một người ở cả hai tổ, ví dụ thường trú ở tổ này và tạm trú ở tổ kia, chỉ xuất hiện một lần. Câu này có thể viết bằng một phép chọn với điều kiện "hoặc"; nhóm dùng `∪` để minh họa phép hợp.
+
+Kết quả trên seed chính thức: [CHỜ SEED]
+
+### 4.10. QRA09: Cư dân đã từng cư trú nhưng không còn đợt hiệu lực tại d
+
+Câu hỏi: liệt kê mã và họ tên cư dân đã từng cư trú (có đợt bắt đầu ≤ d) nhưng không có đợt nào còn hiệu lực vào ngày 20/11/2026.
+
+```text
+DA_TUNG ← π_{ma_cu_dan}(σ_{ngay_bat_dau ≤ '2026-11-20'}(QUA_TRINH_CU_TRU))
+DANG_O  ← π_{ma_cu_dan}(Q_d)
+KQ      ← π_{ma_cu_dan, ho_ten}(CU_DAN ⋈ (DA_TUNG − DANG_O))
+```
+
+Cột `ngay_bat_dau` là `NOT NULL`, nên phép chọn của DA_TUNG không gặp NULL. Phép hiệu cho ra người từng ở nhưng tại d không còn đợt nào hiệu lực. Người chưa từng có đợt (kết quả của QRA06) và người chỉ có đợt tương lai đều không thuộc DA_TUNG, nên không xuất hiện ở đây.
+
+Kết quả trên seed chính thức: [CHỜ SEED]
+
+### 4.11. QRA10: Cư dân chuyển nội bộ giữa hai tổ dân phố khác nhau
+
+Câu hỏi: liệt kê mã và họ tên cư dân có sự kiện chuyển nội bộ từ một hộ thuộc tổ này sang một hộ thuộc tổ khác.
+
+```text
+HO_TO ← π_{ma_ho, ma_to}(π_{ma_ho, ma_dia_chi}(HO_CU_TRU) ⋈ π_{ma_dia_chi, ma_to}(DIA_CHI))
+QT_TO ← π_{ma_qua_trinh, ma_cu_dan, ma_to}(π_{ma_qua_trinh, ma_cu_dan, ma_ho}(QUA_TRINH_CU_TRU) ⋈ HO_TO)
+CU    ← ρ_{CU(ma_qua_trinh_cu, ma_cu_dan, ma_to_cu)}(QT_TO)
+MOI   ← ρ_{MOI(ma_qua_trinh_moi, ma_cu_dan, ma_to_moi)}(QT_TO)
+NB    ← π_{ma_bien_dong, ma_qua_trinh_cu, ma_qua_trinh_moi}(
+             σ_{loai_bien_dong = 'CHUYEN_NOI_BO'}(BIEN_DONG_CU_TRU))
+R     ← π_{ma_cu_dan}(σ_{ma_to_cu ≠ ma_to_moi}(NB ⋈ CU ⋈ MOI))
+KQ    ← π_{ma_cu_dan, ho_ten}(CU_DAN ⋈ R)
+```
+
+Bảng biến động có hai khóa ngoại cùng trỏ tới `QUA_TRINH_CU_TRU`: đợt cũ và đợt mới. Phép đổi tên tạo hai bản QT_TO có tên thuộc tính trùng với hai cột khóa ngoại, nhờ đó `NB ⋈ CU ⋈ MOI` đi theo hai nhánh nối riêng. CU và MOI cùng giữ `ma_cu_dan`, nên phép nối tự nhiên còn buộc đợt cũ và đợt mới thuộc cùng một người (quy tắc B08); sự kiện vi phạm điều này tự bị loại. Phép chọn cuối giữ sự kiện có tổ cũ khác tổ mới, nên chuyển nội bộ giữa hai hộ cùng tổ bị loại.
+
+Kết quả trên seed chính thức: [CHỜ SEED]
+
+### 4.12. Nhận xét
+
+Mười câu dùng đủ bảy phép cơ bản của đại số quan hệ:
+
+| Câu | σ | π | ⋈ tự nhiên | ⋈ theta | ρ | ∪ | ∩ | − |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| QRA01 | ✓ | ✓ | ✓ | | | | | |
+| QRA02 | ✓ | ✓ | | ✓ | | | | |
+| QRA03 | ✓ | ✓ | ✓ | | | | | |
+| QRA04 | ✓ | ✓ | ✓ (tự nối) | | ✓ | | | |
+| QRA05 | | ✓ | ✓ | | | | | ✓ |
+| QRA06 | | ✓ | ✓ | | | | | ✓ |
+| QRA07 | ✓ | ✓ | ✓ | | | | ✓ | |
+| QRA08 | ✓ | ✓ | ✓ | | | ✓ | | |
+| QRA09 | ✓ | ✓ | ✓ | | | | | ✓ |
+| QRA10 | ✓ | ✓ | ✓ | | ✓ | | | |
+
+Mỗi câu có một SQL kiểm chứng viết riêng, khác với 10 câu SQL nghiệp vụ ở Chương 5. Trên bộ dữ liệu thử nhỏ đã biết đáp án (`tests/ra_fixture.sql`), cả 10 câu cho đúng đáp án tính tay. TV1 kiểm chứng độc lập thêm các ca biên, đạt 146/146 kiểm tra (`docs/REVIEW_TV3_CHI_TIET.md`). Bảng đối soát trên seed chính thức:
+
+| Câu | Số bộ kết quả | Câu SQL đối chiếu (Chương 5) | Khớp tập mã? |
+|---|---|---|---|
+| QRA01 | [CHỜ SEED] | QSQL01 | [CHỜ SEED] |
+| QRA02 | [CHỜ SEED] | Không có | Không có |
+| QRA03 | [CHỜ SEED] | Không có | Không có |
+| QRA04 | [CHỜ SEED] | QSQL05 | [CHỜ SEED] |
+| QRA05 | [CHỜ SEED] | QSQL04 | [CHỜ SEED] |
+| QRA06 | [CHỜ SEED] | Không có | Không có |
+| QRA07 | [CHỜ SEED] | QSQL06 | [CHỜ SEED] |
+| QRA08 | [CHỜ SEED] | Không có | Không có |
+| QRA09 | [CHỜ SEED] | QSQL07 | [CHỜ SEED] |
+| QRA10 | [CHỜ SEED] | QSQL09 | [CHỜ SEED] |
+
+Khi đối soát, nhóm gặp ba chỗ đại số quan hệ và SQL khác nhau:
+
+- Đại số loại bộ trùng, SQL thì không. QSQL01 trả thêm cột `loai_cu_tru`, nên người có hai loại cư trú xuất hiện hai dòng, trong khi QRA01 cho mỗi người một bộ. Vì vậy hai bên được so theo tập mã.
+- Đại số cổ điển không có NULL. Nhóm xử lý cột `ngay_ket_thuc` bằng bước chuẩn bị `Q_d` ở mục 4.1.
+- Đại số cổ điển không có `COUNT` hay `GROUP BY`. Các câu thống kê (số người mỗi tổ, số sự kiện mỗi tháng) chỉ có ở Chương 5 và trong VIEW của Chương 6.
 
 ## CHƯƠNG 5 — SQL (10 CÂU)
 
@@ -162,11 +385,125 @@ TV1 đã chuẩn bị 30 tình huống kiểm tra thiết kế với đầu ra k
 
 ## CHƯƠNG 6 — BẢO MẬT CSDL
 
-6.1. Khái quát và các rủi ro [TODO – TV3]  
-6.2. Nguyên tắc phân quyền [TODO – TV3]  
-6.3. Demo B1 – GRANT/REVOKE [TODO + ẢNH – TV3]  
-6.4. Demo B2 – VIEW giới hạn dữ liệu [TODO + ẢNH – TV3]  
-6.5. Đánh giá [TODO – TV3]
+> Người viết: TV3. Người kiểm tra: TV2. Nháp ngày 16/11/2026. Hai demo đã chạy được trên PostgreSQL 17.11 với bảng rỗng, bộ dữ liệu thử và seed trong PR #3. Ảnh minh chứng sẽ chụp trên seed đã merge, hạn 24/11. Script: [sql/05_security.sql](../sql/05_security.sql). Kế hoạch chi tiết: [docs/06b_bao_mat.md](06b_bao_mat.md).
+
+### 6.1. Khái quát và các rủi ro
+
+CSDL quản lý cư dân chứa thông tin cá nhân: họ tên, ngày sinh, giới tính và nơi ở theo thời gian. Ghép các thông tin này lại có thể biết một người đang sống ở đâu hoặc vừa rời khỏi địa chỉ nào. Dữ liệu của đồ án là giả lập 100%, nhưng phần bảo mật được thiết kế như khi làm với dữ liệu thật.
+
+Ba mục tiêu bảo mật của mô hình CIA áp dụng vào đề tài như sau:
+
+| Mục tiêu | Rủi ro trong đề tài | Biện pháp trong đồ án |
+|---|---|---|
+| Bí mật | Cán bộ chỉ cần số liệu tổng hợp lại đọc được họ tên, ngày sinh từng người | VIEW tổng hợp; chỉ cấp quyền trên VIEW (demo B2) |
+| Toàn vẹn | Người chỉ có nhiệm vụ tra cứu tự sửa ngày kết thúc cư trú hoặc xóa sự kiện | Chỉ cấp `SELECT` (demo B1); PK, FK, CHECK; giao dịch khi ghi biến động |
+| Sẵn sàng | Mất dữ liệu do xóa nhầm bảng hoặc hỏng máy | Không cấp `TRUNCATE`, `DROP` cho role nghiệp vụ; sao lưu bằng `pg_dump` |
+
+Hai demo tập trung vào hai rủi ro đầu: lộ hồ sơ cư dân cho người không cần biết, và sửa dữ liệu trái phép. Cả hai đều dễ xảy ra hơn khi mọi người dùng chung một tài khoản quản trị.
+
+### 6.2. Nguyên tắc phân quyền
+
+Đồ án áp dụng nguyên tắc quyền tối thiểu: mỗi tài khoản chỉ có những quyền cần cho công việc của mình. Cụ thể:
+
+- Mỗi vai trò có một role PostgreSQL riêng; công việc hằng ngày không dùng tài khoản `postgres`.
+- Role nghiệp vụ không sở hữu bảng. Chủ sở hữu luôn có toàn quyền trên bảng của mình, nên nếu role demo là chủ sở hữu thì phép thử quyền mất ý nghĩa.
+- Script thu hồi quyền mặc định của nhóm `PUBLIC` (nhóm ngầm định chứa mọi role) trước, rồi mới cấp quyền cho từng role.
+
+Xác thực trả lời câu hỏi "bạn là ai", ví dụ đăng nhập bằng tên role và mật khẩu. Phân quyền trả lời câu hỏi "bạn được làm gì" trên từng đối tượng, bằng `GRANT` và `REVOKE`. Để đọc một bảng, role cần đủ ba tầng quyền: `CONNECT` trên database, `USAGE` trên schema và quyền tương ứng trên bảng.
+
+Đồ án có hai thứ cùng gọi là "tài khoản". Bảng `tai_khoan` là tài khoản nghiệp vụ mô phỏng, chỉ ghi lại ai đã ghi nhận một biến động; nó không cấp hay chặn quyền nào. Role PostgreSQL là tầng quyền thật, được hệ quản trị kiểm tra trên mọi câu lệnh. Hai tầng độc lập với nhau: khóa một dòng trong `tai_khoan` không tự thu hồi role nào.
+
+Ràng buộc toàn vẹn (PK, FK, CHECK) giữ cho dữ liệu đúng và áp dụng cho mọi người, kể cả quản trị. Ai được đọc hay sửa bảng nào thì do `GRANT` và `REVOKE` quyết định.
+
+Mô hình phân quyền của đồ án:
+
+| Role | Tác nhân (đặc tả mục 3) | 6 bảng nghiệp vụ | `tai_khoan` | VIEW thống kê |
+|---|---|---|---|---|
+| `postgres` | Quản trị CSDL: tạo bảng, role, cấp quyền | Chủ sở hữu | Chủ sở hữu | Chủ sở hữu |
+| `csdl17_admin` | Cán bộ quản lý cư dân | SELECT, INSERT, UPDATE, DELETE | SELECT, INSERT, UPDATE, DELETE | SELECT |
+| `csdl17_reader` | Cán bộ tổng hợp, mức tra cứu chi tiết | Chỉ SELECT | Không | Không |
+| `csdl17_report` | Cán bộ tổng hợp, mức chỉ xem số liệu tổng hợp | Không | Không | Chỉ SELECT |
+
+Role `reader` minh họa việc giới hạn thao tác (demo B1), còn role `report` minh họa việc giới hạn dữ liệu nhìn thấy (demo B2).
+
+### 6.3. Demo B1: GRANT/REVOKE cho tài khoản chỉ đọc
+
+Mục tiêu: cho thấy `csdl17_reader` tra cứu được nhưng không sửa được dữ liệu, và dữ liệu không đổi sau khi role này thử sửa.
+
+Thiết lập, chạy bằng `postgres`:
+
+```sql
+CREATE ROLE csdl17_reader LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE;
+REVOKE ALL ON ALL TABLES IN SCHEMA public FROM PUBLIC;
+GRANT USAGE ON SCHEMA public TO csdl17_reader;
+GRANT SELECT ON to_dan_pho, dia_chi, ho_cu_tru, cu_dan,
+                qua_trinh_cu_tru, bien_dong_cu_tru TO csdl17_reader;
+```
+
+Trước khi tạo role, script kiểm tra các role đã có sẵn. Nếu một role demo đã tồn tại với quyền quá cao (superuser, sở hữu bảng, là thành viên role khác…), script dừng và rollback toàn bộ phần thiết lập.
+
+| Bước | Lệnh (chạy dưới `csdl17_reader`) | Kết quả mong đợi | Ảnh |
+|---|---|---|---|
+| 1 | `SELECT current_user;` | `csdl17_reader` | `SEC_B1_select_ok.png` |
+| 2 | `SELECT ma_cu_dan, ho_ten, ngay_sinh, gioi_tinh FROM cu_dan ... LIMIT 5;` | Trả về dữ liệu | `SEC_B1_select_ok.png` |
+| 3 | `UPDATE cu_dan SET ghi_chu = ... WHERE ma_cu_dan = 1;` | `ERROR: permission denied for table cu_dan` | `SEC_B1_denied.png` |
+| 4 | `INSERT INTO to_dan_pho ...;` và `DELETE FROM qua_trinh_cu_tru ...;` | `permission denied` cho từng bảng | `SEC_B1_denied.png` |
+| 5 | `SELECT * FROM tai_khoan;` | `permission denied for table tai_khoan` | `SEC_B1_denied.png` |
+| 6 | (dưới `postgres`) xem lại dòng `ma_cu_dan = 1` | Giống hệt trước bước 3 | `SEC_B1_unchanged.png` |
+
+[ẢNH B1: chụp trên seed chính thức, hạn 24/11]
+
+PostgreSQL kiểm tra quyền trước khi thực hiện câu lệnh. `csdl17_reader` chỉ có `SELECT`, nên mọi lệnh ghi bị từ chối và không dòng nào thay đổi. Để đối chứng, cùng lệnh `UPDATE` đó chạy dưới `csdl17_admin` trong một giao dịch rồi `ROLLBACK` thì thành công. Lệnh đúng cú pháp và thỏa ràng buộc; nó bị chặn chỉ vì thiếu quyền.
+
+### 6.4. Demo B2: VIEW giới hạn dữ liệu
+
+Mục tiêu: cho thấy `csdl17_report` xem được số cư dân theo tổ qua VIEW nhưng không đọc được các bảng gốc chứa họ tên và ngày sinh.
+
+Thiết lập, chạy bằng `postgres`:
+
+```sql
+CREATE OR REPLACE VIEW vw_thong_ke_cu_dan_theo_to
+WITH (security_invoker = false) AS
+SELECT t.ma_to, t.ten_to, COUNT(DISTINCT q.ma_cu_dan) AS so_cu_dan
+FROM to_dan_pho t
+LEFT JOIN dia_chi d          ON d.ma_to = t.ma_to
+LEFT JOIN ho_cu_tru h        ON h.ma_dia_chi = d.ma_dia_chi
+LEFT JOIN qua_trinh_cu_tru q ON q.ma_ho = h.ma_ho
+                            AND q.ngay_bat_dau <= DATE '2026-11-20'
+                            AND (q.ngay_ket_thuc IS NULL
+                                 OR q.ngay_ket_thuc >= DATE '2026-11-20')
+GROUP BY t.ma_to, t.ten_to;
+
+REVOKE ALL ON ALL TABLES IN SCHEMA public FROM csdl17_report;
+GRANT SELECT ON vw_thong_ke_cu_dan_theo_to TO csdl17_report;
+```
+
+| Bước | Lệnh (chạy dưới `csdl17_report`) | Kết quả mong đợi | Ảnh |
+|---|---|---|---|
+| 1 | (dưới `postgres`) `pg_get_viewdef(...)` | VIEW chỉ có `ma_to`, `ten_to`, `so_cu_dan` | `SEC_B2_viewdef.png` |
+| 2 | `SELECT current_user;` | `csdl17_report` | `SEC_B2_view_ok.png` |
+| 3 | `SELECT * FROM vw_thong_ke_cu_dan_theo_to;` | Mỗi tổ một dòng, kể cả tổ 0 người | `SEC_B2_view_ok.png` |
+| 4 | `SELECT ho_ten, ngay_sinh FROM cu_dan;` | `ERROR: permission denied for table cu_dan` | `SEC_B2_denied.png` |
+| 5 | `SELECT * FROM qua_trinh_cu_tru;` | `permission denied for table qua_trinh_cu_tru` | `SEC_B2_denied.png` |
+
+[ẢNH B2: chụp trên seed chính thức, hạn 24/11]
+
+VIEW do chủ sở hữu bảng tạo, ở chế độ mặc định `security_invoker = false`, nên VIEW đọc bảng nền bằng quyền của chủ sở hữu VIEW. `csdl17_report` chỉ có quyền trên VIEW, vì vậy nhận được số liệu tổng hợp mà không xem được họ tên hay ngày sinh của ai. Nếu đặt `security_invoker = true` (có từ PostgreSQL 15), VIEW sẽ kiểm tra quyền của người gọi trên bảng nền, và role report bị từ chối cả khi đọc VIEW.
+
+Kết quả VIEW phải trùng từng dòng với QSQL03 ở Chương 5 cho cùng ngày 20/11/2026. Trên seed trong PR #3, hai bên khớp cả 8 tổ, kể cả Tổ 08 có 0 người. [Kiểm tra lại sau khi seed chính thức được merge.]
+
+### 6.5. Đánh giá
+
+Cả hai demo chạy bằng role thật. Khi chạy toàn bộ script có đúng 6 lỗi `permission denied` cố ý và không lỗi nào khác. TV1 đã kiểm chứng hai cách chạy, chuyển role bằng `SET ROLE` và đăng nhập trực tiếp bằng role; dữ liệu của 7 bảng không đổi sau các lệnh bị từ chối. Script chạy lại được an toàn vì có bước kiểm tra role có sẵn, và toàn bộ phần thiết lập nằm trong một giao dịch nên lỗi ở đâu cũng rollback hết.
+
+Các hạn chế:
+
+- Số liệu tổng hợp vẫn có thể lộ thông tin khi nhóm quá nhỏ. Nếu một tổ chỉ có 1 người, con số kết hợp với hiểu biết bên ngoài có thể giúp đoán ra người đó. Có thể khắc phục bằng cách chỉ hiển thị tổ có từ k người trở lên.
+- VIEW dùng ngày tham chiếu cố định 20/11/2026 để kết quả tái lập được. Khi dùng thật sẽ thay bằng `CURRENT_DATE`.
+- Đồ án chưa demo bảo mật mức dòng (Row-Level Security), ví dụ mỗi cán bộ chỉ xem cư dân thuộc tổ mình phụ trách.
+- Đồ án chưa cấu hình xác thực thật (mật khẩu mạnh, `pg_hba.conf`, mã hóa kết nối TLS) và chưa bật ghi nhật ký truy cập. Các bước này cần khi triển khai thật và nằm ngoài phạm vi bài tập.
+
+Hướng mở rộng gồm Row-Level Security theo tổ, ngưỡng k cho VIEW tổng hợp, ghi nhật ký truy cập bằng `log_statement` và `log_connections`, và sao lưu định kỳ bằng `pg_dump` kèm thử khôi phục bằng `pg_restore`.
 
 ## KẾT LUẬN
 
@@ -178,6 +515,10 @@ TV1 đã chuẩn bị 30 tình huống kiểm tra thiết kế với đầu ra k
 - PostgreSQL 17 Documentation — [Range Types](https://www.postgresql.org/docs/17/rangetypes.html).
 - [Đặc tả nghiệp vụ của nhóm](03_dac_ta_nghiep_vu.md), bản bàn giao 11/11/2026.
 - [Từ điển dữ liệu và chuẩn hóa](04_data_dictionary_va_chuan_hoa.md), bản bàn giao 11/11/2026.
+- PostgreSQL 17 Documentation — [Privileges](https://www.postgresql.org/docs/17/ddl-priv.html), [GRANT](https://www.postgresql.org/docs/17/sql-grant.html), [REVOKE](https://www.postgresql.org/docs/17/sql-revoke.html) (Chương 6).
+- PostgreSQL 17 Documentation — [CREATE VIEW](https://www.postgresql.org/docs/17/sql-createview.html), tùy chọn `security_invoker` (Chương 6).
+- PostgreSQL 17 Documentation — [Database Roles](https://www.postgresql.org/docs/17/user-manag.html), [Role Membership](https://www.postgresql.org/docs/17/role-membership.html) (Chương 6).
+- [Đại số quan hệ QRA01–QRA10](06a_dai_so_quan_he.md) và [kế hoạch bảo mật](06b_bao_mat.md) của nhóm (Chương 4, 6).
 - Giáo trình học phần: chờ nhóm bổ sung đúng tài liệu thực sự sử dụng.
 
 ## PHỤ LỤC
