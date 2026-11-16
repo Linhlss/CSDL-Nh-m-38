@@ -1,10 +1,16 @@
-# Dữ liệu giả lập
+# Dữ liệu giả lập — nhóm 38, lớp 174356
 
-**Đầu vào tuần 1 cho TV2:** đọc [bộ bàn giao TV1](../docs/BAN_GIAO_TV1_TUAN_1.md), từ điển đầy đủ và [ma trận câu hỏi](../docs/07_ma_tran_truy_van_va_review.md) trước khi sinh dữ liệu. Ngày chuyển t có đợt cũ kết thúc t−1, đợt mới bắt đầu t; ngày cuối được tính bao gồm. DDL giữ nguyên tên/cột v0, ràng buộc nâng cao còn chờ tuần 2.
+Seed cố định **20261110**, 7 CSV UTF-8/LF, tổng **636 bản ghi**: 8 tổ, 50 địa chỉ, 60 hộ, 200 cư dân, 250 đợt, 63 sự kiện, 5 tài khoản. Dùng dữ liệu mô phỏng học thuật, không có CCCD/SĐT hoặc mật khẩu thật.
 
-- Toàn bộ dữ liệu là mô phỏng 100% và chỉ dùng cho bài tập học thuật.
-- Cần bảo đảm S01–S21 trong `../docs/01_de_cuong.md`.
-- Sinh theo thứ tự khóa ngoại: tổ → địa chỉ → hộ → cư dân/tài khoản → đợt cư trú → biến động.
-- Dùng seed ngẫu nhiên cố định, tạo test fixture có kết quả tính tay.
-- Không dùng dữ liệu cá nhân thật; không tạo CCCD giống thật.
-- `generated/` dùng lưu CSV kết quả sau khi sinh; hiện chưa có tệp dữ liệu.
+**Đường nạp duy nhất là INSERT trong [03_seed.sql](../sql/03_seed.sql).** CSV chỉ để đối chiếu; không nạp thêm CSV vào DB đã seed.
+
+```sh
+python3 scripts/generate_data.py
+psql -U postgres -d csdl17_cu_tru_demo -v ON_ERROR_STOP=1 -f sql/01_schema.sql
+psql -U postgres -d csdl17_cu_tru_demo -v ON_ERROR_STOP=1 -f sql/03_seed.sql
+psql -U postgres -d csdl17_cu_tru_demo -v ON_ERROR_STOP=1 -f sql/06_validation.sql
+```
+
+Seed reset 7 bảng và đồng bộ sequence; chỉ dùng DB mô phỏng riêng. Generator kiểm dữ liệu trước ghi và hỗ trợ `--output-root /tmp/csdl17-generated`. Sửa B15 chỉ hiệu chỉnh ngày lập hộ để không muộn hơn các đợt thuộc hộ; giữ ID/ngày cư trú/ngày sự kiện. Thứ tự FK: tổ → địa chỉ → hộ; cư dân/tài khoản → đợt → biến động.
+
+Ngày đối chiếu d=20/11/2026, ngày cuối bao gồm. Xem [kế hoạch](../docs/05_ke_hoach_du_lieu_va_sql.md), [fixture29](../tests/week1_fixture.sql), [expected](../tests/week1_expected.json), [ma trận](../tests/test_scenarios.md), [log PostgreSQL](../tests/week1_execution_results.json). Ràng buộc nâng cao là phần tuần 2 của TV1.
