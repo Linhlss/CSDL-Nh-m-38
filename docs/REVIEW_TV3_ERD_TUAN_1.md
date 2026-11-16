@@ -132,3 +132,10 @@ TV3 xác nhận **triển khai** demo B1 (GRANT/REVOKE, role `csdl17_reader`) v�
 | Phương án 2 demo bảo mật | **Đồng ý triển khai** (mục 8) |
 
 Phía TV3 **không còn điều kiện chặn** Gate 1. Đây là ý kiến của TV3 trong tài liệu, chưa phải chữ ký biên bản họp. Gate 1 chung còn chờ TV2 xác nhận.
+
+
+## 10. Đóng phần review kỹ thuật tuần 1 — 16/11/2026
+
+Agent hỗ trợ theo yêu cầu chủ repo đã hoàn thiện W1-T3-13 bằng [review dữ liệu TV2](REVIEW_DU_LIEU_TV2_TUAN_1.md), đọc cả fixture29 và seed636 sau sửa B15. C1 đã được làm rõ ở đặc tả P3: lịch sử/hết hạn tạm trú không chuyển chỗ có thể đóng đợt không sự kiện; P4/P5 chuyển thực tế vẫn ghi nhật ký, giữ B08–B09. Các ca hết hạn/ngày cuối/tương lai đã chạy trong log tuần1.
+
+Bộ 06a/06b, ma trận toán tử, QRA04/09, B1/B2, review ERD và dữ liệu đã có đầy đủ đầu ra kỹ thuật tuần1. Giữ nguyên lời xác nhận do TV3 thực sự ghi ngày13/11 ở trên. Các cập nhật hỗ trợ này không thêm chữ ký hoặc giả cuộc họp nhóm; Gate1 chung chờ những xác nhận còn thiếu.
