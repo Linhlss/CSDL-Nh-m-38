@@ -160,7 +160,7 @@ TV1 đã chuẩn bị 30 tình huống kiểm tra thiết kế với đầu ra k
 
 ## CHƯƠNG 4 — ĐẠI SỐ QUAN HỆ (10 CÂU)
 
-> Người viết: TV3. Reviewer được phân công: TV1. Nháp ngày 16/11/2026; cùng ngày viết lại ký hiệu theo cách trình bày trên lớp (chỉ đổi cách viết công thức, không đổi câu hỏi và SQL kiểm chứng). PR #3 đã merge; seed hiện hành có 636 dòng. Kết quả bên dưới trích từ [log kiểm chứng tuần 1](../tests/week1_execution_results.json), không phải một lần chạy mới hay xác nhận nghiệm thu của thành viên. Bốn QRA chưa có log trên seed lớn vẫn được ghi rõ ở mục 4.12. SQL kiểm chứng của từng câu nằm trong [06a_dai_so_quan_he.md](06a_dai_so_quan_he.md).
+> Người viết: TV3. Reviewer được phân công: TV1. Nháp ngày 16/11/2026; cùng ngày viết lại ký hiệu theo cách trình bày trên lớp (chỉ đổi cách viết công thức, không đổi câu hỏi và SQL kiểm chứng). PR #3 đã merge; seed hiện hành có 636 dòng. Kết quả bên dưới trích từ [log kiểm chứng tuần 1](../tests/week1_execution_results.json), không phải một lần chạy mới hay xác nhận nghiệm thu của thành viên. Riêng QRA02, 03, 06, 08 chưa có trong log tuần 1; kết quả của bốn câu này lấy từ lần chạy bổ sung ngày 16/11, ghi rõ ở mục 4.12. SQL kiểm chứng của từng câu nằm trong [06a_dai_so_quan_he.md](06a_dai_so_quan_he.md).
 
 ### 4.1. Ký hiệu và quy ước
 
@@ -228,7 +228,7 @@ KQ = π ma_cu_dan, ho_ten (CU_DAN ⋈ R2)
 
 Câu này giống QRA01, chỉ thêm điều kiện loại cư trú. Phép chọn `loai_cu_tru='TAM_TRU'` đặt ngay trên `Q_d`, nên người thường trú ở Tổ 02 bị loại trước khi nối.
 
-Kết quả: đã khớp đáp án tay trên tiny29; chờ ghi tập kết quả trên seed636 cho bản báo cáo cuối (mục 4.12).
+Kết quả trên seed636: **10 bộ**, mã cư dân 7, 8, 32, 42, 62, 77, 88, 162, 178, 190. Đã khớp đáp án tay trên tiny29; kiểm tra trên seed636 ở mục 4.12.
 
 ### 4.4. QRA03: Cư dân từ 60 tuổi trở lên đang cư trú tại Tổ 01
 
@@ -241,7 +241,7 @@ KQ = π ma_cu_dan, ho_ten, ngay_sinh (R3 ⋈ R2)        (R2 như QRA01)
 
 Đại số quan hệ không có hàm tính tuổi, nên điều kiện tuổi được viết thành so sánh ngày sinh với một ngày cắt cố định. Phép nối với R2 của QRA01 giữ lại người vừa đủ tuổi vừa đang ở Tổ 01.
 
-Kết quả: đã khớp đáp án tay trên tiny29; chờ ghi tập kết quả trên seed636 cho bản báo cáo cuối (mục 4.12).
+Kết quả trên seed636: **2 bộ**, mã cư dân 1, 2. Đã khớp đáp án tay trên tiny29; kiểm tra trên seed636 ở mục 4.12.
 
 ### 4.5. QRA04: Cư dân từng cư trú ở ít nhất hai nhóm hộ khác nhau
 
@@ -282,7 +282,7 @@ KQ = π ma_cu_dan, ho_ten (CU_DAN ⋈ R1)
 
 Người chỉ có đợt tương lai vẫn có bản ghi trong `QUA_TRINH_CU_TRU`, nên không thuộc kết quả.
 
-Kết quả: đã khớp đáp án tay trên tiny29; chờ ghi tập kết quả trên seed636 cho bản báo cáo cuối (mục 4.12).
+Kết quả trên seed636: **8 bộ**, mã cư dân 25, 26, 27, 196, 197, 198, 199, 200. Đã khớp đáp án tay trên tiny29; kiểm tra trên seed636 ở mục 4.12.
 
 ### 4.8. QRA07: Cư dân từng có cả thường trú và tạm trú
 
@@ -321,7 +321,7 @@ KQ = R1 ∪ R2
 
 Phép hợp gộp hai tập mã cư dân. Một người ở cả hai tổ, ví dụ thường trú ở tổ này và tạm trú ở tổ kia, chỉ xuất hiện một lần. Câu này có thể viết bằng một phép chọn với điều kiện "hoặc"; nhóm dùng `∪` để minh họa phép hợp.
 
-Kết quả: đã khớp đáp án tay trên tiny29; chờ ghi tập kết quả trên seed636 cho bản báo cáo cuối (mục 4.12).
+Kết quả trên seed636: **61 bộ** (34 người ở Tổ 01, 29 người ở Tổ 02, 2 người có mặt ở cả hai tổ). Đã khớp đáp án tay trên tiny29; kiểm tra trên seed636 ở mục 4.12.
 
 ### 4.10. QRA09: Cư dân đã từng cư trú nhưng không còn đợt hiệu lực tại d
 
@@ -376,18 +376,18 @@ Theo giáo trình, các phép cơ bản của đại số quan hệ là σ, π, 
 
 Mỗi câu có một SQL kiểm chứng viết riêng, khác với 10 câu SQL nghiệp vụ ở Chương 5. Trên bộ dữ liệu thử nhỏ đã biết đáp án (`tests/ra_fixture.sql`), cả 10 câu và cách viết phép chia của QRA07 đều cho đúng đáp án tính tay. Lần review kỹ thuật độc lập hỗ trợ TV1 đạt **146/146**, gồm 144 kiểm tra chức năng và 2 phép tái hiện; không phải 146 phép thử riêng cho đại số quan hệ. Xem [review TV3 trong nhật ký](../meetings/decision_log.md#review-tv3).
 
-Lần kiểm chứng tuần 1 ngày 16/11 đạt **96/96**, gồm 95 kiểm tra chức năng và 1 tái hiện B15 bản cũ. [Log đầy đủ](../tests/week1_execution_results.json) lưu expected/actual và hash đầu vào; [môi trường](../tests/week1_environment.md) nêu giới hạn lần chạy. Sáu cặp RA/SQL đã khớp đầy đủ các thuộc tính sau khi chuẩn hóa mức hạt trên seed636. QRA02/03/06/08 đã khớp đáp án tay trên tiny29; log này chưa lưu kết quả bốn câu đó trên seed636. Bảng đối soát trên seed hiện hành:
+Lần kiểm chứng tuần 1 ngày 16/11 đạt **96/96**, gồm 95 kiểm tra chức năng và 1 tái hiện B15 bản cũ. [Log đầy đủ](../tests/week1_execution_results.json) lưu expected/actual và hash đầu vào; [môi trường](../tests/week1_environment.md) nêu giới hạn lần chạy. Sáu cặp RA/SQL đã khớp đầy đủ các thuộc tính sau khi chuẩn hóa mức hạt trên seed636. QRA02/03/06/08 đã khớp đáp án tay trên tiny29 nhưng log tuần 1 chưa lưu kết quả trên seed636. Ngày 16/11, TV3 chạy bổ sung SQL kiểm chứng của bốn câu này ([tests/seed636_qra02_03_06_08.sql](../tests/seed636_qra02_03_06_08.sql)) trên CSDL tạm nạp `01_schema.sql`, `02_constraints.sql`, `03_seed.sql`; hash `03_seed.sql` trùng log tuần 1. Bốn câu không có SQL nghiệp vụ tương ứng ở Chương 5, nên mỗi câu được đối chiếu với một cách viết SQL độc lập: QRA02 bằng `EXISTS`, QRA03 bằng tập người đang ở Tổ 01 lọc theo ngày sinh, QRA06 bằng `NOT EXISTS`, QRA08 bằng một phép chọn điều kiện "hoặc". Cả bốn cặp lệch 0 mã. Với QRA08, 34 + 29 − 2 = 61; số người Tổ 01 (34) trùng QRA01, số người Tổ 01 và Tổ 02 trùng VIEW ở mục 6.4. Lần chạy bổ sung này chưa được đưa vào log tuần 1. Bảng đối soát trên seed hiện hành:
 
 | Câu | Số bộ kết quả | Câu SQL đối chiếu | Kết quả ở cùng mức hạt |
 |---|---|---|---|
 | QRA01 | 34 | QSQL01 | Khớp |
-| QRA02 | Chờ ghi kết quả seed636 | SQL riêng trong 06a | Đã khớp đáp án tay tiny29 |
-| QRA03 | Chờ ghi kết quả seed636 | SQL riêng trong 06a | Đã khớp đáp án tay tiny29 |
+| QRA02 | 10 | SQL riêng trong 06a; đối chiếu bằng `EXISTS` | Khớp (chạy bổ sung 16/11) |
+| QRA03 | 2 | SQL riêng trong 06a; đối chiếu với tập Tổ 01 lọc ngày sinh | Khớp (chạy bổ sung 16/11) |
 | QRA04 | 54 | QSQL05 | Khớp |
 | QRA05 | 4 | QSQL04 | Khớp |
-| QRA06 | Chờ ghi kết quả seed636 | SQL riêng trong 06a | Đã khớp đáp án tay tiny29 |
+| QRA06 | 8 | SQL riêng trong 06a; đối chiếu bằng `NOT EXISTS` | Khớp (chạy bổ sung 16/11) |
 | QRA07 | 31 | QSQL06 | Khớp |
-| QRA08 | Chờ ghi kết quả seed636 | SQL riêng trong 06a | Đã khớp đáp án tay tiny29 |
+| QRA08 | 61 | SQL riêng trong 06a; đối chiếu bằng điều kiện "hoặc" | Khớp (chạy bổ sung 16/11) |
 | QRA09 | 17 | QSQL07 | Khớp |
 | QRA10 | 22 | QSQL09 | Khớp |
 
