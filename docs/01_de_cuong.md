@@ -2,8 +2,8 @@
 
 > **Chủ đề được giao:** 17 – Quản lý cư dân ở một địa phương  
 > **Tên đề tài đề xuất:** **Xây dựng cơ sở dữ liệu quản lý cư dân và biến động cư trú tại một phường**  
-> **Nhóm:** [Số thứ tự nhóm] — **Mã lớp:** [Mã lớp]  
-> **Thành viên:** TV1 – [Họ tên, MSSV]; TV2 – [Họ tên, MSSV]; TV3 – [Họ tên, MSSV]  
+> **Nhóm:** 38 — **Mã lớp:** 174356 — **Giảng viên:** ThS. Nguyễn Thị Thanh Huyền
+> **Thành viên:** TV1 – Dương Ngọc Ninh, 20237469; TV2 – Trần Tuấn Ngọc, 20227064; TV3 – Trần Bùi Tùng Linh, 20227057
 > **Ngày lập kế hoạch:** 10/11/2026  
 > **Hạn nộp theo thông báo:** **Thứ Sáu 27/11/2026, tiết 3**; lịch/bắt đầu báo cáo: 27/11/2026 (thứ tự cụ thể do giảng viên thông báo).  
 > **Mốc nội bộ:** Hoàn thiện toàn bộ vào **tối 25/11**; **26/11** dành cho kiểm thử cuối, in ấn và bàn giao.  
@@ -13,7 +13,9 @@
 
 ## 0. Hướng dẫn sử dụng tài liệu này
 
-**Cập nhật 11/11/2026:** TV1 đã chuẩn bị [bộ bàn giao tuần 1](BAN_GIAO_TV1_TUAN_1.md). Phần mô hình/DDL v0 và chuẩn hóa tổng quát bên dưới lưu lại định hướng khởi tạo; nguồn kỹ thuật hiện hành cho review là [đặc tả](03_dac_ta_nghiep_vu.md), [từ điển/chuẩn hóa](04_data_dictionary_va_chuan_hoa.md), [ERD](../diagrams/erd_v1.png) và DDL v1-candidate. Quy tắc ngày chuyển và giới hạn kết luận 3NF phải đọc theo bộ bàn giao mới. Gate 1 chưa có xác nhận chéo; [biên bản](../meetings/decision_log.md) ghi trạng thái thực tế.
+**Chốt thiết kế 16/11/2026:** Gate 1 PASS và thiết kế v1 theo xác nhận chủ repo trong chat rằng cả ba đã đồng ý, đã đối chiếu yêu cầu/thời hạn/quy cách in. 52/53 mục tuần 1 hoàn thành; môi trường cá nhân TV2 hoãn sang W2-T2-01. [Nguồn và phạm vi xác nhận](../meetings/decision_log.md#gate1).
+
+**Nguồn hiện hành, 16/11/2026:** [đặc tả](03_dac_ta_nghiep_vu.md), [từ điển/chuẩn hóa](04_data_dictionary_va_chuan_hoa.md), [ERD](../diagrams/erd_v1.png) và DDL là bộ kỹ thuật hiện hành. Các mô tả mô hình/DDL v0 bên dưới lưu định hướng khởi tạo; quyết định, review và trạng thái xác nhận theo [nhật ký chung](../meetings/decision_log.md). Xem [checklist tuần 2](03_CHECKLIST_DU_AN.md#tuan-2-hien-hanh) để tiếp tục, không dùng số liệu dự kiến làm kết quả đã chạy.
 
 Tài liệu giữ phạm vi và lịch điều hành toàn dự án; bộ bàn giao được dẫn ở trên giữ đặc tả kỹ thuật mới nhất. Đừng sao chép toàn bộ đề cương thành báo cáo: các phần đánh dấu **[CẦN HOÀN THIỆN]**, **[BẢNG/ẢNH CẦN BỔ SUNG]** là công việc theo từng tuần. Các sơ đồ trong đề cương là **đề xuất v0**; dùng sơ đồ xuất trong bộ bàn giao để review bản ứng viên v1.
 

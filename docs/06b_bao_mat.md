@@ -1,11 +1,14 @@
 # KẾ HOẠCH BẢO MẬT CSDL VÀ KỊCH BẢN DEMO B1, B2
 
-> **Người viết:** TV3 · **Reviewer nghiệp vụ:** TV2 · **Phiên bản:** v0.2 (13/11/2026, bổ sung kiểm tra role có sẵn qua review TV1)
+> **Nguồn nội dung:** TV3 · **Reviewer kỹ thuật theo phân công:** TV2 · **Phiên bản:** v0.3 (bàn giao tuần 1, cập nhật 15/11/2026)
 > **Script đi kèm:** `sql/05_security.sql`
-> **Căn cứ:** mục 8 của `docs/01_de_cuong.md`, schema `sql/01_schema.sql` v1-candidate (cấu trúc giữ nguyên v0).
+> **Căn cứ:** mục 8 của `docs/01_de_cuong.md`, schema `sql/01_schema.sql` v1 (cấu trúc giữ nguyên v0).
 > Tệp này là nguồn để viết **Chương 6 – Bảo mật CSDL** của báo cáo.
+> **Phân công nhóm:** TV3 — Trần Bùi Tùng Linh, MSSV 20227057. Cập nhật 15/11 do agent hỗ trợ theo yêu cầu chủ repo; lời xác nhận thật TV3 ngày 13/11 giữ nguyên trong phiếu review, không suy ra tài khoản GitHub tương ứng với người này.
 
 ---
+
+Thiết kế v1 chốt theo xác nhận chủ repo tiếp nhận16/11/2026; nguồn ở [Gate 1](../meetings/decision_log.md#gate1). Nghiệm thu bảo mật/ảnh cuối vẫn theo kế hoạch tuần 2–3.
 
 ## 1. Mục tiêu và phạm vi
 
@@ -86,11 +89,11 @@ Mỗi tài khoản chỉ được cấp **đúng những quyền cần cho công
 | `csdl17_report` | Cán bộ tổng hợp, mức chỉ xem số liệu tổng hợp | CONNECT | USAGE | **Không có** | Không có | **Chỉ SELECT** |
 | `PUBLIC` | Mọi role khác | Bị thu hồi | Không có CREATE | Không có | Không có | Không có |
 
-Tác nhân **Quản trị CSDL** dùng `postgres` để tạo bảng, role và cấp quyền; không dùng tài khoản này để đóng vai role chỉ đọc khi demo. Hai role `csdl17_reader` và `csdl17_report` cùng phục vụ Cán bộ tổng hợp nhưng ở hai mức quyền, để minh họa hai cơ chế khác nhau: B1 giới hạn **thao tác** (chỉ SELECT), B2 giới hạn **dữ liệu nhìn thấy** (chỉ VIEW). Sửa 13/11/2026 theo mục C2 của `docs/REVIEW_TV3_ERD_TUAN_1.md`.
+Tác nhân **Quản trị CSDL** dùng `postgres` để tạo bảng, role và cấp quyền; không dùng tài khoản này để đóng vai role chỉ đọc khi demo. Hai role `csdl17_reader` và `csdl17_report` cùng phục vụ Cán bộ tổng hợp nhưng ở hai mức quyền, để minh họa hai cơ chế khác nhau: B1 giới hạn **thao tác** (chỉ SELECT), B2 giới hạn **dữ liệu nhìn thấy** (chỉ VIEW). Sửa 13/11/2026 theo mục C2 trong nhật ký chung.
 
 "6 bảng nghiệp vụ" là `to_dan_pho`, `dia_chi`, `ho_cu_tru`, `cu_dan`, `qua_trinh_cu_tru`, `bien_dong_cu_tru`.
 
-**Đối chiếu với cột `tai_khoan.vai_tro`** (bổ sung 11/11/2026, mục E2 trong `docs/REVIEW_TV3_ERD_TUAN_1.md`):
+**Đối chiếu với cột `tai_khoan.vai_tro`** (bổ sung 11/11/2026, mục E2 trong nhật ký chung):
 
 | `vai_tro` trong bảng `tai_khoan` (tầng nghiệp vụ mô phỏng) | Role PostgreSQL tương ứng trong demo (tầng quyền thật) |
 |---|---|
@@ -225,7 +228,13 @@ Mỗi ảnh phải thấy rõ **câu lệnh**, **role đang chạy** và **kết
 | Chạy với dữ liệu, đối chiếu VIEW với QSQL03 | Seed của TV2 | 20–22/11 |
 | Chụp ảnh chính thức, viết Chương 6 | Gate 2 | 24/11 |
 
+**Bàn giao tuần 1 (W1-T3-08–11 và W1-T3-14):** lý thuyết trọng tâm, mô hình ba role, nguồn PostgreSQL đã dùng, thứ tự chạy, hai kịch bản dương/âm và danh sách minh chứng đã có trong tệp này. Mã B1/B2 và lớp kiểm chứng độc lập đã có trên main. Xem [review dữ liệu trong nhật ký](../meetings/decision_log.md#review-data) cho đối chiếu mới; việc chạy trên seed cuối, ảnh S20/S21 và Chương 6 hoàn chỉnh tiếp tục đúng lịch tuần 2–3.
+
+**Kế hoạch S20/S21:** TV3 chủ trì B1/B2; TV2 hỗ trợ dữ liệu và ghi log; TV1 review cấu hình. S20 phải có SELECT được, UPDATE/INSERT/DELETE bị chặn bằng SQLSTATE 42501 và dữ liệu trước/sau không đổi. S21 phải đọc được VIEW có cả tổ 0 người, chỉ ba cột tổng hợp, và bị chặn khi đọc hai bảng gốc. Mỗi lần thử phải ghi `current_user`, `session_user`, PostgreSQL/version, commit và d. Đăng nhập qua trust trong container chỉ chứng minh phân quyền, không được ghi thành kiểm chứng mật khẩu/TLS.
+
 **Checklist nghiệm thu:**
+
+Các ô sau dành cho nghiệm thu thực tế của giai đoạn chạy cuối; không dùng chúng để phủ nhận việc bộ đặc tả tuần 1 đã có. Kết quả kiểm chứng kỹ thuật được gắn phạm vi riêng trong log, không tự tích ô “TV2 đã review” hoặc chữ ký của thành viên.
 
 - [ ] Script chạy từ DB sạch không lỗi ngoài các lỗi cố ý.
 - [ ] Role có sẵn không phù hợp bị từ chối trước khi thay đổi dữ liệu, ACL, VIEW hoặc role; lỗi thiết lập rollback toàn bộ.
@@ -247,3 +256,5 @@ Mỗi ảnh phải thấy rõ **câu lệnh**, **role đang chạy** và **kết
 - PostgreSQL 17 – *Role Membership*: https://www.postgresql.org/docs/17/role-membership.html
 - PostgreSQL 17 – *psql*, `ON_ERROR_STOP`: https://www.postgresql.org/docs/17/app-psql.html
 - [CẦN ĐIỀN: giáo trình môn Cơ sở dữ liệu của lớp, chương về bảo mật và an toàn dữ liệu]
+
+**Kết quả tích hợp tuần 1, 16/11/2026:** review hỗ trợ kỹ thuật đã có trong [review dữ liệu trong nhật ký](../meetings/decision_log.md#review-data), cùng expected/actual và môi trường. Xác nhận thành viên và nghiệm thu báo cáo cuối được quản lý riêng.

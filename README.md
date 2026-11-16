@@ -1,52 +1,48 @@
-# BTL Cơ sở dữ liệu — Đề tài số 17
+# BTL Cơ sở dữ liệu — Đề tài 17
 
-**Tên đề tài:** Xây dựng cơ sở dữ liệu quản lý cư dân và biến động cư trú tại một phường mô phỏng.  
-**Hạn nộp theo kế hoạch nhóm:** Thứ Sáu 27/11/2026, tiết 3.  
-**Thông tin hành chính:** chờ nhóm điền STT nhóm, mã lớp, giảng viên và họ tên/MSSV thật của ba thành viên.
+Xây dựng CSDL quản lý cư dân và biến động cư trú tại một phường mô phỏng.
 
-## Bắt đầu từ bộ bàn giao tuần 1
+**Nhóm 38 — lớp 174356 — ThS. Nguyễn Thị Thanh Huyền.** Hạn nộp theo kế hoạch nhóm: 27/11/2026, tiết 3.
 
-**Cập nhật 11/11/2026:** Sản phẩm thiết kế TV1 đã hoàn thiện để bàn giao ở phiên bản `v1-candidate`. Gate 1 của cả nhóm còn chờ TV2/TV3 review; chưa hoàn tất toàn bộ đồ án.
+| Thành viên | Họ tên | MSSV | Trách nhiệm |
+|---|---|---|---|
+| TV1 | Dương Ngọc Ninh | 20237469 | Nghiệp vụ, thiết kế, ràng buộc, tích hợp |
+| TV2 | Trần Tuấn Ngọc | 20227064 | Dữ liệu, SQL, kiểm thử |
+| TV3 | Trần Bùi Tùng Linh | 20227057 | Đại số quan hệ, bảo mật, review |
 
-**Cập nhật 12/11/2026:** TV1 đã trả lời E1, thêm validation phát hiện trùng sự kiện theo từng vai trò và kiểm tra ngày B09. [Review TV3 chi tiết](docs/REVIEW_TV3_CHI_TIET.md) có kết quả kiểm chứng độc lập PostgreSQL 17.11: 86 kiểm tra chức năng đạt và 3 phép tái hiện lỗi/giới hạn. Fixture sửa ở nhánh `codex/review-tv3`; PR #1 giữ nguyên. Gate 1 chung vẫn chờ xác nhận.
+## Hiện trạng và việc tiếp theo
 
-**Cập nhật 13/11/2026:** đã sửa F03 và merge [PR #1](https://github.com/Linhlss/CSDL-Nh-m-38/pull/1) vào main tại [d84571e](https://github.com/Linhlss/CSDL-Nh-m-38/commit/d84571e544b480c9c4ba4a421d5d5435b33faac8). Role có sẵn được kiểm tra trước mọi thay đổi quyền; lỗi thiết lập rollback toàn bộ. Bộ kiểm chứng mới đạt 144 kiểm tra chức năng và 2 phép tái hiện. Gate 1 tiếp tục chờ xác nhận thành viên; kết quả trên seed chính thức chưa được nghiệm thu.
+**Kỹ thuật tuần 1 đã hoàn thiện.** Repo có schema 7 bảng/35 cột, fixture29, seed636, 10 SQL, 10 RA và B1/B2; nháp Chương 4/6 đã merge. Log tuần 1 đạt 96/96 (95 kiểm tra chức năng + 1 tái hiện B15 cũ). **Gate 1 PASS, thiết kế v1** theo xác nhận chủ repo tiếp nhận 16/11/2026: cả ba đã đồng ý thiết kế và đã đối chiếu yêu cầu/thời hạn/quy cách in. **52/53 mục tuần 1 hoàn thành, 1 mục môi trường cá nhân TV2 hoãn sang W2-T2-01**; TV2 dùng Windows, phiên bản PostgreSQL/công cụ/kết quả kết nối chưa có. [Nguồn xác nhận và phần hoãn](meetings/decision_log.md#gate1).
 
-1. Đọc [hướng dẫn bàn giao TV1](docs/BAN_GIAO_TV1_TUAN_1.md) để tiếp tục đúng phần được giao.
-2. Dùng [đặc tả nghiệp vụ](docs/03_dac_ta_nghiep_vu.md), [từ điển/chuẩn hóa](docs/04_data_dictionary_va_chuan_hoa.md) và [DDL](sql/01_schema.sql) làm bộ giao diện dữ liệu. SQL giữ cấu trúc v0: 7 bảng, 35 cột.
-3. Xem [ERD](diagrams/erd_v1.png), [cây chức năng](diagrams/phan_ra_chuc_nang.png) và [ma trận 20 câu hỏi](docs/07_ma_tran_truy_van_va_review.md). Sơ đồ có nguồn .drawio và bản vector .svg.
-4. TV2/TV3 ghi nhận xét vào [hồ sơ quyết định/Gate 1](meetings/decision_log.md), rồi thống nhất phiên bản trước triển khai tuần 2.
+**Tuần 2 — 16–22/11:**
 
-## Kiểm tra bộ bàn giao
+- **TV1:** triển khai ràng buộc/transaction trong `sql/02_constraints.sql` đang TODO; kiểm thử, chốt chuẩn hóa và Chương 1–3.
+- **TV2:** kiểm thử dữ liệu/10 SQL cùng ràng buộc mới, ghi expected/actual; viết Chương 3.5 và Chương 5.
+- **TV3:** bổ sung kết quả QRA02/03/06/08 trên seed636, hoàn thiện đối soát và Chương 4/6; chuẩn bị ảnh B1/B2 ngày 24/11.
 
-```sh
-python3 scripts/verify_week1.py
-```
+[Checklist và lịch phối hợp](docs/03_CHECKLIST_DU_AN.md#tuan-2-hien-hanh) giữ đầy đủ 142 mã việc và reviewer. Gate 2 ngày 22/11 chốt nội dung kỹ thuật; tuần 3 (23–27/11) dành cho rebuild cuối, minh chứng, báo cáo, in/nộp.
 
-Lệnh chỉ dùng thư viện chuẩn Python, kiểm tra tệp, cấu trúc DDL và nhất quán tài liệu/sơ đồ. Xem [kết quả tự kiểm tra](tests/week1_verification_log.md). Đây không phải kiểm thử DB. Muốn dựng lại ảnh: Python 3 + Pillow, chạy `python3 scripts/render_week1_diagrams.py`.
+## Đọc và làm việc
 
-## Nhận phần bàn giao qua GitHub
+| Nội dung | Nguồn chính |
+|---|---|
+| Yêu cầu và kế hoạch tổng thể | [Đề cương](docs/01_de_cuong.md) |
+| Quy trình, thuật ngữ, B01–B18 | [Đặc tả nghiệp vụ](docs/03_dac_ta_nghiep_vu.md) |
+| Cột/khóa, chuẩn hóa, cơ chế ràng buộc | [Từ điển dữ liệu](docs/04_data_dictionary_va_chuan_hoa.md) |
+| Dữ liệu, nạp/reset, 10 SQL và test | [Hồ sơ dữ liệu/SQL](docs/05_ke_hoach_du_lieu_va_sql.md), [cách nạp](data/README.md) |
+| 10 RA, SQL kiểm chứng và B1/B2 | [Đại số quan hệ](docs/06a_dai_so_quan_he.md), [bảo mật](docs/06b_bao_mat.md) |
+| Kết quả, quyết định và xác nhận | [Nhật ký chung](meetings/decision_log.md), [ma trận câu hỏi](docs/07_ma_tran_truy_van_va_review.md) |
+| Báo cáo đang biên tập | [Bản nháp tích hợp](docs/02_bao_cao_suon.md) |
 
-Repository chung: [Linhlss/CSDL-Nh-m-38](https://github.com/Linhlss/CSDL-Nh-m-38). Phần tuần 1 của TV1 được bàn giao trên nhánh `main`. Người 2 cập nhật bản clone của mình khi đang ở nhánh `main`:
+Nhận bản mới trên nhánh main từ [repo GitHub](https://github.com/Linhlss/CSDL-Nh-m-38), rồi kiểm tra tệp:
 
 ```sh
 git pull --ff-only origin main
 python3 scripts/verify_week1.py
 ```
 
-Đọc `docs/BAN_GIAO_TV1_TUAN_1.md` rồi tiếp tục phần dữ liệu và SQL. Manifest SHA-256 ở `tests/week1_manifest.json` kiểm tra các tệp nhận từ repository; không bao gồm DB đã dựng sẵn. Sau khi sửa tài liệu/mã trong bộ thiết kế, chạy `python3 scripts/verify_week1.py --record` để cập nhật bằng chứng trước khi commit.
+Lệnh Python chỉ dùng thư viện chuẩn: kiểm tra tài liệu/sơ đồ, liên kết, mã việc, hash đầu vào runtime đã ghi và manifest; không chạy PostgreSQL. Khi sửa nội dung, review rồi dùng `python3 scripts/verify_week1.py --record` để cập nhật [biên bản](tests/week1_verification_log.md) và [manifest](tests/week1_manifest.json) trước commit.
 
-## Tiến độ và phần tiếp theo
+Log DB và lệnh tái lập nằm ở [môi trường kiểm chứng](tests/week1_environment.md) và nhật ký chung. Dựng lại ảnh sơ đồ bằng `python3 scripts/render_week1_diagrams.py` (Python + Pillow); nguồn chỉnh sửa ở `diagrams/`.
 
-- **Tuần 1 (10–15/11):** đã chuẩn bị nghiệp vụ, sơ đồ, ánh xạ, 35 cột, chuẩn hóa nháp, review khả năng đáp ứng truy vấn và Chương 1–3. Chờ review chéo/Gate 1; điểm dư thừa ngày sự kiện được công bố trong tài liệu chuẩn hóa.
-- **Tuần 2 (16–22/11):** TV1 tiếp tục ràng buộc/transaction và test; TV2 làm seed, 10 SQL/kết quả. TV3 đã có 10 RA/SQL kiểm chứng và script bảo mật chạy trên fixture nhỏ; còn đối soát seed chính thức và hai demo/ảnh cuối. Script 02–04 còn TODO đúng phân công.
-- **Tuần 3 (23–27/11):** test DB trắng, ảnh minh chứng, báo cáo, in/nộp. `report/`, `evidence/`, `data/generated/` chưa có sản phẩm cuối kỳ.
-
-[Đề cương](docs/01_de_cuong.md) giữ kế hoạch toàn dự án; [checklist](docs/03_CHECKLIST_DU_AN.md) giữ mã việc và trách nhiệm. Khi khác với phần thiết kế khởi tạo trong đề cương, bộ bàn giao v1 là nguồn kỹ thuật hiện hành cho review.
-
-## Quy tắc nhóm
-
-- Mỗi đầu việc có owner và reviewer; không xác nhận thay thành viên khác.
-- Dữ liệu giả lập; không dùng thông tin công dân thật hoặc commit mật khẩu.
-- Chỉ ghi ảnh/kết quả đã chạy thực tế; tự kiểm tài liệu không thay test PostgreSQL.
-- Mọi thay đổi cấu trúc sau khi nhóm duyệt phải ghi ảnh hưởng seed, truy vấn, sơ đồ và báo cáo trong biên bản.
+Dữ liệu giả lập 100%; không commit mật khẩu. Mỗi việc có owner/reviewer; thay đổi cấu trúc cần ghi ảnh hưởng dữ liệu, truy vấn, sơ đồ và báo cáo vào nhật ký. Chỉ ghi kết quả đã chạy, không xác nhận thay thành viên khác.

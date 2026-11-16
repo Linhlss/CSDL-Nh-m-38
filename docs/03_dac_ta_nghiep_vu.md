@@ -1,8 +1,10 @@
 # ĐẶC TẢ NGHIỆP VỤ — BỘ BÀN GIAO THIẾT KẾ v1
 
 **Đề tài 17:** Xây dựng cơ sở dữ liệu quản lý cư dân và biến động cư trú tại một phường mô phỏng.  
-**Owner:** TV1. **Ngày:** 11/11/2026. **Trạng thái:** hoàn thiện nội dung để bàn giao; chờ TV2/TV3 xác nhận Gate 1.  
+**Owner:** TV1. **Ngày:** 11/11/2026. **Trạng thái hiện hành:** thiết kế v1, Gate 1 PASS theo xác nhận chủ repo tiếp nhận 16/11/2026; [nguồn xác nhận](../meetings/decision_log.md#gate1).
 **Cấu trúc dữ liệu:** `sql/01_schema.sql`. **Từ điển và chuẩn hóa:** `04_data_dictionary_va_chuan_hoa.md`.
+
+**Làm rõ C1 ngày 15/11/2026:** agent hỗ trợ TV1 cập nhật phạm vi chức năng 3.2/P3 theo yêu cầu chủ repo; giữ nguyên schema. Đây là nội dung kỹ thuật để nhóm tiếp nhận, không phải xác nhận hoặc chữ ký Gate 1 thay thành viên.
 
 ## 1. Bài toán, mục tiêu và ranh giới
 
@@ -69,7 +71,7 @@ Các đường nối trên sơ đồ thể hiện phân rã chức năng, không
 | B10 | Đóng đợt cũ, mở đợt mới và ghi sự kiện là một giao dịch; lỗi một bước phải hủy toàn bộ |
 | B11 | Hộ giữ địa chỉ ổn định; không đổi liên kết hộ–địa chỉ hoặc địa chỉ–tổ đã được dùng trong lịch sử để mô phỏng chuyển chỗ ở. Tạo bản ghi mới khi cần |
 | B12 | Không xóa vật lý hồ sơ/đợt đang được tham chiếu; không xóa lịch sử để biểu diễn chuyển đi. DDL dùng FK không cascade |
-| B13 | `qua_trinh_cu_tru` là nguồn sự thật theo thời gian. Biến động chỉ ghi sự kiện, ngày, các mã đợt và người ghi; không sao chép tên hay địa chỉ |
+| B13 | `qua_trinh_cu_tru` là nguồn sự thật theo thời gian. Biến động chỉ ghi sự kiện, ngày, các mã đợt và người ghi; không sao chép tên hay địa chỉ. Đợt nhập/hiệu chỉnh lịch sử hoặc tạm trú hết hạn có thể không có sự kiện theo phạm vi C1/P3 |
 | B14 | Tài khoản ghi nhận phải tồn tại; quy trình ghi mới dùng tài khoản `HOAT_DONG`. Việc khóa tài khoản không làm mất nhật ký cũ hoặc thu hồi role PostgreSQL tự động |
 | B15 | Bộ dữ liệu có ngày sinh <= ngày bắt đầu cư trú và ngày lập hộ <= ngày bắt đầu. Cấm chuỗi tên/địa chỉ rỗng hoặc chỉ khoảng trắng khi chuẩn bị dữ liệu. Đây là kiểm tra đầu vào/seed, chưa là CHECK trong DDL v1 |
 | B16 | Các câu “đang” dùng d. QRA09/QSQL07 chỉ coi người đã từng cư trú khi có đợt bắt đầu <= d. QRA04/QRA07/QSQL05/QSQL06 xét toàn bộ đợt đã lưu; nếu có đợt tương lai, phải ghi rõ đó là toàn bộ dữ liệu đã ghi nhận |
@@ -101,9 +103,11 @@ Không áp đặt một đợt chỉ được tham chiếu bởi một sự ki�
 
 - **Đầu vào:** mã cư dân, mã hộ, loại, ngày bắt đầu, ngày kết thúc tùy chọn.
 - **Điều kiện:** người/hộ tồn tại; thỏa B04, B06, B15. Đợt tương lai được phép lưu nhưng không thuộc tập hiệu lực trước ngày bắt đầu.
-- **Xử lý:** kiểm tra quan hệ, ngày và các khoảng cùng người/cùng loại; tạo đợt. Nhập lịch sử ban đầu được phép không có nhật ký sự kiện. Khi thay đổi đợt đã có sự kiện, phải kiểm tra lại các sự kiện tham chiếu.
+- **Xử lý:** kiểm tra quan hệ, ngày và các khoảng cùng người/cùng loại; tạo hoặc hiệu chỉnh đợt. Nhập lịch sử ban đầu được phép không có nhật ký sự kiện. Khi thay đổi đợt đã có sự kiện, phải kiểm tra lại các sự kiện tham chiếu theo B08–B09.
 - **Đọc/ghi:** đọc `cu_dan`, `ho_cu_tru`, `qua_trinh_cu_tru`, các sự kiện liên quan; ghi `qua_trinh_cu_tru`.
 - **Đầu ra:** mã đợt. **Lỗi:** FK sai, loại sai, ngày đảo, chồng lấn, ngày sinh/ngày lập hộ không phù hợp. Các thao tác chuyển thực tế trong mô hình thực hiện bằng P4/P5 để giữ nhật ký nhất quán.
+
+**Phạm vi chức năng 3.2 — Kết thúc đợt (C1):** được ghi hoặc hiệu chỉnh ngày kết thúc khi nhập/sửa lịch sử, hoặc khi đợt tạm trú hết hạn mà không phát sinh hành vi chuyển chỗ ở. Những trường hợp này không bắt buộc tạo `CHUYEN_DI`; không tạo sự kiện giả chỉ để mọi đợt đều có nhật ký. Chuyển đến, chuyển đi hoặc chuyển nội bộ thực tế vẫn phải dùng P4/P5 và ghi sự kiện trong cùng giao dịch. Quyết định C1 không cho phép bỏ nhật ký của P4/P5 hoặc làm sai B08–B09 ở sự kiện đã tham chiếu đợt.
 
 ### P4 — Ghi nhận chuyển đến
 
@@ -134,10 +138,12 @@ Nhân vật mô phỏng CD-A ở H-A từ 01/11/2026 đến hết 14/11/2026, ch
 
 Một đợt bắt đầu 25/11 và kết thúc NULL không có hiệu lực vào 20/11. Một đợt kết thúc 20/11 vẫn có hiệu lực vào 20/11. Nếu người chỉ có đợt tương lai thì không thuộc QRA09/QSQL07; nếu chưa có bất kỳ đợt nào thì thuộc QRA06. Đây là ví dụ thiết kế, không phải dữ liệu đã được nạp.
 
+Ví dụ C1: một người chỉ có đợt tạm trú 01/11–19/11/2026, hết hạn và không có `CHUYEN_DI`. Ngày 19/11 người đó còn đợt hiệu lực; ngày 20/11 người đó thuộc QRA09/QSQL07 vì đã từng cư trú và không còn đợt hiệu lực. Người chưa có đợt hoặc chỉ có đợt tương lai không thuộc kết quả này. Các truy vấn dựa vào khoảng ngày của đợt, không lấy sự tồn tại của `CHUYEN_DI` làm điều kiện thay thế.
+
 ## 8. Liên kết bàn giao
 
 - `04_data_dictionary_va_chuan_hoa.md`: giao diện dữ liệu và ràng buộc.
 - `07_ma_tran_truy_van_va_review.md`: đủ 20 câu hỏi và review tài liệu hiện có.
 - `../tests/week1_design_cases.md`: các tình huống thiết kế với đáp án kỳ vọng.
 - `../meetings/decision_log.md`: quyết định thiết kế và trạng thái Gate 1.
-- `BAN_GIAO_TV1_TUAN_1.md`: điểm bắt đầu cho người nhận bàn giao.
+- [Checklist tuần 2](03_CHECKLIST_DU_AN.md#tuan-2-hien-hanh): việc tiếp theo của từng người.

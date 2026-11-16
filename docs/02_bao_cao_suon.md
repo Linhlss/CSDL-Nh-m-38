@@ -1,15 +1,19 @@
-# BÁO CÁO BTL MÔN CƠ SỞ DỮ LIỆU — BẢN NHÁP TUẦN 1
+# BÁO CÁO BTL MÔN CƠ SỞ DỮ LIỆU — BẢN NHÁP TÍCH HỢP
 
 **Chủ đề số 17** — Xây dựng cơ sở dữ liệu quản lý cư dân và biến động cư trú tại một phường.
 
-> TV1 đã viết nội dung thiết kế Chương 1–3 và mở đầu ngày 11/11/2026. Chưa là báo cáo cuối: chờ review chéo, dữ liệu, truy vấn, demo và minh chứng thực thi của tuần 2–3. Thông tin bìa phải được nhóm cung cấp; không suy đoán họ tên/MSSV/mã lớp.
+> TV1 đã viết nội dung thiết kế Chương 1–3 và mở đầu ngày 11/11/2026; bản nháp Chương 4 và 6 của TV3 được tích hợp ngày 16/11/2026. Thông tin bìa đã điền theo chủ repo cung cấp. Chưa là báo cáo cuối: Chương 5, ảnh minh chứng, nghiệm thu tuần 2–3 và xác nhận của nhóm còn theo kế hoạch.
+
+> Cập nhật 15/11/2026 bởi agent hỗ trợ TV1: làm rõ C1 ở P3/chức năng 3.2, đồng bộ ý nghĩa đợt–sự kiện và phạm vi chuẩn hóa nháp. Giữ nguyên schema; không thay lời xác nhận hoặc chữ ký của thành viên.
+
+> Thiết kế v1/Gate 1 PASS theo xác nhận chủ repo tiếp nhận16/11/2026; [nguồn xác nhận](../meetings/decision_log.md#gate1). Đây là chốt thiết kế, các chương/kết quả/ảnh và chữ ký báo cáo cuối tiếp tục theo tuần 2–3.
 
 ## TRANG BÌA
 
-- Mã lớp: [TODO]
-- Số thứ tự nhóm: [TODO]
-- Giảng viên: [TODO]
-- Thành viên: TV1 [Họ tên – MSSV]; TV2 [...]; TV3 [...]
+- Mã lớp: 174356
+- Số thứ tự nhóm: 38
+- Giảng viên: ThS. Nguyễn Thị Thanh Huyền
+- Thành viên: TV1 Dương Ngọc Ninh — 20237469; TV2 Trần Tuấn Ngọc — 20227064; TV3 Trần Bùi Tùng Linh — 20227057
 - Ngày nộp: 27/11/2026
 
 ## MỤC LỤC
@@ -40,7 +44,7 @@ Cán bộ quản lý cập nhật danh mục, hồ sơ, đợt và sự kiện. 
 |---|---|---|
 | P1 — Địa bàn và hộ | Tạo tổ, địa chỉ và nhóm hộ theo đúng bản ghi cha | Không trùng tên tổ/cặp tổ+địa chỉ; hộ có địa chỉ cố định |
 | P2 — Hồ sơ cư dân | Tạo/sửa họ tên, ngày sinh, giới tính theo mã người | Trùng họ tên được phép; không lưu địa chỉ hiện tại ở hồ sơ |
-| P3 — Đợt cư trú | Tạo đợt người–hộ–loại–khoảng ngày | FK hợp lệ, ngày đúng, không chồng cùng loại; nhập lịch sử có thể chưa có nhật ký |
+| P3 — Đợt cư trú | Tạo/hiệu chỉnh đợt người–hộ–loại–khoảng ngày; ghi kết thúc theo C1 | FK hợp lệ, ngày đúng, không chồng cùng loại; nhập/sửa lịch sử hoặc hết hạn tạm trú có thể không có nhật ký; giữ B08–B09 nếu đã có sự kiện tham chiếu |
 | P4 — Chuyển đến | Tạo đợt mới và sự kiện chỉ tham chiếu đợt mới | Ngày bắt đầu mới bằng ngày sự kiện; một giao dịch |
 | P5 — Chuyển đi/nội bộ | Đóng đợt cũ; nếu nội bộ tạo đợt mới; ghi sự kiện | Nội bộ cùng người/khác hộ; cũ kết thúc trước ngày chuyển một ngày; rollback khi lỗi |
 | P6 — Tra cứu/thống kê | Danh sách theo ngày và thống kê người/sự kiện | Đúng ngày tham chiếu, đếm mã người phân biệt, giữ nhóm 0 khi câu hỏi yêu cầu |
@@ -53,6 +57,8 @@ Cán bộ quản lý cập nhật danh mục, hồ sơ, đợt và sự kiện. 
 
 Sơ đồ có sáu nhóm chức năng và 14 chức năng cấp 2. Quan hệ nối thể hiện chức năng con thuộc chức năng cha; không thể hiện trình tự thực hiện. Bảng chức năng → dữ liệu đọc/ghi nằm trong mục 4 của đặc tả nghiệp vụ, giúp đối chiếu mỗi chức năng với dữ liệu được mô hình hóa.
 
+Chức năng **3.2 Kết thúc đợt** dùng cho nhập/hiệu chỉnh lịch sử hoặc hết hạn tạm trú không phát sinh hành vi chuyển chỗ ở; khi đó không bắt buộc tạo `CHUYEN_DI` (C1). Các chuyển đến/đi/nội bộ thực tế vẫn do nhóm chức năng 4 và P4/P5 ghi sự kiện trong cùng giao dịch. C1 phân định phạm vi hai nhóm chức năng, không cho phép bỏ nhật ký của thao tác chuyển thực tế.
+
 ### 1.5. Quy tắc nghiệp vụ trọng tâm
 
 Một đợt có hiệu lực tại d khi đã bắt đầu và chưa kết thúc trước d. Ngày kết thúc được tính bao gồm; NULL là chưa ghi nhận ngày kết thúc. Vì vậy đợt tương lai với kết thúc NULL vẫn chưa có hiệu lực. Hai đợt cùng người/cùng loại không được giao nhau; hai loại khác nhau đồng thời được cho phép trong phạm vi mô phỏng và thống kê phải tránh đếm trùng.
@@ -60,6 +66,8 @@ Một đợt có hiệu lực tại d khi đã bắt đầu và chưa kết thú
 Với ngày chuyển t, đợt cũ kết thúc t−1, đợt mới bắt đầu t. Sự kiện đến chỉ có đợt mới; đi chỉ có đợt cũ; nội bộ có hai đợt của cùng cư dân và khác hộ. Ví dụ cũ ở H-A tới hết 14/11, mới ở H-B từ 15/11 thì sự kiện chuyển ghi ngày 15/11. Nhiều thao tác phải cùng một giao dịch để không xuất hiện lịch sử đã đóng nhưng thiếu nơi mới hoặc thiếu sự kiện.
 
 Không đổi liên kết hộ–địa chỉ/tổ đã được lịch sử dùng để biểu diễn chuyển nơi ở. Nhật ký không sao chép tên người hoặc địa chỉ. Quy tắc B01–B18 và các giới hạn thực thi hiện tại được công bố trong đặc tả; chưa coi các trigger/transaction dự kiến là đã chạy.
+
+Một người chỉ có đợt tạm trú 01/11–19/11/2026 đã hết hạn, không có `CHUYEN_DI`, vẫn thuộc QRA09/QSQL07 tại ngày 20/11; ngày 19/11 đợt còn hiệu lực nên người đó không thuộc kết quả này. Điều kiện truy vấn dựa vào khoảng ngày, không bắt buộc có sự kiện chuyển đi. Người chưa có đợt hoặc chỉ có đợt tương lai vẫn bị loại đúng theo B16.
 
 ## CHƯƠNG 2 — MÔ HÌNH THỰC THỂ LIÊN KẾT
 
@@ -91,7 +99,7 @@ ERD thể hiện đủ 35 cột và 7 FK. Ký hiệu ? là cột cho phép NULL.
 
 Nếu đặt hộ hiện tại trong `cu_dan`, mỗi lần chuyển phải ghi đè giá trị cũ, khiến câu hỏi “người này ở đâu ngày 14/11?” không trả lời được. `qua_trinh_cu_tru` lưu từng khoảng riêng, cho phép trở lại cùng hộ sau một thời gian. Địa chỉ được suy ra qua đợt → hộ → địa chỉ → tổ.
 
-`bien_dong_cu_tru` có mục đích khác: lưu sự kiện và người ghi nhận. Đợt cư trú không mặc nhiên phải có nhật ký khi nhập lịch sử ban đầu. Khi sửa đợt đã được nhật ký tham chiếu, phải kiểm lại tính nhất quán sự kiện; khi chuyển cả hộ, mô hình dùng hộ mới thay vì thay địa chỉ của hộ cũ.
+`bien_dong_cu_tru` có mục đích khác: lưu sự kiện và người ghi nhận. Đợt nhập/hiệu chỉnh lịch sử hoặc tạm trú hết hạn không mặc nhiên phải có nhật ký theo C1. Khi sửa đợt đã được nhật ký tham chiếu, phải kiểm lại B08–B09; khi chuyển cả hộ, mô hình dùng hộ mới thay vì thay địa chỉ của hộ cũ. Cardinality DB 0..N giữ nguyên; validation E1 yêu cầu xử lý các sự kiện trùng cùng vai trò trước nghiệm thu.
 
 ## CHƯƠNG 3 — THIẾT KẾ CSDL QUAN HỆ
 
@@ -142,15 +150,17 @@ Với tập phụ thuộc đã công bố, sáu bảng danh mục/hồ sơ/lịc
 
 Riêng ngày biến động có thể suy ra từ biên ngày của đợt theo quy tắc đã chọn. Khi FK nullable và một đợt được nhiều sự kiện tham chiếu, xuất hiện phụ thuộc có điều kiện trên các tập con. Bản nháp ghi nhận đây là điểm dư thừa có kiểm soát cần review; không khẳng định toàn bộ mô hình đạt 3NF tuyệt đối chỉ dựa trên PK. Phân tích đầy đủ, phạm vi kết luận và việc chốt tuần 2 được ghi ở mục 5 của tài liệu chuẩn hóa.
 
+Quyết định C1 không đổi tập khóa/FD đã công bố và không làm đợt–sự kiện thành quan hệ bắt buộc một–một. Bản nháp tuần 1 đã có nội dung phân tích để review; luận chứng chuẩn hóa cuối theo DEC12 và cơ chế ràng buộc xuyên bảng vẫn là phần hoàn thiện tuần 2.
+
 ### 3.5. Kế hoạch dữ liệu và kiểm tra
 
-**Chờ TV2 triển khai tuần 2.** Dữ liệu mục tiêu gồm 8 tổ, 50 địa chỉ, 60 hộ, 200 cư dân, khoảng 250 đợt, 70 sự kiện và 5 tài khoản; có thể điều chỉnh theo độ phủ kiểm thử. Nạp theo thứ tự FK, dùng seed cố định và bộ ví dụ nhỏ có đáp án tay. Không ghi các con số mục tiêu thành số liệu đã nạp.
+**Phạm vi bàn giao tuần 1:** TV2 chuẩn bị kế hoạch dữ liệu/SQL, fixture nhỏ có đáp án tay và ma trận kịch bản; việc nghiệm thu bộ dữ liệu lớn là bước riêng của tuần 2. Quy mô tham khảo gồm 8 tổ, 50 địa chỉ, 60 hộ, 200 cư dân, khoảng 250 đợt, 70 sự kiện và 5 tài khoản; có thể điều chỉnh theo độ phủ kiểm thử. Nạp theo thứ tự FK, dùng seed cố định và ghi số liệu thực tế trong log của lần chạy. Không ghi các con số mục tiêu thành số liệu đã nạp.
 
 TV1 đã chuẩn bị 30 tình huống kiểm tra thiết kế với đầu ra kỳ vọng trong `tests/week1_design_cases.md` và ma trận 20 câu hỏi. Kết quả thực thi PostgreSQL, S01–S21, ảnh SQL và kiểm chứng dữ liệu chính thức sẽ được bổ sung sau; tự kiểm tra tài liệu không thay thế kiểm thử DB.
 
 ## CHƯƠNG 4 — ĐẠI SỐ QUAN HỆ (10 CÂU)
 
-> Người viết: TV3. Người kiểm tra: TV1. Nháp ngày 16/11/2026, viết lại theo cách trình bày trên lớp. Các dòng "Kết quả trên seed chính thức" sẽ điền sau khi seed của TV2 (PR #3) được sửa và merge. SQL kiểm chứng của từng câu nằm trong [docs/06a_dai_so_quan_he.md](06a_dai_so_quan_he.md).
+> Người viết: TV3. Reviewer được phân công: TV1. Nháp ngày 16/11/2026; cùng ngày viết lại ký hiệu theo cách trình bày trên lớp (chỉ đổi cách viết công thức, không đổi câu hỏi và SQL kiểm chứng). PR #3 đã merge; seed hiện hành có 636 dòng. Kết quả bên dưới trích từ [log kiểm chứng tuần 1](../tests/week1_execution_results.json), không phải một lần chạy mới hay xác nhận nghiệm thu của thành viên. Bốn QRA chưa có log trên seed lớn vẫn được ghi rõ ở mục 4.12. SQL kiểm chứng của từng câu nằm trong [06a_dai_so_quan_he.md](06a_dai_so_quan_he.md).
 
 ### 4.1. Ký hiệu và quy ước
 
@@ -190,6 +200,7 @@ Quy ước:
    `HO_TO` chỉ có hai thuộc tính `ma_ho` và `ma_to`, nên nối tự nhiên với `Q_d`, `QUA_TRINH_CU_TRU` hay `TO_DAN_PHO` đều đúng.
 4. **Tên thuộc tính sau phép chiếu.** Thuộc tính có tiền tố như `Q1.ma_cu_dan` được gọi lại theo tên gốc `ma_cu_dan` để nối tiếp với `CU_DAN`.
 5. **So sánh theo mã.** Mọi phép `∪`, `∩`, `−` đều so trên `ma_cu_dan` hoặc `ma_dia_chi`, nên hai vế khả hợp. Hai người trùng họ tên vẫn là hai bộ khác nhau.
+6. **Đối chiếu với SQL.** Đại số làm việc trên tập, SQL làm việc trên đa tập. SQL kiểm chứng dùng `DISTINCT` hoặc phép tập hợp khi cần loại trùng. Hai bên được đối chiếu đầy đủ các thuộc tính đầu ra sau khi đưa về cùng mức hạt; số dòng chỉ là thông tin tóm tắt.
 
 ### 4.2. QRA01: Cư dân đang cư trú tại Tổ 01 tại ngày d
 
@@ -203,7 +214,7 @@ KQ = π ma_cu_dan, ho_ten (CU_DAN ⋈ R2)
 
 R1 là các hộ thuộc Tổ 01. R2 là những người có đợt còn hiệu lực tại d ở một trong các hộ đó. R2 chỉ còn `ma_cu_dan`, nên khi nối với `CU_DAN` không bị vướng cột `ghi_chu`.
 
-Kết quả trên seed chính thức: [CHỜ SEED]
+Kết quả trên seed636: **34 bộ**, trích kiểm tra `QRA01` ở mục 4.12; tập kết quả đầy đủ có trong log tuần 1.
 
 ### 4.3. QRA02: Cư dân đang tạm trú tại Tổ 02 tại ngày d
 
@@ -217,7 +228,7 @@ KQ = π ma_cu_dan, ho_ten (CU_DAN ⋈ R2)
 
 Câu này giống QRA01, chỉ thêm điều kiện loại cư trú. Phép chọn `loai_cu_tru='TAM_TRU'` đặt ngay trên `Q_d`, nên người thường trú ở Tổ 02 bị loại trước khi nối.
 
-Kết quả trên seed chính thức: [CHỜ SEED]
+Kết quả: đã khớp đáp án tay trên tiny29; chờ ghi tập kết quả trên seed636 cho bản báo cáo cuối (mục 4.12).
 
 ### 4.4. QRA03: Cư dân từ 60 tuổi trở lên đang cư trú tại Tổ 01
 
@@ -230,7 +241,7 @@ KQ = π ma_cu_dan, ho_ten, ngay_sinh (R3 ⋈ R2)        (R2 như QRA01)
 
 Đại số quan hệ không có hàm tính tuổi, nên điều kiện tuổi được viết thành so sánh ngày sinh với một ngày cắt cố định. Phép nối với R2 của QRA01 giữ lại người vừa đủ tuổi vừa đang ở Tổ 01.
 
-Kết quả trên seed chính thức: [CHỜ SEED]
+Kết quả: đã khớp đáp án tay trên tiny29; chờ ghi tập kết quả trên seed636 cho bản báo cáo cuối (mục 4.12).
 
 ### 4.5. QRA04: Cư dân từng cư trú ở ít nhất hai nhóm hộ khác nhau
 
@@ -245,7 +256,7 @@ KQ = π ma_cu_dan, ho_ten (CU_DAN ⋈ R1)
 
 Đây là câu tự nối. Q1 và Q2 là hai bản sao của cùng một bảng. Điều kiện nối ghép hai đợt của cùng một người và giữ cặp đợt thuộc hai hộ khác nhau, vì vậy người có hai đợt trong cùng một hộ bị loại.
 
-Kết quả trên seed chính thức: [CHỜ SEED]
+Kết quả trên seed636: **54 bộ**, trích kiểm tra `QRA04` ở mục 4.12; tập kết quả đầy đủ có trong log tuần 1.
 
 ### 4.6. QRA05: Địa chỉ chưa được gán cho nhóm hộ nào
 
@@ -258,7 +269,7 @@ KQ = π ma_dia_chi, dia_chi_chuan (DIA_CHI ⋈ R1)
 
 Phép hiệu lấy mọi mã địa chỉ trừ đi các mã địa chỉ đã có hộ. Địa chỉ có hộ nhưng hộ không có người ở (S05) vẫn có mặt trong `HO_CU_TRU`, nên không thuộc kết quả.
 
-Kết quả trên seed chính thức: [CHỜ SEED]
+Kết quả trên seed636: **4 bộ**, trích kiểm tra `QRA05` ở mục 4.12; tập kết quả đầy đủ có trong log tuần 1.
 
 ### 4.7. QRA06: Cư dân có hồ sơ nhưng chưa từng có đợt cư trú
 
@@ -271,7 +282,7 @@ KQ = π ma_cu_dan, ho_ten (CU_DAN ⋈ R1)
 
 Người chỉ có đợt tương lai vẫn có bản ghi trong `QUA_TRINH_CU_TRU`, nên không thuộc kết quả.
 
-Kết quả trên seed chính thức: [CHỜ SEED]
+Kết quả: đã khớp đáp án tay trên tiny29; chờ ghi tập kết quả trên seed636 cho bản báo cáo cuối (mục 4.12).
 
 ### 4.8. QRA07: Cư dân từng có cả thường trú và tạm trú
 
@@ -296,7 +307,7 @@ KQ   = π ma_cu_dan, ho_ten (CU_DAN ⋈ R3)
 
 Không thể viết một phép chọn `loai_cu_tru='THUONG_TRU' ∧ loai_cu_tru='TAM_TRU'`, vì mỗi bộ chỉ có một loại cư trú nên kết quả luôn rỗng. Cách 1 lấy giao của hai tập người. Cách 2 đọc là "người có đủ mọi loại cư trú trong LOAI". LOAI được viết thành quan hệ hằng gồm hai bộ, không lấy bằng `π loai_cu_tru (QUA_TRINH_CU_TRU)`. Nếu lấy từ dữ liệu mà dữ liệu chỉ có một loại, số chia sẽ thiếu một loại và kết quả bị sai. Hai cách cho cùng một kết quả trên bộ dữ liệu thử.
 
-Kết quả trên seed chính thức: [CHỜ SEED]
+Kết quả trên seed636: **31 bộ**, trích kiểm tra `QRA07` ở mục 4.12; tập kết quả đầy đủ có trong log tuần 1. Cách 2 (phép chia) cũng cho 31 bộ, tập mã trùng hoàn toàn với cách 1 (kiểm tra riêng ngày 16/11 trên CSDL tạm nạp `01_schema.sql`, `02_constraints.sql`, `03_seed.sql`; chưa có trong log tuần 1).
 
 ### 4.9. QRA08: Cư dân đang cư trú tại Tổ 01 hoặc Tổ 02 tại ngày d
 
@@ -310,7 +321,7 @@ KQ = R1 ∪ R2
 
 Phép hợp gộp hai tập mã cư dân. Một người ở cả hai tổ, ví dụ thường trú ở tổ này và tạm trú ở tổ kia, chỉ xuất hiện một lần. Câu này có thể viết bằng một phép chọn với điều kiện "hoặc"; nhóm dùng `∪` để minh họa phép hợp.
 
-Kết quả trên seed chính thức: [CHỜ SEED]
+Kết quả: đã khớp đáp án tay trên tiny29; chờ ghi tập kết quả trên seed636 cho bản báo cáo cuối (mục 4.12).
 
 ### 4.10. QRA09: Cư dân đã từng cư trú nhưng không còn đợt hiệu lực tại d
 
@@ -325,7 +336,7 @@ KQ = π ma_cu_dan, ho_ten (CU_DAN ⋈ R3)
 
 Cột `ngay_bat_dau` là `NOT NULL`, nên phép chọn của R1 không gặp giá trị rỗng. Phép hiệu cho ra người từng ở nhưng tại d không còn đợt nào hiệu lực. Người chưa từng có đợt (kết quả QRA06) và người chỉ có đợt tương lai đều không thuộc R1, nên không xuất hiện ở đây.
 
-Kết quả trên seed chính thức: [CHỜ SEED]
+Kết quả trên seed636: **17 bộ**, trích kiểm tra `QRA09` ở mục 4.12; tập kết quả đầy đủ có trong log tuần 1.
 
 ### 4.11. QRA10: Cư dân chuyển nội bộ giữa hai tổ dân phố khác nhau
 
@@ -344,7 +355,7 @@ KQ  = π ma_cu_dan, ho_ten (CU_DAN ⋈ R2)
 
 Bảng biến động có hai khóa ngoại cùng trỏ tới `QUA_TRINH_CU_TRU`: đợt cũ và đợt mới. Vì vậy QT được dùng hai lần dưới hai tên CU và MOI. Điều kiện `CU.ma_cu_dan = MOI.ma_cu_dan` buộc đợt cũ và đợt mới thuộc cùng một người (quy tắc B08). Điều kiện `CU.ma_to ≠ MOI.ma_to` loại các lần chuyển giữa hai hộ cùng tổ.
 
-Kết quả trên seed chính thức: [CHỜ SEED]
+Kết quả trên seed636: **22 bộ**, trích kiểm tra `QRA10` ở mục 4.12; tập kết quả đầy đủ có trong log tuần 1.
 
 ### 4.12. Nhận xét
 
@@ -363,24 +374,27 @@ Theo giáo trình, các phép cơ bản của đại số quan hệ là σ, π, 
 | QRA09 | ✓ | ✓ | ✓ | | | | | ✓ | |
 | QRA10 | ✓ | ✓ | ✓ | ✓ | ✓ | | | | |
 
-Mỗi câu có một SQL kiểm chứng viết riêng, khác với 10 câu SQL nghiệp vụ ở Chương 5. Trên bộ dữ liệu thử nhỏ đã biết đáp án (`tests/ra_fixture.sql`), cả 10 câu và cách viết phép chia của QRA07 đều cho đúng đáp án tính tay. TV1 kiểm chứng độc lập thêm các ca biên, đạt 146/146 kiểm tra (`docs/REVIEW_TV3_CHI_TIET.md`). Bảng đối soát trên seed chính thức:
+Mỗi câu có một SQL kiểm chứng viết riêng, khác với 10 câu SQL nghiệp vụ ở Chương 5. Trên bộ dữ liệu thử nhỏ đã biết đáp án (`tests/ra_fixture.sql`), cả 10 câu và cách viết phép chia của QRA07 đều cho đúng đáp án tính tay. Lần review kỹ thuật độc lập hỗ trợ TV1 đạt **146/146**, gồm 144 kiểm tra chức năng và 2 phép tái hiện; không phải 146 phép thử riêng cho đại số quan hệ. Xem [review TV3 trong nhật ký](../meetings/decision_log.md#review-tv3).
 
-| Câu | Số bộ kết quả | Câu SQL đối chiếu (Chương 5) | Khớp tập mã? |
+Lần kiểm chứng tuần 1 ngày 16/11 đạt **96/96**, gồm 95 kiểm tra chức năng và 1 tái hiện B15 bản cũ. [Log đầy đủ](../tests/week1_execution_results.json) lưu expected/actual và hash đầu vào; [môi trường](../tests/week1_environment.md) nêu giới hạn lần chạy. Sáu cặp RA/SQL đã khớp đầy đủ các thuộc tính sau khi chuẩn hóa mức hạt trên seed636. QRA02/03/06/08 đã khớp đáp án tay trên tiny29; log này chưa lưu kết quả bốn câu đó trên seed636. Bảng đối soát trên seed hiện hành:
+
+| Câu | Số bộ kết quả | Câu SQL đối chiếu | Kết quả ở cùng mức hạt |
 |---|---|---|---|
-| QRA01 | [CHỜ SEED] | QSQL01 | [CHỜ SEED] |
-| QRA02 | [CHỜ SEED] | Không có | Không có |
-| QRA03 | [CHỜ SEED] | Không có | Không có |
-| QRA04 | [CHỜ SEED] | QSQL05 | [CHỜ SEED] |
-| QRA05 | [CHỜ SEED] | QSQL04 | [CHỜ SEED] |
-| QRA06 | [CHỜ SEED] | Không có | Không có |
-| QRA07 | [CHỜ SEED] | QSQL06 | [CHỜ SEED] |
-| QRA08 | [CHỜ SEED] | Không có | Không có |
-| QRA09 | [CHỜ SEED] | QSQL07 | [CHỜ SEED] |
-| QRA10 | [CHỜ SEED] | QSQL09 | [CHỜ SEED] |
+| QRA01 | 34 | QSQL01 | Khớp |
+| QRA02 | Chờ ghi kết quả seed636 | SQL riêng trong 06a | Đã khớp đáp án tay tiny29 |
+| QRA03 | Chờ ghi kết quả seed636 | SQL riêng trong 06a | Đã khớp đáp án tay tiny29 |
+| QRA04 | 54 | QSQL05 | Khớp |
+| QRA05 | 4 | QSQL04 | Khớp |
+| QRA06 | Chờ ghi kết quả seed636 | SQL riêng trong 06a | Đã khớp đáp án tay tiny29 |
+| QRA07 | 31 | QSQL06 | Khớp |
+| QRA08 | Chờ ghi kết quả seed636 | SQL riêng trong 06a | Đã khớp đáp án tay tiny29 |
+| QRA09 | 17 | QSQL07 | Khớp |
+| QRA10 | 22 | QSQL09 | Khớp |
 
-Khi đối soát, nhóm gặp ba chỗ đại số quan hệ và SQL khác nhau:
+Khi đối soát, cần xử lý các khác biệt sau:
 
-- Đại số loại bộ trùng, SQL thì không. QSQL01 trả thêm cột `loai_cu_tru`, nên người có hai loại cư trú xuất hiện hai dòng, trong khi QRA01 cho mỗi người một bộ. Vì vậy hai bên được so theo tập mã.
+- Đại số loại bộ trùng, SQL thì không. QSQL01 trả thêm cột `loai_cu_tru`, nên người có hai loại cư trú xuất hiện hai dòng, trong khi QRA01 cho mỗi người một bộ. Vì vậy phải chiếu mã, tên và loại trùng trước khi so tập kết quả.
+- QSQL09 trả từng sự kiện; khi so QRA10 phải chiếu `DISTINCT ma_cu_dan` rồi nối tên cư dân. Số sự kiện không được dùng thay số người.
 - Đại số cổ điển không có giá trị rỗng. Nhóm xử lý cột `ngay_ket_thuc` bằng quan hệ chuẩn bị `Q_d` ở mục 4.1.
 - Mười câu đại số không dùng phép gom nhóm (đếm, nhóm theo). Các câu thống kê như số người mỗi tổ, số sự kiện mỗi tháng chỉ có ở Chương 5 và trong VIEW của Chương 6.
 
@@ -392,7 +406,7 @@ Khi đối soát, nhóm gặp ba chỗ đại số quan hệ và SQL khác nhau:
 
 ## CHƯƠNG 6 — BẢO MẬT CSDL
 
-> Người viết: TV3. Người kiểm tra: TV2. Nháp ngày 16/11/2026. Hai demo đã chạy được trên PostgreSQL 17.11 với bảng rỗng, bộ dữ liệu thử và seed trong PR #3. Ảnh minh chứng sẽ chụp trên seed đã merge, hạn 24/11. Script: [sql/05_security.sql](../sql/05_security.sql). Kế hoạch chi tiết: [docs/06b_bao_mat.md](06b_bao_mat.md).
+> Người viết: TV3. Reviewer được phân công: TV2. Nháp ngày 16/11/2026. Bằng chứng kỹ thuật do agent hỗ trợ ghi: [review TV3 trong nhật ký](../meetings/decision_log.md#review-tv3) và [log tuần 1 ngày 16/11](../tests/week1_execution_results.json) trên PostgreSQL 17.11, tiny29 và seed636 hiện hành. Đây không phải chữ ký review của TV2. Ảnh minh chứng sẽ chụp trên seed đã merge, hạn 24/11. Script: [sql/05_security.sql](../sql/05_security.sql). Kế hoạch chi tiết: [06b_bao_mat.md](06b_bao_mat.md).
 
 ### 6.1. Khái quát và các rủi ro
 
@@ -437,7 +451,7 @@ Role `reader` minh họa việc giới hạn thao tác (demo B1), còn role `rep
 
 Mục tiêu: cho thấy `csdl17_reader` tra cứu được nhưng không sửa được dữ liệu, và dữ liệu không đổi sau khi role này thử sửa.
 
-Thiết lập, chạy bằng `postgres`:
+Trích đoạn minh họa quyền dưới `postgres`, **không chạy riêng khối này**. Khi thực thi, dùng đầy đủ [05_security.sql](../sql/05_security.sql), gồm preflight trước mọi thay đổi và transaction thiết lập. Với psql, script tự bật `ON_ERROR_STOP`; với GUI, chạy trọn khối thiết lập và chỉ tiếp tục khi đã COMMIT thành công:
 
 ```sql
 CREATE ROLE csdl17_reader LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE;
@@ -466,7 +480,7 @@ PostgreSQL kiểm tra quyền trước khi thực hiện câu lệnh. `csdl17_re
 
 Mục tiêu: cho thấy `csdl17_report` xem được số cư dân theo tổ qua VIEW nhưng không đọc được các bảng gốc chứa họ tên và ngày sinh.
 
-Thiết lập, chạy bằng `postgres`:
+Trích đoạn VIEW/quyền dưới `postgres`, **không phải khối thiết lập độc lập**. Chạy đầy đủ [05_security.sql](../sql/05_security.sql) để kiểm tra role và cấp đủ quyền database/schema trước demo:
 
 ```sql
 CREATE OR REPLACE VIEW vw_thong_ke_cu_dan_theo_to
@@ -497,7 +511,7 @@ GRANT SELECT ON vw_thong_ke_cu_dan_theo_to TO csdl17_report;
 
 VIEW do chủ sở hữu bảng tạo, ở chế độ mặc định `security_invoker = false`, nên VIEW đọc bảng nền bằng quyền của chủ sở hữu VIEW. `csdl17_report` chỉ có quyền trên VIEW, vì vậy nhận được số liệu tổng hợp mà không xem được họ tên hay ngày sinh của ai. Nếu đặt `security_invoker = true` (có từ PostgreSQL 15), VIEW sẽ kiểm tra quyền của người gọi trên bảng nền, và role report bị từ chối cả khi đọc VIEW.
 
-Kết quả VIEW phải trùng từng dòng với QSQL03 ở Chương 5 cho cùng ngày 20/11/2026. Trên seed trong PR #3, hai bên khớp cả 8 tổ, kể cả Tổ 08 có 0 người. [Kiểm tra lại sau khi seed chính thức được merge.]
+Kết quả VIEW trùng từng dòng với QSQL03 cho cùng ngày 20/11/2026 trong kiểm tra `w1_seed/VIEW-vs-QSQL03` của [log tuần 1](../tests/week1_execution_results.json). Seed636 hiện hành cho số người ở Tổ 01–08 lần lượt **34, 29, 21, 33, 41, 30, 11, 0**; Tổ 08 vẫn có một dòng dù không có người. Đây là số người phân biệt trong từng tổ; không cộng các tổ để suy ra tổng người duy nhất toàn phường.
 
 ### 6.5. Đánh giá
 
@@ -536,6 +550,6 @@ Hướng mở rộng gồm Row-Level Security theo tổ, ngưỡng k cho VIEW t�
 
 | STT | Họ tên | MSSV | Công việc thực tế | Xếp loại A/B/C... | Chữ ký |
 |---|---|---|---|---|---|
-| 1 | [TV1] | [...] | [TODO] | [...] | [...] |
-| 2 | [TV2] | [...] | [TODO] | [...] | [...] |
-| 3 | [TV3] | [...] | [TODO] | [...] | [...] |
+| 1 | Dương Ngọc Ninh | 20237469 | Theo hồ sơ bàn giao tuần 1; cập nhật cuối kỳ | Chờ nhóm đánh giá | Chờ ký |
+| 2 | Trần Tuấn Ngọc | 20227064 | Theo hồ sơ bàn giao tuần 1; cập nhật cuối kỳ | Chờ nhóm đánh giá | Chờ ký |
+| 3 | Trần Bùi Tùng Linh | 20227057 | Theo hồ sơ bàn giao tuần 1; cập nhật cuối kỳ | Chờ nhóm đánh giá | Chờ ký |

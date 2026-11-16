@@ -1,10 +1,13 @@
 # 10 CÂU HỎI VÀ BIỂU THỨC ĐẠI SỐ QUAN HỆ (QRA01–QRA10)
 
-> **Người viết:** TV3 · **Người kiểm tra:** TV1 · **Phiên bản:** v0.2 (nháp, 16/11/2026; viết lại ký hiệu theo cách trình bày trên lớp, khớp Chương 4 của báo cáo; thêm cách viết phép chia cho QRA07. v0.1 ngày 11/11/2026 sửa mục 0.3 theo góp ý RV08 của TV1)
-> **Căn cứ:** `sql/01_schema.sql` v1-candidate (cấu trúc giữ nguyên v0) và mục 6 của `docs/01_de_cuong.md`.
-> **Lưu ý:** Nếu Gate 1 (15/11) đổi tên bảng hoặc tên cột, phải sửa lại toàn bộ tệp này. Mục (6) "Kết quả mong đợi" sẽ điền sau khi TV2 có dữ liệu giả lập (dự kiến 20/11).
+> **Nguồn lời giải:** TV3 · **Reviewer kỹ thuật:** TV1 · **Phiên bản:** v0.3 (16/11/2026: viết lại ký hiệu theo cách trình bày trên lớp, khớp Chương 4 của báo cáo; thêm cách viết phép chia cho QRA07. v0.2 bàn giao tuần 1, cập nhật 15/11/2026)
+> **Căn cứ:** `sql/01_schema.sql` v1 (cấu trúc giữ nguyên v0) và mục 6 của `docs/01_de_cuong.md`.
+> **Phân công nhóm:** TV3 — Trần Bùi Tùng Linh, MSSV 20227057. Phần bổ sung ngày 15/11 do agent hỗ trợ kỹ thuật theo yêu cầu chủ repo; không thay lời xác nhận của thành viên hoặc suy ra chủ tài khoản GitHub từ tên người.
+> **Phạm vi:** lời giải, quy ước và đáp án trên fixture kiểm chứng tuần 1; phần kết quả chính thức/ảnh của Chương 4 tiếp tục đối soát trong tuần 2–3. Nếu đổi schema sau Gate 1, phải cập nhật đồng thời công thức, SQL kiểm chứng và expected.
 
 ---
+
+Thiết kế v1 chốt theo xác nhận chủ repo tiếp nhận16/11/2026; nguồn ở [Gate 1](../meetings/decision_log.md#gate1). SQL kiểm chứng QRA01–QRA10 giữ nguyên; ngày 16/11 chỉ đổi cách viết công thức và thêm cách 2 (phép chia) cho QRA07.
 
 ## 0. Ký hiệu, quy ước và quan hệ chuẩn bị
 
@@ -28,7 +31,7 @@ Mười câu dưới đây không dùng phép gom nhóm (đếm, nhóm theo) và
 
 Thuộc tính có tiền tố như `Q1.ma_cu_dan`, sau phép chiếu, được gọi lại theo tên gốc `ma_cu_dan` để nối tiếp với `CU_DAN`.
 
-### 0.2. Lược đồ quan hệ (theo `01_schema.sql` v1-candidate, cấu trúc như v0)
+### 0.2. Lược đồ quan hệ (theo `01_schema.sql` v1, cấu trúc như v0)
 
 ```text
 TO_DAN_PHO(ma_to, ten_to, ghi_chu)
@@ -589,3 +592,26 @@ So sánh **tập khóa** kết quả (`ma_cu_dan` hoặc `ma_dia_chi`), không s
 3. Một người **chỉ có đợt bắt đầu sau 20/11/2026**: QRA09 phải loại người này.
 4. Một sự kiện chuyển nội bộ **cùng tổ, khác hộ**: QRA10 phải loại sự kiện này.
 5. Tên tổ trong dữ liệu đúng chính xác `'Tổ 01'`, `'Tổ 02'` (có dấu, có số 0 ở đầu). Nếu đổi cách đặt tên thì báo TV3 sửa biểu thức.
+
+## Bàn giao tuần 1 và cách đối soát với phần SQL của TV2
+
+Các mục W1-T3-01–12 đã có nguồn: 10 câu hỏi, ma trận toán tử, quy ước tập hợp/thời gian, biểu thức đầy đủ QRA04/QRA09/QRA10, kế hoạch B1/B2 và phiếu review ERD. Hai file 06a/06b là bộ bàn giao tách đôi theo DEC11; không tạo một bản sao lời giải thứ hai chỉ để khớp tên file đề xuất trong checklist.
+
+Review dữ liệu tuần 1 cho W1-T3-13 và đối chiếu sản phẩm W1-T3-14 được lưu tại [review dữ liệu trong nhật ký](../meetings/decision_log.md#review-data). Xác nhận thực tế do TV3 ghi ngày 13/11 và nguồn PR #2 được giữ trong [nhật ký review TV3](../meetings/decision_log.md#review-tv3). Agent thực hiện kiểm tra kỹ thuật mới; không ký Gate 1 thay thành viên.
+
+| RA | Đối chiếu phù hợp | Cách chuẩn hóa kết quả |
+|---|---|---|
+| QRA01 | QSQL01 tại cùng Tổ 01 và d | Chiếu `ma_cu_dan, ho_ten`, loại trùng sau khi bỏ `loai_cu_tru` |
+| QRA02 | SQL kiểm chứng riêng trong mục QRA02 | Không so trực tiếp với QSQL01 đang cố định Tổ 01; phải cùng Tổ 02 và loại TAM_TRU |
+| QRA03 | SQL kiểm chứng riêng trong mục QRA03 | So cả mã, tên, ngày sinh và điều kiện tuổi tại d |
+| QRA04 | QSQL05 | Bỏ `so_ho`; so tập mã và tên, không so số đợt |
+| QRA05 | QSQL04 | So đầy đủ `ma_dia_chi, dia_chi_chuan` |
+| QRA06 | SQL kiểm chứng riêng trong mục QRA06 | Người chưa từng có đợt; không tương đương QSQL07 |
+| QRA07 | QSQL06 | So tập mã và tên, bao gồm hai loại ở hai thời kỳ khác nhau |
+| QRA08 | SQL kiểm chứng riêng trong mục QRA08 | So tập mã của phép hợp, loại người thuộc cả hai tổ bị lặp |
+| QRA09 | QSQL07 | So tập mã và tên; loại người chưa có đợt hoặc chỉ có đợt tương lai |
+| QRA10 | QSQL09 | QSQL09 trả sự kiện: lấy DISTINCT mã người rồi nối tên trước khi so; không so số sự kiện với số cư dân |
+
+QSQL02, QSQL03, QSQL08 và QSQL10 có thống kê mà đại số cổ điển ở đây không biểu diễn bằng COUNT/GROUP BY. Đối chiếu chúng với đáp án tính tay; riêng QSQL03 so đầy đủ từng tổ với VIEW B2 theo cùng d. Không ghi “10 RA = 10 SQL” khi hai bên khác câu hỏi hoặc mức hạt kết quả.
+
+**Kết quả tích hợp tuần 1, 16/11/2026:** review hỗ trợ kỹ thuật đã có trong [review dữ liệu trong nhật ký](../meetings/decision_log.md#review-data), cùng expected/actual và môi trường. Xác nhận thành viên và nghiệm thu báo cáo cuối được quản lý riêng.

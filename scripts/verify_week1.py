@@ -16,7 +16,7 @@ import re
 import struct
 import sys
 import zlib
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 from urllib.parse import unquote
 from xml.etree import ElementTree as ET
@@ -24,20 +24,53 @@ from xml.etree import ElementTree as ET
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "tests/week1_manifest.json"
 LOG = ROOT / "tests/week1_verification_log.md"
+LEDGER = "meetings/decision_log.md"
 TABLES = {"to_dan_pho": 3, "dia_chi": 4, "ho_cu_tru": 4, "cu_dan": 5,
           "qua_trinh_cu_tru": 6, "tai_khoan": 5, "bien_dong_cu_tru": 8}
 REQUIRED = ["README.md", ".gitignore", "docs/03_dac_ta_nghiep_vu.md", "docs/04_data_dictionary_va_chuan_hoa.md",
             "docs/02_bao_cao_suon.md", "docs/07_ma_tran_truy_van_va_review.md",
-            "docs/BAN_GIAO_TV1_TUAN_1.md", "meetings/decision_log.md", "sql/01_schema.sql",
+            LEDGER, "sql/01_schema.sql",
             "sql/02_constraints.sql", "tests/week1_design_cases.md", "tests/week1_sql_compatibility.json",
             "scripts/render_week1_diagrams.py", "scripts/verify_week1.py"]
 REQUIRED += [f"diagrams/{name}.{ext}" for name in ("erd_v1", "phan_ra_chuc_nang")
              for ext in ("drawio", "png", "svg")]
+REQUIRED += [".gitattributes", "docs/05_ke_hoach_du_lieu_va_sql.md",
+             "tests/week1_fixture.sql", "tests/week1_expected.json", "tests/week1_environment.md",
+             "tests/week1_execution_results.json", "scripts/verify_week1_runtime.py"]
 RESULTS = []
 
 
 def read(path):
     return (ROOT / path).read_text(encoding="utf-8")
+
+
+def gate1_state():
+    parts = read(LEDGER).split('<a id="gate1"></a>')
+    assert len(parts) == 2, "Gate 1 must have one current decision section"
+    values = {}
+    for key in ("Gate 1", "Phiên bản thiết kế", "Ngày tiếp nhận", "Nguồn xác nhận", "Thành viên đồng ý"):
+        matches = re.findall(r"^\| " + re.escape(key) + r" \| ([^|\n]+) \|$", parts[1], re.M)
+        assert len(matches) == 1, f"Missing/ambiguous Gate 1 field: {key}"
+        values[key] = matches[0].strip()
+    status = values["Gate 1"]
+    assert status in ("PASS", "CHỜ REVIEW"), "Unknown Gate 1 status"
+    approved = status == "PASS"
+    assert values["Phiên bản thiết kế"] == ("v1" if approved else "v1-candidate"), "Gate 1 and design version disagree"
+    if approved:
+        datetime.strptime(values["Ngày tiếp nhận"], "%d/%m/%Y")
+        assert values["Nguồn xác nhận"] and values["Nguồn xác nhận"] not in ("...", "Chưa có"), "Approved Gate 1 needs a confirmation source"
+        assert set(re.findall(r"\bTV[123]\b", values["Thành viên đồng ý"])) == {"TV1", "TV2", "TV3"}, "Approved Gate 1 needs all three members"
+    return {"status": status, "version": values["Phiên bản thiết kế"], "approved": approved,
+            "received_on": values["Ngày tiếp nhận"], "source": values["Nguồn xác nhận"]}
+
+
+def week1_counts():
+    statuses = [line.split("|")[-2].strip() for line in read(LEDGER).splitlines()
+                if re.match(r"^\| W1-(?:T[123]|G)-\d\d \|", line)]
+    done = sum(value.startswith("Đạt") for value in statuses)
+    deferred = sum(value.startswith("Hoãn") for value in statuses)
+    return {"total": len(statuses), "completed": done, "deferred": deferred,
+            "pending": len(statuses) - done - deferred}
 
 
 def sha(path):
@@ -189,12 +222,12 @@ def report_and_handoff():
     assert "[TODO" not in part and "[CHÈN HÌNH" not in part
     for n in range(1,4):
         assert len(re.findall(rf"^### {n}\.\d+\.",part,re.M)) >= 4
-    ids = re.findall(r"^\| (W1-T1-\d\d) \|",read("meetings/decision_log.md"),re.M)
+    ids = re.findall(r"^\| (W1-T1-\d\d) \|",read(LEDGER),re.M)
     assert len(ids) == 20 and set(ids) == {f"W1-T1-{n:02}" for n in range(1,21)}
-    assert "CHỜ REVIEW" in read("meetings/decision_log.md")
+    gate = gate1_state()
     assert "dư thừa" in read("docs/04_data_dictionary_va_chuan_hoa.md")
-    assert "kiểm tra tệp không thay test DB" in read("docs/BAN_GIAO_TV1_TUAN_1.md")
-    return "Chapters 1–3 filled; all 20 TV1 tasks traced; peer-review and DB-test limits explicit"
+    assert "kiểm tra tệp không thay test DB" in read(LEDGER)
+    return f"Chapters 1–3 filled; all 20 TV1 tasks traced; Gate 1 {gate['status']} / {gate['version']}; confirmation source and DB-test limits explicit"
 
 
 def local_links(record):
@@ -228,16 +261,81 @@ def python_syntax():
 
 
 def files_for_manifest():
-    files = [ROOT/"README.md",ROOT/".gitignore"]
+    files = [ROOT/"README.md",ROOT/".gitignore",ROOT/".gitattributes"]
     for directory in ("docs","diagrams","sql","scripts","tests","meetings","data","report","evidence"):
         files.extend(p for p in (ROOT/directory).rglob("*") if p.is_file()
                      and p.name != ".DS_Store" and "__pycache__" not in p.parts and p != MANIFEST)
     return sorted(set(files))
 
 
+def week1_handoff():
+    expected = {f"W1-T{person}-{n:02}" for person, count in [(1,20),(2,14),(3,14)]
+                for n in range(1,count+1)} | {f"W1-G-{n:02}" for n in range(1,6)}
+    text = read(LEDGER)
+    rows = re.findall(r"^\| (W1-(?:T[123]|G)-\d\d) \|", text, re.M)
+    assert len(rows)==53 and set(rows)==expected, "Week1 handoff must trace all 53 unique IDs"
+    checklist = read("docs/03_CHECKLIST_DU_AN.md")
+    counts = {1: (20,14,14,5), 2: (15,16,13,3), 3: (15,11,11,5)}
+    project_ids = {f"W{week}-{owner}-{n:02}"
+                   for week, sizes in counts.items()
+                   for owner, size in zip(("T1","T2","T3","G"),sizes)
+                   for n in range(1,size+1)}
+    all_boxes = re.findall(r"^- \[([ x])\] \*\*(W[123]-(?:T[123]|G)-\d\d)",checklist,re.M)
+    assert len(all_boxes)==142 and {key for _,key in all_boxes}==project_ids, "Checklist must retain all 142 unique project IDs"
+    boxes = [(mark,key) for mark,key in all_boxes if key.startswith("W1-")]
+    assert len(boxes)==53 and {key for _,key in boxes}==expected
+    ledger = [line.split("|") for line in text.splitlines()
+              if re.match(r"^\| W1-(?:T[123]|G)-\d\d \|",line)]
+    ready = {cells[1].strip() for cells in ledger if cells[-2].strip().startswith("Đạt")}
+    deferred = {cells[1].strip() for cells in ledger if cells[-2].strip().startswith("Hoãn")}
+    marked = {key for mark,key in boxes if mark=="x"}
+    assert marked==ready, "Checklist boxes must agree with the evidence ledger, not an assumed completion count"
+    assert not marked & deferred, "Deferred tasks must not count as complete"
+    for cells in ledger:
+        if cells[1].strip() in deferred:
+            targets = re.findall(r"\bW2-(?:T[123]|G)-\d\d\b", cells[-2])
+            assert targets and all(target in project_ids for target in targets), "Deferred week1 tasks need a valid week2 handoff ID"
+    if gate1_state()["approved"]:
+        gate_tasks = {"W1-T1-01", "W1-T1-19", "W1-T1-20", "W1-T2-14", "W1-G-03", "W1-G-04"}
+        assert gate_tasks <= ready, "Approved Gate 1 must have its six confirmations completed"
+    counts = week1_counts()
+    for name, sid in [("Dương Ngọc Ninh","20237469"),("Trần Tuấn Ngọc","20227064"),("Trần Bùi Tùng Linh","20227057")]:
+        assert name in text and sid in text
+    return f"142 unique project IDs; shared ledger: 53 week1 IDs, {counts['completed']} completed, {counts['deferred']} deferred to week2, {counts['pending']} awaiting confirmation; deferred tasks stay unchecked"
+
+
+def runtime_evidence():
+    result=json.loads(read("tests/week1_execution_results.json"))
+    assert result["summary"]["failed"]==0 and result["summary"]["passed"]==len(result["checks"])
+    keys={item["test"] for item in result["checks"] if item["status"]=="PASS"}
+    assert all(f"{db}/QSQL{n:02}/full-tuples" in keys for db in ("w1_tiny","w1_seed") for n in range(1,11))
+    for path,digest in result["files_sha256"].items():
+        assert sha(ROOT/path)==digest, f"Runtime-tested input changed: {path}"
+    clean=lambda s:re.sub(r"--[^\n]*","",s).strip().rstrip(";")
+    parts=re.split(r"^-- (QSQL\d{2})\.[^\n]*\n",read("sql/04_queries.sql"),flags=re.M)
+    sql={parts[i]:clean(parts[i+1]) for i in range(1,len(parts),2)}
+    blocks=re.findall(r"```sql\n(.*?)```",read("docs/06a_dai_so_quan_he.md"),re.S)
+    assert len(blocks)==11
+    sql.update({f"QRA{i:02}":clean(s) for i,s in enumerate(blocks[1:],1)})
+    assert {k:hashlib.sha256(v.encode()).hexdigest() for k,v in sql.items()}==result["query_sha256"]
+    return f"{result['summary']['passed']}/{len(result['checks'])} recorded PostgreSQL checks; exact input hashes and all 20 SQL/counterpart query hashes verified (DB not rerun)"
+
+
+def newline_policy():
+    assert "* text=auto eol=lf" in read(".gitattributes")
+    for path in files_for_manifest():
+        if path.suffix in (".md",".py",".sql",".csv",".json",".drawio",".svg"):
+            assert b"\r" not in path.read_bytes(), f"Expected LF text: {path.relative_to(ROOT)}"
+    return "LF policy and repository text verified; PNG/binary content unchanged; no unperformed Windows test claimed"
+
+
 def check_manifest():
     assert MANIFEST.exists(), "Run --record once to create the evidence manifest"
-    entries = json.loads(MANIFEST.read_text())["files"]
+    manifest = json.loads(MANIFEST.read_text())
+    gate = gate1_state()
+    assert manifest["version"] == gate["version"] and manifest["group_gate1_approved"] is gate["approved"], "Manifest Gate 1 status differs from the current decision"
+    assert manifest["week1_tasks"] == week1_counts(), "Manifest task counts differ from the shared ledger"
+    entries = manifest["files"]
     assert {e["path"] for e in entries} == {str(p.relative_to(ROOT)) for p in files_for_manifest()}
     for item in entries:
         path = ROOT/item["path"]
@@ -247,12 +345,14 @@ def check_manifest():
 
 def record_evidence():
     recorded_date = date.today()
+    gate = gate1_state()
     rows = "\n".join(f"| {name} | {state} | {detail} |" for name,state,detail in RESULTS)
-    LOG.write_text(f"""# BIÊN BẢN TỰ KIỂM TRA BỘ BÀN GIAO TV1 — {recorded_date:%d/%m/%Y}
+    LOG.write_text(f"""# BIÊN BẢN KIỂM TRA TỆP DỰ ÁN — {recorded_date:%d/%m/%Y}
 
 **Lệnh đã chạy:** `python3 scripts/verify_week1.py --record` từ thư mục gốc.
 **Python thực tế:** {platform.python_version()}. **Hệ điều hành:** {platform.system()} {platform.release()}.
 **Phạm vi:** kiểm tra tệp và đối chiếu cấu trúc/tài liệu, không kết nối PostgreSQL.
+**Trạng thái đọc từ nhật ký:** Gate 1 {gate['status']}; thiết kế {gate['version']}. Ngày tiếp nhận: {gate['received_on']}; nguồn: {gate['source']}.
 
 | Kiểm tra | Kết quả | Bằng chứng / phạm vi |
 |---|---|---|
@@ -260,27 +360,29 @@ def record_evidence():
 
 ## Kiểm tra trực quan
 
-Đã mở và xem cả hai ảnh PNG sau khi dựng: tên/thuộc tính đọc được, không cắt bảng hoặc chữ; hai vai trò cũ/mới tách riêng; cây chức năng đủ ba cấp. PNG là 2300×1626, tỷ lệ A4 ngang. SVG và drawio được kiểm XML; việc xem ảnh không thay việc TV2/TV3 review nội dung.
+Lần dựng sơ đồ tuần 1 đã mở và xem cả hai ảnh PNG: tên/thuộc tính đọc được, không cắt bảng hoặc chữ; hai vai trò cũ/mới tách riêng; cây chức năng đủ ba cấp. Lần kiểm tra tệp này kiểm PNG 2300×1626, CRC và XML của SVG/drawio, không tự nhận là một lần review hình ảnh mới hoặc thay review nội dung của TV2/TV3.
 
 ## Kiểm tra tương thích
 
-`week1_sql_compatibility.json` lưu URL phiên bản gốc và SHA-256 SQL chuẩn hóa. Đã đọc bản GitHub tại d20b394, bỏ chú thích dòng và gộp khoảng trắng để so với local; không thay đổi câu lệnh tạo bảng/chỉ mục.
+`week1_sql_compatibility.json` lưu URL phiên bản gốc tại d20b394 và SHA-256 SQL chuẩn hóa đã đối chiếu. Lần kiểm tra này bỏ chú thích dòng, gộp khoảng trắng và so với hash đã ghi; không tự nhận đã tải lại nguồn GitHub. Không thay đổi câu lệnh tạo bảng/chỉ mục.
 
 ## Những điều chưa được xác nhận
 
-- Lệnh kiểm tra tệp này không chạy DDL hoặc S01–S21 trên PostgreSQL. Kiểm chứng DB độc lập (nếu đã có) được ghi riêng trong docs/REVIEW_TV3_CHI_TIET.md; không dùng log này làm bằng chứng DB.
+- Lệnh kiểm tra tệp này không chạy DDL hoặc S01–S21 trên PostgreSQL. Nguồn và phạm vi kiểm chứng độc lập nằm trong [nhật ký chung](../meetings/decision_log.md), [log146](tv3_review_results.json) và [log96](week1_execution_results.json); không dùng biên bản tĩnh này làm bằng chứng chạy DB mới.
 - Lệnh này không nghiệm thu cơ chế tuần 2 trong constraints/seed/query/security; xem sản phẩm và kết quả của từng owner. Ca D01–D30 là đối chiếu thiết kế với đáp án kỳ vọng, không là kết quả DB PASS.
-- Lệnh này không tự xác nhận review của TV2/TV3 hoặc Gate 1 PASS; xem meetings/decision_log.md và báo cáo review mới nhất. Phân tích chuẩn hóa công bố điểm dư thừa ngày sự kiện và phần cần chốt tuần 2.
-- Biên bản này chỉ kiểm tra tệp; trạng thái tích hợp PR và commit xem docs/REVIEW_TV3_CHI_TIET.md, meetings/decision_log.md và lịch sử main trên GitHub. Merge không thay thế xác nhận Gate 1.
+- Trạng thái Gate 1 ở trên được đọc từ xác nhận đã lưu trong meetings/decision_log.md; script không tạo lời đồng ý hoặc chữ ký của thành viên. Phân tích chuẩn hóa công bố điểm dư thừa ngày sự kiện và phần cần chốt tuần 2.
+- Biên bản này chỉ kiểm tra tệp; trạng thái tích hợp PR, commit, bảng53mã và xác nhận còn thiếu tập trung tại meetings/decision_log.md. Merge không thay thế xác nhận Gate 1; lịch tuần 2 nằm trong checklist hiện hành.
 
 ## Kiểm tra lại
 
 Nhận bản mới bằng `git pull --ff-only origin main` trên nhánh main, rồi chạy `python3 scripts/verify_week1.py`. Lệnh kiểm tra chỉ đọc, gồm đối chiếu SHA-256 của các tệp trong repository. Sau khi sửa nội dung, review rồi chạy lại --record để tái tạo biên bản và manifest trước commit; không chỉnh log thành PASS bằng tay.
 """,encoding="utf-8")
     entries = [{"path":str(p.relative_to(ROOT)),"bytes":p.stat().st_size,"sha256":sha(p)} for p in files_for_manifest()]
-    MANIFEST.write_text(json.dumps({"version":"v1-candidate","recorded_date":recorded_date.isoformat(),
-                                    "scope":"static_handoff_checks_only",
-                                    "database_executed":False,"group_gate1_approved":False,"files":entries},
+    MANIFEST.write_text(json.dumps({"version":gate["version"],"recorded_date":recorded_date.isoformat(),
+                                    "scope":"static_handoff_and_recorded_runtime_evidence",
+                                    "runtime_evidence_available":True,"week1_technical_complete":True,
+                                    "database_executed":False,"group_gate1_approved":gate["approved"],
+                                    "week1_tasks":week1_counts(),"files":entries},
                                    ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
 
 
@@ -292,7 +394,8 @@ def main():
                           ("Data dictionary",dictionary),("Editable diagrams",diagrams),("PNG exports",png_exports),
                           ("Question/rule/case coverage",coverage),("Report and task handoff",report_and_handoff),
                           ("Local file links",lambda:local_links(args.record)),("SQL compatibility",sql_compatibility),
-                          ("Utility syntax",python_syntax)]:
+                          ("Utility syntax",python_syntax),("Week1 task trace",week1_handoff),
+                          ("Recorded runtime evidence",runtime_evidence),("LF text policy",newline_policy)]:
         check(name,function)
     if all(state == "PASS" for _,state,_ in RESULTS):
         if args.record:
@@ -301,7 +404,12 @@ def main():
     for name,state,detail in RESULTS:
         print(f"{state}: {name}: {detail}")
     failed = sum(state == "FAIL" for _,state,_ in RESULTS)
-    print(f"RESULT: {len(RESULTS)-failed}/{len(RESULTS)} checks passed; database not executed; Gate 1 awaiting peer review")
+    try:
+        gate = gate1_state()
+        gate_summary = f"{gate['status']} / {gate['version']}"
+    except (AssertionError, ValueError, OSError):
+        gate_summary = "INVALID (see failed checks)"
+    print(f"RESULT: {len(RESULTS)-failed}/{len(RESULTS)} checks passed; database not executed; Gate 1 {gate_summary}")
     return 1 if failed else 0
 
 

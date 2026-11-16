@@ -1,7 +1,9 @@
 # LƯỢC ĐỒ, TỪ ĐIỂN DỮ LIỆU VÀ CHUẨN HÓA — v1
 
-**Owner:** TV1. **Ngày bàn giao:** 11/11/2026. **Phiên bản:** ứng viên v1, cấu trúc tương thích v0; chờ review chéo Gate 1.  
+**Owner:** TV1. **Ngày bàn giao:** 11/11/2026. **Phiên bản hiện hành:** v1, cấu trúc tương thích v0; Gate 1 PASS theo xác nhận chủ repo tiếp nhận 16/11/2026. [Nguồn xác nhận](../meetings/decision_log.md#gate1).
 **Nguồn cấu trúc:** `../sql/01_schema.sql`. **Nguồn ngữ nghĩa:** `03_dac_ta_nghiep_vu.md` (B01–B18).
+
+**Cập nhật kỹ thuật 15/11/2026:** agent hỗ trợ TV1 làm rõ C1 về đợt kết thúc không kèm sự kiện và giữ phạm vi kết luận chuẩn hóa nháp tuần 1. Việc rà soát này không thay xác nhận Gate 1 của thành viên.
 
 ## 1. Quy ước chung và mô hình ER
 
@@ -25,7 +27,7 @@ Kiểu DATE chỉ lưu ngày. TIMESTAMPTZ lưu thời điểm ghi nhận; đặt
 | Đợt → Sự kiện, vai trò mới | 0..N sự kiện | 0..1 đợt mới | `bien_dong_cu_tru.ma_qua_trinh_moi` |
 | Tài khoản → Sự kiện | 0..N sự kiện | Đúng 1 người ghi | `bien_dong_cu_tru.ma_tai_khoan NOT NULL` |
 
-Hai quan hệ cũ/mới có điều kiện tùy loại sự kiện ở CHECK. Không phải mỗi sự kiện có nhiều đợt cũ/mới. Mỗi đợt có thể không xuất hiện trong nhật ký khi nhập lịch sử ban đầu.
+Hai quan hệ cũ/mới có điều kiện tùy loại sự kiện ở CHECK. Không phải mỗi sự kiện có nhiều đợt cũ/mới. Theo C1/P3, đợt nhập/hiệu chỉnh lịch sử hoặc tạm trú hết hạn có thể không xuất hiện trong nhật ký. Mọi chuyển thực tế dùng P4/P5 vẫn phải có sự kiện. Cardinality DB 0..N không thay điều kiện validation E1: nhiều sự kiện dùng cùng đợt trong cùng vai trò phải được xử lý trước nghiệm thu.
 
 ## 2. Ánh xạ từ ER sang quan hệ
 
@@ -104,6 +106,8 @@ Không UNIQUE `ma_dia_chi` vì nhiều hộ có thể ở cùng địa chỉ. `n
 
 `ck_qt_loai` kiểm loại; `ck_qt_ngay` kiểm trật tự ngày. Không UNIQUE `(ma_cu_dan, ma_ho)` vì người có thể quay lại. Chưa có cơ chế B06 chống chồng lấn trong script tuần 1. Đợt kết thúc NULL chưa chắc đang có hiệu lực.
 
+`ngay_ket_thuc` là ngày cuối của khoảng cư trú, không phải bằng chứng tự thân rằng đã có `CHUYEN_DI`. C1 cho phép kết thúc do hết hạn tạm trú hoặc nhập/hiệu chỉnh lịch sử không kèm sự kiện. Nếu đã có sự kiện tham chiếu, mọi sửa ngày vẫn phải giữ B08–B09. QRA09/QSQL07 xét tập đợt đã bắt đầu và hiệu lực tại d, kể cả người có đợt kết thúc không kèm nhật ký.
+
 ### 3.6. `tai_khoan` — danh mục người ghi nhận (5 cột)
 
 | Cột | Kiểu | NULL? | Khóa / miền | Default | Ý nghĩa |
@@ -170,6 +174,8 @@ Xét riêng tập phụ thuộc nội bảng do PK/UNIQUE công bố, bảng `bi
 
 Đây là phần phân tích chuẩn hóa bản nháp tuần 1; nhiệm vụ hoàn thiện luận chứng tuần 2 vẫn được giữ đúng phân công. Báo cáo bản nộp phải dùng quyết định cuối đã được reviewer xác nhận, không sao chép tuyên bố vượt quá kết quả phân tích.
 
+C1 làm rõ trường hợp một đợt không có sự kiện; không đổi khóa, FD đã công bố hoặc số bảng/cột. Không suy ra quan hệ bắt buộc một–một giữa đợt và sự kiện để đơn giản hóa chứng minh. Bản tuần 1 giữ đủ khóa/FD, phân tích 1NF–3NF theo phạm vi đã nêu và câu hỏi DEC12; chưa tuyên bố đã chốt chuẩn hóa cuối của toàn mô hình.
+
 ## 6. Ma trận ràng buộc và phương án tuần 2
 
 | Quy tắc | Cơ chế trong DDL v1 | Phương án triển khai / kiểm chứng tiếp |
@@ -197,4 +203,4 @@ Thứ tự nạp: tổ → địa chỉ → hộ; cư dân và tài khoản → 
 
 ## 8. Kiểm tra trước khi dùng bộ thiết kế
 
-Đọc cùng `../tests/week1_design_cases.md`. Kiểm tra đủ 35 cột, 7 quan hệ FK, ba cấu hình sự kiện và các cặp NULL. Người nhận chạy `python3 scripts/verify_week1.py` để kiểm tra nhất quán tệp; đây không phải bằng chứng PostgreSQL đã tạo bảng. Kết quả chạy thật được lưu riêng ở `../tests/week1_verification_log.md`.
+Đọc cùng `../tests/week1_design_cases.md`. Kiểm tra đủ 35 cột, 7 quan hệ FK, ba cấu hình sự kiện và các cặp NULL. Người nhận chạy `python3 scripts/verify_week1.py` để kiểm tra nhất quán tệp; kết quả kiểm tra tệp ở `../tests/week1_verification_log.md` không phải log tạo bảng hoặc chạy truy vấn PostgreSQL. Các lần kiểm chứng DB đã có, phạm vi và hash đầu vào được ghi riêng trong [review TV3 trong nhật ký](../meetings/decision_log.md#review-tv3).
