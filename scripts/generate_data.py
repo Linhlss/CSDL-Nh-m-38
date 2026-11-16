@@ -12,6 +12,7 @@
 
 from __future__ import annotations
 
+import argparse
 import csv
 import random
 from datetime import date, timedelta
@@ -21,8 +22,6 @@ SEED = 20261110
 REF_DATE = date(2026, 11, 20)
 
 ROOT = Path(__file__).resolve().parent.parent
-CSV_DIR = ROOT / "data" / "generated"
-SEED_SQL_PATH = ROOT / "sql" / "03_seed.sql"
 
 HO_LIST = [
     "Nguyễn", "Trần", "Lê", "Phạm", "Hoàng", "Huỳnh", "Phan", "Vũ",
@@ -70,7 +69,94 @@ def intervals_overlap(a_start: date, a_end: date | None, b_start: date, b_end: d
     return a_start <= eff_b_end and b_start <= eff_a_end
 
 
-def main() -> None:
+def require(condition: bool, message: str) -> None:
+    """Validation remains enabled when Python is run with -O."""
+    if not condition:
+        raise ValueError(message)
+
+
+def validate_data(tables: dict[str, list[dict]]) -> None:
+    """Validate complete generated data before creating or replacing output files."""
+    primary_keys = {
+        "to_dan_pho": "ma_to", "dia_chi": "ma_dia_chi", "ho_cu_tru": "ma_ho",
+        "cu_dan": "ma_cu_dan", "tai_khoan": "ma_tai_khoan",
+        "qua_trinh_cu_tru": "ma_qua_trinh", "bien_dong_cu_tru": "ma_bien_dong",
+    }
+    index = {}
+    for table, key in primary_keys.items():
+        values = [row[key] for row in tables[table]]
+        require(all(isinstance(value, int) and value > 0 for value in values), f"PK {table}: ID phải là số nguyên dương")
+        require(len(values) == len(set(values)), f"PK {table}: ID trùng")
+        index[table] = {row[key]: row for row in tables[table]}
+
+    for table, field in (("to_dan_pho", "ten_to"), ("dia_chi", "dia_chi_chuan"),
+                         ("cu_dan", "ho_ten"), ("tai_khoan", "ten_dang_nhap"),
+                         ("tai_khoan", "ten_hien_thi")):
+        require(all(isinstance(row[field], str) and row[field].strip() for row in tables[table]),
+                f"B15 {table}.{field}: chuỗi rỗng hoặc chỉ khoảng trắng")
+    for table, fields in (("to_dan_pho", ("ten_to",)), ("tai_khoan", ("ten_dang_nhap",)),
+                          ("dia_chi", ("ma_to", "dia_chi_chuan"))):
+        keys = [tuple(row[field] for field in fields) for row in tables[table]]
+        require(len(keys) == len(set(keys)), f"B03 {table}: khóa nghiệp vụ trùng")
+    for row in tables["dia_chi"]:
+        require(row["ma_to"] in index["to_dan_pho"], f"FK dia_chi {row['ma_dia_chi']}: tổ không tồn tại")
+    for row in tables["ho_cu_tru"]:
+        require(row["ma_dia_chi"] in index["dia_chi"], f"FK ho_cu_tru {row['ma_ho']}: địa chỉ không tồn tại")
+        require(isinstance(row["ngay_lap"], date), f"B15 hộ {row['ma_ho']}: ngày lập không hợp lệ")
+    for row in tables["cu_dan"]:
+        require(isinstance(row["ngay_sinh"], date), f"B15 cư dân {row['ma_cu_dan']}: ngày sinh không hợp lệ")
+        require(row["gioi_tinh"] in ("Nam", "Nu", "Khac"), f"CHECK giới tính cư dân {row['ma_cu_dan']}")
+    for row in tables["tai_khoan"]:
+        require(row["vai_tro"] in ("QUAN_TRI", "CAN_BO", "THONG_KE"), f"CHECK vai trò tài khoản {row['ma_tai_khoan']}")
+        require(row["trang_thai"] in ("HOAT_DONG", "KHOA"), f"CHECK trạng thái tài khoản {row['ma_tai_khoan']}")
+
+    intervals: dict[tuple[int, str], list[dict]] = {}
+    for row in tables["qua_trinh_cu_tru"]:
+        qid, cid, hid = row["ma_qua_trinh"], row["ma_cu_dan"], row["ma_ho"]
+        require(cid in index["cu_dan"] and hid in index["ho_cu_tru"], f"FK đợt {qid}: cư dân/hộ không tồn tại")
+        start, end = row["ngay_bat_dau"], row["ngay_ket_thuc"]
+        require(isinstance(start, date) and (end is None or isinstance(end, date)), f"B04 đợt {qid}: ngày không hợp lệ")
+        require(end is None or end >= start, f"B04 đợt {qid}: ngày kết thúc trước ngày bắt đầu")
+        require(row["loai_cu_tru"] in ("THUONG_TRU", "TAM_TRU"), f"CHECK loại đợt {qid}")
+        require(index["cu_dan"][cid]["ngay_sinh"] <= start, f"B15 đợt {qid}: cư trú trước ngày sinh")
+        require(index["ho_cu_tru"][hid]["ngay_lap"] <= start, f"B15 đợt {qid}: cư trú trước ngày lập hộ {hid}")
+        key = (cid, row["loai_cu_tru"])
+        for other in intervals.get(key, []):
+            require(not intervals_overlap(start, end, other["ngay_bat_dau"], other["ngay_ket_thuc"]),
+                    f"B06 các đợt {other['ma_qua_trinh']}/{qid}: chồng lấn cùng cư dân và loại")
+        intervals.setdefault(key, []).append(row)
+
+    seen_old, seen_new = set(), set()
+    for row in tables["bien_dong_cu_tru"]:
+        bid, old, new = row["ma_bien_dong"], row["ma_qua_trinh_cu"], row["ma_qua_trinh_moi"]
+        require(row["ma_tai_khoan"] in index["tai_khoan"], f"FK biến động {bid}: tài khoản không tồn tại")
+        require(isinstance(row["ngay_bien_dong"], date), f"B09 biến động {bid}: ngày không hợp lệ")
+        kind = row["loai_bien_dong"]
+        require((kind == "CHUYEN_DEN" and old is None and new is not None)
+                or (kind == "CHUYEN_DI" and old is not None and new is None)
+                or (kind == "CHUYEN_NOI_BO" and old is not None and new is not None and old != new),
+                f"B07 biến động {bid}: hình dạng FK không hợp lệ")
+        for value, seen, role in ((old, seen_old, "CU"), (new, seen_new, "MOI")):
+            if value is not None:
+                require(value in index["qua_trinh_cu_tru"], f"FK biến động {bid}: đợt {value} không tồn tại")
+                require(value not in seen, f"E1_{role}: đợt {value} dùng nhiều lần cùng vai trò")
+                seen.add(value)
+        if old is not None:
+            require(index["qua_trinh_cu_tru"][old]["ngay_ket_thuc"] == row["ngay_bien_dong"] - timedelta(days=1),
+                    f"B09 biến động {bid}: ngày kết thúc cũ không bằng t-1")
+        if new is not None:
+            require(index["qua_trinh_cu_tru"][new]["ngay_bat_dau"] == row["ngay_bien_dong"],
+                    f"B09 biến động {bid}: ngày bắt đầu mới không bằng t")
+        if old is not None and new is not None:
+            before, after = index["qua_trinh_cu_tru"][old], index["qua_trinh_cu_tru"][new]
+            require(before["ma_cu_dan"] == after["ma_cu_dan"] and before["ma_ho"] != after["ma_ho"],
+                    f"B08 biến động {bid}: phải cùng cư dân, khác hộ")
+
+
+def main(output_root: Path | None = None) -> None:
+    output_root = ROOT if output_root is None else Path(output_root)
+    csv_dir = output_root / "data" / "generated"
+    seed_sql_path = output_root / "sql" / "03_seed.sql"
     rng = random.Random(SEED)
 
     # 1. TO_DAN_PHO (8 tổ; Tổ 08 là tổ 0 người đang cư trú)
@@ -186,10 +272,10 @@ def main() -> None:
     used_as_moi: set[int] = set()
 
     def add_qt(ma_cu_dan: int, ma_ho: int, loai: str, start: date, end: date | None) -> int:
-        assert end is None or end >= start, f"Invalid dates {start}..{end}"
+        require(end is None or end >= start, f"Invalid dates {start}..{end}")
         key = (ma_cu_dan, loai)
         for s, e in used_intervals.get(key, []):
-            assert not intervals_overlap(start, end, s, e), f"Overlap B06 for {key}: {start}..{end} vs {s}..{e}"
+            require(not intervals_overlap(start, end, s, e), f"Overlap B06 for {key}: {start}..{end} vs {s}..{e}")
         used_intervals.setdefault(key, []).append((start, end))
         qt_id = len(qua_trinh) + 1
         qua_trinh.append({
@@ -203,19 +289,19 @@ def main() -> None:
         return qt_id
 
     def add_bd(loai_bd: str, qt_cu: int | None, qt_moi: int | None, ngay: date, ma_tk: int, note: str | None = None) -> int:
-        assert ma_tk in (1, 2, 3, 4), "TK 5 phải có 0 sự kiện"
+        require(ma_tk in (1, 2, 3, 4), "TK 5 phải có 0 sự kiện")
         if qt_cu is not None:
-            assert qt_cu not in used_as_cu, f"E1_CU violation on qt {qt_cu}"
+            require(qt_cu not in used_as_cu, f"E1_CU violation on qt {qt_cu}")
             used_as_cu.add(qt_cu)
             q_cu_obj = qua_trinh[qt_cu - 1]
-            assert q_cu_obj["ngay_ket_thuc"] == ngay - timedelta(days=1), "B09 cu violation"
+            require(q_cu_obj["ngay_ket_thuc"] == ngay - timedelta(days=1), "B09 cu violation")
         if qt_moi is not None:
-            assert qt_moi not in used_as_moi, f"E1_MOI violation on qt {qt_moi}"
+            require(qt_moi not in used_as_moi, f"E1_MOI violation on qt {qt_moi}")
             used_as_moi.add(qt_moi)
             q_moi_obj = qua_trinh[qt_moi - 1]
-            assert q_moi_obj["ngay_bat_dau"] == ngay, "B09 moi violation"
+            require(q_moi_obj["ngay_bat_dau"] == ngay, "B09 moi violation")
         if qt_cu is not None and qt_moi is not None:
-            assert qua_trinh[qt_cu - 1]["ma_cu_dan"] == qua_trinh[qt_moi - 1]["ma_cu_dan"], "Same person violation"
+            require(qua_trinh[qt_cu - 1]["ma_cu_dan"] == qua_trinh[qt_moi - 1]["ma_cu_dan"], "Same person violation")
         bd_id = len(bien_dong) + 1
         bien_dong.append({
             "ma_bien_dong": bd_id,
@@ -375,8 +461,23 @@ def main() -> None:
                 add_qt(cid, ho_x, loai, date(2025, 6, 1) + timedelta(days=rng.randint(0, 300)), None)
                 break
 
-    # Xuất CSV vào data/generated/
-    CSV_DIR.mkdir(parents=True, exist_ok=True)
+    # B15: giữ nguyên mọi lượt RNG/ID/ngày cư trú; chỉ đưa ngày lập hộ về
+    # không muộn hơn đợt sớm nhất. Hộ không có đợt giữ ngày đã sinh.
+    first_residence = {}
+    for row in qua_trinh:
+        hid = row["ma_ho"]
+        first_residence[hid] = min(first_residence.get(hid, row["ngay_bat_dau"]), row["ngay_bat_dau"])
+    for row in ho_cu_tru:
+        if row["ma_ho"] in first_residence:
+            row["ngay_lap"] = min(row["ngay_lap"], first_residence[row["ma_ho"]])
+
+    validate_data({"to_dan_pho": to_dan_pho, "dia_chi": dia_chi, "ho_cu_tru": ho_cu_tru,
+                   "cu_dan": cu_dan, "tai_khoan": tai_khoan,
+                   "qua_trinh_cu_tru": qua_trinh, "bien_dong_cu_tru": bien_dong})
+
+    # Chỉ ghi sau khi toàn bộ dữ liệu đã qua validation.
+    csv_dir.mkdir(parents=True, exist_ok=True)
+    seed_sql_path.parent.mkdir(parents=True, exist_ok=True)
     tables = [
         ("to_dan_pho.csv", ["ma_to", "ten_to", "ghi_chu"], to_dan_pho),
         ("dia_chi.csv", ["ma_dia_chi", "ma_to", "dia_chi_chuan", "ghi_chu"], dia_chi),
@@ -388,8 +489,8 @@ def main() -> None:
     ]
 
     for filename, cols, rows in tables:
-        with open(CSV_DIR / filename, "w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=cols)
+        with open(csv_dir / filename, "w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=cols, lineterminator="\n")
             writer.writeheader()
             for r in rows:
                 out = {}
@@ -468,7 +569,7 @@ def main() -> None:
         "",
     ])
 
-    SEED_SQL_PATH.write_text("\n".join(lines), encoding="utf-8")
+    seed_sql_path.write_text("\n".join(lines), encoding="utf-8", newline="\n")
 
     total = len(to_dan_pho) + len(dia_chi) + len(ho_cu_tru) + len(cu_dan) + len(tai_khoan) + len(qua_trinh) + len(bien_dong)
     print(f"Generated successfully: total={total} rows")
@@ -478,4 +579,7 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output-root", type=Path, default=ROOT,
+                        help="Thư mục đích chứa data/generated và sql/03_seed.sql (mặc định: repo)")
+    main(parser.parse_args().output_root)
