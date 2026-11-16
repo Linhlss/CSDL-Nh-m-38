@@ -56,3 +56,79 @@
 - Tiếp nhận RV08: **đã sửa** (mục 3).
 - Hai demo bảo mật B1/B2 khả thi trên schema hiện tại, không cần đổi bảng lõi: **xác nhận**.
 - Gate 1 của TV3 **chưa ký PASS**: còn chờ TV1 trả lời E1. `tests/ra_fixture.sql` đã chạy lại trên DB trắng với schema v1-candidate: 11/11 kết quả khớp.
+
+---
+
+# PHẦN BỔ SUNG NGÀY 13/11/2026
+
+## 6. Review sơ đồ phân rã chức năng (review của W1-T1-08)
+
+**Đối tượng:** `diagrams/phan_ra_chuc_nang.png`, `.drawio`, `.svg` (bản 11/11/2026); `docs/03_dac_ta_nghiep_vu.md` mục 3, 4, 6 (tác nhân, bảng đọc/ghi, P1–P6).
+
+**Kết luận:** sơ đồ **đạt** tiêu chí của W1-T1-08. Không có lỗi chặn Gate 1. Có 1 câu hỏi cho TV1 (C1) và 1 điểm TV3 tự sửa ở tài liệu của mình (C2).
+
+### 6.1. Đối chiếu tiêu chí W1-T1-08
+
+| Tiêu chí | Kết quả |
+|---|---|
+| 1 nút cấp 0 | Đạt: "Quản lý cư dân và biến động cư trú" |
+| 6 nhóm chức năng cấp 1 | Đạt: Địa bàn, Hộ và cư dân, Quá trình cư trú, Biến động, Tra cứu và thống kê, Quản trị và bảo mật |
+| Chức năng cấp 2 tương ứng nghiệp vụ | Đạt: 14 chức năng (2 + 2 + 2 + 3 + 3 + 2), khớp chú thích dưới sơ đồ và bảng mục 4 của đặc tả |
+| Có cả `.drawio` và `.png` | Đạt, có thêm `.svg` |
+| Tên đúng là **phân rã chức năng**, không nhầm với flowchart hay ERD | Đạt. Chú thích ghi rõ đường nối là quan hệ phân rã, không phải trình tự xử lý hay luồng dữ liệu |
+
+### 6.2. Đối chiếu chức năng với quy trình, câu hỏi và demo
+
+| Nhóm cấp 1 | Quy trình P | Phần của TV3 dùng tới |
+|---|---|---|
+| 1. Quản lý địa bàn | P1 | QRA05 (địa chỉ chưa có hộ) |
+| 2. Quản lý hộ và cư dân | P1 (2.1), P2 (2.2) | QRA06 (cư dân chưa có đợt) |
+| 3. Quản lý quá trình cư trú | P3 | `Q_d`, QRA04, QRA07, QRA09 |
+| 4. Ghi nhận biến động | P4 (4.1), P5 (4.2, 4.3) | QRA10 (4.3 chuyển nội bộ) |
+| 5. Tra cứu và thống kê | P6 | 5.1 Hiện tại: QRA01, 02, 03, 08, 09. 5.2 Lịch sử: QRA04, 05, 06, 07, 10. 5.3 Thống kê: VIEW của demo B2 |
+| 6. Quản trị và bảo mật | Không có P riêng; bảng mục 4 của đặc tả đã ghi đọc/ghi | 6.1 Vai trò: demo B1 (role, GRANT/REVOKE). 6.2 Giới hạn truy cập: demo B2 (VIEW) |
+
+Cả 10 câu QRA và hai demo B1/B2 đều có chức năng tương ứng trên sơ đồ. Bảng đọc/ghi mục 4 nhất quán với ERD: nhóm 5 chỉ đọc; nhóm 6 ghi role, quyền và VIEW, **không** ghi `tai_khoan` để cấp quyền. Điều này khớp với `docs/06b_bao_mat.md` mục 2.4.
+
+### 6.3. Vấn đề còn mở
+
+| Mã | Mức | Nội dung | Đề nghị | Người xử lý |
+|---|---|---|---|---|
+| **C1** | Câu hỏi, không chặn | Chức năng **3.2 Kết thúc đợt** chưa rõ phạm vi. P3 ghi "các thao tác chuyển thực tế thực hiện bằng P4/P5", còn P5 đã đóng đợt cũ khi chuyển đi hoặc chuyển nội bộ. Vậy 3.2 dùng cho trường hợp nào: chỉ để hiệu chỉnh khi nhập lịch sử ban đầu, hay cả trường hợp đợt tạm trú hết hạn mà không có sự kiện `CHUYEN_DI`? Điều này ảnh hưởng tới việc TV2 sinh dữ liệu cho QRA09 (người từng cư trú nhưng không còn đợt hiệu lực) và S09. | TV1 ghi một câu trong P3 về các trường hợp được đóng đợt không kèm sự kiện. Kết quả QRA09 không phụ thuộc vào cách chọn, vì QRA09 chỉ dựa vào ngày của đợt. | TV1 |
+| C2 | Nhỏ | `docs/06b_bao_mat.md` gọi người dùng role `csdl17_reader` là "cán bộ tra cứu". Đặc tả mục 3 chỉ có 3 tác nhân, không có tác nhân này. | Đã sửa 06b: `csdl17_reader` và `csdl17_report` cùng phục vụ tác nhân **Cán bộ tổng hợp** ở hai mức (tra cứu chi tiết chỉ đọc, và chỉ xem số liệu tổng hợp). Đặc tả mục 3 đã cho phép "chỉ xem cột hoặc VIEW được cấp quyền" nên không cần đổi đặc tả. Chú thích dòng 87 của `sql/05_security.sql` vẫn ghi "cán bộ tra cứu"; TV3 cố ý chưa sửa để không làm lệch mã hash script trong `tests/tv3_review_results.json`, sẽ sửa cùng lần cập nhật script tuần 2. | TV3 (đã sửa 06b) |
+
+## 7. Tiếp nhận phản hồi review của TV1 (`docs/REVIEW_TV3_CHI_TIET.md`)
+
+TV3 đã đọc báo cáo review chi tiết và **tiếp nhận** các nội dung sau:
+
+| Mã | Nội dung TV1 sửa hoặc trả lời | Ý kiến của TV3 |
+|---|---|---|
+| F01 | Ngày `CHUYEN_DI` của đợt 6 trong `tests/ra_fixture.sql` đổi từ 30/06/2025 thành 01/07/2025 cho khớp B09 | Đồng ý. Lỗi dữ liệu thử do TV3 viết sai quy tắc B09. Đáp án 10 câu QRA không đổi |
+| F02 / E1 | Giữ schema theo DEC06; `V_E1_CU`, `V_E1_MOI` trong `sql/06_validation.sql` phải trả 0 dòng trước nghiệm thu | Đồng ý, E1 đóng. Khi đối soát trên seed chính thức, TV3 sẽ chạy hai truy vấn này cùng TV2 |
+| F03 | Thêm kiểm tra role có sẵn trước khi thiết lập, đặt thiết lập trong transaction | Đồng ý. Đây là trường hợp TV3 chưa lường trước |
+| F04 | Thêm `scripts/review_tv3.py` so sánh tự động kết quả | Đồng ý. `tests/ra_fixture.sql` vẫn là bản in để minh họa trong báo cáo |
+| F05 | Sửa mô tả PR #1 sang tên file 06a/06b | Đồng ý |
+
+**TV3 chạy lại trên máy của mình ngày 13/11/2026** (Windows, PostgreSQL 17.11, DB trắng tạm thời, đã xóa sau khi chạy), dùng `main` tại `fa6c055`:
+
+- `sql/01_schema.sql` rồi `sql/05_security.sql`: bước kiểm tra trước chấp nhận 3 role demo đã có sẵn trên cluster (không superuser); có đúng **6 lỗi `permission denied` cố ý**, không có lỗi nào khác.
+- `tests/ra_fixture.sql` (bản đã sửa F01): `Q_d`, QRA01–10 và VIEW dưới role report cho **kết quả giống hệt** lần chạy 11/11; 7 bảng rỗng sau ROLLBACK.
+
+## 8. Xác nhận phương án 2 demo bảo mật
+
+TV3 xác nhận **triển khai** demo B1 (GRANT/REVOKE, role `csdl17_reader`) và B2 (VIEW `vw_thong_ke_cu_dan_theo_to`, role `csdl17_report`) theo `sql/05_security.sql` và `docs/06b_bao_mat.md` hiện có trên `main`:
+
+- Schema v1-candidate đủ cho cả hai demo, không cần đổi bảng lõi.
+- Hai demo đã chạy được trên DB trắng (mục 7), cả khi TV1 kiểm chứng bằng `SET ROLE` lẫn đăng nhập trực tiếp bằng role.
+- **Chưa xong** (theo kế hoạch tuần 2–3): chạy trên seed chính thức của TV2, chụp ảnh vào `evidence/security/`, ghi kết quả S20/S21.
+
+## 9. Trạng thái xác nhận Gate 1 của TV3 (13/11/2026)
+
+| Hạng mục trong phiếu Gate 1 | Ý kiến TV3 |
+|---|---|
+| Đặc tả và cây chức năng | **Đồng ý**, còn câu hỏi C1 không chặn |
+| ERD, lược đồ, từ điển, chuẩn hóa nháp | **Đồng ý** phần ERD và lược đồ (mục 1–2). Phần chuẩn hóa (DEC12) để TV2 và TV1 chốt trong tuần 2 |
+| Khả năng đáp ứng 10 RA | **Đồng ý** |
+| Phương án 2 demo bảo mật | **Đồng ý triển khai** (mục 8) |
+
+Phía TV3 **không còn điều kiện chặn** Gate 1. Đây là ý kiến của TV3 trong tài liệu, chưa phải chữ ký biên bản họp. Gate 1 chung còn chờ TV2 xác nhận.

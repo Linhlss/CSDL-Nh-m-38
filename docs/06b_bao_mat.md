@@ -29,7 +29,7 @@ CSDL quản lý cư dân trong thực tế chứa **thông tin cá nhân**: họ
 | Mục tiêu | Ý nghĩa | Ví dụ trong đề tài | Biện pháp trong đồ án |
 |---|---|---|---|
 | **Bí mật** (Confidentiality) | Chỉ người được phép mới đọc được dữ liệu | Cán bộ tổng hợp chỉ cần biết số người mỗi tổ, không cần biết họ tên từng người | VIEW tổng hợp + chỉ cấp quyền trên VIEW (Demo B2) |
-| **Toàn vẹn** (Integrity) | Dữ liệu không bị sửa sai hoặc sửa trái phép | Cán bộ tra cứu không được tự sửa ngày kết thúc cư trú của ai đó | Chỉ cấp SELECT, không cấp UPDATE/INSERT/DELETE (Demo B1); thêm PK/FK/CHECK và transaction |
+| **Toàn vẹn** (Integrity) | Dữ liệu không bị sửa sai hoặc sửa trái phép | Cán bộ tổng hợp (role chỉ đọc) không được tự sửa ngày kết thúc cư trú của ai đó | Chỉ cấp SELECT, không cấp UPDATE/INSERT/DELETE (Demo B1); thêm PK/FK/CHECK và transaction |
 | **Sẵn sàng** (Availability) | Người được phép truy cập được khi cần, dữ liệu không bị mất | Cán bộ cần tra cứu lịch sử cư trú bất kỳ lúc nào | Sao lưu `pg_dump`/khôi phục `pg_restore`; không cấp quyền TRUNCATE/DROP cho role nghiệp vụ |
 
 ### 2.3. Nguyên tắc quyền tối thiểu (least privilege)
@@ -78,13 +78,15 @@ Mỗi tài khoản chỉ được cấp **đúng những quyền cần cho công
 
 ## 3. Mô hình phân quyền của đồ án
 
-| Role | Ai dùng (tác nhân ở mục 3.1 đề cương) | Database | Schema `public` | 6 bảng nghiệp vụ | `tai_khoan` | `vw_thong_ke_cu_dan_theo_to` |
+| Role | Ai dùng (tác nhân ở mục 3 của `docs/03_dac_ta_nghiep_vu.md`) | Database | Schema `public` | 6 bảng nghiệp vụ | `tai_khoan` | `vw_thong_ke_cu_dan_theo_to` |
 |---|---|---|---|---|---|---|
 | `postgres` (superuser) | Người cài đặt, chạy script | Toàn quyền | Toàn quyền | Chủ sở hữu | Chủ sở hữu | Chủ sở hữu |
-| `csdl17_admin` | Quản trị demo / cán bộ quản lý cư dân | CONNECT | USAGE | SELECT, INSERT, UPDATE, DELETE | SELECT, INSERT, UPDATE, DELETE | SELECT |
-| `csdl17_reader` | Cán bộ tra cứu | CONNECT | USAGE | **Chỉ SELECT** | Không có | Không có |
-| `csdl17_report` | Cán bộ tổng hợp | CONNECT | USAGE | **Không có** | Không có | **Chỉ SELECT** |
+| `csdl17_admin` | Cán bộ quản lý cư dân (thêm/sửa dữ liệu, ghi biến động) | CONNECT | USAGE | SELECT, INSERT, UPDATE, DELETE | SELECT, INSERT, UPDATE, DELETE | SELECT |
+| `csdl17_reader` | Cán bộ tổng hợp, mức tra cứu chi tiết (chỉ đọc) | CONNECT | USAGE | **Chỉ SELECT** | Không có | Không có |
+| `csdl17_report` | Cán bộ tổng hợp, mức chỉ xem số liệu tổng hợp | CONNECT | USAGE | **Không có** | Không có | **Chỉ SELECT** |
 | `PUBLIC` | Mọi role khác | Bị thu hồi | Không có CREATE | Không có | Không có | Không có |
+
+Tác nhân **Quản trị CSDL** dùng `postgres` để tạo bảng, role và cấp quyền; không dùng tài khoản này để đóng vai role chỉ đọc khi demo. Hai role `csdl17_reader` và `csdl17_report` cùng phục vụ Cán bộ tổng hợp nhưng ở hai mức quyền, để minh họa hai cơ chế khác nhau: B1 giới hạn **thao tác** (chỉ SELECT), B2 giới hạn **dữ liệu nhìn thấy** (chỉ VIEW). Sửa 13/11/2026 theo mục C2 của `docs/REVIEW_TV3_ERD_TUAN_1.md`.
 
 "6 bảng nghiệp vụ" là `to_dan_pho`, `dia_chi`, `ho_cu_tru`, `cu_dan`, `qua_trinh_cu_tru`, `bien_dong_cu_tru`.
 
@@ -94,8 +96,8 @@ Mỗi tài khoản chỉ được cấp **đúng những quyền cần cho công
 |---|---|
 | `QUAN_TRI` | `csdl17_admin` |
 | `CAN_BO` (người ghi nhận biến động) | `csdl17_admin` |
-| Không có (cán bộ chỉ tra cứu, không ghi sự kiện nên không cần tài khoản ghi nhận) | `csdl17_reader` |
-| `THONG_KE` | `csdl17_report` |
+| `THONG_KE` (khi cần tra cứu chi tiết) | `csdl17_reader` |
+| `THONG_KE` (khi chỉ cần số liệu tổng hợp) | `csdl17_report` |
 
 Bảng trên chỉ là **tương ứng gợi ý** để giải thích trong báo cáo. Hai tầng **độc lập**: đổi `vai_tro` hoặc khóa một tài khoản (`trang_thai = 'KHOA'`) **không** tự cấp hay thu hồi role PostgreSQL nào (B14). Muốn chặn một người thật thì quản trị viên phải `REVOKE` hoặc `ALTER ROLE ... NOLOGIN`.
 

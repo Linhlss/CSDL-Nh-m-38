@@ -1,6 +1,6 @@
 {
   "version": "v1-candidate",
-  "recorded_date": "2026-11-13",
+  "recorded_date": "2026-11-16",
   "scope": "static_handoff_checks_only",
   "database_executed": false,
   "group_gate1_approved": false,
@@ -92,8 +92,8 @@
     },
     {
       "path": "docs/06b_bao_mat.md",
-      "bytes": 20651,
-      "sha256": "5269323e4a101787cadf2de607588e722a5a9122bdf5c7ac0577c3a451244901"
+      "bytes": 21295,
+      "sha256": "f2e7fa4f5ff8f3cda38a3e70a1f34119466ca17d2d46c0e75819fe28bfbaf2ab"
     },
     {
       "path": "docs/07_ma_tran_truy_van_va_review.md",
@@ -117,8 +117,8 @@
     },
     {
       "path": "docs/REVIEW_TV3_ERD_TUAN_1.md",
-      "bytes": 6308,
-      "sha256": "ba29416f3c71bb096f78ee895e08eff7191a4723ac1c762aaa14136104f8fa15"
+      "bytes": 13556,
+      "sha256": "5847d832b9bc23506cee0b293866f3a9217e6cb7cc215847fa437f512766283b"
     },
     {
       "path": "evidence/security/.gitkeep",
@@ -132,8 +132,8 @@
     },
     {
       "path": "meetings/decision_log.md",
-      "bytes": 10924,
-      "sha256": "eea80c23e94c2dc92d5f6bb87f09f978821c60ad3b04d0bc7224666c3ce1946b"
+      "bytes": 12458,
+      "sha256": "2ab14901b9e287260788e930ea2d4fbe9f596061c539afaf96ad69f4362e3047"
     },
     {
       "path": "report/.gitkeep",
@@ -223,7 +223,7 @@
     {
       "path": "tests/week1_verification_log.md",
       "bytes": 3535,
-      "sha256": "5b3b5613aed676d549b02e2c7fc60b134abbcd5d0cce37c2f54532af97c29c1a"
+      "sha256": "d353b0ad5e99371d7c119291959ac6dae2f783abc4120654d8a5b79a15ba44a3"
     }
   ]
 }
