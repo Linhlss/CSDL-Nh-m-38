@@ -594,24 +594,28 @@ ORDER BY c.ma_cu_dan;
 
 ---
 
-## Phụ lục — Phiếu đối chiếu đại số quan hệ với SQL (điền sau khi có seed)
+## Phụ lục — Phiếu đối chiếu đại số quan hệ với SQL trên seed636
 
 So sánh **tập khóa** kết quả (`ma_cu_dan` hoặc `ma_dia_chi`), không so theo họ tên.
 
-**Đã kiểm chứng sơ bộ (10/11/2026, PostgreSQL 17.11):** `tests/ra_fixture.sql` là bộ dữ liệu thử 10 cư dân đã biết đáp án. Cả 10 câu SQL kiểm chứng và VIEW của Demo B2 đều trả đúng đáp án tính tay. Bảng dưới vẫn phải điền lại trên **seed chính thức** của TV2.
+**Đã kiểm chứng sơ bộ (10/11/2026, PostgreSQL 17.11):** `tests/ra_fixture.sql` là bộ dữ liệu thử 10 cư dân đã biết đáp án. Cả 10 câu SQL kiểm chứng và VIEW của Demo B2 đều trả đúng đáp án tính tay.
 
-| Câu | Số bộ kết quả theo đại số (tính tay trên bộ kịch bản) | Số dòng SQL kiểm chứng | Khớp? | Người đối chiếu | Ngày |
-|---|---|---|---|---|---|
-| QRA01 | ... | ... | [ ] | ... | ... |
-| QRA02 | ... | ... | [ ] | ... | ... |
-| QRA03 | ... | ... | [ ] | ... | ... |
-| QRA04 | ... | ... | [ ] | ... | ... |
-| QRA05 | ... | ... | [ ] | ... | ... |
-| QRA06 | ... | ... | [ ] | ... | ... |
-| QRA07 | ... | ... | [ ] | ... | ... |
-| QRA08 | ... | ... | [ ] | ... | ... |
-| QRA09 | ... | ... | [ ] | ... | ... |
-| QRA10 | ... | ... | [ ] | ... | ... |
+**Chạy lại trên seed636 (17/11/2026, PostgreSQL 17.11):** CSDL tạm, nạp `sql/01_schema.sql`, `02_constraints.sql`, `03_seed.sql` (sha256 `71f33714…fa0f2`, 636 bản ghi). Mỗi SQL ở mục (7) được chép nguyên văn và đếm cả số dòng lẫn số dòng phân biệt; hai số bằng nhau ở cả 10 câu, nên SQL không sinh dòng trùng. Cột "Số bộ theo đại số" lấy từ Chương 4 của báo cáo. Sáu câu đã đối chiếu tập khóa với QSQL tương ứng trong log tuần 1; bốn câu còn lại đối chiếu chéo bằng `tests/seed636_qra02_03_06_08.sql`. Với QRA07, cách viết phép chia (`NOT EXISTS` lồng) cũng cho 31 bộ và lệch 0 theo cả hai chiều so với cách viết phép giao.
+
+| Câu | Số bộ theo đại số (Ch.4) | Số dòng SQL kiểm chứng | Đối chiếu tập khóa với | Khớp? | Người đối chiếu | Ngày |
+|---|---|---|---|---|---|---|
+| QRA01 | 34 | 34 | QSQL01 (chiếu bỏ `loai_cu_tru`) | [x] | TV3 | 17/11/2026 |
+| QRA02 | 10 | 10 | SQL `EXISTS` riêng | [x] | TV3 | 17/11/2026 |
+| QRA03 | 2 | 2 | Tập Tổ 01 lọc ngày sinh | [x] | TV3 | 17/11/2026 |
+| QRA04 | 54 | 54 | QSQL05 | [x] | TV3 | 17/11/2026 |
+| QRA05 | 4 | 4 | QSQL04 | [x] | TV3 | 17/11/2026 |
+| QRA06 | 8 | 8 | SQL `NOT EXISTS` riêng | [x] | TV3 | 17/11/2026 |
+| QRA07 | 31 | 31 | QSQL06; cách viết phép chia | [x] | TV3 | 17/11/2026 |
+| QRA08 | 61 | 61 | SQL điều kiện "hoặc" | [x] | TV3 | 17/11/2026 |
+| QRA09 | 17 | 17 | QSQL07 | [x] | TV3 | 17/11/2026 |
+| QRA10 | 22 | 22 | QSQL09 (`DISTINCT ma_cu_dan`) | [x] | TV3 | 17/11/2026 |
+
+Dấu `[x]` ở đây là TV3 tự đối chiếu; mục (8) của từng câu vẫn chờ TV1 kiểm tra.
 
 ## Đề nghị gửi TV2 khi sinh dữ liệu
 
