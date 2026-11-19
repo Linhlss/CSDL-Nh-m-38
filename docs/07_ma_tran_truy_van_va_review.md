@@ -72,3 +72,34 @@ PR #1 đã merge tại `d84571e` sau khi khóa HEAD `3414131`. **RV10/F05 đã x
 ## 7. Chốt thiết kế ngày tiếp nhận 16/11/2026
 
 Gate 1 PASS, thiết kế v1 theo chủ repo xác nhận trong chat rằng cả ba đã đồng ý và đã đối chiếu thông báo gốc. Các đoạn review ngày11–13/11 phía trên giữ trạng thái lịch sử. Môi trường cá nhân TV2 (Windows, phiên bản/công cụ/kết nối chưa có) hoãn sang W2-T2-01; [nhật ký](../meetings/decision_log.md#gate1) giữ nguồn và phạm vi phê duyệt.
+
+## 8. Review chéo S01–S16 trên seed636 — TV3, 19/11/2026 (W2-T3-11)
+
+Chạy [tests/seed636_s01_s16_tv3.sql](../tests/seed636_s01_s16_tv3.sql) trên CSDL tạm PostgreSQL 17 nạp `01_schema.sql` + `03_seed.sql` (sha256 `71f33714…fa0f2`, 200 cư dân / 250 đợt / 63 sự kiện), d = `2026-11-20`. Mỗi ca so **tập mã** kỳ vọng với tập mã thực tế, không chỉ so số dòng.
+
+| Ca | Dữ liệu seed636 dùng để kiểm | Kết quả |
+|---|---|---|
+| S01 | C1–C6 đang ở Tổ 01; C15, C28 đã chuyển khỏi Tổ 01 | Đạt |
+| S02 | C7, C8 tạm trú Tổ 02 được lấy; C9, C10 thường trú bị loại | Đạt |
+| S03 | C1 sinh đúng 20/11/1966 và C2 được lấy; C3 sinh 21/11/1966 bị loại | Đạt |
+| S04 | QSQL04/QRA05 ra **47, 48, 49, 50**; địa chỉ của hộ rỗng 59/60 không lọt | Đạt, xem ghi chú 1 |
+| S05 | Hộ 59, 60: 0 người tại d, mỗi hộ từng có 1 đợt | Đạt |
+| S06 | C15 hai hộ được lấy; C17 hai đợt cùng một hộ bị loại | Đạt |
+| S07 | `INTERSECT` lấy C6 (hai loại cùng lúc), C17, C18 (hai loại khác thời kỳ) | Đạt |
+| S08 | C1, C2 chỉ thường trú, C7 chỉ tạm trú không lọt tập giao | Đạt |
+| S09 | `EXCEPT` QRA09 lấy C19–C22; loại C23, C24 (chỉ đợt tương lai) và C25 (không có đợt) | Đạt |
+| S10 | `EXCEPT` QRA06 = 25, 26, 27, 196–200; C23, C24 có đợt tương lai không lọt | Đạt |
+| S11 | 19 sự kiện CHUYEN_DEN, 0 dòng sai hình dạng FK hoặc ngày | Đạt |
+| S12 | 17 sự kiện CHUYEN_DI, 0 dòng sai hình dạng FK hoặc ngày | Đạt |
+| S13 | QSQL09 lấy C15 (Tổ 01 → Tổ 02); loại C16 (cùng Tổ 02) | Đạt |
+| S14 | Hộ của C1 = 5 người, của C11 = 3, của C14 = 1 | Đạt, xem ghi chú 2 |
+| S15 | QSQL03 có Tổ 08 = 0 người; QSQL08 không sinh nhóm tháng/loại đếm 0 | Đạt |
+| S16 | C4, C5 cùng tên "Nguyễn Văn An", cả hai có trong Tổ 01 với hai mã riêng | Đạt, xem ghi chú 3 |
+
+Đối chiếu bốn phép tập hợp với dạng `NOT EXISTS`/`EXISTS` của QSQL theo tập mã: QRA05 (4 bộ), QRA06 (8), QRA07 (31), QRA09 (17) đều **lệch 0**.
+
+**Ghi chú gửi TV2 (không chặn Gate 2):**
+
+1. **S04:** generator và cột `ghi_chu` chỉ đánh dấu địa chỉ 49, 50 là S04, nhưng địa chỉ 47, 48 (Tổ 08) cũng chưa có hộ nên kết quả đúng là 4 địa chỉ. 06a đã ghi 4 bộ. Đề nghị thêm ghi chú cho 47, 48 hoặc sửa chú thích trong `generate_data.py` để Chương 5 không viết "2 địa chỉ".
+2. **S14:** seed636 không có người nào có hai đợt hiệu lực trong **cùng một hộ** tại d, nên bẫy `COUNT(*)` so với `COUNT(DISTINCT)` của QSQL02 chỉ được kiểm trên fixture29 (C3 hai loại trong H1). Ở mức tổ, bẫy này vẫn có trên seed636: C6 có hai đợt hiệu lực ở hai hộ thuộc Tổ 01. Có thể giữ nguyên và ghi rõ trong Chương 5, hoặc thêm một ca vào seed nếu muốn seed tự kiểm.
+3. **S16:** seed636 có 6 họ tên bị trùng (15 người). Nếu viết `EXCEPT` trên `ho_ten` thay vì `ma_cu_dan`, QRA09 ra 16 người thay vì 17. Đây là ví dụ thật để Chương 4/5 giải thích vì sao phép hiệu/giao phải chiếu theo khóa.
