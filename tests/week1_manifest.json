@@ -24,16 +24,6 @@
       "sha256": "9e1eec0c05984d6933b473ce5458fd0986d317a4385122bc6c2e0410cfa2f796"
     },
     {
-      "path": "README.md",
-      "bytes": 4432,
-      "sha256": "efbfd08c7f9ef1200effb65ca3e99b4ea10b53d78658aa524f254278a57fbda5"
-    },
-    {
-      "path": "data/README.md",
-      "bytes": 1530,
-      "sha256": "7927b16d43561f52bdb805289ab7c8b588eb46f7b8fef2ef5fc2e9a51c6e4714"
-    },
-    {
       "path": "data/generated/.gitkeep",
       "bytes": 0,
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
@@ -72,6 +62,11 @@
       "path": "data/generated/to_dan_pho.csv",
       "bytes": 808,
       "sha256": "c0577feaeeb5402b9d12fad9c405d535f5a7160e40f80ea4117aa46620650d69"
+    },
+    {
+      "path": "data/README.md",
+      "bytes": 1530,
+      "sha256": "7927b16d43561f52bdb805289ab7c8b588eb46f7b8fef2ef5fc2e9a51c6e4714"
     },
     {
       "path": "diagrams/.gitkeep",
@@ -115,13 +110,13 @@
     },
     {
       "path": "docs/02_bao_cao_suon.md",
-      "bytes": 47959,
-      "sha256": "4b61dc690ebc5117b17e754d08a4c90093aa65328d000fdf409bc9f4e3174b83"
+      "bytes": 52279,
+      "sha256": "f4ebb9a0d8fd3f1d652b13661e88bd4e20e4c98408139ad0175a98bf88d1f51a"
     },
     {
       "path": "docs/03_CHECKLIST_DU_AN.md",
-      "bytes": 60199,
-      "sha256": "c1769997f1832105d0957119e66d628f24748e0485b532fc947786650835d1d9"
+      "bytes": 60575,
+      "sha256": "99939ca10f2495bbec5e7536023abf7e99a7b9364b1c96a1a407a30a04d7336b"
     },
     {
       "path": "docs/03_dac_ta_nghiep_vu.md",
@@ -130,8 +125,8 @@
     },
     {
       "path": "docs/04_data_dictionary_va_chuan_hoa.md",
-      "bytes": 21149,
-      "sha256": "1db3e70b3452287472687bc7b6e8f2ced228b589716dc0f78d0f4a10f290ab9b"
+      "bytes": 21936,
+      "sha256": "999318ddb939ae60e7c4acb20001c802b848319f82c08db0378a61f56da1b1f7"
     },
     {
       "path": "docs/05_ke_hoach_du_lieu_va_sql.md",
@@ -165,8 +160,13 @@
     },
     {
       "path": "meetings/decision_log.md",
-      "bytes": 35245,
-      "sha256": "ce65ebb5ff0530028baa498eb610333da37be6e424b778970d1dc92610d95e98"
+      "bytes": 36446,
+      "sha256": "19390a54486dcbac0b3912bb8c64df5cc898d7bf91b95ae7c364d4c5f02eefa1"
+    },
+    {
+      "path": "README.md",
+      "bytes": 5518,
+      "sha256": "0cc9c70ac9a1fd5338c3ed1645700e050473b078a0b4ca69f56d0da8112c2e13"
     },
     {
       "path": "report/.gitkeep",
@@ -194,14 +194,14 @@
       "sha256": "286b11a1ca9bd8496039d29fc0d8f24bf448ab3e24ccfdad4ec03f2b8919e0a9"
     },
     {
-      "path": "scripts/verify_week1.py",
-      "bytes": 23542,
-      "sha256": "dc805e8891798961f7aa729afacfa3bc53244e94f2ad817377ff4bf3f840a415"
-    },
-    {
       "path": "scripts/verify_week1_runtime.py",
       "bytes": 14464,
       "sha256": "0a17642825a97c3e2b53037cc81ac0db9e1853532eb6c8b921eacc52d97f9654"
+    },
+    {
+      "path": "scripts/verify_week1.py",
+      "bytes": 23908,
+      "sha256": "cef4b06728396bfb1ddd3249059148043560d6d2bfb3a3608d883359bd543554"
     },
     {
       "path": "sql/01_schema.sql",
@@ -210,8 +210,8 @@
     },
     {
       "path": "sql/02_constraints.sql",
-      "bytes": 1645,
-      "sha256": "7c0192462a6c5e47e29c63ec5162d08765a057250f1f68ee662f5a46966da122"
+      "bytes": 9859,
+      "sha256": "ff4d276b006da0eb9b2d02deeac675fc1a0e1269fa83f5dcde4f8309bea13a32"
     },
     {
       "path": "sql/03_seed.sql",
@@ -230,8 +230,13 @@
     },
     {
       "path": "sql/06_validation.sql",
-      "bytes": 2792,
-      "sha256": "d04b6769a8286da743c8b1874f5ed45781112bd89e89995e5eaf453ba12c4db7"
+      "bytes": 5242,
+      "sha256": "fed0c10660dc331058e1e9e7d52c755a4da9b8ec6532db250d5a41dcaf7e4322"
+    },
+    {
+      "path": "tests/constraints_week2.sql",
+      "bytes": 9913,
+      "sha256": "aafc4dc26e7d2681ab119d85e74490353d8539378ce57450ca5e60c1dfe6bd6d"
     },
     {
       "path": "tests/final_test_log.md",
@@ -287,6 +292,11 @@
       "path": "tests/week1_verification_log.md",
       "bytes": 4510,
       "sha256": "ed4e1b4db4d7300ea917cc4e083ffaa175bb61ed51cb10504e1eebdb6b5ffd9e"
+    },
+    {
+      "path": "tests/week2_constraints_execution_log.md",
+      "bytes": 3587,
+      "sha256": "e28041c9b074d9459a4955be35811470b1a0c37417f05ce81706f2394431c000"
     }
   ]
 }

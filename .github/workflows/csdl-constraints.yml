@@ -4,6 +4,11 @@ on:
   push:
     paths:
       - "sql/**"
+      - "README.md"
+      - "docs/**"
+      - "scripts/verify_week1.py"
+      - "tests/week1_manifest.json"
+      - "tests/week2_constraints_execution_log.md"
       - "tests/constraints_week2.sql"
       - ".github/workflows/csdl-constraints.yml"
   workflow_dispatch:
@@ -31,6 +36,8 @@ jobs:
       PGDATABASE: postgres
     steps:
       - uses: actions/checkout@v4
+      - name: Verify historical week 1 handoff and file hashes
+        run: python3 scripts/verify_week1.py
       - name: Install PostgreSQL client
         run: |
           sudo apt-get update -qq
