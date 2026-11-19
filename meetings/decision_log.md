@@ -231,3 +231,14 @@ Lời chủ repo về môi trường: “windows, phiên bản không biết, kh
 | Nộp | 27/11, tiết 3 | TV1 điều phối; yêu cầu/thời hạn đã được chủ repo xác nhận nhóm đối chiếu ngày16/11. |
 
 Quyền repo kiểm tra 16/11: Linhlss admin, Ngocdeezet write, ninhdn07 write. Chỉ giữ main sau tích hợp; không đếm nhiều nhánh chứa cùng commit thành đóng góp mới. Toàn bộ hồ sơ trước khi gộp có trong [lịch sử tại 12994f1](https://github.com/Linhlss/CSDL-Nh-m-38/tree/12994f106ad9993c0ddf0ff9069bf21268352bd8). Nhật ký giữ kết luận/nguồn và trạng thái; công thức, SQL, dữ liệu, fixture, log gốc và sơ đồ tiếp tục là sản phẩm kỹ thuật chính.
+
+
+## 7. Kiểm thử ràng buộc nâng cao tuần 2 — 19/11/2026
+
+**Nguồn GitHub Actions PostgreSQL 17:** [lần chạy 80ce1709 thành công](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44533515990). Bài kiểm thử kiểm lần lượt schema, constraints, nạp seed636, ca B06/B08/B09/B10/B11/B14, validation và 10 câu SQL. Log có 20 thông báo PASS trong fixture và 1 PASS ở validation, không có lỗi bất ngờ; dữ liệu test được ROLLBACK. Bản test về sau còn thêm assertion tổng số seed 636 sau rollback nên cần kiểm tra lại ở CI khi cập nhật.
+
+- TV1 đã hoàn thiện mã và test cho W2-T1-04/05/06/07/09/12. Kết quả máy CI là bằng chứng kỹ thuật; không tự nhận thay review của TV2/TV3.
+- Việc B15 (đầu vào ngày sinh/ngày lập hộ/tên), chứng minh chuẩn hóa cuối, ảnh demo và Gate 2 ngày 22/11 vẫn chờ thực hiện/duyệt.
+- Không thay đổi ERD/7 bảng lõi, lược đồ khóa, 10 câu SQL, 10 RA hoặc seed636; chỉ bổ sung loại constraint/index GiST, trigger, hàm và test.
+- [Chi tiết expected/actual và mã SQLSTATE](../tests/week2_constraints_execution_log.md).
+

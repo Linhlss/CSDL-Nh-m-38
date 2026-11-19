@@ -186,6 +186,8 @@ TV1 đã chuẩn bị 30 tình huống kiểm tra thiết kế với đầu ra k
 | Chuyển nội bộ lỗi ở bước tạo đợt mới | Lỗi `23503`, đợt cũ và sự kiện không bị đổi | B10 |
 | Chuyển nội bộ hợp lệ | Đóng cũ, tạo mới và lưu nhật ký khớp | B10 |
 
+**Kiểm chứng ngày 19/11:** Workflow PostgreSQL 17 tại [run 44533515990](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44533515990) đã thành công: 20 thông báo PASS của fixture, 1 PASS validation, không có lỗi PostgreSQL bất ngờ; chuỗi SQL01–10 thực thi thành công. Log này là kết quả kỹ thuật tuần 2, chưa thay thế biên bản Gate 3.
+
 **Minh chứng nghiệm thu:** Lưu log PostgreSQL thực thi từ CSDL trắng và kết quả `06_validation.sql` vào `tests/final_test_log.md`, kèm ảnh các ca tiêu biểu trong `evidence/sql/`. Không sử dụng log kiểm tra tệp tuần 1 để thay thế kiểm thử ràng buộc tuần 2.
 
 ## CHƯƠNG 4 — ĐẠI SỐ QUAN HỆ (10 CÂU)

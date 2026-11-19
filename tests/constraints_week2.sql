@@ -187,3 +187,28 @@ END $$;
 
 -- Không thay đổi seed / dữ liệu gốc. Kết quả PASS nằm ở PostgreSQL NOTICE/log.
 ROLLBACK;
+
+-- Xác nhận nguyên trạng 636 bản ghi sau ROLLBACK.
+DO $assert_seed$
+DECLARE v_total INTEGER;
+BEGIN
+    SELECT
+        (SELECT COUNT(*) FROM to_dan_pho)
+      + (SELECT COUNT(*) FROM dia_chi)
+      + (SELECT COUNT(*) FROM ho_cu_tru)
+      + (SELECT COUNT(*) FROM cu_dan)
+      + (SELECT COUNT(*) FROM qua_trinh_cu_tru)
+      + (SELECT COUNT(*) FROM bien_dong_cu_tru)
+      + (SELECT COUNT(*) FROM tai_khoan)
+    INTO v_total;
+    IF v_total <> 636 THEN
+        RAISE EXCEPTION 'TEST FAIL: sau ROLLBACK tổng seed %, mong đợi 636', v_total;
+    END IF;
+    IF EXISTS (
+        SELECT 1 FROM cu_dan WHERE ma_cu_dan IN (99001,99002,99003)
+    ) THEN
+        RAISE EXCEPTION 'TEST FAIL: fixture còn trong DB';
+    END IF;
+    RAISE NOTICE '[PASS] Seed gốc 636 bản ghi được giữ nguyên sau test';
+END
+$assert_seed$;

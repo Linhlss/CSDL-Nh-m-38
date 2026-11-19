@@ -24,6 +24,22 @@ Xây dựng CSDL quản lý cư dân và biến động cư trú tại một ph�
 
 [Checklist và lịch phối hợp](docs/03_CHECKLIST_DU_AN.md#tuan-2-hien-hanh) giữ đầy đủ 142 mã việc và reviewer. Gate 2 ngày 22/11 chốt nội dung kỹ thuật; tuần 3 (23–27/11) dành cho rebuild cuối, minh chứng, báo cáo, in/nộp.
 
+## Kiểm thử ràng buộc nâng cao (TV1 — tuần 2)
+
+B06 (chống chồng lấn), B08–B09 (đợt cũ/mới và ngày sự kiện), B10 (chuyển nội bộ nguyên tử), B11 (không di chuyển ngầm địa chỉ lịch sử) và B14 (tài khoản đang hoạt động) được triển khai trong `sql/02_constraints.sql`.
+
+Dựng lại trên **PostgreSQL ≥15** với quyền bật extension `btree_gist`:
+
+```sh
+psql -v ON_ERROR_STOP=1 -f sql/01_schema.sql
+psql -v ON_ERROR_STOP=1 -f sql/02_constraints.sql
+psql -v ON_ERROR_STOP=1 -f sql/03_seed.sql
+psql -v ON_ERROR_STOP=1 -f tests/constraints_week2.sql
+psql -v ON_ERROR_STOP=1 -f sql/06_validation.sql
+```
+
+Tệp `tests/constraints_week2.sql` chạy ca dương/âm trong transaction và `ROLLBACK` để giữ seed. Kết quả đã kiểm chứng tại [GitHub Actions 19/11/2026](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44533515990); nhật ký ở [tests/week2_constraints_execution_log.md](tests/week2_constraints_execution_log.md). Log này **chưa phải** biên bản nghiệm thu cuối Gate 3/4.
+
 ## Đọc và làm việc
 
 | Nội dung | Nguồn chính |
