@@ -1,6 +1,6 @@
 {
   "version": "v1",
-  "recorded_date": "2026-11-16",
+  "recorded_date": "2026-11-19",
   "scope": "static_handoff_and_recorded_runtime_evidence",
   "runtime_evidence_available": true,
   "week1_technical_complete": true,
@@ -25,8 +25,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 4072,
-      "sha256": "16b0eb042c85a790917f6341777258b4f4521d8e088393f26fab8a272d75fd01"
+      "bytes": 4432,
+      "sha256": "efbfd08c7f9ef1200effb65ca3e99b4ea10b53d78658aa524f254278a57fbda5"
     },
     {
       "path": "data/README.md",
@@ -111,17 +111,17 @@
     {
       "path": "docs/01_de_cuong.md",
       "bytes": 76858,
-      "sha256": "b2bb21e24c5217fbd3bd26dc088f272b3838812090b60cf9da1ebb07c1421c80"
+      "sha256": "e386ae43d815754c411e4e4f366d942e1c66e144d7a7f7eeafc7d5b4f060c690"
     },
     {
       "path": "docs/02_bao_cao_suon.md",
       "bytes": 47959,
-      "sha256": "4b3b910117f1e363c0a0a1e7c37c40f34a2715fdfef291a8253fbef401ce36e1"
+      "sha256": "4b61dc690ebc5117b17e754d08a4c90093aa65328d000fdf409bc9f4e3174b83"
     },
     {
       "path": "docs/03_CHECKLIST_DU_AN.md",
       "bytes": 60199,
-      "sha256": "73b04d5dd386bf6305dab7f4d468126d0ce5635ed32e586937e878e9e19bfda6"
+      "sha256": "c1769997f1832105d0957119e66d628f24748e0485b532fc947786650835d1d9"
     },
     {
       "path": "docs/03_dac_ta_nghiep_vu.md",
@@ -136,17 +136,17 @@
     {
       "path": "docs/05_ke_hoach_du_lieu_va_sql.md",
       "bytes": 7275,
-      "sha256": "7d82ceca87cc6f79f7151b61f20708c8160e969750c13d0cbadc1dc7ed416095"
+      "sha256": "733963a9b72bec77a0e7f59e1b1ce725181b3f34c36cd463ee20d477076aaa09"
     },
     {
       "path": "docs/06a_dai_so_quan_he.md",
-      "bytes": 31125,
-      "sha256": "5381af3ddcd8c80ce43cb71c7100968eed268bd5ead2efcdc14660400c10a536"
+      "bytes": 31208,
+      "sha256": "2a0eaf5c7bd9eeb6d674c5676095c987c9e66ff7c347ed8b583d3937538bd04a"
     },
     {
       "path": "docs/06b_bao_mat.md",
-      "bytes": 23517,
-      "sha256": "536f6c925e4608b4287a6f35b02cfc6fa65b512a80ba875ad6a6f518f2aa1d9f"
+      "bytes": 23600,
+      "sha256": "843dfa91bcbb8cac39f0cf7ae0a22c5a52366231ef5d1815a1887d87ced1c62c"
     },
     {
       "path": "docs/07_ma_tran_truy_van_va_review.md",
@@ -165,8 +165,8 @@
     },
     {
       "path": "meetings/decision_log.md",
-      "bytes": 34646,
-      "sha256": "8d97202de133149108cf8da46c419a400e7512146ad6e471e0c3e970d68fd4b1"
+      "bytes": 35245,
+      "sha256": "ce65ebb5ff0530028baa498eb610333da37be6e424b778970d1dc92610d95e98"
     },
     {
       "path": "report/.gitkeep",
@@ -246,7 +246,7 @@
     {
       "path": "tests/test_scenarios.md",
       "bytes": 3757,
-      "sha256": "86dfcdab5191baca18569695ca7a5c929f638f9293882d90556a693ddc27a06a"
+      "sha256": "2d0e87da1af2bd4c85bdedb639a6d36233661f0502ae0506e28bb6767ccdd348"
     },
     {
       "path": "tests/tv3_review_results.json",
