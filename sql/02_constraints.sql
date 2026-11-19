@@ -37,6 +37,12 @@ DECLARE
     v_cu qua_trinh_cu_tru%ROWTYPE;
     v_moi qua_trinh_cu_tru%ROWTYPE;
 BEGIN
+    -- CHECK gốc chạy sau BEFORE trigger: giữ mã lỗi nhất quán cho dạng thiếu FK.
+    IF p_loai = 'CHUYEN_NOI_BO' AND (p_cu IS NULL OR p_moi IS NULL) THEN
+        RAISE EXCEPTION 'B08: chuyển nội bộ phải có cả đợt cũ và mới'
+            USING ERRCODE = '23514';
+    END IF;
+
     IF p_cu IS NOT NULL THEN
         SELECT * INTO v_cu FROM qua_trinh_cu_tru
         WHERE ma_qua_trinh = p_cu FOR SHARE;
@@ -145,19 +151,19 @@ FOR EACH ROW EXECUTE FUNCTION fn_sau_sua_dot_cu_tru();
 CREATE OR REPLACE FUNCTION fn_khoa_dia_chi_lich_su()
 RETURNS trigger LANGUAGE plpgsql AS $fn$
 BEGIN
-    IF TG_TABLE_NAME = 'ho_cu_tru'
-       AND NEW.ma_dia_chi IS DISTINCT FROM OLD.ma_dia_chi THEN
-        IF EXISTS (SELECT 1 FROM qua_trinh_cu_tru WHERE ma_ho = OLD.ma_ho) THEN
+    IF TG_TABLE_NAME = 'ho_cu_tru' THEN
+        IF NEW.ma_dia_chi IS DISTINCT FROM OLD.ma_dia_chi
+           AND EXISTS (SELECT 1 FROM qua_trinh_cu_tru WHERE ma_ho = OLD.ma_ho) THEN
             RAISE EXCEPTION 'B11: không đổi địa chỉ của hộ % đã có lịch sử', OLD.ma_ho
                 USING ERRCODE = '23514';
         END IF;
-    ELSIF TG_TABLE_NAME = 'dia_chi'
-       AND NEW.ma_to IS DISTINCT FROM OLD.ma_to THEN
-        IF EXISTS (
-            SELECT 1 FROM ho_cu_tru h
-            JOIN qua_trinh_cu_tru q ON q.ma_ho = h.ma_ho
-            WHERE h.ma_dia_chi = OLD.ma_dia_chi
-        ) THEN
+    ELSIF TG_TABLE_NAME = 'dia_chi' THEN
+        IF NEW.ma_to IS DISTINCT FROM OLD.ma_to
+           AND EXISTS (
+               SELECT 1 FROM ho_cu_tru h
+               JOIN qua_trinh_cu_tru q ON q.ma_ho = h.ma_ho
+               WHERE h.ma_dia_chi = OLD.ma_dia_chi
+           ) THEN
             RAISE EXCEPTION 'B11: không đổi tổ của địa chỉ % đã có lịch sử', OLD.ma_dia_chi
                 USING ERRCODE = '23514';
         END IF;
