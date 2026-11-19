@@ -1,12 +1,14 @@
 # NHẬT KÝ QUYẾT ĐỊNH, REVIEW VÀ NGHIỆM THU — NHÓM 38
 
+> **Đính chính đánh số thành viên 19/11/2026:** TV1 Trần Bùi Tùng Linh (20227057); TV2 Trần Tuấn Ngọc (20227064); TV3 Dương Ngọc Ninh (20237469). Bảng phân công hiện hành đã được cập nhật. Những dòng nhật ký, tên PR, vai trò TV1/TV3 và nhận xét tại các thời điểm trước đính chính là tư liệu lịch sử; không được diễn giải chúng như việc thay đổi tác giả, người thực hiện hoặc người đã xác nhận trong quá khứ. Hồ sơ đóng góp cuối cùng cần xác minh với từng thành viên.
+
 **Cập nhật:** 16/11/2026. **Lớp 174356 — ThS. Nguyễn Thị Thanh Huyền.** Đề tài 17: quản lý cư dân và biến động cư trú tại một phường mô phỏng.
 
 | Vai trò | Họ tên | MSSV | Phần chính | Dự phòng kỹ thuật |
 |---|---|---|---|---|
-| TV1 | Dương Ngọc Ninh | 20237469 | Thiết kế, nghiệp vụ, tích hợp | TV3 |
+| TV1 | Trần Bùi Tùng Linh | 20227057 | Thiết kế, nghiệp vụ, tích hợp | TV3 |
 | TV2 | Trần Tuấn Ngọc | 20227064 | Dữ liệu, SQL, kiểm thử | TV1 |
-| TV3 | Trần Bùi Tùng Linh | 20227057 | Đại số quan hệ, bảo mật, review | TV2 |
+| TV3 | Dương Ngọc Ninh | 20237469 | Đại số quan hệ, bảo mật, review | TV2 |
 
 Danh tính và thứ tự TV do chủ repo cung cấp, không suy từ tài khoản GitHub. Phân công dự phòng không thay chữ ký cá nhân. Nhật ký này là nơi duy nhất đối chiếu 53 mã tuần 1 và kết luận các hồ sơ đã gộp. [Checklist](../docs/03_CHECKLIST_DU_AN.md) quản lý 142 mã toàn dự án; [README](../README.md) hướng dẫn bắt đầu.
 

@@ -13,7 +13,7 @@
 - Mã lớp: 174356
 - Số thứ tự nhóm: 38
 - Giảng viên: ThS. Nguyễn Thị Thanh Huyền
-- Thành viên: TV1 Dương Ngọc Ninh — 20237469; TV2 Trần Tuấn Ngọc — 20227064; TV3 Trần Bùi Tùng Linh — 20227057
+- Thành viên: TV1 Trần Bùi Tùng Linh — 20227057; TV2 Trần Tuấn Ngọc — 20227064; TV3 Dương Ngọc Ninh — 20237469
 - Ngày nộp: 27/11/2026
 
 ## MỤC LỤC
@@ -542,6 +542,6 @@ Hướng mở rộng gồm Row-Level Security theo tổ, ngưỡng k cho VIEW t�
 
 | STT | Họ tên | MSSV | Công việc thực tế | Xếp loại A/B/C... | Chữ ký |
 |---|---|---|---|---|---|
-| 1 | Dương Ngọc Ninh | 20237469 | Theo hồ sơ bàn giao tuần 1; cập nhật cuối kỳ | Chờ nhóm đánh giá | Chờ ký |
+| 1 | Trần Bùi Tùng Linh | 20227057 | Theo hồ sơ bàn giao tuần 1; cập nhật cuối kỳ | Chờ nhóm đánh giá | Chờ ký |
 | 2 | Trần Tuấn Ngọc | 20227064 | Theo hồ sơ bàn giao tuần 1; cập nhật cuối kỳ | Chờ nhóm đánh giá | Chờ ký |
-| 3 | Trần Bùi Tùng Linh | 20227057 | Theo hồ sơ bàn giao tuần 1; cập nhật cuối kỳ | Chờ nhóm đánh giá | Chờ ký |
+| 3 | Dương Ngọc Ninh | 20237469 | Theo hồ sơ bàn giao tuần 1; cập nhật cuối kỳ | Chờ nhóm đánh giá | Chờ ký |

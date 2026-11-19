@@ -6,9 +6,11 @@ Xây dựng CSDL quản lý cư dân và biến động cư trú tại một ph�
 
 | Thành viên | Họ tên | MSSV | Trách nhiệm |
 |---|---|---|---|
-| TV1 | Dương Ngọc Ninh | 20237469 | Nghiệp vụ, thiết kế, ràng buộc, tích hợp |
+| TV1 | Trần Bùi Tùng Linh | 20227057 | Nghiệp vụ, thiết kế, ràng buộc, tích hợp |
 | TV2 | Trần Tuấn Ngọc | 20227064 | Dữ liệu, SQL, kiểm thử |
-| TV3 | Trần Bùi Tùng Linh | 20227057 | Đại số quan hệ, bảo mật, review |
+| TV3 | Dương Ngọc Ninh | 20237469 | Đại số quan hệ, bảo mật, review |
+
+> **Đính chính số thứ tự thành viên (19/11/2026):** TV1 = Trần Bùi Tùng Linh (20227057), TV2 = Trần Tuấn Ngọc (20227064), TV3 = Dương Ngọc Ninh (20237469). Đính chính này không sửa tác giả commit/PR hoặc tự gán lại đóng góp lịch sử; bảng phân công trang cuối phải phản ánh công việc thực tế.
 
 ## Hiện trạng và việc tiếp theo
 

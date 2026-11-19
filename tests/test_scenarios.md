@@ -1,6 +1,6 @@
 # MA TRẬN S01–S21 — HỒ SƠ TUẦN 1
 
-**Nhóm 38, lớp 174356; cập nhật 16/11/2026 bởi agent hỗ trợ theo yêu cầu chủ repo.** TV1 Dương Ngọc Ninh — 20237469; TV2 Trần Tuấn Ngọc — 20227064; TV3 Trần Bùi Tùng Linh — 20227057.
+**Nhóm 38, lớp 174356; cập nhật 16/11/2026 bởi agent hỗ trợ theo yêu cầu chủ repo.** TV1 Trần Bùi Tùng Linh — 20227057; TV2 Trần Tuấn Ngọc — 20227064; TV3 Dương Ngọc Ninh — 20237469.
 
 ID trong bảng mặc định thuộc [fixture29](week1_fixture.sql); bộ đầy đủ dùng seed636. [Expected tính tay](week1_expected.json), [expected/actual PostgreSQL](week1_execution_results.json) ghi đủ tuple/hash. “Đạt” là kiểm chứng kỹ thuật trên DB tạm, không phải chữ ký thành viên hay nghiệm thu toàn dự án.
 

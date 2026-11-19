@@ -2,9 +2,9 @@
 
 > **Tên:** Xây dựng cơ sở dữ liệu quản lý cư dân và biến động cư trú tại một phường (mô phỏng).  
 > **Nhóm:** 38 — **Mã lớp:** 174356 — **GV:** ThS. Nguyễn Thị Thanh Huyền.
-> **TV1:** Dương Ngọc Ninh — 20237469 (Trưởng nhóm, phân tích, thiết kế, tích hợp).
+> **TV1:** Trần Bùi Tùng Linh — 20227057 (Trưởng nhóm, phân tích, thiết kế, tích hợp).
 > **TV2:** Trần Tuấn Ngọc — 20227064 (Dữ liệu giả lập, SQL, kiểm thử).
-> **TV3:** Trần Bùi Tùng Linh — 20227057 (Đại số quan hệ, bảo mật, kiểm chứng).
+> **TV3:** Dương Ngọc Ninh — 20237469 (Đại số quan hệ, bảo mật, kiểm chứng).
 > **Thời gian:** 10–27/11/2026 · **Hạn nộp:** Thứ Sáu 27/11/2026, tiết 3 (theo ảnh thông báo của giảng viên).  
 > **Ngày tham chiếu cố định để so sánh kết quả truy vấn:** `2026-11-20`.  
 > **Nền kỹ thuật:** PostgreSQL >= 15, mô hình 7 bảng; seed hiện hành 636 dòng giả lập 100%. ~643 là dự kiến ban đầu, không phải yêu cầu bắt buộc.

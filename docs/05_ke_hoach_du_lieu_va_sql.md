@@ -1,6 +1,6 @@
 # DỮ LIỆU, SQL VÀ KIỂM THỬ — HỒ SƠ KỸ THUẬT
 
-**Nhóm 38, lớp 174356, ThS. Nguyễn Thị Thanh Huyền.** TV1 Dương Ngọc Ninh — 20237469; TV2 Trần Tuấn Ngọc — 20227064; TV3 Trần Bùi Tùng Linh — 20227057.
+**Nhóm 38, lớp 174356, ThS. Nguyễn Thị Thanh Huyền.** TV1 Trần Bùi Tùng Linh — 20227057; TV2 Trần Tuấn Ngọc — 20227064; TV3 Dương Ngọc Ninh — 20237469.
 
 Hoàn thiện kỹ thuật16/11/2026 bởi agent theo yêu cầu chủ repo, tiếp nối PR #3 tại63388b3. Review hỗ trợ không thay chữ ký, xác nhận máy cá nhân hay cuộc họp của thành viên.
 

@@ -3,7 +3,7 @@
 > **Chủ đề được giao:** 17 – Quản lý cư dân ở một địa phương  
 > **Tên đề tài đề xuất:** **Xây dựng cơ sở dữ liệu quản lý cư dân và biến động cư trú tại một phường**  
 > **Nhóm:** 38 — **Mã lớp:** 174356 — **Giảng viên:** ThS. Nguyễn Thị Thanh Huyền
-> **Thành viên:** TV1 – Dương Ngọc Ninh, 20237469; TV2 – Trần Tuấn Ngọc, 20227064; TV3 – Trần Bùi Tùng Linh, 20227057
+> **Thành viên:** TV1 – Trần Bùi Tùng Linh, 20227057; TV2 – Trần Tuấn Ngọc, 20227064; TV3 – Dương Ngọc Ninh, 20237469
 > **Ngày lập kế hoạch:** 10/11/2026  
 > **Hạn nộp theo thông báo:** **Thứ Sáu 27/11/2026, tiết 3**; lịch/bắt đầu báo cáo: 27/11/2026 (thứ tự cụ thể do giảng viên thông báo).  
 > **Mốc nội bộ:** Hoàn thiện toàn bộ vào **tối 25/11**; **26/11** dành cho kiểm thử cuối, in ấn và bàn giao.  
