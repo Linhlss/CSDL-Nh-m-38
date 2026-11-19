@@ -1,0 +1,56 @@
+name: Kiem thu rang buoc CSDL tuan 2
+
+on:
+  push:
+    paths:
+      - "sql/**"
+      - "tests/constraints_week2.sql"
+      - ".github/workflows/csdl-constraints.yml"
+  workflow_dispatch:
+
+jobs:
+  postgresql-constraints:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: "5432"
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: postgres
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y postgresql-client
+      - name: Test schema, constraints, seed and negative cases
+        run: |
+          set -euo pipefail
+          psql -v ON_ERROR_STOP=1 -f sql/01_schema.sql
+          psql -v ON_ERROR_STOP=1 -f sql/02_constraints.sql
+          psql -v ON_ERROR_STOP=1 -f sql/03_seed.sql
+          psql -v ON_ERROR_STOP=1 -f tests/constraints_week2.sql
+          psql -v ON_ERROR_STOP=1 -f sql/06_validation.sql
+      - name: Check all 10 SQL queries still execute
+        run: |
+          psql -v ON_ERROR_STOP=1 -f sql/04_queries.sql > /tmp/csdl17-queries.log
+          echo "10 queries executed; full result in artifact."
+      - name: Upload textual execution evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: csdl17-sql-queries
+          path: /tmp/csdl17-queries.log
+          if-no-files-found: ignore

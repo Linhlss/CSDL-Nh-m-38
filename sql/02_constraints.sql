@@ -1,22 +1,255 @@
--- TODO – TV1 (deadline 20/11)
--- Kiểm tra các quy tắc KHÔNG thể làm chỉ bằng CHECK một hàng:
--- 1) Không chồng lấn 2 đợt cư trú CÙNG LOẠI của cùng cư dân.
--- 2) Với CHUYEN_NOI_BO, ma_qua_trinh_cu/moi cùng ma_cu_dan, khác ma_ho.
--- 3) Ngày biến động phù hợp khoảng cư trú cũ/mới.
--- 4) Các thao tác đóng/mở đợt + nhật ký được thực hiện trong 1 transaction.
---
--- Có thể chọn PostgreSQL EXCLUDE USING gist (btree_gist) hoặc trigger và kèm query validation.
--- PHẢI VIẾT TEST PHỦ TRƯỜNG HỢP HỢP LỆ VÀ KHÔNG HỢP LỆ.
---
--- ĐẶC TẢ ĐÃ BÀN GIAO TUẦN 1 (11/11/2026), CHƯA LÀ MÃ THỰC THI:
--- Nguồn chuẩn: docs/03_dac_ta_nghiep_vu.md B06, B08-B11, B14;
--- docs/04_data_dictionary_va_chuan_hoa.md mục 6; tests/week1_design_cases.md.
--- B06: cùng cư dân + cùng loại, khoảng [bắt đầu, kết thúc] không giao;
---      cận trên NULL là không giới hạn. GiST + btree_gist; D08-D10.
--- B08: hai đợt cùng cư dân, khác hộ; D15-D18.
--- B09: ngày sự kiện t; đợt mới bắt đầu t, đợt cũ kết thúc t-1; D19-D20.
---      Kiểm cả INSERT/UPDATE sự kiện và UPDATE đợt đang được tham chiếu (D22).
--- B10: khóa đợt cũ, đóng/mở/ghi sự kiện một giao dịch; thử rollback (D21).
--- B11: giữ liên kết hộ-địa chỉ/tổ ổn định khi đã có lịch sử (D23).
--- B14: khi ghi mới, tài khoản phải HOAT_DONG; không làm sai nhật ký cũ khi khóa.
--- Chỉ đánh dấu hoàn thành tuần 2 sau khi có code, test DB và kết quả thật.
+-- BTL CSDL 17 | TV1 | Rang buoc nghiep vu nang cao (PostgreSQL >= 15).
+-- Chay SAU sql/01_schema.sql, TRUOC sql/03_seed.sql.
+-- Khong tao bang moi; su dung GiST, trigger va ham giao dich.
+-- Tai lap: CREATE EXTENSION/CREATE OR REPLACE/DO kiem tra ten constraint.
+-- Chi chay trong database demo. Mot so buoc yeu cau quyen CREATE EXTENSION.
+
+BEGIN;
+CREATE EXTENSION IF NOT EXISTS btree_gist;
+
+-- B06: cùng người + cùng loại không được chồng lấn khoảng ngày [start,end].
+-- NULL ở ngày kết thúc nghĩa là không có giới hạn trên.
+-- daterange(..., '[]') đưa cả ngày kết thúc vào khoảng.
+DO $ddl$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint
+        WHERE conname = 'ex_qt_cu_tru_khong_chong_lan'
+          AND conrelid = 'qua_trinh_cu_tru'::regclass
+    ) THEN
+        ALTER TABLE qua_trinh_cu_tru
+          ADD CONSTRAINT ex_qt_cu_tru_khong_chong_lan
+          EXCLUDE USING gist (
+            ma_cu_dan WITH =,
+            loai_cu_tru WITH =,
+            daterange(ngay_bat_dau, ngay_ket_thuc, '[]') WITH &&
+          );
+    END IF;
+END
+$ddl$;
+
+-- B08/B09: kiểm tra đầy đủ một sự kiện, có khóa SHARE để đồng bộ
+-- với thao tác UPDATE đợt cư trú chạy đồng thời.
+CREATE OR REPLACE FUNCTION fn_kiem_tra_su_kien(
+    p_loai VARCHAR, p_cu BIGINT, p_moi BIGINT, p_ngay DATE
+) RETURNS void LANGUAGE plpgsql AS $fn$
+DECLARE
+    v_cu qua_trinh_cu_tru%ROWTYPE;
+    v_moi qua_trinh_cu_tru%ROWTYPE;
+BEGIN
+    IF p_cu IS NOT NULL THEN
+        SELECT * INTO v_cu FROM qua_trinh_cu_tru
+        WHERE ma_qua_trinh = p_cu FOR SHARE;
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'B09: đợt cũ % không tồn tại', p_cu
+                USING ERRCODE = '23503';
+        END IF;
+        IF v_cu.ngay_ket_thuc IS DISTINCT FROM (p_ngay - 1) THEN
+            RAISE EXCEPTION 'B09: đợt cũ % phải kết thúc trước ngày chuyển % đúng 1 ngày',
+                p_cu, p_ngay USING ERRCODE = '23514';
+        END IF;
+    END IF;
+
+    IF p_moi IS NOT NULL THEN
+        SELECT * INTO v_moi FROM qua_trinh_cu_tru
+        WHERE ma_qua_trinh = p_moi FOR SHARE;
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'B09: đợt mới % không tồn tại', p_moi
+                USING ERRCODE = '23503';
+        END IF;
+        IF v_moi.ngay_bat_dau IS DISTINCT FROM p_ngay THEN
+            RAISE EXCEPTION 'B09: đợt mới % phải bắt đầu đúng ngày chuyển %',
+                p_moi, p_ngay USING ERRCODE = '23514';
+        END IF;
+    END IF;
+
+    IF p_loai = 'CHUYEN_NOI_BO' THEN
+        IF v_cu.ma_cu_dan IS DISTINCT FROM v_moi.ma_cu_dan
+           OR v_cu.ma_ho IS NOT DISTINCT FROM v_moi.ma_ho THEN
+            RAISE EXCEPTION 'B08: chuyển nội bộ phải cùng cư dân, khác hộ'
+                USING ERRCODE = '23514';
+        END IF;
+    END IF;
+END
+$fn$;
+
+-- B14: lúc ghi sự kiện hoặc đổi người ghi phải dùng tài khoản HOAT_DONG.
+-- Khóa tài khoản về sau không làm vô hiệu sự kiện lịch sử.
+CREATE OR REPLACE FUNCTION fn_truoc_ghi_bien_dong()
+RETURNS trigger LANGUAGE plpgsql AS $fn$
+DECLARE
+    v_kiem_tra_tai_khoan BOOLEAN := FALSE;
+    v_trang_thai VARCHAR(20);
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        v_kiem_tra_tai_khoan := TRUE;
+    ELSIF NEW.ma_tai_khoan IS DISTINCT FROM OLD.ma_tai_khoan THEN
+        v_kiem_tra_tai_khoan := TRUE;
+    END IF;
+
+    IF v_kiem_tra_tai_khoan THEN
+        SELECT trang_thai INTO v_trang_thai FROM tai_khoan
+        WHERE ma_tai_khoan = NEW.ma_tai_khoan FOR SHARE;
+        IF v_trang_thai IS DISTINCT FROM 'HOAT_DONG' THEN
+            RAISE EXCEPTION 'B14: tài khoản % không ở trạng thái HOAT_DONG', NEW.ma_tai_khoan
+                USING ERRCODE = '23514';
+        END IF;
+    END IF;
+
+    PERFORM fn_kiem_tra_su_kien(
+        NEW.loai_bien_dong, NEW.ma_qua_trinh_cu,
+        NEW.ma_qua_trinh_moi, NEW.ngay_bien_dong
+    );
+    RETURN NEW;
+END
+$fn$;
+
+DROP TRIGGER IF EXISTS trg_bien_dong_hop_le ON bien_dong_cu_tru;
+CREATE TRIGGER trg_bien_dong_hop_le
+BEFORE INSERT OR UPDATE ON bien_dong_cu_tru
+FOR EACH ROW EXECUTE FUNCTION fn_truoc_ghi_bien_dong();
+
+-- B08/B09 chiều ngược: sửa một đợt không được làm hỏng sự kiện cũ.
+CREATE OR REPLACE FUNCTION fn_sau_sua_dot_cu_tru()
+RETURNS trigger LANGUAGE plpgsql AS $fn$
+DECLARE
+    v_su_kien bien_dong_cu_tru%ROWTYPE;
+BEGIN
+    IF (NEW.ma_cu_dan, NEW.ma_ho, NEW.ngay_bat_dau, NEW.ngay_ket_thuc)
+       IS DISTINCT FROM
+       (OLD.ma_cu_dan, OLD.ma_ho, OLD.ngay_bat_dau, OLD.ngay_ket_thuc) THEN
+        FOR v_su_kien IN
+            SELECT * FROM bien_dong_cu_tru
+            WHERE ma_qua_trinh_cu = NEW.ma_qua_trinh
+               OR ma_qua_trinh_moi = NEW.ma_qua_trinh
+        LOOP
+            PERFORM fn_kiem_tra_su_kien(
+                v_su_kien.loai_bien_dong,
+                v_su_kien.ma_qua_trinh_cu,
+                v_su_kien.ma_qua_trinh_moi,
+                v_su_kien.ngay_bien_dong
+            );
+        END LOOP;
+    END IF;
+    RETURN NEW;
+END
+$fn$;
+
+DROP TRIGGER IF EXISTS trg_dot_khong_pha_su_kien ON qua_trinh_cu_tru;
+CREATE TRIGGER trg_dot_khong_pha_su_kien
+AFTER UPDATE OF ma_cu_dan, ma_ho, ngay_bat_dau, ngay_ket_thuc
+ON qua_trinh_cu_tru
+FOR EACH ROW EXECUTE FUNCTION fn_sau_sua_dot_cu_tru();
+
+-- B11: không chuyển địa chỉ/tổ "ngầm" trên lịch sử đã có.
+CREATE OR REPLACE FUNCTION fn_khoa_dia_chi_lich_su()
+RETURNS trigger LANGUAGE plpgsql AS $fn$
+BEGIN
+    IF TG_TABLE_NAME = 'ho_cu_tru'
+       AND NEW.ma_dia_chi IS DISTINCT FROM OLD.ma_dia_chi THEN
+        IF EXISTS (SELECT 1 FROM qua_trinh_cu_tru WHERE ma_ho = OLD.ma_ho) THEN
+            RAISE EXCEPTION 'B11: không đổi địa chỉ của hộ % đã có lịch sử', OLD.ma_ho
+                USING ERRCODE = '23514';
+        END IF;
+    ELSIF TG_TABLE_NAME = 'dia_chi'
+       AND NEW.ma_to IS DISTINCT FROM OLD.ma_to THEN
+        IF EXISTS (
+            SELECT 1 FROM ho_cu_tru h
+            JOIN qua_trinh_cu_tru q ON q.ma_ho = h.ma_ho
+            WHERE h.ma_dia_chi = OLD.ma_dia_chi
+        ) THEN
+            RAISE EXCEPTION 'B11: không đổi tổ của địa chỉ % đã có lịch sử', OLD.ma_dia_chi
+                USING ERRCODE = '23514';
+        END IF;
+    END IF;
+    RETURN NEW;
+END
+$fn$;
+
+DROP TRIGGER IF EXISTS trg_ho_giu_dia_chi_lich_su ON ho_cu_tru;
+CREATE TRIGGER trg_ho_giu_dia_chi_lich_su
+BEFORE UPDATE OF ma_dia_chi ON ho_cu_tru
+FOR EACH ROW EXECUTE FUNCTION fn_khoa_dia_chi_lich_su();
+
+DROP TRIGGER IF EXISTS trg_dia_chi_giu_to_lich_su ON dia_chi;
+CREATE TRIGGER trg_dia_chi_giu_to_lich_su
+BEFORE UPDATE OF ma_to ON dia_chi
+FOR EACH ROW EXECUTE FUNCTION fn_khoa_dia_chi_lich_su();
+
+-- Ngăn đua tranh giữa thêm lịch sử và đổi liên kết địa lý:
+-- FK chỉ giữ KEY SHARE, vì vậy khóa SHARE bổ sung các hàng cha.
+CREATE OR REPLACE FUNCTION fn_khoa_vi_tri_khi_ghi_dot()
+RETURNS trigger LANGUAGE plpgsql AS $fn$
+BEGIN
+    PERFORM 1 FROM ho_cu_tru h
+    JOIN dia_chi d ON d.ma_dia_chi = h.ma_dia_chi
+    WHERE h.ma_ho = NEW.ma_ho
+    FOR SHARE OF h, d;
+    RETURN NEW;
+END
+$fn$;
+
+DROP TRIGGER IF EXISTS trg_dot_khoa_vi_tri ON qua_trinh_cu_tru;
+CREATE TRIGGER trg_dot_khoa_vi_tri
+AFTER INSERT OR UPDATE OF ma_ho ON qua_trinh_cu_tru
+FOR EACH ROW EXECUTE FUNCTION fn_khoa_vi_tri_khi_ghi_dot();
+
+-- B10: một lần gọi hàm được PostgreSQL thực hiện nguyên tử;
+-- luôn đặt trong transaction bên ngoài để gom các bước nghiệp vụ khác.
+-- Mở/đóng đợt và ghi sự kiện cùng giao dịch, khóa đợt cũ FOR UPDATE.
+-- Không thay đổi loại cư trú đợt cũ; loại đợt mới được truyền vào.
+CREATE OR REPLACE FUNCTION fn_chuyen_noi_bo(
+    p_ma_qua_trinh_cu BIGINT,
+    p_ma_ho_moi BIGINT,
+    p_loai_moi VARCHAR(20),
+    p_ngay_chuyen DATE,
+    p_ma_tai_khoan BIGINT
+) RETURNS TABLE(ma_dot_moi BIGINT, ma_su_kien BIGINT)
+LANGUAGE plpgsql AS $fn$
+DECLARE
+    v_cu qua_trinh_cu_tru%ROWTYPE;
+    v_moi BIGINT;
+    v_sk BIGINT;
+BEGIN
+    SELECT * INTO v_cu FROM qua_trinh_cu_tru
+    WHERE ma_qua_trinh = p_ma_qua_trinh_cu FOR UPDATE;
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'B10: đợt cũ % không tồn tại', p_ma_qua_trinh_cu
+            USING ERRCODE = '23503';
+    END IF;
+    IF v_cu.ngay_ket_thuc IS NOT NULL OR p_ngay_chuyen <= v_cu.ngay_bat_dau THEN
+        RAISE EXCEPTION 'B10: đợt cũ phải đang mở và bắt đầu trước ngày chuyển'
+            USING ERRCODE = '23514';
+    END IF;
+    IF p_ma_ho_moi = v_cu.ma_ho THEN
+        RAISE EXCEPTION 'B08: hộ mới phải khác hộ cũ'
+            USING ERRCODE = '23514';
+    END IF;
+
+    UPDATE qua_trinh_cu_tru
+    SET ngay_ket_thuc = p_ngay_chuyen - 1
+    WHERE ma_qua_trinh = p_ma_qua_trinh_cu;
+
+    INSERT INTO qua_trinh_cu_tru (
+        ma_cu_dan, ma_ho, loai_cu_tru, ngay_bat_dau, ngay_ket_thuc
+    ) VALUES (v_cu.ma_cu_dan, p_ma_ho_moi, p_loai_moi, p_ngay_chuyen, NULL)
+    RETURNING ma_qua_trinh INTO v_moi;
+
+    INSERT INTO bien_dong_cu_tru (
+        loai_bien_dong, ma_qua_trinh_cu, ma_qua_trinh_moi,
+        ngay_bien_dong, ma_tai_khoan
+    ) VALUES (
+        'CHUYEN_NOI_BO', p_ma_qua_trinh_cu, v_moi,
+        p_ngay_chuyen, p_ma_tai_khoan
+    ) RETURNING ma_bien_dong INTO v_sk;
+
+    RETURN QUERY SELECT v_moi, v_sk;
+END
+$fn$;
+COMMIT;
+
+-- Mẫu sử dụng (không tự chạy):
+-- BEGIN;
+-- SELECT * FROM fn_chuyen_noi_bo(1, 2, 'THUONG_TRU', DATE '2026-11-20', 1);
+-- COMMIT;
+-- Nếu bất kỳ bước nào lỗi, ROLLBACK toàn bộ giao dịch.

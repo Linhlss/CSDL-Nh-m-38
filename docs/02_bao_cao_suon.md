@@ -128,9 +128,22 @@ Các miền giá trị gồm giới tính `Nam/Nu/Khac`, loại cư trú `THUONG
 
 ### 3.3. Khóa, ràng buộc và giới hạn thực thi
 
-DDL đã có 7 PK, 7 FK, 3 UNIQUE nghiệp vụ và 6 CHECK. UNIQUE áp dụng cho tên tổ, tên đăng nhập và cặp tổ+địa chỉ. CHECK bảo vệ miền giới tính, loại cư trú, trật tự ngày, vai trò/trạng thái và phối hợp các đợt theo loại sự kiện. FK không cascade để tránh xóa dây chuyền.
+Lược đồ cơ bản trong `sql/01_schema.sql` có 7 PK, 7 FK, 3 UNIQUE nghiệp vụ, 6 CHECK và 5 chỉ mục. Các ràng buộc một hàng này không đủ kiểm tra chồng lấn giữa nhiều đợt hoặc sự kiện tham chiếu sang hai đợt. Vì vậy nhóm tách **ràng buộc toàn vẹn nghiệp vụ** sang `sql/02_constraints.sql`, chạy sau schema và trước seed:
 
-Những kiểm tra cần nhiều dòng/bảng được tách rõ: chống chồng lấn dự kiến dùng exclusion constraint GiST; kiểm cùng người/khác hộ/ngày sự kiện dùng trigger kiểm cả sự kiện và các đợt liên quan khi cập nhật; giao dịch đóng/mở/ghi nhật ký cần rollback đầy đủ. Tuần 1 đã đặc tả các cơ chế này, chưa triển khai hoặc ghi nhận test DB đã thành công. Năm chỉ mục bổ sung hỗ trợ các đường nối và điều kiện thời gian; chưa có kết quả đo hiệu năng.
+| Quy tắc | Cơ chế PostgreSQL đã viết | Hành vi mong đợi |
+|---|---|---|
+| B06 | `EXCLUDE USING gist` với `btree_gist` và `daterange(..., '[]')` | Từ chối hai đợt **cùng người, cùng loại** giao nhau; NULL kết thúc = không giới hạn; khác loại hoặc liền ngày không giao được phép |
+| B08 | Trigger trên sự kiện và trigger kiểm ngược khi sửa đợt | Nội bộ phải cùng cư dân, khác hộ, kể cả khi hai đợt đã có FK hợp lệ |
+| B09 | Trigger so ngày sự kiện với biên của đợt | Đợt cũ kết thúc ở **t−1**, đợt mới bắt đầu **t**; sửa đợt cũ/mới không được phá nhật ký |
+| B10 | Hàm `fn_chuyen_noi_bo` và transaction | Khóa đợt cũ, đóng đợt, mở đợt mới, ghi sự kiện nguyên tử; lỗi giữa các bước làm rollback |
+| B11 | Trigger bảo vệ FK địa chỉ/tổ đã có đợt lịch sử | Không thể đổi hộ sang địa chỉ khác hoặc đổi tổ của địa chỉ đã tham gia lịch sử |
+| B14 | Trigger trạng thái tài khoản khi tạo sự kiện/đổi người ghi | Tài khoản phải `HOAT_DONG`; khóa tài khoản sau đó không vô hiệu hóa sự kiện lịch sử |
+
+**Phân biệt cơ chế:** FK/CHECK bảo đảm cấu trúc và miền dữ liệu; GiST exclusion ràng buộc **giữa nhiều dòng**; trigger bảo vệ **liên bảng và chiều cập nhật ngược**; transaction bảo đảm tính nguyên tử của thao tác nhiều bước. `01_schema.sql` không có các cơ chế sau, nên chỉ chạy file đầu sẽ chưa thực thi được B06, B08–B11, B14.
+
+**Giới hạn:** B15 (tên không rỗng, ngày sinh/ngày lập hộ hợp lệ so với ngày bắt đầu) hiện kiểm bằng bộ sinh dữ liệu và đầu vào, chưa được tất cả các dạng UPDATE trên CSDL bảo vệ. B11 chỉ khóa **liên kết địa lý đã có lịch sử**, không cấm sửa ghi chú hay các liên kết chưa sử dụng. B10 là một đường thao tác có hỗ trợ; quyền ghi SQL trực tiếp vẫn phải được quản lý và ứng dụng phải dùng giao dịch đúng quy trình. Không khẳng định đã kiểm chứng concurrency đa kết nối ngoài các ca thực tế có trong biên bản.
+
+Bộ kiểm thử tích hợp `tests/constraints_week2.sql` được thiết kế chạy trên database có seed trong một `BEGIN…ROLLBACK` riêng; gồm ca hợp lệ và lỗi `23P01` (exclusion), `23514` (vi phạm nghiệp vụ) và `23503` (FK). Log CI/psql của lần chạy thật là căn cứ để ghi PASS, không phải sự tồn tại của file SQL. `sql/06_validation.sql` bổ sung kiểm tra không còn vi phạm trong dữ liệu đã nạp.
 
 ### 3.4. Chuẩn hóa
 
@@ -157,6 +170,23 @@ Quyết định C1 không đổi tập khóa/FD đã công bố và không làm 
 **Phạm vi bàn giao tuần 1:** TV2 chuẩn bị kế hoạch dữ liệu/SQL, fixture nhỏ có đáp án tay và ma trận kịch bản; việc nghiệm thu bộ dữ liệu lớn là bước riêng của tuần 2. Quy mô tham khảo gồm 8 tổ, 50 địa chỉ, 60 hộ, 200 cư dân, khoảng 250 đợt, 70 sự kiện và 5 tài khoản; có thể điều chỉnh theo độ phủ kiểm thử. Nạp theo thứ tự FK, dùng seed cố định và ghi số liệu thực tế trong log của lần chạy. Không ghi các con số mục tiêu thành số liệu đã nạp.
 
 TV1 đã chuẩn bị 30 tình huống kiểm tra thiết kế với đầu ra kỳ vọng trong `tests/week1_design_cases.md` và ma trận 20 câu hỏi. Kết quả thực thi PostgreSQL, S01–S21, ảnh SQL và kiểm chứng dữ liệu chính thức sẽ được bổ sung sau; tự kiểm tra tài liệu không thay thế kiểm thử DB.
+
+### 3.6. Kiểm thử ràng buộc nâng cao và giao dịch
+
+**Môi trường áp dụng:** PostgreSQL ≥15, bật `btree_gist`. Thứ tự tái lập: `01_schema.sql` → `02_constraints.sql` → `03_seed.sql` → `tests/constraints_week2.sql` → `06_validation.sql`. Ca thử âm phải có lỗi mong đợi và được rollback; dataset 636 bản ghi không được thay đổi. Hai loại dữ liệu được phân biệt: dữ liệu mô phỏng chính thức và fixture 990xx chỉ tồn tại trong transaction kiểm thử.
+
+| Tình huống kiểm thử | Expected | Cơ chế |
+|---|---|---|
+| Hai đợt cùng loại giao ngày; cả INSERT và UPDATE | Lỗi `23P01` | B06 |
+| Hai đợt liền ngày, hoặc cùng người nhưng khác loại | Chấp nhận | B06 |
+| Chuyển nội bộ giữa hai cư dân hoặc cùng hộ | Lỗi `23514` | B08 |
+| Chuyển sai ngày, sửa ngược đợt làm sai sự kiện | Lỗi `23514` | B09 |
+| Di chuyển địa chỉ/tổ đã có lịch sử | Lỗi `23514` | B11 |
+| Ghi biến động bằng tài khoản khóa | Lỗi `23514` | B14 |
+| Chuyển nội bộ lỗi ở bước tạo đợt mới | Lỗi `23503`, đợt cũ và sự kiện không bị đổi | B10 |
+| Chuyển nội bộ hợp lệ | Đóng cũ, tạo mới và lưu nhật ký khớp | B10 |
+
+**Minh chứng nghiệm thu:** Lưu log PostgreSQL thực thi từ CSDL trắng và kết quả `06_validation.sql` vào `tests/final_test_log.md`, kèm ảnh các ca tiêu biểu trong `evidence/sql/`. Không sử dụng log kiểm tra tệp tuần 1 để thay thế kiểm thử ràng buộc tuần 2.
 
 ## CHƯƠNG 4 — ĐẠI SỐ QUAN HỆ (10 CÂU)
 

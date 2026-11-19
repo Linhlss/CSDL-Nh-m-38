@@ -52,6 +52,65 @@ WHERE (b.ma_qua_trinh_cu IS NOT NULL
        AND moi.ngay_bat_dau IS DISTINCT FROM b.ngay_bien_dong)
 ORDER BY b.ma_bien_dong;
 
--- TODO: kiểm tra cặp đợt cùng cư dân cùng loại chồng lấn.
--- TODO: kiểm tra cặp đợt cũ/mới của sự kiện chuyển nội bộ cùng cư dân.
--- TODO: kiểm tra số kịch bản S01–S21 và query expected.
+
+
+-- ===== KIEM TRA TUAN 2 (TV1): phat hien du lieu vuot qua rang buoc =====
+-- B06: hai dot cung nguoi, cung loai, giao nhau (mong doi 0 dong).
+SELECT a.ma_qua_trinh AS dot_a, b.ma_qua_trinh AS dot_b,
+       a.ma_cu_dan, a.loai_cu_tru
+FROM qua_trinh_cu_tru a
+JOIN qua_trinh_cu_tru b
+  ON a.ma_cu_dan = b.ma_cu_dan
+ AND a.loai_cu_tru = b.loai_cu_tru
+ AND a.ma_qua_trinh < b.ma_qua_trinh
+WHERE daterange(a.ngay_bat_dau, a.ngay_ket_thuc, '[]')
+   && daterange(b.ngay_bat_dau, b.ngay_ket_thuc, '[]');
+
+-- B08/B09: su kien sai nguoi/ho/ngay (mong doi 0 dong).
+SELECT b.ma_bien_dong, b.loai_bien_dong,
+       cu.ma_cu_dan AS nguoi_cu, moi.ma_cu_dan AS nguoi_moi,
+       cu.ma_ho AS ho_cu, moi.ma_ho AS ho_moi
+FROM bien_dong_cu_tru b
+LEFT JOIN qua_trinh_cu_tru cu ON cu.ma_qua_trinh = b.ma_qua_trinh_cu
+LEFT JOIN qua_trinh_cu_tru moi ON moi.ma_qua_trinh = b.ma_qua_trinh_moi
+WHERE (b.ma_qua_trinh_cu IS NOT NULL
+        AND cu.ngay_ket_thuc IS DISTINCT FROM b.ngay_bien_dong - 1)
+   OR (b.ma_qua_trinh_moi IS NOT NULL
+        AND moi.ngay_bat_dau IS DISTINCT FROM b.ngay_bien_dong)
+   OR (b.loai_bien_dong = 'CHUYEN_NOI_BO'
+        AND (cu.ma_cu_dan IS DISTINCT FROM moi.ma_cu_dan
+             OR cu.ma_ho IS NOT DISTINCT FROM moi.ma_ho));
+
+-- Assertion tren bo du lieu da nap: neu vi pham, psql ON_ERROR_STOP=1 se dung.
+DO $assert$
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM qua_trinh_cu_tru a
+        JOIN qua_trinh_cu_tru b
+          ON a.ma_qua_trinh < b.ma_qua_trinh
+         AND a.ma_cu_dan = b.ma_cu_dan
+         AND a.loai_cu_tru = b.loai_cu_tru
+        WHERE daterange(a.ngay_bat_dau, a.ngay_ket_thuc, '[]')
+           && daterange(b.ngay_bat_dau, b.ngay_ket_thuc, '[]')
+    ) THEN
+        RAISE EXCEPTION 'B06 validation FAIL: còn đợt chồng lấn';
+    END IF;
+    IF EXISTS (
+        SELECT 1 FROM bien_dong_cu_tru b
+        LEFT JOIN qua_trinh_cu_tru cu ON cu.ma_qua_trinh = b.ma_qua_trinh_cu
+        LEFT JOIN qua_trinh_cu_tru moi ON moi.ma_qua_trinh = b.ma_qua_trinh_moi
+        WHERE (b.ma_qua_trinh_cu IS NOT NULL AND
+               cu.ngay_ket_thuc IS DISTINCT FROM b.ngay_bien_dong - 1)
+           OR (b.ma_qua_trinh_moi IS NOT NULL AND
+               moi.ngay_bat_dau IS DISTINCT FROM b.ngay_bien_dong)
+           OR (b.loai_bien_dong = 'CHUYEN_NOI_BO'
+               AND (cu.ma_cu_dan IS DISTINCT FROM moi.ma_cu_dan
+                    OR cu.ma_ho IS NOT DISTINCT FROM moi.ma_ho))
+    ) THEN
+        RAISE EXCEPTION 'B08/B09 validation FAIL: sự kiện mâu thuẫn đợt';
+    END IF;
+    RAISE NOTICE '[PASS] B06, B08, B09: dữ liệu đang nạp không có vi phạm';
+END
+$assert$;
+
+-- Đối soát expected/actual S01–S21 và 10 truy vấn: tests/ và Gate 3.

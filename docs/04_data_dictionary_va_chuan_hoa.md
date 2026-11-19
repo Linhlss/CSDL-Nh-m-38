@@ -176,24 +176,28 @@ Xét riêng tập phụ thuộc nội bảng do PK/UNIQUE công bố, bảng `bi
 
 C1 làm rõ trường hợp một đợt không có sự kiện; không đổi khóa, FD đã công bố hoặc số bảng/cột. Không suy ra quan hệ bắt buộc một–một giữa đợt và sự kiện để đơn giản hóa chứng minh. Bản tuần 1 giữ đủ khóa/FD, phân tích 1NF–3NF theo phạm vi đã nêu và câu hỏi DEC12; chưa tuyên bố đã chốt chuẩn hóa cuối của toàn mô hình.
 
-## 6. Ma trận ràng buộc và phương án tuần 2
+## 6. Ma trận ràng buộc và hiện thực tuần 2
 
-| Quy tắc | Cơ chế trong DDL v1 | Phương án triển khai / kiểm chứng tiếp |
+| Quy tắc | Cơ chế trong DDL cơ bản | Hiện thực bổ sung / kiểm chứng |
 |---|---|---|
-| B01–B03: khóa, tham chiếu, tính bắt buộc | 7 PK, 7 FK, NOT NULL, 3 UNIQUE | S17 và ca NULL/trùng khóa; không thêm UNIQUE cho họ tên hoặc địa chỉ hộ |
-| B04: ngày và loại | `ck_qt_ngay`, `ck_qt_loai` | S18, đợt một ngày, ngày biên; DATE không cho ngày lịch sai |
-| B05: tập hiệu lực | Không lưu trạng thái suy diễn | Mọi câu “đang” dùng cùng predicate; kiểm tương lai/NULL/ngày cuối |
-| B06: không giao cùng người/cùng loại | Chưa có | Exclusion constraint GiST trên người, loại và `daterange(ngay_bat_dau, ngay_ket_thuc, '[]')`, extension `btree_gist`; NULL ở cận trên biểu diễn không giới hạn; kiểm cả INSERT/UPDATE và ca cạnh tranh |
-| B07: hình dạng sự kiện | `ck_bd_hinh_dang` | S19, ba hình dạng đúng và các dạng sai |
-| B08–B09: nội bộ và ngày sự kiện | Chưa có | Trigger kiểm các đợt tham chiếu khi INSERT/UPDATE sự kiện; kiểm lại mọi sự kiện liên quan khi UPDATE đợt. Chặn FK người/hộ/ngày bị đổi gây sai lịch sử; kiểm ngay trước commit với thứ tự giao dịch hợp lệ |
-| B10: nguyên tử | Chưa có thủ tục/transaction mẫu | Một giao dịch, khóa đợt cũ trước sửa; test lỗi ở bước 2/3 thì rollback toàn bộ |
-| B11: liên kết lịch sử ổn định | Chưa có | Ngăn đổi FK hộ–địa chỉ/địa chỉ–tổ đã dùng trong lịch sử; không chỉ kiểm bảng sự kiện |
-| B12: không xóa dây chuyền | FK NO ACTION | Test xóa cha có con bị từ chối; chưa đủ để ngăn mọi DELETE lịch sử nếu chưa có con, cần quyền/quy trình |
-| B14: tài khoản ghi mới hoạt động | FK chỉ kiểm tồn tại | Kiểm tra nghiệp vụ/trigger khi ghi sự kiện; không kiểm hồi tố sự kiện cũ khi tài khoản bị khóa |
-| B15: chất lượng đầu vào | Chưa có CHECK/trigger thêm | Seed validator và các ca ngày sinh/ngày lập hộ/tên rỗng |
-| B17–B18: thống kê và dữ liệu mô phỏng | Thuộc seed/query/quyền | COUNT DISTINCT, dữ liệu có đáp án tay, role thật và VIEW của TV3 |
+| B01–B03: PK/FK/UNIQUE/NOT NULL | 7 PK, 7 FK, 3 UNIQUE | Kiểm thử FK, NULL và trùng khóa trong S17–S19 |
+| B04: ngày và loại | `ck_qt_ngay`, `ck_qt_loai` | Ngày cuối được tính bao gồm; NULL kết thúc là khoảng mở |
+| B05: hiệu lực tại d | Không có trạng thái suy diễn | Truy vấn thống nhất ngày bắt đầu ≤ d và kết thúc NULL hoặc ≥ d |
+| B06: không giao cùng người/cùng loại | Chưa có trong `01_schema.sql` | `ex_qt_cu_tru_khong_chong_lan`: GiST exclusion trên mã cư dân, loại và `daterange(..., '[]')`; test INSERT/UPDATE chồng lấn (`23P01`), liền ngày và khác loại |
+| B07: hình dạng sự kiện | `ck_bd_hinh_dang` | CHECK phân biệt chuyển đến, đi, nội bộ |
+| B08–B09: sự kiện và ngày | Chưa có trong `01_schema.sql` | `fn_kiem_tra_su_kien`, trigger trên `bien_dong_cu_tru` và trigger kiểm lại khi UPDATE `qua_trinh_cu_tru`; kiểm cùng người/khác hộ, cũ kết thúc t−1, mới bắt đầu t |
+| B10: giao dịch chuyển nội bộ | Chưa có hàm mẫu | `fn_chuyen_noi_bo` khóa đợt cũ FOR UPDATE, đóng đợt, tạo đợt mới, tạo sự kiện; thử lỗi FK giữa các bước, chứng minh rollback |
+| B11: liên kết lịch sử ổn định | FK không ngăn đổi liên kết hợp lệ | Trigger bảo vệ `ho_cu_tru.ma_dia_chi` và `dia_chi.ma_to` nếu đã có lịch sử; khóa SHARE khi thêm đợt để giảm nguy cơ cập nhật song song |
+| B12: không xóa dây chuyền | FK NO ACTION | Không xóa cascade; kiểm soát DELETE qua vai trò/quy trình |
+| B14: tài khoản ghi mới hoạt động | FK chỉ kiểm tồn tại | Trigger B14 chỉ kiểm khi INSERT sự kiện hoặc đổi người ghi, không hồi tố khi trạng thái tài khoản đổi |
+| B15: chất lượng đầu vào | Chưa có CHECK liên bảng cho B15 | Bộ sinh dữ liệu kiểm ngày sinh/ngày lập hộ/tên; giới hạn cần nêu trung thực, chưa tự chặn mọi UPDATE trực tiếp |
+| B17–B18: thống kê, mô phỏng | Seed, query, role | COUNT DISTINCT, bộ 636 bản ghi và 2 demo bảo mật |
 
-GiST/exclusion được chọn theo [PostgreSQL Range Types](https://www.postgresql.org/docs/17/rangetypes.html#RANGETYPES-CONSTRAINT); CHECK một dòng không bảo vệ mọi quan hệ xuyên dòng/bảng theo [PostgreSQL Constraints](https://www.postgresql.org/docs/17/ddl-constraints.html). Kiểm môi trường có extension trước khi viết script tuần 2. Tuần 1 chưa cài extension hoặc ghi rằng cơ chế này đã bật.
+**Thứ tự chạy PostgreSQL:** `sql/01_schema.sql` → `sql/02_constraints.sql` → `sql/03_seed.sql` → `tests/constraints_week2.sql` → `sql/06_validation.sql`. File kiểm thử mở transaction và rollback nên không thay đổi bộ seed chính. `sql/02_constraints.sql` có mã hiện thực nhưng chỉ được đánh dấu PASS sau khi có log chạy PostgreSQL và kiểm tra đầu ra thực.
+
+**Lưu ý chuẩn hóa:** Việc hiện thực B09 không tự động chứng minh bảng `bien_dong_cu_tru` đạt 3NF theo toàn bộ phụ thuộc nghiệp vụ có điều kiện. Ngày sự kiện vẫn là thông tin có thể suy ra từ biên đợt; báo cáo phải trình bày đây là dư thừa có kiểm soát được ràng buộc bằng trigger, hoặc xem xét loại bỏ trong một thiết kế khác. Không thêm bảng/chỉnh schema chỉ để che nhược điểm này.
+
+Các cơ chế được xây dựng dựa trên [PostgreSQL Range Types](https://www.postgresql.org/docs/17/rangetypes.html#RANGETYPES-CONSTRAINT) và [PostgreSQL Constraints](https://www.postgresql.org/docs/17/ddl-constraints.html). Chức năng CHECK một hàng không thể kiểm tra tính nhất quán của nhiều hàng hoặc nhiều bảng.
 
 ## 7. Chỉ mục và thứ tự nạp
 
