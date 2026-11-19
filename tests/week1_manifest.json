@@ -110,8 +110,8 @@
     },
     {
       "path": "docs/02_bao_cao_suon.md",
-      "bytes": 52279,
-      "sha256": "f4ebb9a0d8fd3f1d652b13661e88bd4e20e4c98408139ad0175a98bf88d1f51a"
+      "bytes": 77702,
+      "sha256": "21c2ff2fd668a5cd965391a3430c220d45d9eef666424d8702a6ceff06d4cfe8"
     },
     {
       "path": "docs/03_CHECKLIST_DU_AN.md",
@@ -240,8 +240,8 @@
     },
     {
       "path": "tests/final_test_log.md",
-      "bytes": 647,
-      "sha256": "e3fdb816c2e3e38ce9bd59ff250ab34e77ae926aad6c04055ee7a67a922ad4ae"
+      "bytes": 4417,
+      "sha256": "54f6a166d3c294835e8e72b037fa968e6b96e41dc848185ac69fd22107947bfb"
     },
     {
       "path": "tests/ra_fixture.sql",
