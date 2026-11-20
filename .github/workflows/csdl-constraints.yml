@@ -45,7 +45,6 @@ jobs:
           python3 scripts/ra_sql_blocks.py
       - name: Verify historical week 1 records without modifying old runtime evidence
         run: |
-          python3 scripts/verify_week1.py --record
           python3 scripts/verify_week1.py
       - name: Install PostgreSQL client
         run: |

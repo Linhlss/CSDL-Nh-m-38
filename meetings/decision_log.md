@@ -242,3 +242,14 @@ Quyền repo kiểm tra 16/11: Linhlss admin, Ngocdeezet write, ninhdn07 write. 
 - Không thay đổi ERD/7 bảng lõi, lược đồ khóa, 10 câu SQL, 10 RA hoặc seed636; chỉ bổ sung loại constraint/index GiST, trigger, hàm và test.
 - [Chi tiết expected/actual và mã SQLSTATE](../tests/week2_constraints_execution_log.md).
 
+
+
+## 8. TV1 bàn giao kỹ thuật ngày 20/11/2026 — chờ review chính thức
+
+TV1 hoàn thành bản ứng viên tại nhánh `fix/tv1-integration-gate2`; **không sửa main, không merge PR #5**. [Hồ sơ TV1](../docs/09_ho_so_tv1_gate2.md) trình bày mã, expected/actual, những hạn chế và người review.
+
+**Bằng chứng:** [CI PostgreSQL 17 run 44654667107](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44654667107) — 6 unit parser, 14/14 kiểm tra tệp, 40 trường hợp ràng buộc/rollback, 3 validation và 71 đối soát tích hợp đều PASS. Seed636 không đổi. Lỗi quyền ở B1/B2 là kết quả kiểm thử âm mong đợi.
+
+E1: assertion chỉ dùng ở khâu nghiệm thu, chưa chống ghi trùng ngay lúc INSERT. B15: CHECK và trigger trên hai chiều ghi dữ liệu. S04: 47–50; S14b: bẫy COUNT DISTINCT tạm trên fixture và rollback, không thay đổi seed.
+
+**Đề xuất TV1 về 3NF:** giữ `ngay_bien_dong` là dư thừa có kiểm soát bởi trigger B09; không khẳng định 7 bảng đều tuyệt đối 3NF theo mọi phụ thuộc hàm có điều kiện. Cần TV2/TV3 review. Gate 2 cả nhóm, môi trường Windows TV2, hình chứng minh và báo cáo nộp cuối vẫn chờ nghiệm thu.
