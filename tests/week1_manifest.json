@@ -115,8 +115,8 @@
     },
     {
       "path": "docs/02_bao_cao_suon.md",
-      "bytes": 58043,
-      "sha256": "5acf5edb6eb39429213b8976bf7553f26f1bc489d270f3425aaa25f198f3d852"
+      "bytes": 58450,
+      "sha256": "a654647a858e3ee87eed1e85c9137df9dd55fd75a18c3f81a76ed90ecf45e42d"
     },
     {
       "path": "docs/03_CHECKLIST_DU_AN.md",
@@ -145,13 +145,13 @@
     },
     {
       "path": "docs/06b_bao_mat.md",
-      "bytes": 24092,
-      "sha256": "be99ec507018c5bdcf0ed9aabafceac66b70e8f3092260cf0bba5014f89620fe"
+      "bytes": 24202,
+      "sha256": "644633f2b7867126a795a4400cec1dec984cbcac160a048228e6d27f1271dba1"
     },
     {
       "path": "docs/07_ma_tran_truy_van_va_review.md",
-      "bytes": 22831,
-      "sha256": "b6a2533952bebd1d6f6a988d4ecb9d909a56142a6c61232f888dc89890a5611c"
+      "bytes": 23068,
+      "sha256": "58f7381fb8d44f09d49a200cbd7cebb88de6e0b3dde81636aa971e42a650b165"
     },
     {
       "path": "docs/08_huong_dan_dung_csdl.md",
@@ -215,8 +215,8 @@
     },
     {
       "path": "scripts/verify_week1.py",
-      "bytes": 24296,
-      "sha256": "001387d1ddc62d578cd7f5fcd202ad19afa3840c85ade1fcc0600d1ecc7c7b94"
+      "bytes": 24435,
+      "sha256": "fea251206918e5ed7af186ad994d1bdeeae79cbd4d196420a6402e40e595c4b2"
     },
     {
       "path": "scripts/verify_week1_runtime.py",
@@ -245,8 +245,8 @@
     },
     {
       "path": "sql/05_security.sql",
-      "bytes": 13183,
-      "sha256": "1a3329adb5072a5189bbf4736312e377a3e20c8b5d64bf57aa03180ab87fa5e1"
+      "bytes": 13528,
+      "sha256": "f2dbe40ff50696eb59394184f33786966252ce93afb379a625fb9fcf1122af56"
     },
     {
       "path": "sql/06_validation.sql",
@@ -270,8 +270,8 @@
     },
     {
       "path": "tests/security_catalog_tv3.sql",
-      "bytes": 7334,
-      "sha256": "b0a60f755a9a242340fd88def25b9d309a6a36e4818dadd857d8cffffcb162ca"
+      "bytes": 8369,
+      "sha256": "e616ddca4a0a057ec4f7933628570a520a8da752e08f400194edd0ca5e0ce15c"
     },
     {
       "path": "tests/security_login_tv3.sql",
@@ -336,7 +336,7 @@
     {
       "path": "tests/week1_verification_log.md",
       "bytes": 4560,
-      "sha256": "948313a9868f3b8c0ee1d7f4e89ec82fe5e087952e63a9db98679aaba2aeb8fa"
+      "sha256": "cc6fce5978ae27ab99ddca323877bf5324f95961dbfce41126a83cad5d5b2059"
     },
     {
       "path": "tests/week2_constraints_execution_log.md",
@@ -345,8 +345,8 @@
     },
     {
       "path": "tests/week2_security_login_log.md",
-      "bytes": 4990,
-      "sha256": "1158f42307390b8ed4c07af5ebdf77f79df56e0476506372f84cf83f056bfb69"
+      "bytes": 6230,
+      "sha256": "c645f6cd50de26018ab63dfe2d43a263df3c16d82456ef1621ab0e0a1cd12b20"
     }
   ]
 }
