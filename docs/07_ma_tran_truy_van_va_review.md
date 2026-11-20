@@ -133,3 +133,29 @@ Nền: nhánh `tv3/gate2-w2-t3`, dựng trên `fix/tv1-integration-gate2` @ `025
 | T3-07 | Manifest `tests/week1_manifest.json` phải ghi lại từ bản checkout LF sau mỗi lần sửa `docs/` hoặc `tests/`. Máy TV3 dùng `core.autocrlf=true` nên `verify_week1.py` báo 2 FAIL xuống dòng (`sql/01_schema.sql`, `diagrams/erd_v1.drawio`) không liên quan nội dung | Người merge cuối | Mỗi lần merge |
 
 Không còn lỗi chặn nào ở phần RA và bảo mật. Các mục T3-03 đến T3-05 thuộc Gate 3 (ảnh và báo cáo cuối), nêu ở đây để có owner và hạn.
+
+## 10. Kiểm tra chéo schema/ERD của TV1 — TV3, 20/11/2026 (W3-T3-08)
+
+Phạm vi: `01_schema.sql`, `02_constraints.sql`, `diagrams/erd_v1.drawio`, [03](03_dac_ta_nghiep_vu.md) (B01–B18, P1–P6), [04](04_data_dictionary_va_chuan_hoa.md), trên nhánh tích hợp @ `52eb8d9`. Thử nghiệm chạy trên DB `csdl17_seed636` (PostgreSQL 17.11), mọi lệnh ghi trong transaction rồi ROLLBACK.
+
+**Đạt, không cần sửa**
+
+- ERD khớp DDL: 7 thực thể, 35 thuộc tính, 7 vai trò FK (`verify_week1.py` kiểm tự động); bản số 1/0..N trên 5 quan hệ phân cấp, 0..1/0..N cho hai vai trò "đợt cũ", "đợt mới" đúng với quyết định E1 (không UNIQUE hai FK). Ký hiệu `?` cho hai FK được NULL khớp `bien_dong_cu_tru`.
+- NULL: chỉ `ngay_ket_thuc`, hai FK đợt và các cột `ghi_chu` được NULL, đúng B04/B07. `daterange(bat_dau, NULL, '[]')` hiểu NULL là không giới hạn trên, đúng B05/B06.
+- Ràng buộc thời gian: B06 (EXCLUDE GiST), B09 hai chiều (trigger trên sự kiện và trên UPDATE đợt), B15 hai chiều đều có test âm/dương trong `tests/constraints_week2.sql` và PASS ở CI.
+- B10 chạy được bằng role nghiệp vụ: `csdl17_admin` gọi `fn_chuyen_noi_bo` thành công (đóng đợt cũ, tạo đợt mới, ghi sự kiện). Các trigger SECURITY INVOKER cần khóa `FOR SHARE` trên bảng cha, admin đủ quyền.
+- Quyết định giữ `ngay_bien_dong` (04, dòng "Quyết định đề xuất của TV1 cho Gate 2"): **TV3 đồng ý giữ**. Nhận xét bổ sung cho Chương 2: quan hệ `ngay_bien_dong` với `ngay_bat_dau`/`ngay_ket_thuc` là ràng buộc **giữa hai quan hệ**, không phải FD trong nội bộ `bien_dong_cu_tru`; khi E1 được bảo đảm, mỗi giá trị khác NULL của `ma_qua_trinh_cu`/`ma_qua_trinh_moi` chỉ xuất hiện một lần, nên vế trái của FD suy ra là khóa trên các bộ khác NULL. Nên trình bày là "dư thừa có kiểm soát bằng trigger", như TV1 đã viết.
+
+**Vấn đề phát hiện**
+
+| ID | Mức | Vấn đề | Bằng chứng | Đề xuất | Owner |
+|---|---|---|---|---|---|
+| X01 | Trung bình | 13/63 sự kiện seed636 (21%) do `thongke_01` (vai trò `THONG_KE`) ghi, trong khi đặc tả mục 3 nói cán bộ tổng hợp "không sửa dữ liệu gốc". B14 chỉ kiểm `HOAT_DONG`, không kiểm vai trò | Sự kiện 11, 13, 16, 26, 29, 33, 38, 43, 51, 52, 59, 62, 63 | Theo quy tắc dừng, **không** đổi trigger. Chọn một: (a) TV2 đổi người ghi của 13 sự kiện sang tài khoản `CAN_BO` rồi sinh lại seed; hoặc (b) TV1 ghi rõ trong đặc tả rằng `vai_tro` chỉ mô tả, không ràng buộc người ghi, và nêu ở phần hạn chế. TV3 nghiêng về (b) vì không đổi kết quả 20 truy vấn | TV1 + TV2 |
+| X02 | Trung bình | `csdl17_admin` có `DELETE` trên `bien_dong_cu_tru` và `qua_trinh_cu_tru`: xóa được nhật ký sự kiện và đợt đã đóng không bị tham chiếu, trái B12 "không xóa lịch sử" | Dưới `SET ROLE csdl17_admin`: `DELETE 1` cho cả hai bảng (đã ROLLBACK) | Thu hồi `DELETE` trên hai bảng lịch sử khỏi `csdl17_admin` trong `05_security.sql`; chạy lại catalog/login test | **TV3** |
+| X03 | Thấp | 04 còn ba câu ghi "chưa có trigger / chưa có B06 trong script tuần 1" (mục `ho_cu_tru`, `qua_trinh_cu_tru`, khóa logic B06), dễ đọc thành hiện trạng | Các đoạn ngay trước bảng B06–B15 | Thêm "(đã hiện thực ở `02_constraints.sql`, xem bảng bên dưới)" | TV1 |
+| X04 | Thấp | Nhãn ERD vẫn ghi "Cấu trúc v1 / chờ review chéo • 11/11/2026" dù Gate 1 đã PASS | `erd_v1.drawio`, dòng phụ đề | Đổi thành "Thiết kế v1 • Gate 1 PASS 16/11/2026" khi xuất ảnh cuối, nếu còn thời gian | TV1 |
+| X05 | Thấp | Sự kiện 8, 9 (`CHUYEN_DEN` ngày 01/12 và 25/11) được ghi trước ngày xảy ra (`thoi_diem_ghi` 20/11). Đặc tả cho phép đợt tương lai nhưng không nói rõ ghi sự kiện tương lai | Truy vấn `ngay_bien_dong > thoi_diem_ghi::date` | Ghi một câu trong đặc tả P4: được ghi trước ngày chuyển (đăng ký trước) | TV1 |
+| X06 | Thông tin | Ngày sinh và ngày lập hộ ở tương lai (2099) vẫn chèn được khi chưa có đợt; B15 chỉ so với đợt | INSERT thử thành công (đã ROLLBACK) | Ngoài phạm vi; nêu ở hạn chế nếu cần | TV1 |
+| X07 | Thông tin | Ghi trùng một đợt trong cùng vai trò lúc INSERT không bị chặn | Hai `CHUYEN_DI` cùng đợt cũ chèn được | Đúng quyết định E1 (chỉ bắt khi validation); không sửa | — |
+
+Không có lỗi nghiêm trọng chặn Gate 3. X02 thuộc phần TV3 và sẽ được sửa nếu nhóm đồng ý.
