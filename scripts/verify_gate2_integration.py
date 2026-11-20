@@ -167,8 +167,8 @@ def main():
     before=rows(args.fixture_db,"SELECT COUNT(*) AS n FROM qua_trinh_cu_tru")
     statement="""
     BEGIN;
-    INSERT INTO qua_trinh_cu_tru(ma_cu_dan,ma_ho,loai_cu_tru,ngay_bat_dau)
-    VALUES (1,1,'TAM_TRU',DATE '2026-01-01');
+    INSERT INTO qua_trinh_cu_tru(ma_qua_trinh,ma_cu_dan,ma_ho,loai_cu_tru,ngay_bat_dau)
+    VALUES (99090,1,1,'TAM_TRU',DATE '2026-01-01');
     SELECT row_to_json(x) FROM (
        SELECT q.ma_ho, COUNT(*) AS n_dot, COUNT(DISTINCT q.ma_cu_dan) AS n_nguoi
        FROM qua_trinh_cu_tru q
