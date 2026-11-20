@@ -322,7 +322,10 @@ def runtime_evidence():
     blocks=re.findall(r"```sql\n(.*?)```",read("docs/06a_dai_so_quan_he.md"),re.S)
     assert len(blocks)==11
     sql.update({f"QRA{i:02}":clean(s) for i,s in enumerate(blocks[1:],1)})
-    assert {k:hashlib.sha256(v.encode()).hexdigest() for k,v in sql.items()}==result["query_sha256"]
+    current_hashes = {k:hashlib.sha256(v.encode()).hexdigest() for k,v in sql.items()}
+    mismatches = [k for k,v in current_hashes.items() if result["query_sha256"].get(k) != v]
+    missing = sorted(set(result["query_sha256"]) - set(current_hashes))
+    assert not mismatches and not missing, f"Historical SQL hashes changed: mismatched={mismatches}, missing={missing}"
     return f"{result['summary']['passed']}/{len(result['checks'])} historical PostgreSQL checks; week1 input versions preserved in log; week2 validation/runtime tooling tracked by new manifest and CI (DB not rerun by this script)"
 
 
