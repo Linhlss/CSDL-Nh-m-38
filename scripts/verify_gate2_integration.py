@@ -162,6 +162,15 @@ def main():
     psql(args.fixture_db,fixture_data())
     check_data(args.fixture_db,ra,sql,False)
     security(args.fixture_db)
+    # S14b không có ở seed636 nhưng phải có đối chứng DISTINCT tại fixture.
+    duplicates=rows(args.fixture_db, """
+      SELECT q.ma_ho FROM qua_trinh_cu_tru q
+      WHERE q.ngay_bat_dau <= DATE '2026-11-20'
+        AND (q.ngay_ket_thuc IS NULL OR q.ngay_ket_thuc >= DATE '2026-11-20')
+      GROUP BY q.ma_ho
+      HAVING COUNT(*) > COUNT(DISTINCT q.ma_cu_dan)
+    """)
+    assert_pred("fixture/S14b-count-distinct-counterexample",len(duplicates)>=1)
     print(f"RESULT: {PASSED} checks PASS (2 DB, 10 QRA + division, 10 QSQL, roles, VIEW)")
 
 if __name__=="__main__":

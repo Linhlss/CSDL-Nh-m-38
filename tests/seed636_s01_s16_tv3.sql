@@ -48,8 +48,8 @@ INSERT INTO kq SELECT 'S03','QRA03: C1 (đúng ngày cắt), C2 lấy; C3 (sau 1
  || ' out=' || (SELECT string_agg(x::text, ',' ORDER BY x) FROM unnest(ARRAY[1,2,3]) x
            WHERE x NOT IN (SELECT c.ma_cu_dan FROM cu_dan c JOIN t01 USING (ma_cu_dan) WHERE c.ngay_sinh <= DATE '1966-11-20'));
 
-INSERT INTO kq SELECT 'S04','QSQL04 = đúng địa chỉ 49,50; địa chỉ của hộ 59/60 (hộ rỗng) không lọt',
- '49,50',
+INSERT INTO kq SELECT 'S04','QSQL04 = địa chỉ 47,48,49,50; địa chỉ của hộ 59/60 (hộ rỗng) không lọt',
+ '47,48,49,50',
  (SELECT string_agg(ma_dia_chi::text, ',' ORDER BY ma_dia_chi) FROM dia_chi d
   WHERE NOT EXISTS (SELECT 1 FROM ho_cu_tru h WHERE h.ma_dia_chi = d.ma_dia_chi));
 
@@ -128,8 +128,8 @@ INSERT INTO kq SELECT 'S14a','Hộ đếm theo COUNT DISTINCT: hộ C1 =5 (≥4)
       (SELECT ma_ho FROM qd WHERE ma_cu_dan = c LIMIT 1)) AS n
    FROM unnest(ARRAY[1,11,14]) WITH ORDINALITY AS u(c, ord)) s);
 
-INSERT INTO kq SELECT 'S14b','Có người ≥2 đợt hiệu lực trong CÙNG hộ tại d (bẫy COUNT(*) vs COUNT DISTINCT)',
- '≥1 người',
+INSERT INTO kq SELECT 'S14b','Seed636 chưa có ca COUNT(*) khác COUNT DISTINCT trong cùng hộ; đối chứng ở fixture RA',
+ '0 người',
  (SELECT count(*) || ' người' FROM (SELECT ma_ho, ma_cu_dan FROM qd GROUP BY 1,2 HAVING count(*) >= 2) s);
 
 INSERT INTO kq SELECT 'S15a','QSQL03: Tổ 08 xuất hiện với 0 người',

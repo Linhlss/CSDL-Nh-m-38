@@ -250,6 +250,30 @@ BEGIN
     RAISE NOTICE '[PASS] B15-positive: bộ cư trú hợp lệ được ghi';
 END $positive$;
 
+-- S17–S19 và các ràng buộc cấu trúc: thử dữ liệu sai, phải bị từ chối.
+SELECT pg_temp.expect_sqlstate('S17_foreign_key',
+    $sql$INSERT INTO qua_trinh_cu_tru(ma_cu_dan,ma_ho,loai_cu_tru,ngay_bat_dau)
+         VALUES (999999,99001,'THUONG_TRU','2026-01-01')$sql$,'23503');
+SELECT pg_temp.expect_sqlstate('S18_end_before_start',
+    $sql$INSERT INTO qua_trinh_cu_tru(ma_cu_dan,ma_ho,loai_cu_tru,ngay_bat_dau,ngay_ket_thuc)
+         VALUES (99003,99002,'THUONG_TRU','2026-03-01','2026-02-28')$sql$,'23514');
+SELECT pg_temp.expect_sqlstate('S19_internal_without_episodes',
+    $sql$INSERT INTO bien_dong_cu_tru(loai_bien_dong,ngay_bien_dong,ma_tai_khoan)
+         VALUES ('CHUYEN_NOI_BO','2026-06-15',99001)$sql$,'23514');
+SELECT pg_temp.expect_sqlstate('PK_duplicate_primary_key',
+    $sql$INSERT INTO to_dan_pho(ma_to,ten_to) VALUES (99001,'TEST duplicate id')$sql$,'23505');
+SELECT pg_temp.expect_sqlstate('UNIQUE_duplicate_business_key',
+    $sql$INSERT INTO to_dan_pho(ten_to) VALUES ('TEST Tổ A')$sql$,'23505');
+SELECT pg_temp.expect_sqlstate('UNIQUE_duplicate_composite_address',
+    $sql$INSERT INTO dia_chi(ma_to,dia_chi_chuan)
+         VALUES (99001,'TEST địa chỉ A')$sql$,'23505');
+SELECT pg_temp.expect_sqlstate('NOT_NULL_missing_person_name',
+    $sql$INSERT INTO cu_dan(ho_ten,ngay_sinh,gioi_tinh)
+         VALUES (NULL,'1990-01-01','Nam')$sql$,'23502');
+SELECT pg_temp.expect_sqlstate('CHECK_invalid_gender',
+    $sql$INSERT INTO cu_dan(ho_ten,ngay_sinh,gioi_tinh)
+         VALUES ('TEST Invalid Gender','1990-01-01','Other')$sql$,'23514');
+
 -- B14: khóa tài khoản không làm mất nhật ký trước đó.
 UPDATE tai_khoan SET trang_thai='KHOA' WHERE ma_tai_khoan=99001;
 UPDATE bien_dong_cu_tru SET ghi_chu='sự kiện lịch sử vẫn được phép ghi chú'
