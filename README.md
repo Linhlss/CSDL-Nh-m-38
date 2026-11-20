@@ -42,6 +42,13 @@ Tệp `tests/constraints_week2.sql` chạy ca dương/âm trong transaction và 
 
 Xem **[Hướng dẫn dựng CSDL thống nhất](docs/08_huong_dan_dung_csdl.md)** để chạy hai DB riêng (seed636 và fixture RA), hai demo bảo mật và bộ đối soát tích hợp.
 
+## Hồ sơ TV1 Gate 2 — nhánh ứng viên
+
+- [Dựng từ CSDL trắng](docs/08_huong_dan_dung_csdl.md), chia DB seed636 và fixture RA.
+- [Hồ sơ TV1, kết quả CI và vấn đề chờ review](docs/09_ho_so_tv1_gate2.md).
+- [Kiểm thử PostgreSQL 17: run 44654667107](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44654667107): 6 unit parser, 14/14 kiểm tra tệp, 40 PASS ràng buộc, 3 PASS validation, 71 đối soát tích hợp; giữ seed636.
+- PR #5 của TV3 chưa merge vào main; thay đổi TV1 nằm trên nhánh `fix/tv1-integration-gate2`. Kết quả CI không thay chữ ký hay review TV2/TV3.
+
 ## Đọc và làm việc
 
 | Nội dung | Nguồn chính |
