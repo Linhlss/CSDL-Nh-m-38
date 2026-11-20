@@ -175,16 +175,36 @@ Riêng ngày biến động có thể suy ra từ biên ngày của đợt theo 
 
 Quyết định C1 không đổi tập khóa/FD đã công bố và không làm đợt–sự kiện thành quan hệ bắt buộc một–một. TV1 đã hoàn thiện đề xuất chốt DEC12 ở `docs/04_data_dictionary_va_chuan_hoa.md`. TV3 đã review xong. Review độc lập của TV2 vẫn là điều kiện nghiệm thu Gate 2.
 
-### 3.5. Kế hoạch dữ liệu và kiểm tra
+### 3.5. Dữ liệu mô phỏng và kế hoạch kiểm tra
 
-**Phạm vi bàn giao tuần 1:** TV2 chuẩn bị kế hoạch dữ liệu/SQL, fixture nhỏ có đáp án tay và ma trận kịch bản; việc nghiệm thu bộ dữ liệu lớn là bước riêng của tuần 2. Bộ seed chính thức hiện có 636 bản ghi giả lập: **8 tổ, 50 địa chỉ, 60 hộ, 200 cư dân, 250 đợt, 63 sự kiện, 5 tài khoản**. Dùng `sql/03_seed.sql`, không nạp CSV chồng lên seed. Cách tái lập hai database tách biệt nằm tại `docs/08_huong_dan_dung_csdl.md`. TV2 vẫn cần hoàn thiện phần giải thích nguồn/thiết kế sinh dữ liệu và Chương 5.
+> Người viết: TV2 (Trần Tuấn Ngọc). Reviewer được phân công: TV1 và TV3. Cập nhật tuần 2 ngày 19/11/2026; số liệu trích từ bộ sinh tái lập `scripts/generate_data.py`, `sql/03_seed.sql` và log PostgreSQL tại [tests/week1_execution_results.json](../tests/week1_execution_results.json) cùng [tests/week2_constraints_execution_log.md](../tests/week2_constraints_execution_log.md).
 
-TV1 đã chuẩn bị 30 tình huống kiểm tra thiết kế với đầu ra kỳ vọng trong `tests/week1_design_cases.md` và ma trận 20 câu hỏi. Kết quả thực thi PostgreSQL trên seed636 đã có cho các nhóm ca sau:
-- S01–S16: 18/18 ca có chấm điểm đạt, cộng 2 ca chỉ để thông tin.
-- S17–S19: kiểm FK, NULL và trùng khóa.
-- S20–S21: catalog quyền và đăng nhập thật.
+**Tuyên bố nguồn dữ liệu:** Bộ dữ liệu sử dụng trong đồ án là **dữ liệu giả lập do nhóm thiết kế nhằm kiểm thử các ràng buộc và truy vấn**, không phải dữ liệu nhân khẩu học thực tế, không sử dụng thông tin cá nhân của cư dân thật. Địa danh phường/đường/ngõ tại Hà Nội được dùng để tên địa chỉ tự nhiên; mọi số nhà, hộ cư trú, hồ sơ cư dân, đợt cư trú, biến động và tài khoản đều là mô phỏng và không phản ánh tình hình dân cư của một địa phương cụ thể.
 
-Kết quả được ghi trong CI và [log kiểm thử từ DB trắng ngày 20/11](../tests/week2_tv1_integration_log.md). Ảnh SQL cho bản nộp vẫn chờ Gate 3. Tự kiểm tra tài liệu không thay thế kiểm thử DB.
+**Kiến trúc hai lớp và quy mô thực tế:**
+
+- **Lớp 1 — `fixture29` ([tests/week1_fixture.sql](../tests/week1_fixture.sql)):** 29 bản ghi trên 7 bảng (3 tổ, 3 địa chỉ, 3 hộ, 7 cư dân, 8 đợt cư trú, 2 tài khoản, 3 biến động), có đáp án tính tay độc lập tại [tests/week1_expected.json](../tests/week1_expected.json) để đối chiếu từng tuple của 10 câu SQL và 10 câu RA.
+- **Lớp 2 — `seed636` ([sql/03_seed.sql](../sql/03_seed.sql) và 7 tệp CSV UTF-8 tại `data/generated/`):** sinh bằng [scripts/generate_data.py](../scripts/generate_data.py) với seed cố định `random.Random(20261110)`, tổng **636 bản ghi**:
+
+| STT | Bảng | Số bản ghi (`seed636`) | Quy mô gợi ý ban đầu | Ghi chú kiểm phủ kịch bản |
+|---|---|---:|---:|---|
+| 1 | `to_dan_pho` | 8 | 8 | `Tổ 01`–`Tổ 07` có cư dân; `Tổ 08` có 0 cư dân đang cư trú tại ngày `d` |
+| 2 | `dia_chi` | 50 | 50 | 4 địa chỉ chưa có nhóm hộ (`ma_dia_chi` 47–50, S04) |
+| 3 | `ho_cu_tru` | 60 | 60 | Có hộ `>= 4` người (S14), hộ 3 người, hộ 1 người và hộ trống (`ma_ho` 59–60, S05) |
+| 4 | `cu_dan` | 200 | 200 | Có ca trùng tên (`ma_cu_dan` 4–5, S16), sát ngày cắt 60 tuổi (`1966-11-20` và `1966-11-21`, S03), người chưa có đợt (S10), người chỉ có đợt tương lai |
+| 5 | `tai_khoan` | 5 | 5 | 4 tài khoản có ghi sự kiện; `ma_tai_khoan = 5` ghi 0 sự kiện (QSQL10) |
+| 6 | `qua_trinh_cu_tru` | 250 | 250 | Không chồng lấn cùng người + cùng loại (B06); có người 2 loại cùng lúc (S07), người 2 đợt cùng hộ (đối chứng QSQL05), người hết hiệu lực (S09) |
+| 7 | `bien_dong_cu_tru` | 63 | ~70 | Gồm `CHUYEN_DEN`, `CHUYEN_DI`, `CHUYEN_NOI_BO` cùng tổ và khác tổ (S11–S13); tuân thủ E1 và B09 |
+| | **Tổng cộng** | **636** | **~643** | Đủ bao phủ dương/âm `S01–S16`; không tạo sự kiện vô nghĩa để ép số lượng |
+
+**Quy tắc sinh, nạp và kiểm soát chất lượng:**
+
+- Sinh và nạp theo thứ tự khóa ngoại `to_dan_pho` → `dia_chi` → `ho_cu_tru` → `cu_dan` / `tai_khoan` → `qua_trinh_cu_tru` → `bien_dong_cu_tru`, cuối cùng đồng bộ lại 7 sequence bằng `setval(...)`.
+- Chỉ nạp bằng `sql/03_seed.sql` (có `TRUNCATE ... RESTART IDENTITY CASCADE` trong transaction); không nạp chồng thêm CSV vào cùng DB.
+- Quy tắc B15 (`ngay_lap <= ngay_bat_dau` sớm nhất của hộ) được hiệu chỉnh trước khi xuất tệp; bộ validator trong `scripts/generate_data.py` tự kiểm PK/FK, miền giá trị, B06/B08/B09/E1/B15 trước khi ghi tệp.
+- Kết quả kiểm tra tự động `sql/06_validation.sql` trên PostgreSQL 17 (`week1_execution_results.json` và CI run `44533515990`): `so_dot_sai_ngay = 0`, `V_E1_CU = 0` dòng, `V_E1_MOI = 0` dòng, `V_B09 = 0` dòng. Ca kiểm thử âm `S17–S19` và bộ test ràng buộc nâng cao chạy trong transaction `ROLLBACK`, không làm bẩn `seed636`. Ảnh minh chứng chạy trên máy cá nhân Windows (`W2-T2-01`) và ảnh kết quả SQL cuối kỳ (`evidence/sql/`) sẽ được bổ sung trước Gate 3.
+
+**Ghi chú tích hợp của TV1 (20/11/2026):** mục 3.5 ở trên được giữ nguyên theo bản của TV2 (PR #6). Bổ sung trạng thái kiểm thử mới hơn bản 19/11: ngoài 30 tình huống thiết kế trong `tests/week1_design_cases.md`, kết quả PostgreSQL trên seed636 nay có S01–S16 (18/18 ca có chấm điểm đạt, 2 ca chỉ để thông tin), S17–S19 (FK, NULL, trùng khóa) và S20–S21 (catalog quyền, đăng nhập thật), ghi trong CI và [log kiểm thử từ DB trắng](../tests/week2_tv1_integration_log.md). Cách tái lập hai database tách biệt nằm tại `docs/08_huong_dan_dung_csdl.md`. Ảnh SQL cho bản nộp vẫn chờ Gate 3.
 
 ### 3.6. Kiểm thử ràng buộc nâng cao và giao dịch
 
@@ -459,9 +479,416 @@ Khi đối soát, cần xử lý các khác biệt sau:
 
 ## CHƯƠNG 5 — SQL (10 CÂU)
 
-5.1. Hệ quản trị và cách tạo dữ liệu [TODO – TV2]  
-5.2–5.11. QSQL01–QSQL10: câu hỏi, SQL, ảnh, kết quả, nhận xét [TODO – TV2]  
-5.12. Tổng hợp kiểm thử [TODO – TV2]
+> Người viết: TV2 (Trần Tuấn Ngọc). Reviewer được phân công: TV1 và TV3. Nháp tuần 2 ngày 19/11/2026. Toàn bộ mã SQL lấy nguyên vẹn từ [sql/04_queries.sql](../sql/04_queries.sql); số liệu kết quả trên `fixture29` và `seed636` trích từ log chạy PostgreSQL 17.11 tại [tests/week1_execution_results.json](../tests/week1_execution_results.json) và lượt CI PostgreSQL 17 ([run 44533515990](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44533515990)). Ảnh chụp kết quả chạy từng câu trong `evidence/sql/` và log môi trường Windows cá nhân (`W2-T2-01`) sẽ được bổ sung trước Gate 3 (24/11).
+
+> **Ghi chú tích hợp của TV1 (20/11/2026, chờ TV2 review):** Nội dung Chương 5 lấy nguyên từ PR #6 của TV2 (commit `19c4a440`, `6c479e19`, tác giả Ngocdeezet). TV1 đã chạy lại 10 câu trên `seed636` và `fixture29` bằng PostgreSQL 17.12. Mọi số dòng và mọi bảng trích kết quả bên dưới đều **khớp với kết quả thực tế**. Các khẳng định về từng mã cư dân cũng khớp: 16 (chuyển nội bộ cùng tổ), 17 (hai đợt cùng hộ), 23–24 (chỉ có đợt tương lai), 25–27 (chưa có đợt), và S03 (ngày sinh 1966-11-20 và 1966-11-21). TV1 chỉ sửa hai lỗi:
+> 1. Tên VIEW đúng là `vw_thong_ke_cu_dan_theo_to`.
+> 2. Các lệnh ở mục 5.1 được thêm `-d csdl17_seed636`, theo góp ý review tự động trên PR #6, và thống nhất tên DB với `docs/08`.
+>
+> Bằng chứng mới nhất nằm ở [log kiểm thử TV1](../tests/week2_tv1_integration_log.md).
+
+### 5.1. Hệ quản trị và cách tạo dữ liệu
+
+- **Hệ quản trị CSDL:** PostgreSQL ≥ 15 (kiểm chứng trên PostgreSQL 17 / `psql`, bật extension `btree_gist` cho `02_constraints.sql`).
+- **Quy ước ngày tham chiếu và truy vấn:** Ngày tham chiếu cố định `d = DATE '2026-11-20'`; ngày kết thúc tính bao gồm. Một đợt đang hiệu lực tại `d` khi `ngay_bat_dau <= DATE '2026-11-20' AND (ngay_ket_thuc IS NULL OR ngay_ket_thuc >= DATE '2026-11-20')`. Khi đếm số người luôn dùng `COUNT(DISTINCT ma_cu_dan)`, không dùng `ho_ten` làm khóa định danh để tránh gộp nhầm người trùng tên (`S16`).
+- **Thứ tự dựng và kiểm tra từ CSDL trắng `csdl17_seed636`** (tạo trước bằng `createdb -U postgres csdl17_seed636`; mỗi lệnh chỉ rõ `-d` để không chạy nhầm vào DB mặc định theo tên người dùng):
+  1. `psql -X -U postgres -d csdl17_seed636 -v ON_ERROR_STOP=1 -f sql/01_schema.sql` — tạo 7 bảng, 7 PK, 7 FK, 3 UNIQUE, 6 CHECK và 5 chỉ mục.
+  2. `psql -X -U postgres -d csdl17_seed636 -v ON_ERROR_STOP=1 -f sql/02_constraints.sql` — bật ràng buộc nâng cao B06, B08–B11, B14, B15 và hàm E1.
+  3. `psql -X -U postgres -d csdl17_seed636 -v ON_ERROR_STOP=1 -f sql/03_seed.sql` — nạp 636 bản ghi (`seed636`) theo thứ tự FK và đồng bộ 7 sequence.
+  4. `psql -X -U postgres -d csdl17_seed636 -v ON_ERROR_STOP=1 -f sql/06_validation.sql` — kiểm tra số bản ghi và xác nhận `V_E1_CU`, `V_E1_MOI`, `V_B09` trả 0 dòng.
+  5. `psql -X -U postgres -d csdl17_seed636 -v ON_ERROR_STOP=1 -f sql/04_queries.sql` — chạy toàn bộ `QSQL01–QSQL10`.
+
+  Chuỗi đầy đủ, gồm cả kiểm thử âm `tests/constraints_week2.sql` và DB fixture RA riêng, nằm ở `docs/08_huong_dan_dung_csdl.md`.
+
+---
+
+### 5.2. QSQL01 — Danh sách cư dân đang cư trú tại Tổ 01 vào ngày d
+
+- **Câu hỏi nghiệp vụ & tham số:** Liệt kê mã cư dân, họ tên và loại cư trú của các cư dân đang cư trú tại `Tổ 01` tại ngày `d = 2026-11-20`.
+- **Bảng sử dụng:** `cu_dan`, `qua_trinh_cu_tru`, `ho_cu_tru`, `dia_chi`, `to_dan_pho`.
+- **Truy vấn SQL:**
+
+```sql
+SELECT DISTINCT
+    c.ma_cu_dan,
+    c.ho_ten,
+    q.loai_cu_tru
+FROM cu_dan AS c
+JOIN qua_trinh_cu_tru AS q ON q.ma_cu_dan = c.ma_cu_dan
+JOIN ho_cu_tru AS h        ON h.ma_ho = q.ma_ho
+JOIN dia_chi AS d          ON d.ma_dia_chi = h.ma_dia_chi
+JOIN to_dan_pho AS t       ON t.ma_to = d.ma_to
+WHERE t.ten_to = 'Tổ 01'
+  AND q.ngay_bat_dau <= DATE '2026-11-20'
+  AND (q.ngay_ket_thuc IS NULL OR q.ngay_ket_thuc >= DATE '2026-11-20')
+ORDER BY c.ma_cu_dan, q.loai_cu_tru;
+```
+
+- **Giải thích kỹ thuật:** Nối chuỗi 5 bảng theo đường địa lý chuẩn `C → Q → H → D → T`, lọc đúng `ten_to = 'Tổ 01'` và điều kiện hiệu lực đầy đủ hai đầu ngày (tránh coi đợt tương lai có `ngay_ket_thuc IS NULL` là đang cư trú). `SELECT DISTINCT` theo bộ 3 cột `(ma_cu_dan, ho_ten, loai_cu_tru)` giúp giữ đủ hai người trùng tên (`ma_cu_dan = 4` và `5`) và hiển thị riêng từng loại cư trú nếu một người có đồng thời cả thường trú và tạm trú (`ma_cu_dan = 6`).
+- **Kết quả kiểm chứng:** `fixture29` trả **5 dòng** (4 người phân biệt); `seed636` trả **36 dòng** (ứng với 34 cư dân phân biệt, khớp `QRA01 = 34` khi bỏ cột `loai_cu_tru`). Trích 7 dòng đầu trên `seed636`:
+
+| `ma_cu_dan` | `ho_ten` | `loai_cu_tru` | Ghi chú đối chứng |
+|---:|---|---|---|
+| 1 | Nguyễn Hữu Khoa | `THUONG_TRU` | Cư dân Tổ 01 (S01) |
+| 2 | Hoàng Minh Thảo | `THUONG_TRU` | Cư dân Tổ 01 |
+| 3 | Hoàng Hữu Hùng | `THUONG_TRU` | Cư dân Tổ 01 |
+| 4 | Nguyễn Văn An | `THUONG_TRU` | Trùng tên với mã 5 (S16), không bị gộp |
+| 5 | Nguyễn Văn An | `TAM_TRU` | Trùng tên với mã 4 (S16), khác mã |
+| 6 | Dương Khánh Hương | `TAM_TRU` | Có đồng thời 2 loại tại Tổ 01 |
+| 6 | Dương Khánh Hương | `THUONG_TRU` | Xuất hiện 2 dòng vì khác `loai_cu_tru` |
+
+- **Ảnh minh chứng:** `[Chờ bổ sung: evidence/sql/QSQL01_result.png]`
+
+---
+
+### 5.3. QSQL02 — Danh sách các hộ đang có ít nhất 4 cư dân tại ngày d
+
+- **Câu hỏi nghiệp vụ & tham số:** Tìm các nhóm hộ đang có từ 4 cư dân phân biệt trở lên tại ngày `d = 2026-11-20`, sắp xếp giảm dần theo số cư dân.
+- **Bảng sử dụng:** `ho_cu_tru`, `qua_trinh_cu_tru`.
+- **Truy vấn SQL:**
+
+```sql
+SELECT
+    h.ma_ho,
+    COUNT(DISTINCT q.ma_cu_dan) AS so_cu_dan
+FROM ho_cu_tru AS h
+JOIN qua_trinh_cu_tru AS q ON q.ma_ho = h.ma_ho
+WHERE q.ngay_bat_dau <= DATE '2026-11-20'
+  AND (q.ngay_ket_thuc IS NULL OR q.ngay_ket_thuc >= DATE '2026-11-20')
+GROUP BY h.ma_ho
+HAVING COUNT(DISTINCT q.ma_cu_dan) >= 4
+ORDER BY so_cu_dan DESC, h.ma_ho;
+```
+
+- **Giải thích kỹ thuật:** Lọc các đợt hiệu lực tại `d` trong `WHERE`, gom nhóm theo `h.ma_ho`, dùng `COUNT(DISTINCT q.ma_cu_dan)` để không đếm trùng một cư dân nếu có hai loại cư trú trong cùng hộ, sau đó lọc ngưỡng `>= 4` ở `HAVING`.
+- **Kết quả kiểm chứng:** `fixture29` trả **1 hộ** (`ma_ho = 1`, `so_cu_dan = 4`; loại đúng hộ 1 người và hộ rỗng); `seed636` trả **24 hộ** (loại đúng hộ 3 người, hộ 1 người và hai hộ rỗng S05 `ma_ho = 59, 60`). Trích 6 dòng đầu trên `seed636`:
+
+| `ma_ho` | `so_cu_dan` |
+|---:|---:|
+| 12 | 7 |
+| 15 | 7 |
+| 19 | 7 |
+| 20 | 7 |
+| 25 | 7 |
+| 40 | 7 |
+
+- **Ảnh minh chứng:** `[Chờ bổ sung: evidence/sql/QSQL02_result.png]`
+
+---
+
+### 5.4. QSQL03 — Thống kê số cư dân đang cư trú theo từng tổ dân phố
+
+- **Câu hỏi nghiệp vụ & tham số:** Thống kê số cư dân phân biệt đang cư trú tại ngày `d = 2026-11-20` của tất cả tổ dân phố, bao gồm cả tổ có 0 cư dân.
+- **Bảng sử dụng:** `to_dan_pho`, `dia_chi`, `ho_cu_tru`, `qua_trinh_cu_tru`.
+- **Truy vấn SQL:**
+
+```sql
+SELECT
+    t.ma_to,
+    t.ten_to,
+    COUNT(DISTINCT q.ma_cu_dan) AS so_cu_dan
+FROM to_dan_pho AS t
+LEFT JOIN dia_chi AS d          ON d.ma_to = t.ma_to
+LEFT JOIN ho_cu_tru AS h        ON h.ma_dia_chi = d.ma_dia_chi
+LEFT JOIN qua_trinh_cu_tru AS q ON q.ma_ho = h.ma_ho
+                               AND q.ngay_bat_dau <= DATE '2026-11-20'
+                               AND (q.ngay_ket_thuc IS NULL OR q.ngay_ket_thuc >= DATE '2026-11-20')
+GROUP BY t.ma_to, t.ten_to
+ORDER BY t.ma_to;
+```
+
+- **Giải thích kỹ thuật:** Dùng chuỗi `LEFT JOIN` xuất phát từ `to_dan_pho` và đặt điều kiện lọc ngày hiệu lực ngay trong mệnh đề `ON` của `qua_trinh_cu_tru` (nếu đặt trong `WHERE` sẽ vô tình loại mất tổ 0 người). `COUNT(DISTINCT q.ma_cu_dan)` bỏ qua giá trị `NULL` (trả về `0` cho `Tổ 08`) và chỉ đếm 1 lần với cư dân có cả 2 loại cư trú trong cùng tổ (`ma_cu_dan = 6` tại `Tổ 01`).
+- **Kết quả kiểm chứng:** `fixture29` trả **3 tổ** (`Tổ 01 = 4`, `Tổ 02 = 1`, `Tổ 03 = 0`); `seed636` trả đủ **8 tổ** và khớp 100% với VIEW `vw_thong_ke_cu_dan_theo_to` của TV3 (`VIEW-vs-QSQL03 PASS`):
+
+| `ma_to` | `ten_to` | `so_cu_dan` |
+|---:|---|---:|
+| 1 | Tổ 01 | 34 |
+| 2 | Tổ 02 | 29 |
+| 3 | Tổ 03 | 21 |
+| 4 | Tổ 04 | 33 |
+| 5 | Tổ 05 | 41 |
+| 6 | Tổ 06 | 30 |
+| 7 | Tổ 07 | 11 |
+| 8 | Tổ 08 | 0 |
+
+- **Ảnh minh chứng:** `[Chờ bổ sung: evidence/sql/QSQL03_result.png]`
+
+---
+
+### 5.5. QSQL04 — Danh sách địa chỉ chưa có nhóm hộ nào
+
+- **Câu hỏi nghiệp vụ:** Liệt kê mã và tên địa chỉ chuẩn của các địa chỉ chưa được gán bất kỳ nhóm hộ cư trú nào.
+- **Bảng sử dụng:** `dia_chi`, `ho_cu_tru`.
+- **Truy vấn SQL:**
+
+```sql
+SELECT
+    d.ma_dia_chi,
+    d.dia_chi_chuan
+FROM dia_chi AS d
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM ho_cu_tru AS h
+    WHERE h.ma_dia_chi = d.ma_dia_chi
+)
+ORDER BY d.ma_dia_chi;
+```
+
+- **Giải thích kỹ thuật:** Dùng truy vấn con tương quan `NOT EXISTS` để tìm các địa chỉ không có bản ghi nào trong `ho_cu_tru`, an toàn với giá trị `NULL` hơn `NOT IN`. Địa chỉ đã có hộ nhưng hộ không có cư dân đang ở (`S05`, ví dụ địa chỉ chứa `ma_ho = 59, 60`) bị loại đúng vì vẫn tồn tại bản ghi trong `ho_cu_tru`.
+- **Kết quả kiểm chứng:** `fixture29` trả **1 dòng** (`ma_dia_chi = 3`); `seed636` trả đúng **4 dòng** (khớp `QRA05 = 4`):
+
+| `ma_dia_chi` | `dia_chi_chuan` |
+|---:|---|
+| 47 | Số 57 Phố Đại La, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội |
+| 48 | Số 58 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội |
+| 49 | Số 59 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội |
+| 50 | Số 60 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội |
+
+- **Ảnh minh chứng:** `[Chờ bổ sung: evidence/sql/QSQL04_result.png]`
+
+---
+
+### 5.6. QSQL05 — Danh sách cư dân từng cư trú ở ít nhất 2 nhóm hộ khác nhau
+
+- **Câu hỏi nghiệp vụ:** Liệt kê các cư dân đã từng cư trú ở từ 2 nhóm hộ khác nhau trở lên trên toàn bộ quá trình cư trú đã ghi nhận, kèm tổng số hộ phân biệt.
+- **Bảng sử dụng:** `cu_dan`, `qua_trinh_cu_tru`.
+- **Truy vấn SQL:**
+
+```sql
+SELECT
+    c.ma_cu_dan,
+    c.ho_ten,
+    COUNT(DISTINCT q.ma_ho) AS so_ho
+FROM cu_dan AS c
+JOIN qua_trinh_cu_tru AS q ON q.ma_cu_dan = c.ma_cu_dan
+GROUP BY c.ma_cu_dan, c.ho_ten
+HAVING COUNT(DISTINCT q.ma_ho) >= 2
+ORDER BY so_ho DESC, c.ma_cu_dan;
+```
+
+- **Giải thích kỹ thuật:** Dùng `COUNT(DISTINCT q.ma_ho) >= 2` ở `HAVING` để yêu cầu ít nhất 2 mã hộ khác nhau. Cư dân có nhiều đợt nhưng đều trong cùng một hộ (ca đối chứng `ma_cu_dan = 17` trên `seed636` và `C3` trên `fixture29`) chỉ có `COUNT(DISTINCT ma_ho) = 1` nên bị loại đúng.
+- **Kết quả kiểm chứng:** `fixture29` trả **1 dòng** (`C5`, `so_ho = 2`); `seed636` trả **54 dòng** (khớp `QRA04 = 54` khi chiếu bỏ cột `so_ho`). Trích 5 dòng đầu trên `seed636`:
+
+| `ma_cu_dan` | `ho_ten` | `so_ho` |
+|---:|---|---:|
+| 92 | Trần Phương Thảo | 3 |
+| 140 | Hồ Khánh My | 3 |
+| 6 | Dương Khánh Hương | 2 |
+| 15 | Vũ Gia Quân | 2 |
+| 16 | Lê Bảo Dung | 2 |
+
+- **Ảnh minh chứng:** `[Chờ bổ sung: evidence/sql/QSQL05_result.png]`
+
+---
+
+### 5.7. QSQL06 — Danh sách cư dân có cả lịch sử thường trú và tạm trú
+
+- **Câu hỏi nghiệp vụ:** Liệt kê mã và họ tên các cư dân có cả đợt `THUONG_TRU` và đợt `TAM_TRU` trong toàn bộ dữ liệu đã ghi nhận (không yêu cầu hai đợt phải trùng thời điểm).
+- **Bảng sử dụng:** `cu_dan`, `qua_trinh_cu_tru`.
+- **Truy vấn SQL:**
+
+```sql
+SELECT
+    c.ma_cu_dan,
+    c.ho_ten
+FROM cu_dan AS c
+WHERE EXISTS (
+    SELECT 1
+    FROM qua_trinh_cu_tru AS q1
+    WHERE q1.ma_cu_dan = c.ma_cu_dan
+      AND q1.loai_cu_tru = 'THUONG_TRU'
+)
+  AND EXISTS (
+    SELECT 1
+    FROM qua_trinh_cu_tru AS q2
+    WHERE q2.ma_cu_dan = c.ma_cu_dan
+      AND q2.loai_cu_tru = 'TAM_TRU'
+)
+ORDER BY c.ma_cu_dan;
+```
+
+- **Giải thích kỹ thuật:** Dùng hai mệnh đề `EXISTS` độc lập tương đương phép giao giữa tập cư dân có `THUONG_TRU` và tập cư dân có `TAM_TRU`, đồng thời không làm nhân bản dòng cư dân như khi `JOIN` hai lần. Cư dân chỉ có một loại (`S08`, như `ma_cu_dan = 1, 2`) bị loại đúng.
+- **Kết quả kiểm chứng:** `fixture29` trả **2 dòng** (`C3`, `C5`); `seed636` trả **31 dòng** (khớp `QRA07 = 31`). Trích 5 dòng đầu trên `seed636`:
+
+| `ma_cu_dan` | `ho_ten` |
+|---:|---|
+| 6 | Dương Khánh Hương |
+| 17 | Phạm Công Quân |
+| 18 | Vũ Minh Nga |
+| 41 | Ngô Tuấn Hải |
+| 42 | Vũ Hồng Lan |
+
+- **Ảnh minh chứng:** `[Chờ bổ sung: evidence/sql/QSQL06_result.png]`
+
+---
+
+### 5.8. QSQL07 — Danh sách cư dân từng cư trú nhưng không còn đợt nào hiệu lực tại ngày d
+
+- **Câu hỏi nghiệp vụ & tham số:** Tìm các cư dân đã từng có ít nhất một đợt cư trú bắt đầu từ `d = 2026-11-20` trở về trước, nhưng tại ngày `d` không còn đợt nào đang hiệu lực.
+- **Bảng sử dụng:** `cu_dan`, `qua_trinh_cu_tru`.
+- **Truy vấn SQL:**
+
+```sql
+SELECT
+    c.ma_cu_dan,
+    c.ho_ten
+FROM cu_dan AS c
+WHERE EXISTS (
+    SELECT 1
+    FROM qua_trinh_cu_tru AS q_past
+    WHERE q_past.ma_cu_dan = c.ma_cu_dan
+      AND q_past.ngay_bat_dau <= DATE '2026-11-20'
+)
+  AND NOT EXISTS (
+    SELECT 1
+    FROM qua_trinh_cu_tru AS q_cur
+    WHERE q_cur.ma_cu_dan = c.ma_cu_dan
+      AND q_cur.ngay_bat_dau <= DATE '2026-11-20'
+      AND (q_cur.ngay_ket_thuc IS NULL OR q_cur.ngay_ket_thuc >= DATE '2026-11-20')
+)
+ORDER BY c.ma_cu_dan;
+```
+
+- **Giải thích kỹ thuật:** Kết hợp `EXISTS` (`ngay_bat_dau <= d`) và `NOT EXISTS` (đợt hiệu lực tại `d`) giúp tách biệt chính xác ba nhóm biên: (1) người từng ở nay đã hết hạn (`S09`, được chọn), (2) người chưa từng có đợt nào (`S10`, như `ma_cu_dan = 25..27`, bị loại ở `EXISTS`), và (3) người chỉ có đợt tương lai bắt đầu sau `d` (`ma_cu_dan = 23, 24`, cũng bị loại ở `EXISTS`). Theo quyết định C1, truy vấn dựa vào `qua_trinh_cu_tru` nên vẫn đúng kể cả khi đợt hết hạn tự nhiên không có bản ghi `CHUYEN_DI`.
+- **Kết quả kiểm chứng:** `fixture29` trả **1 dòng** (`C7`); `seed636` trả **17 dòng** (khớp `QRA09 = 17`). Trích 5 dòng đầu trên `seed636`:
+
+| `ma_cu_dan` | `ho_ten` |
+|---:|---|
+| 19 | Lê Tuấn Hùng |
+| 20 | Phạm Minh Hương |
+| 21 | Lê Công Tú |
+| 22 | Vũ Thanh Phương |
+| 46 | Nguyễn Minh Hương |
+
+- **Ảnh minh chứng:** `[Chờ bổ sung: evidence/sql/QSQL07_result.png]`
+
+---
+
+### 5.9. QSQL08 — Thống kê số sự kiện biến động theo tháng và loại biến động
+
+- **Câu hỏi nghiệp vụ:** Đếm số lượng sự kiện chuyển đến, chuyển đi, chuyển nội bộ phát sinh trong từng tháng (chỉ hiển thị các cặp tháng–loại có phát sinh theo DEC09).
+- **Bảng sử dụng:** `bien_dong_cu_tru`.
+- **Truy vấn SQL:**
+
+```sql
+SELECT
+    TO_CHAR(DATE_TRUNC('month', b.ngay_bien_dong), 'YYYY-MM') AS thang,
+    b.loai_bien_dong,
+    COUNT(*) AS so_su_kien
+FROM bien_dong_cu_tru AS b
+GROUP BY DATE_TRUNC('month', b.ngay_bien_dong), b.loai_bien_dong
+ORDER BY thang, b.loai_bien_dong;
+```
+
+- **Giải thích kỹ thuật:** Dùng hàm `DATE_TRUNC('month', b.ngay_bien_dong)` chuẩn PostgreSQL để gom nhóm chính xác theo tháng dương lịch và `TO_CHAR(..., 'YYYY-MM')` để định dạng nhãn tháng dễ đọc; dùng `COUNT(*)` để đếm số sự kiện (một người có nhiều sự kiện trong cùng tháng vẫn tính đủ từng sự kiện).
+- **Kết quả kiểm chứng:** `fixture29` trả **3 dòng** (tháng `2026-11`, đủ 3 loại, mỗi loại 1); `seed636` trả **45 nhóm** tháng–loại (tổng cộng đúng 63 sự kiện). Trích 6 dòng đầu trên `seed636`:
+
+| `thang` | `loai_bien_dong` | `so_su_kien` |
+|---|---|---:|
+| 2025-01 | `CHUYEN_DEN` | 1 |
+| 2025-01 | `CHUYEN_DI` | 2 |
+| 2025-01 | `CHUYEN_NOI_BO` | 1 |
+| 2025-02 | `CHUYEN_DEN` | 1 |
+| 2025-02 | `CHUYEN_DI` | 1 |
+| 2025-02 | `CHUYEN_NOI_BO` | 6 |
+
+- **Ảnh minh chứng:** `[Chờ bổ sung: evidence/sql/QSQL08_result.png]`
+
+---
+
+### 5.10. QSQL09 — Danh sách các sự kiện chuyển nội bộ giữa hai tổ khác nhau
+
+- **Câu hỏi nghiệp vụ:** Liệt kê các sự kiện `CHUYEN_NOI_BO` trong đó cư dân chuyển từ một tổ dân phố sang một tổ dân phố khác, hiển thị mã sự kiện, mã cư dân, tổ cũ, tổ mới và ngày biến động.
+- **Bảng sử dụng:** `bien_dong_cu_tru`, `qua_trinh_cu_tru` (2 alias), `ho_cu_tru` (2 alias), `dia_chi` (2 alias).
+- **Truy vấn SQL:**
+
+```sql
+SELECT
+    b.ma_bien_dong,
+    q_cu.ma_cu_dan,
+    d_cu.ma_to AS ma_to_cu,
+    d_moi.ma_to AS ma_to_moi,
+    b.ngay_bien_dong
+FROM bien_dong_cu_tru AS b
+JOIN qua_trinh_cu_tru AS q_cu  ON q_cu.ma_qua_trinh = b.ma_qua_trinh_cu
+JOIN ho_cu_tru AS h_cu         ON h_cu.ma_ho = q_cu.ma_ho
+JOIN dia_chi AS d_cu           ON d_cu.ma_dia_chi = h_cu.ma_dia_chi
+JOIN qua_trinh_cu_tru AS q_moi ON q_moi.ma_qua_trinh = b.ma_qua_trinh_moi
+JOIN ho_cu_tru AS h_moi        ON h_moi.ma_ho = q_moi.ma_ho
+JOIN dia_chi AS d_moi          ON d_moi.ma_dia_chi = h_moi.ma_dia_chi
+WHERE b.loai_bien_dong = 'CHUYEN_NOI_BO'
+  AND q_cu.ma_cu_dan = q_moi.ma_cu_dan
+  AND d_cu.ma_to <> d_moi.ma_to
+ORDER BY b.ma_bien_dong;
+```
+
+- **Giải thích kỹ thuật:** Nối hai nhánh riêng biệt bằng bộ alias rõ ràng (`q_cu/h_cu/d_cu` và `q_moi/h_moi/d_moi`) để truy ra tổ cũ và tổ mới từ hai khóa ngoại `ma_qua_trinh_cu` và `ma_qua_trinh_moi`. Điều kiện `q_cu.ma_cu_dan = q_moi.ma_cu_dan` bảo vệ tính nhất quán cùng cư dân, còn `d_cu.ma_to <> d_moi.ma_to` loại đúng các ca chuyển nội bộ khác hộ nhưng cùng tổ (như `ma_cu_dan = 16` trên `seed636`).
+- **Kết quả kiểm chứng:** `fixture29` trả **1 sự kiện** (`ma_bien_dong = 2`, `C5` từ Tổ 1 sang Tổ 2); `seed636` trả **22 sự kiện** (khi chiếu `DISTINCT ma_cu_dan` khớp `QRA10 = 22` cư dân). Trích 5 dòng đầu trên `seed636`:
+
+| `ma_bien_dong` | `ma_cu_dan` | `ma_to_cu` | `ma_to_moi` | `ngay_bien_dong` |
+|---:|---:|---:|---:|---|
+| 2 | 15 | 1 | 2 | 2026-10-15 |
+| 10 | 28 | 1 | 3 | 2026-11-10 |
+| 11 | 29 | 2 | 4 | 2026-11-15 |
+| 16 | 47 | 3 | 5 | 2026-09-21 |
+| 22 | 65 | 3 | 5 | 2025-07-11 |
+
+- **Ảnh minh chứng:** `[Chờ bổ sung: evidence/sql/QSQL09_result.png]`
+
+---
+
+### 5.11. QSQL10 — Thống kê số sự kiện được ghi nhận bởi mỗi tài khoản
+
+- **Câu hỏi nghiệp vụ:** Thống kê số sự kiện biến động mà mỗi tài khoản nghiệp vụ đã ghi nhận, bao gồm cả tài khoản chưa ghi nhận sự kiện nào.
+- **Bảng sử dụng:** `tai_khoan`, `bien_dong_cu_tru`.
+- **Truy vấn SQL:**
+
+```sql
+SELECT
+    a.ma_tai_khoan,
+    a.ten_hien_thi,
+    COUNT(b.ma_bien_dong) AS so_su_kien
+FROM tai_khoan AS a
+LEFT JOIN bien_dong_cu_tru AS b ON b.ma_tai_khoan = a.ma_tai_khoan
+GROUP BY a.ma_tai_khoan, a.ten_hien_thi
+ORDER BY a.ma_tai_khoan;
+```
+
+- **Giải thích kỹ thuật:** Dùng `LEFT JOIN` từ `tai_khoan` sang `bien_dong_cu_tru` và đếm bằng `COUNT(b.ma_bien_dong)` (không dùng `COUNT(*)`, vì `COUNT(*)` sẽ đếm nhầm dòng `NULL` phía phải thành `1` đối với tài khoản chưa có sự kiện).
+- **Kết quả kiểm chứng:** `fixture29` trả **2 tài khoản** (`TK1 = 3`, `TK2 = 0`); `seed636` trả đủ **5 tài khoản** với tổng `11 + 21 + 18 + 13 + 0 = 63` khớp tổng số dòng của `bien_dong_cu_tru`:
+
+| `ma_tai_khoan` | `ten_hien_thi` | `so_su_kien` |
+|---:|---|---:|
+| 1 | Quản trị viên Hệ thống | 11 |
+| 2 | Cán bộ Cư trú 01 | 21 |
+| 3 | Cán bộ Cư trú 02 | 18 |
+| 4 | Cán bộ Tổng hợp 01 | 13 |
+| 5 | Cán bộ Dự phòng (0 sự kiện) | 0 |
+
+- **Ảnh minh chứng:** `[Chờ bổ sung: evidence/sql/QSQL10_result.png]`
+
+---
+
+### 5.12. Tổng hợp kiểm thử và đối soát
+
+Bảng tổng hợp dưới đây đối chiếu 10 câu SQL trên cả hai tập dữ liệu `fixture29` và `seed636`, kèm kết quả đối soát chéo với 6 câu RA tương ứng và VIEW bảo mật (nguồn: [tests/week1_execution_results.json](../tests/week1_execution_results.json) và CI PostgreSQL 17 [run 44533515990](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44533515990)):
+
+| Mã SQL | Kịch bản kiểm thử | `fixture29` (dòng) | `seed636` (dòng) | Đối soát chéo & ca bị loại đúng | Trạng thái kỹ thuật |
+|---|---|---:|---:|---|---|
+| QSQL01 | S01, S02, S16 | 5 | 36 | Khớp `QRA01 = 34` người phân biệt; loại đợt hết hạn và đợt tương lai | PASS |
+| QSQL02 | S05, S14 | 1 | 24 | Loại hộ 3 người, hộ 1 người và hộ trống S05 (`ma_ho = 59, 60`) | PASS |
+| QSQL03 | S01, S15 | 3 | 8 | Khớp 100% VIEW `vw_thong_ke_cu_dan_theo_to`; giữ `Tổ 08 = 0` | PASS |
+| QSQL04 | S04, S05 | 1 | 4 | Khớp `QRA05 = 4`; địa chỉ có hộ trống S05 không lọt | PASS |
+| QSQL05 | S06 | 1 | 54 | Khớp `QRA04 = 54`; loại người có 2 đợt trong cùng 1 hộ (`ma_cu_dan = 17`) | PASS |
+| QSQL06 | S07, S08 | 2 | 31 | Khớp `QRA07 = 31`; loại người chỉ có 1 loại cư trú (`S08`) | PASS |
+| QSQL07 | S09, S10 | 1 | 17 | Khớp `QRA09 = 17`; loại người chưa có đợt (`S10`) và chỉ có đợt tương lai | PASS |
+| QSQL08 | S11–S13, S15 | 3 | 45 | Tổng `SUM(so_su_kien) = 63` khớp bảng `bien_dong_cu_tru`; chỉ trả nhóm phát sinh | PASS |
+| QSQL09 | S13 | 1 | 22 | Khớp `QRA10 = 22` cư dân; loại ca chuyển nội bộ cùng tổ (`ma_cu_dan = 16`) | PASS |
+| QSQL10 | S15 + TK trống | 2 | 5 | Tổng `63` sự kiện; giữ đúng `ma_tai_khoan = 5` với `so_su_kien = 0` | PASS |
+
+**Nhận xét và việc còn lại cho Gate 3:**
+- Cả 10 truy vấn SQL đều chạy không lỗi trên PostgreSQL 17 sau khi tích hợp bộ ràng buộc nâng cao `sql/02_constraints.sql`, tái nạp `sql/03_seed.sql` cho kết quả hoàn toàn nhất quán (`seed/reload/QSQL01..10 PASS`).
+- Các điểm cần hoàn thiện trước ngày 24/11 (Gate 3): bổ sung log môi trường PostgreSQL cá nhân trên Windows của TV2 (`W2-T2-01`) và chụp đủ 10 ảnh kết quả thực thi `evidence/sql/QSQL01_result.png` … `QSQL10_result.png` để chèn vào bản báo cáo cuối.
 
 ## CHƯƠNG 6 — BẢO MẬT CSDL
 
