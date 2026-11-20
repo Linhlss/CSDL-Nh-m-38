@@ -110,13 +110,13 @@
     },
     {
       "path": "docs/01_de_cuong.md",
-      "bytes": 76858,
-      "sha256": "e386ae43d815754c411e4e4f366d942e1c66e144d7a7f7eeafc7d5b4f060c690"
+      "bytes": 76861,
+      "sha256": "e726c2e7343ffdf2041a154333c883c74905d36adbee1c71908ad13f0f4490e3"
     },
     {
       "path": "docs/02_bao_cao_suon.md",
-      "bytes": 58450,
-      "sha256": "a654647a858e3ee87eed1e85c9137df9dd55fd75a18c3f81a76ed90ecf45e42d"
+      "bytes": 58581,
+      "sha256": "ee5004a4c96fa72f312980117f88462ecd20ae76a7af2b263aad82d0d298d246"
     },
     {
       "path": "docs/03_CHECKLIST_DU_AN.md",
@@ -140,8 +140,8 @@
     },
     {
       "path": "docs/06a_dai_so_quan_he.md",
-      "bytes": 35934,
-      "sha256": "8e0b38d795e091420ed4c4d0666dd6c070989208e926851802393e4f68a62ca3"
+      "bytes": 36430,
+      "sha256": "3737d95958394b1f62f13e08a96647b160b39da43e94872195b96dc6dd45656a"
     },
     {
       "path": "docs/06b_bao_mat.md",
