@@ -2,7 +2,7 @@
 
 > **Nguồn lời giải:** TV3 · **Reviewer kỹ thuật:** TV1 · **Phiên bản:** v0.4 (20/11/2026: thêm ρ đổi tên thuộc tính có tiền tố ở QRA04, QRA10. v0.3 16/11/2026: viết lại ký hiệu theo cách trình bày trên lớp, khớp Chương 4 của báo cáo; thêm cách viết phép chia cho QRA07. v0.2 bàn giao tuần 1, cập nhật 15/11/2026)
 > **Căn cứ:** `sql/01_schema.sql` v1 (cấu trúc giữ nguyên v0) và mục 6 của `docs/01_de_cuong.md`.
-> **Phân công nhóm:** TV3 — Trần Bùi Tùng Linh, MSSV 20227057. Phần bổ sung ngày 15/11 do agent hỗ trợ kỹ thuật theo yêu cầu chủ repo; không thay lời xác nhận của thành viên hoặc suy ra chủ tài khoản GitHub từ tên người.
+> **Phân công nhóm:** TV3 — Dương Ngọc Ninh, MSSV 20237469; reviewer TV1 — Trần Bùi Tùng Linh, MSSV 20227057. Phần bổ sung ngày 15/11 do agent hỗ trợ kỹ thuật theo yêu cầu chủ repo; không thay lời xác nhận của thành viên hoặc suy ra chủ tài khoản GitHub từ tên người.
 > **Phạm vi:** lời giải, quy ước và đáp án trên fixture kiểm chứng tuần 1; phần kết quả chính thức/ảnh của Chương 4 tiếp tục đối soát trong tuần 2–3. Nếu đổi schema sau Gate 1, phải cập nhật đồng thời công thức, SQL kiểm chứng và expected.
 
 ---
