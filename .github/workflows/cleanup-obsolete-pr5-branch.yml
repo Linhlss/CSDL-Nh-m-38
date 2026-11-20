@@ -1,0 +1,36 @@
+name: One-time cleanup obsolete PR5 branch after preserving history
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/cleanup-obsolete-pr5-branch.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    if: github.repository == 'Linhlss/CSDL-Nh-m-38'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify history and delete only obsolete PR5 branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          branch="tv3/chuong-4-6"
+          expected="c41bc349393705ab3b5b96dad5a8f75f1f06032c"
+          git fetch --no-tags origin +refs/heads/main:refs/remotes/origin/main
+          git fetch --no-tags origin "+refs/heads/${branch}:refs/remotes/origin/${branch}"
+          tip=$(git rev-parse "refs/remotes/origin/${branch}")
+          test "$tip" = "$expected"
+          git merge-base --is-ancestor "$tip" refs/remotes/origin/main
+          server_tip=$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/${branch}" --jq .object.sha)
+          test "$server_tip" = "$tip"
+          gh api --method DELETE "repos/${GITHUB_REPOSITORY}/git/refs/heads/${branch}"
+          echo "::notice::Deleted obsolete PR5 branch after retaining its history on main"
