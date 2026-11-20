@@ -84,7 +84,7 @@ Mỗi tài khoản chỉ được cấp **đúng những quyền cần cho công
 | Role | Ai dùng (tác nhân ở mục 3 của `docs/03_dac_ta_nghiep_vu.md`) | Database | Schema `public` | 6 bảng nghiệp vụ | `tai_khoan` | `vw_thong_ke_cu_dan_theo_to` |
 |---|---|---|---|---|---|---|
 | `postgres` (superuser) | Người cài đặt, chạy script | Toàn quyền | Toàn quyền | Chủ sở hữu | Chủ sở hữu | Chủ sở hữu |
-| `csdl17_admin` | Cán bộ quản lý cư dân (thêm/sửa dữ liệu, ghi biến động) | CONNECT | USAGE | SELECT, INSERT, UPDATE, DELETE | SELECT, INSERT, UPDATE, DELETE | SELECT |
+| `csdl17_admin` | Cán bộ quản lý cư dân (thêm/sửa dữ liệu, ghi biến động) | CONNECT | USAGE | SELECT, INSERT, UPDATE; DELETE trừ `qua_trinh_cu_tru`, `bien_dong_cu_tru` (B12) | SELECT, INSERT, UPDATE, DELETE | SELECT |
 | `csdl17_reader` | Cán bộ tổng hợp, mức tra cứu chi tiết (chỉ đọc) | CONNECT | USAGE | **Chỉ SELECT** | Không có | Không có |
 | `csdl17_report` | Cán bộ tổng hợp, mức chỉ xem số liệu tổng hợp | CONNECT | USAGE | **Không có** | Không có | **Chỉ SELECT** |
 | `PUBLIC` | Mọi role khác | Bị thu hồi | Không có CREATE | Không có | Không có | Không có |
@@ -213,7 +213,7 @@ Mỗi ảnh phải thấy rõ **câu lệnh**, **role đang chạy** và **kết
 
 - **Số nhỏ vẫn có thể lộ thông tin:** nếu một tổ chỉ có 1 người, con số tổng hợp cộng với hiểu biết bên ngoài có thể giúp đoán ra người đó. Hướng khắc phục: chỉ hiển thị tổ có từ k người trở lên (ví dụ `HAVING COUNT(...) >= 5`).
 - VIEW dùng **ngày tham chiếu cố định** 20/11/2026 để kết quả tái lập được. Bản dùng thực tế sẽ thay bằng `CURRENT_DATE`.
-- Demo dùng `SET ROLE` cho nhanh. Ít nhất một lần nên đăng nhập thật bằng role demo (mục 4).
+- Demo trong `05_security.sql` dùng `SET ROLE` cho nhanh. Ngày 20/11/2026 đã đăng nhập thật bằng cả hai role demo trên bản tích hợp, xem [biên bản](../tests/week2_security_login_log.md) (reader 12/12, report 10/10, catalog 15/15 PASS sau khi thu hồi `DELETE` bảng lịch sử khỏi admin).
 - Chưa demo bảo mật mức dòng (Row-Level Security), ví dụ mỗi cán bộ chỉ xem cư dân thuộc tổ mình phụ trách. Có thể nêu ở hướng mở rộng.
 
 ---
@@ -254,6 +254,9 @@ Các ô sau dành cho nghiệm thu thực tế của giai đoạn chạy cuối;
 - PostgreSQL Documentation – *CREATE VIEW* (tùy chọn `security_invoker`): https://www.postgresql.org/docs/current/sql-createview.html
 - PostgreSQL Documentation – *Database Roles*: https://www.postgresql.org/docs/current/user-manag.html
 - PostgreSQL 17 – *Role Membership*: https://www.postgresql.org/docs/17/role-membership.html
+- PostgreSQL 17 – *CREATE FUNCTION* (`SECURITY INVOKER`/`DEFINER`): https://www.postgresql.org/docs/17/sql-createfunction.html
+- PostgreSQL 17 – *ALTER DEFAULT PRIVILEGES*: https://www.postgresql.org/docs/17/sql-alterdefaultprivileges.html
+- PostgreSQL 17 – *Password Authentication*: https://www.postgresql.org/docs/17/auth-password.html
 - PostgreSQL 17 – *psql*, `ON_ERROR_STOP`: https://www.postgresql.org/docs/17/app-psql.html
 - [CẦN ĐIỀN: giáo trình môn Cơ sở dữ liệu của lớp, chương về bảo mật và an toàn dữ liệu]
 

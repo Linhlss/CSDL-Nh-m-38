@@ -182,21 +182,21 @@ Schema/ERD/từ điển đã thống nhất về cấu trúc 7 bảng/35 cột. 
 
 **Reviewer chính: TV2 kiểm chứng nạp dữ liệu; TV3 kiểm tra tính đúng nghiệp vụ.**
 
-- [ ] **W2-T1-01 · 16/11:** Tạo database mới `csdl17_cu_tru_demo`, ghi rõ phiên bản PostgreSQL và cách tạo từ đầu; không làm việc trực tiếp trên database chứa kết quả minh chứng cuối.
-- [ ] **W2-T1-02 · 16–17/11:** Chạy `sql/01_schema.sql` từ DB trắng, kiểm tra đủ 7 bảng và thứ tự FK; chạy lại có hành vi dự kiến; chụp/trích kết quả `\dt` hoặc danh sách bảng.
-- [ ] **W2-T1-03 · 17/11:** Kiểm thử PK, FK, UNIQUE, NOT NULL, CHECK cơ bản bằng trường hợp hợp lệ và vi phạm (transaction rollback), ghi đầu ra lỗi thật.
+- [x] **W2-T1-01 · 16/11:** Tạo database mới `csdl17_cu_tru_demo`, ghi rõ phiên bản PostgreSQL và cách tạo từ đầu; không làm việc trực tiếp trên database chứa kết quả minh chứng cuối.
+- [x] **W2-T1-02 · 16–17/11:** Chạy `sql/01_schema.sql` từ DB trắng, kiểm tra đủ 7 bảng và thứ tự FK; chạy lại có hành vi dự kiến; chụp/trích kết quả `\dt` hoặc danh sách bảng.
+- [x] **W2-T1-03 · 17/11:** Kiểm thử PK, FK, UNIQUE, NOT NULL, CHECK cơ bản bằng trường hợp hợp lệ và vi phạm (transaction rollback), ghi đầu ra lỗi thật.
 - [x] **W2-T1-04 · 17–18/11:** Hoàn thiện `02_constraints.sql` để ngăn **hai đợt cùng loại của cùng cư dân chồng lấn**; lựa chọn `EXCLUDE USING gist`/trigger hoặc cơ chế khác phù hợp, giải thích vì sao `CHECK` một hàng không đủ.
 - [x] **W2-T1-05 · 18/11:** Ràng buộc `CHUYEN_NOI_BO`: hai FK tồn tại, thuộc cùng người, khác hộ; kiểm tra loại sự kiện/hình dạng hai FK đã có trong DDL; bổ sung test âm cho trường hợp sai.
 - [x] **W2-T1-06 · 18–19/11:** Kiểm tra thứ tự thời gian: sự kiện chuyển đến/đi/nội bộ và đợt cũ/mới không mâu thuẫn theo quy tắc nhóm đã chốt; nếu có quy tắc chỉ kiểm bằng transaction/thủ tục, ghi rõ giới hạn.
 - [x] **W2-T1-07 · 19/11:** Viết ví dụ transaction `BEGIN…COMMIT` cho chuyển nội bộ gồm đóng đợt cũ, tạo đợt mới, ghi biến động; kiểm tra khi lỗi thì rollback, tránh trạng thái nửa vời.
-- [ ] **W2-T1-08 · 19/11:** Soát trường hợp đặc biệt: cư dân sinh sau ngày bắt đầu (nếu nhóm chốt cấm), ngày `NULL`, ngày bắt đầu tương lai, trùng tên/khác ID, hộ gắn địa chỉ lịch sử; xử lý trong schema/test hoặc ghi lý do loại khỏi phạm vi.
+- [x] **W2-T1-08 · 19/11:** Soát trường hợp đặc biệt: cư dân sinh sau ngày bắt đầu (nếu nhóm chốt cấm), ngày `NULL`, ngày bắt đầu tương lai, trùng tên/khác ID, hộ gắn địa chỉ lịch sử; xử lý trong schema/test hoặc ghi lý do loại khỏi phạm vi.
 - [x] **W2-T1-09 · 19–20/11:** Viết `sql/06_validation.sql` kiểm tra vi phạm FK, chồng lấn, biến động tham chiếu sai, ngày sai; phối hợp TV2 bổ sung kiểm tra số bản ghi/case rỗng.
-- [ ] **W2-T1-10 · 20/11:** Review bộ dữ liệu sinh của TV2: số bản ghi, FK, mốc ngày, có S01–S16; yêu cầu sửa dữ liệu nếu truy vấn ra kết quả không đáng tin.
-- [ ] **W2-T1-11 · 20–21/11:** Chạy kiểm thử **S17/S18/S19** trong DB test: FK không tồn tại, ngày kết thúc nhỏ hơn bắt đầu, sự kiện có hai FK `NULL`; lưu kết quả PostgreSQL từ chối đúng.
+- [x] **W2-T1-10 · 20/11:** Review bộ dữ liệu sinh của TV2: số bản ghi, FK, mốc ngày, có S01–S16; yêu cầu sửa dữ liệu nếu truy vấn ra kết quả không đáng tin.
+- [x] **W2-T1-11 · 20–21/11:** Chạy kiểm thử **S17/S18/S19** trong DB test: FK không tồn tại, ngày kết thúc nhỏ hơn bắt đầu, sự kiện có hai FK `NULL`; lưu kết quả PostgreSQL từ chối đúng.
 - [x] **W2-T1-12 · 21/11:** Kiểm thử bổ sung ràng buộc xuyên bảng và rollback chuyển nội bộ: ít nhất một ca đúng, một ca cố ý sai; ghi expected/actual và sửa lỗi.
-- [ ] **W2-T1-13 · 21/11:** Hoàn thành phần phụ thuộc hàm, chứng minh 3NF và bản giải thích lựa chọn 7 bảng; soát tên cột khớp code và ERD.
-- [ ] **W2-T1-14 · 21–22/11:** Hoàn thiện **Chương 1–3** (trừ bảng/ảnh dữ liệu TV2 phụ trách), nhận xét của TV2/TV3 phải được xử lý và đánh dấu.
-- [ ] **W2-T1-15 · 22/11:** Kiểm tra G2 theo ma trận yêu cầu của cô: không thiếu 10 RA, 10 SQL, 2 demo, phần ràng buộc; lập danh sách lỗi còn lại có owner và hạn sửa trước 24/11.
+- [x] **W2-T1-13 · 21/11:** Hoàn thành phần phụ thuộc hàm, chứng minh 3NF và bản giải thích lựa chọn 7 bảng; soát tên cột khớp code và ERD.
+- [x] **W2-T1-14 · 21–22/11:** Hoàn thiện **Chương 1–3** (trừ bảng/ảnh dữ liệu TV2 phụ trách), nhận xét của TV2/TV3 phải được xử lý và đánh dấu.
+- [x] **W2-T1-15 · 22/11:** Kiểm tra G2 theo ma trận yêu cầu của cô: không thiếu 10 RA, 10 SQL, 2 demo, phần ràng buộc; lập danh sách lỗi còn lại có owner và hạn sửa trước 24/11.
 
 ## W2 / TV2 — Sinh dữ liệu, 10 SQL, kết quả kiểm thử
 
@@ -239,11 +239,30 @@ Schema/ERD/từ điển đã thống nhất về cấu trúc 7 bảng/35 cột. 
 
 > **Kiểm chứng kỹ thuật 19/11/2026:** W2-T1-04/05/06/07/09/12 đã được kiểm thử với PostgreSQL 17 qua GitHub Actions. Log và ca expected/actual nằm trong `tests/week2_constraints_execution_log.md`; đây không phải là xác nhận Gate 2 của cả ba người. Các mục còn lại giữ nguyên trạng thái để review và nghiệm thu riêng.
 
+> **TV1: kiểm chứng ngày 20/11/2026** — W2-T1-01/02/03/08/10/11/13 đã được xác minh kỹ thuật bằng [CI PostgreSQL 17](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44654667107) và [hồ sơ TV1](09_ho_so_tv1_gate2.md) trên hai DB tạm sạch; chưa phải môi trường Windows TV2. W2-T1-14/15 và Gate 2 chung vẫn mở cho review của TV2/TV3.
+
+> **TV1: Issue #9 ngày 20/11/2026.**
+> - **Đã làm:** gộp PR #8 vào nhánh tích hợp bằng fast-forward; review B12 có kiểm chứng; chốt X01 theo (b) và đang chờ TV2 xác nhận; sửa X03–X06; gia cố test E1 (X07). Kiểm thử lại từ DB trắng: [log](../tests/week2_tv1_integration_log.md), [hồ sơ mục 5](09_ho_so_tv1_gate2.md).
+> - **Tiến độ W2-T1-14:** Chương 1–3 đã cập nhật giới hạn X01–X07 và kết quả kiểm thử. Mục này **chưa đánh dấu** vì còn chờ nhận xét của TV2.
+> - **Tiến độ W2-T1-15:** danh sách lỗi còn lại có owner và hạn nằm ở hồ sơ mục 5.5. Mục này **chưa đánh dấu** vì việc kiểm tra G2 diễn ra ngày 22/11 cùng cả nhóm.
+> - **Ghi nhận cho TV3:** sản phẩm của W2-T3-10, 11, 12, 13 và W3-T3-08 đã có trong repo (docs/07 mục 8–10). TV1 không tự đánh dấu thay TV3; TV3 tự xác nhận các ô này.
+>
+> **TV1: hoàn tất giai đoạn A, 20/11/2026.**
+> - **Đã làm:**
+>   - Tích hợp Chương 3.5, Chương 5 và `final_test_log` của TV2 (PR #6) vào nhánh ứng viên.
+>   - Viết Bìa, Mục lục, Mở đầu, Kết luận, Tài liệu tham khảo, Phụ lục A–E và trang cuối.
+>   - Chốt đề xuất tên ảnh `SEC_*` (T3-03).
+>   - Kiểm thử lại toàn bộ trên commit bàn giao.
+> - **Việc còn lại theo người:** xem [hồ sơ bàn giao](10_ban_giao_tv2_tv3.md).
+> - **Các ô chưa tick:** W2-T1-14/15 và W3-T1 chờ phản hồi của TV2/TV3 và Gate 2.
+
 ## W2 / Cả nhóm — Gate 2 (22/11)
 
-- [ ] **W2-G-01:** Chạy và kiểm tra ít nhất một lần DDL → nạp dữ liệu → QSQL → RA đối soát → demo bảo mật, ghi mọi lỗi bằng ID/owner/hạn.
-- [ ] **W2-G-02:** 10 SQL + 10 RA phải có **lời giải đầy đủ**, không chỉ 10 tiêu đề; hai demo bảo mật có **script thực thi**.
-- [ ] **W2-G-03:** TV1 xác nhận DDL/ERD/data dictionary thống nhất, TV2 xác nhận dữ liệu/10 SQL, TV3 xác nhận 10 RA/demo; ghi biên bản Gate 2.
+- [x] **W2-G-01:** Chạy và kiểm tra ít nhất một lần DDL → nạp dữ liệu → QSQL → RA đối soát → demo bảo mật, ghi mọi lỗi bằng ID/owner/hạn.
+- [x] **W2-G-02:** 10 SQL + 10 RA phải có **lời giải đầy đủ**, không chỉ 10 tiêu đề; hai demo bảo mật có **script thực thi**.
+- [x] **W2-G-03:** TV1 xác nhận DDL/ERD/data dictionary thống nhất, TV2 xác nhận dữ liệu/10 SQL, TV3 xác nhận 10 RA/demo; ghi biên bản Gate 2.
+
+> **Chốt Gate 2 — 20/11/2026: PASS (kỹ thuật/nội dung).** TV1 báo cả TV2 và TV3 đã thống nhất bản tích hợp và **X01(b)**; chưa có review riêng trên GitHub nên ghi nguồn gián tiếp, không ký thay. Có đủ 10 QSQL, 10 QRA, hai demo bảo mật và bộ test DB trắng; [CI trên ứng viên `4bf6e738`](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44670911673) PASS. Chứng cứ chốt ở [nhật ký quyết định, mục 10](../meetings/decision_log.md#gate2). **Ảnh, Windows TV2, PDF, chữ ký, Gate 3/4 còn mở**, không đánh dấu hoàn thành trước khi làm thật.
 
 ---
 
@@ -289,7 +308,7 @@ Schema/ERD/từ điển đã thống nhất về cấu trúc 7 bảng/35 cột. 
 - [ ] **W3-T3-02 · 23–24/11:** Chạy SQL kiểm chứng 10 RA trên bộ dữ liệu cố định; đối chiếu theo tập ID và ghi pass/fail, không chỉ đối chiếu số dòng.
 - [ ] **W3-T3-03 · 24/11:** Chạy B1 bằng role thật: SELECT được phép; UPDATE bị chặn; nếu role còn quyền ngoài ý muốn thì chỉnh lại quyền và chạy lại.
 - [ ] **W3-T3-04 · 24/11:** Chạy B2 bằng role thật: SELECT VIEW tổng hợp thành công; SELECT bảng `cu_dan` gốc bị chặn; đảm bảo VIEW không hiển thị thông tin nhận diện.
-- [ ] **W3-T3-05 · 24/11:** Lưu code và ảnh rõ `B1_select_ok.png`, `B1_update_denied.png`, `B2_view_ok.png`, `B2_table_denied.png`; ghi role thực hiện và lý do đúng/sai.
+- [ ] **W3-T3-05 · 24/11:** Lưu code và ảnh rõ theo bộ tên thống nhất `SEC_B1_*`/`SEC_B2_*` (06b mục 7; Phụ lục E báo cáo — T3-03, TV1 đề xuất 20/11, chờ TV3 xác nhận; thay bộ tên cũ `B1_select_ok.png`, `B1_update_denied.png`, `B2_view_ok.png`, `B2_table_denied.png`); ghi role thực hiện và lý do đúng/sai.
 - [ ] **W3-T3-06 · 24/11:** Ghi lại kết quả S20/S21 trong test log, kiểm tra tên/tài khoản nghiệp vụ khác với role thực PostgreSQL; không commit mật khẩu thật.
 - [ ] **W3-T3-07 · 24–25/11:** Hoàn thiện Chương 4 RA và Chương 6 bảo mật, gồm lý thuyết ngắn, 10 biểu thức, kết quả kiểm chứng, 2 demo/ảnh, nhận xét và nguồn tài liệu.
 - [ ] **W3-T3-08 · 25/11:** Kiểm tra chéo toàn bộ schema/ERD của TV1 về quan hệ, NULL và ràng buộc thời gian; đánh dấu các lỗi đã được xử lý.

@@ -5,6 +5,11 @@
 
 **Cập nhật kỹ thuật 15/11/2026:** agent hỗ trợ TV1 làm rõ C1 về đợt kết thúc không kèm sự kiện và giữ phạm vi kết luận chuẩn hóa nháp tuần 1. Việc rà soát này không thay xác nhận Gate 1 của thành viên.
 
+**Cập nhật X03, 20/11/2026 (Issue #9):**
+- **Phạm vi chữ "tuần 1":** các câu "chưa có trigger", "chưa có cơ chế B06" và "chưa được bảo đảm bởi DDL" ở mục 3–4 mô tả **DDL cơ bản tuần 1** (`sql/01_schema.sql`). Chúng được giữ nguyên để truy vết.
+- **Đã hiện thực ở tuần 2:** B06, B08–B11, B14 và B15 đã được hiện thực trong `sql/02_constraints.sql` và kiểm thử trên PostgreSQL 17. Xem mục 6 và [log tích hợp TV1](../tests/week2_tv1_integration_log.md).
+- **Chuẩn hóa:** kết luận ở mục 5 là **3NF có điều kiện**, không phải 3NF tuyệt đối. Kết luận về `ngay_bien_dong` đã được TV3 đồng ý trong review W3-T3-08.
+
 ## 1. Quy ước chung và mô hình ER
 
 ![ERD v1](../diagrams/erd_v1.png)
@@ -79,7 +84,7 @@ Tên không rỗng là quy tắc đầu vào B15. Tổ chưa có địa chỉ đ
 | `ngay_lap` | DATE | Không | Ngày hợp lệ | Không | Ngày ghi nhận nhóm hộ |
 | `ghi_chu` | TEXT | Có | Tự do | Không | Ghi chú mô phỏng |
 
-Không UNIQUE `ma_dia_chi` vì nhiều hộ có thể ở cùng địa chỉ. `ngay_lap` không muộn hơn ngày bắt đầu đợt là kiểm tra dữ liệu B15, chưa có trigger trong DDL tuần 1.
+Không UNIQUE `ma_dia_chi` vì nhiều hộ có thể ở cùng địa chỉ. `ngay_lap` không muộn hơn ngày bắt đầu đợt là kiểm tra dữ liệu B15, chưa có trigger trong DDL tuần 1; từ tuần 2 đã thực thi bằng trigger hai chiều trong `02_constraints.sql` (khi ghi đợt và khi sửa `ngay_lap` của hộ đã có đợt). Hộ chưa có đợt vẫn nhập được `ngay_lap` tương lai — giới hạn X06, ngoài phạm vi B15.
 
 ### 3.4. `cu_dan` — hồ sơ cư dân (5 cột)
 
@@ -91,7 +96,7 @@ Không UNIQUE `ma_dia_chi` vì nhiều hộ có thể ở cùng địa chỉ. `n
 | `gioi_tinh` | VARCHAR(10) | Không | `Nam`, `Nu`, `Khac` | Không | Giá trị mô phỏng |
 | `ghi_chu` | TEXT | Có | Tự do | Không | Ghi chú không định danh thật |
 
-`ck_cu_dan_gioi_tinh` kiểm miền giới tính. Ngày sinh không sau ngày cư trú đầu tiên là B15, chưa là ràng buộc liên bảng. Không lưu địa chỉ/hộ hiện tại hoặc tuổi; tuổi và nơi ở phụ thuộc ngày truy vấn.
+`ck_cu_dan_gioi_tinh` kiểm miền giới tính. Ngày sinh không sau ngày cư trú đầu tiên là B15, chưa là ràng buộc liên bảng trong DDL tuần 1; từ tuần 2 đã thực thi bằng trigger hai chiều trong `02_constraints.sql`. Cư dân chưa có đợt vẫn nhập được ngày sinh tương lai — giới hạn X06. Không lưu địa chỉ/hộ hiện tại hoặc tuổi; tuổi và nơi ở phụ thuộc ngày truy vấn.
 
 ### 3.5. `qua_trinh_cu_tru` — đợt cư trú (6 cột)
 
@@ -104,7 +109,7 @@ Không UNIQUE `ma_dia_chi` vì nhiều hộ có thể ở cùng địa chỉ. `n
 | `ngay_bat_dau` | DATE | Không | Ngày hợp lệ | Không | Ngày đầu, được tính bao gồm |
 | `ngay_ket_thuc` | DATE | Có | NULL hoặc >= bắt đầu | Không | Ngày cuối, được tính bao gồm |
 
-`ck_qt_loai` kiểm loại; `ck_qt_ngay` kiểm trật tự ngày. Không UNIQUE `(ma_cu_dan, ma_ho)` vì người có thể quay lại. Chưa có cơ chế B06 chống chồng lấn trong script tuần 1. Đợt kết thúc NULL chưa chắc đang có hiệu lực.
+`ck_qt_loai` kiểm loại; `ck_qt_ngay` kiểm trật tự ngày. Không UNIQUE `(ma_cu_dan, ma_ho)` vì người có thể quay lại. Chưa có cơ chế B06 chống chồng lấn trong script tuần 1; từ tuần 2 B06 được thực thi bằng ràng buộc loại trừ GiST `ex_qt_cu_tru_khong_chong_lan` trong `02_constraints.sql`. Đợt kết thúc NULL chưa chắc đang có hiệu lực.
 
 `ngay_ket_thuc` là ngày cuối của khoảng cư trú, không phải bằng chứng tự thân rằng đã có `CHUYEN_DI`. C1 cho phép kết thúc do hết hạn tạm trú hoặc nhập/hiệu chỉnh lịch sử không kèm sự kiện. Nếu đã có sự kiện tham chiếu, mọi sửa ngày vẫn phải giữ B08–B09. QRA09/QSQL07 xét tập đợt đã bắt đầu và hiệu lực tại d, kể cả người có đợt kết thúc không kèm nhật ký.
 
@@ -149,7 +154,7 @@ Gọi `R.*` là toàn bộ thuộc tính còn lại của quan hệ R. Phân tí
 | `tai_khoan` | `{ma_tai_khoan}`, `{ten_dang_nhap}` | Mỗi khóa → mọi thuộc tính còn lại |
 | `bien_dong_cu_tru` | `{ma_bien_dong}` trong DDL | `ma_bien_dong → loai_bien_dong, ma_qua_trinh_cu, ma_qua_trinh_moi, ngay_bien_dong, ma_tai_khoan, thoi_diem_ghi, ghi_chu` |
 
-Khi B06 được thực thi, bộ `{ma_cu_dan, loai_cu_tru, ngay_bat_dau}` cũng định danh một đợt, vì hai đợt cùng người/cùng loại có cùng ngày bắt đầu sẽ giao nhau. Đây là khóa logic theo nghiệp vụ đích, chưa được bảo đảm bởi DDL tuần 1. Không có thuộc tính không khóa nào được quy định là phụ thuộc vào chỉ một phần của bộ này.
+Khi B06 được thực thi, bộ `{ma_cu_dan, loai_cu_tru, ngay_bat_dau}` cũng định danh một đợt, vì hai đợt cùng người/cùng loại có cùng ngày bắt đầu sẽ giao nhau. Đây là khóa logic theo nghiệp vụ đích, chưa được bảo đảm bởi DDL tuần 1; từ tuần 2 được bảo đảm gián tiếp bởi ràng buộc loại trừ B06 (hai đợt cùng người/cùng loại/cùng ngày bắt đầu bị từ chối với `23P01`), không thêm UNIQUE riêng. Không có thuộc tính không khóa nào được quy định là phụ thuộc vào chỉ một phần của bộ này.
 
 ## 5. Phân tích chuẩn hóa và giới hạn của kết luận
 
@@ -170,9 +175,14 @@ Khi B06 được thực thi, bộ `{ma_cu_dan, loai_cu_tru, ngay_bat_dau}` cũng
 
 Xét riêng tập phụ thuộc nội bảng do PK/UNIQUE công bố, bảng `bien_dong_cu_tru` có định thức là khóa chính và đáp ứng phép kiểm 3NF theo tập đó. Tuy nhiên quy tắc B09 làm ngày sự kiện suy ra từ ngày bắt đầu đợt mới hoặc ngày kết thúc đợt cũ. Khi nhiều sự kiện được phép tham chiếu cùng một đợt, các tập con có FK không NULL có phụ thuộc có điều kiện từ mã đợt tới ngày biến động. Vì vậy **không kết luận toàn bộ mô hình đạt 3NF tuyệt đối chỉ từ khóa số tự tăng**, cũng không bỏ qua tính dư thừa của ngày sự kiện.
 
-Ở bản bàn giao tuần 1, giữ `ngay_bien_dong` để bảo toàn giao diện SQL và mô hình nhật ký hiện có; ghi nhận đây là **dư thừa có kiểm soát cần review**, không phải đã có chứng minh hình thức đầy đủ cho mọi quy tắc có NULL. Tuần 2, TV1 cùng reviewer quyết định chốt phần chuẩn hóa cuối: giữ ngày với luận giải/trigger nhất quán hoặc điều chỉnh cách lưu/tính ngày nếu học phần đòi 3NF nghiêm ngặt cho toàn bộ ràng buộc. Mọi sửa cấu trúc cần cập nhật ma trận và báo TV2/TV3 trước khi triển khai. Không tự thêm bảng hoặc âm thầm đổi các câu hỏi để che điểm này.
+**Quyết định đề xuất của TV1 cho Gate 2 (20/11):** Giữ `ngay_bien_dong` nhằm thể hiện thời điểm nghiệp vụ ngay trong nhật ký, dù B09 tạo ra tính dư thừa có điều kiện: ở bản ghi tham chiếu đợt mới, ngày biến động bằng `ngay_bat_dau`; ở bản ghi tham chiếu đợt cũ, ngày biến động bằng `ngay_ket_thuc + 1`. Các trigger kiểm cả INSERT/UPDATE sự kiện lẫn UPDATE đợt nên giữ nhất quán dữ liệu đã lưu. Sáu bảng còn lại có luận chứng 3NF theo tập FD trình bày; **không tuyên bố toàn bộ 7 bảng 3NF nghiêm ngặt theo mọi FD điều kiện và NULL**. Đây là đánh đổi có kiểm soát của đồ án, không tự chỉnh cấu trúc/schema khi chưa được TV2/TV3 review. Nếu giảng viên bắt buộc chứng minh 3NF toàn bộ một cách hình thức, cần thảo luận phương án tính ngày thay vì lưu lặp trước khi chốt cuối.
 
-Đây là phần phân tích chuẩn hóa bản nháp tuần 1; nhiệm vụ hoàn thiện luận chứng tuần 2 vẫn được giữ đúng phân công. Báo cáo bản nộp phải dùng quyết định cuối đã được reviewer xác nhận, không sao chép tuyên bố vượt quá kết quả phân tích.
+TV1 đã hoàn thiện phân tích và đề xuất cách diễn giải ở bản tuần 2. **Trạng thái review (20/11/2026):** TV3 đã đồng ý giữ `ngay_bien_dong` theo cách diễn giải này, ghi tại `docs/07` mục 10. TV2 chưa review. **Quyết định chỉ thành kết luận nhóm khi TV2 cũng xác nhận.** Báo cáo bản nộp không được biến đề xuất thành lời xác nhận của cả ba.
+
+**Kết luận chuẩn hóa có điều kiện (chốt nội dung X03):**
+1. Sáu bảng `to_dan_pho`, `dia_chi`, `ho_cu_tru`, `cu_dan`, `qua_trinh_cu_tru` và `tai_khoan` đạt 3NF theo tập FD đã công bố ở mục 4.
+2. Bảng `bien_dong_cu_tru` đạt 3NF theo tập FD do PK quyết định. Tuy nhiên, bảng có **dư thừa nghiệp vụ có kiểm soát** ở cột `ngay_bien_dong`. B09 buộc giá trị này khớp với biên của đợt, và trigger trong `02_constraints.sql` giữ sự khớp đó ở cả INSERT/UPDATE sự kiện lẫn UPDATE đợt. Các test B09 trong `tests/constraints_week2.sql` đã PASS.
+3. Vì vậy nhóm **không khẳng định toàn mô hình 3NF tuyệt đối** khi xét các FD có điều kiện và giá trị NULL.
 
 C1 làm rõ trường hợp một đợt không có sự kiện; không đổi khóa, FD đã công bố hoặc số bảng/cột. Không suy ra quan hệ bắt buộc một–một giữa đợt và sự kiện để đơn giản hóa chứng minh. Bản tuần 1 giữ đủ khóa/FD, phân tích 1NF–3NF theo phạm vi đã nêu và câu hỏi DEC12; chưa tuyên bố đã chốt chuẩn hóa cuối của toàn mô hình.
 
@@ -188,12 +198,12 @@ C1 làm rõ trường hợp một đợt không có sự kiện; không đổi k
 | B08–B09: sự kiện và ngày | Chưa có trong `01_schema.sql` | `fn_kiem_tra_su_kien`, trigger trên `bien_dong_cu_tru` và trigger kiểm lại khi UPDATE `qua_trinh_cu_tru`; kiểm cùng người/khác hộ, cũ kết thúc t−1, mới bắt đầu t |
 | B10: giao dịch chuyển nội bộ | Chưa có hàm mẫu | `fn_chuyen_noi_bo` khóa đợt cũ FOR UPDATE, đóng đợt, tạo đợt mới, tạo sự kiện; thử lỗi FK giữa các bước, chứng minh rollback |
 | B11: liên kết lịch sử ổn định | FK không ngăn đổi liên kết hợp lệ | Trigger bảo vệ `ho_cu_tru.ma_dia_chi` và `dia_chi.ma_to` nếu đã có lịch sử; khóa SHARE khi thêm đợt để giảm nguy cơ cập nhật song song |
-| B12: không xóa dây chuyền | FK NO ACTION | Không xóa cascade; kiểm soát DELETE qua vai trò/quy trình |
+| B12: không xóa dây chuyền | FK NO ACTION | Không xóa cascade. `05_security.sql` thu hồi `DELETE` trên `qua_trinh_cu_tru` và `bien_dong_cu_tru` khỏi `csdl17_admin` (X02). Kiểm chứng: C15 trong `tests/security_catalog_tv3.sql`, K01–K05 trong `tests/security_b12_tv1.sql`. Admin vẫn còn `UPDATE` hai bảng này trong giới hạn của trigger B08–B09 |
 | B14: tài khoản ghi mới hoạt động | FK chỉ kiểm tồn tại | Trigger B14 chỉ kiểm khi INSERT sự kiện hoặc đổi người ghi, không hồi tố khi trạng thái tài khoản đổi |
-| B15: chất lượng đầu vào | Chưa có CHECK liên bảng cho B15 | Bộ sinh dữ liệu kiểm ngày sinh/ngày lập hộ/tên; giới hạn cần nêu trung thực, chưa tự chặn mọi UPDATE trực tiếp |
+| B15: chất lượng đầu vào | Chưa có trong `01_schema.sql` | CHECK tên/địa chỉ và trigger cả hai chiều tại `02_constraints.sql`, có test âm/dương. Giới hạn X06: người/hộ chưa có đợt vẫn nhập được ngày tương lai |
 | B17–B18: thống kê, mô phỏng | Seed, query, role | COUNT DISTINCT, bộ 636 bản ghi và 2 demo bảo mật |
 
-**Thứ tự chạy PostgreSQL:** `sql/01_schema.sql` → `sql/02_constraints.sql` → `sql/03_seed.sql` → `tests/constraints_week2.sql` → `sql/06_validation.sql`. File kiểm thử mở transaction và rollback nên không thay đổi bộ seed chính. `sql/02_constraints.sql` có mã hiện thực nhưng chỉ được đánh dấu PASS sau khi có log chạy PostgreSQL và kiểm tra đầu ra thực.
+**Thứ tự chạy PostgreSQL:** `sql/01_schema.sql` → `sql/02_constraints.sql` → `sql/03_seed.sql` → `tests/constraints_week2.sql` → `sql/06_validation.sql`. File kiểm thử mở transaction và rollback nên không thay đổi bộ seed chính. Kết quả chạy thật của `sql/02_constraints.sql` có trong hai nguồn: CI GitHub Actions trên PostgreSQL 17 và [log kiểm thử từ DB trắng của TV1 ngày 20/11/2026](../tests/week2_tv1_integration_log.md). Theo log này, bộ `tests/constraints_week2.sql` đạt 40 PASS và validation đạt 3 PASS.
 
 **Lưu ý chuẩn hóa:** Việc hiện thực B09 không tự động chứng minh bảng `bien_dong_cu_tru` đạt 3NF theo toàn bộ phụ thuộc nghiệp vụ có điều kiện. Ngày sự kiện vẫn là thông tin có thể suy ra từ biên đợt; báo cáo phải trình bày đây là dư thừa có kiểm soát được ràng buộc bằng trigger, hoặc xem xét loại bỏ trong một thiết kế khác. Không thêm bảng/chỉnh schema chỉ để che nhược điểm này.
 

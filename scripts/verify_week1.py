@@ -311,7 +311,9 @@ def runtime_evidence():
     assert all(f"{db}/QSQL{n:02}/full-tuples" in keys for db in ("w1_tiny","w1_seed") for n in range(1,11))
     # Lịch sử tuần 1 được giữ nguyên; 06_validation.sql đã được mở rộng
     # trong tuần 2. Không sửa hash trong log chạy PostgreSQL ngày 16/11.
-    week2_evolved = {"sql/06_validation.sql"}
+    # 05_security.sql: TV3 thu hồi DELETE bảng lịch sử khỏi admin (B12, X02, 20/11).
+    week2_evolved = {"sql/06_validation.sql", "scripts/verify_week1_runtime.py",
+                     "sql/05_security.sql"}
     for path,digest in result["files_sha256"].items():
         if path in week2_evolved:
             continue  # version hiện tại được xác thực qua manifest + CI tuần 2
@@ -319,11 +321,15 @@ def runtime_evidence():
     clean=lambda s:re.sub(r"--[^\n]*","",s).strip().rstrip(";")
     parts=re.split(r"^-- (QSQL\d{2})\.[^\n]*\n",read("sql/04_queries.sql"),flags=re.M)
     sql={parts[i]:clean(parts[i+1]) for i in range(1,len(parts),2)}
-    blocks=re.findall(r"```sql\n(.*?)```",read("docs/06a_dai_so_quan_he.md"),re.S)
-    assert len(blocks)==11
-    sql.update({f"QRA{i:02}":clean(s) for i,s in enumerate(blocks[1:],1)})
-    assert {k:hashlib.sha256(v.encode()).hexdigest() for k,v in sql.items()}==result["query_sha256"]
-    return f"{result['summary']['passed']}/{len(result['checks'])} historical PostgreSQL checks; immutable week1 inputs and 20 queries verified; 06_validation.sql evolved in week2 (DB not rerun)"
+    from ra_sql_blocks import parse_ra_sql_blocks
+    named = parse_ra_sql_blocks(read("docs/06a_dai_so_quan_he.md"))
+    sql.update({k:clean(v) for k,v in named.items()
+                if k.startswith("QRA") and k != "QRA07_DIV"})
+    current_hashes = {k:hashlib.sha256(v.encode()).hexdigest() for k,v in sql.items()}
+    mismatches = [k for k,v in current_hashes.items() if result["query_sha256"].get(k) != v]
+    missing = sorted(set(result["query_sha256"]) - set(current_hashes))
+    assert not mismatches and not missing, f"Historical SQL hashes changed: mismatched={mismatches}, missing={missing}"
+    return f"{result['summary']['passed']}/{len(result['checks'])} historical PostgreSQL checks; week1 input versions preserved in log; week2 validation/runtime tooling tracked by new manifest and CI (DB not rerun by this script)"
 
 
 def newline_policy():

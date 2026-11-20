@@ -455,7 +455,7 @@ Chỉ thêm chỉ mục sau khi query chạy đúng: `QUA_TRINH_CU_TRU(ma_cu_dan
 
 Trong bảng dưới, `Q = QUA_TRINH_CU_TRU`, `C = CU_DAN`, `H = HO_CU_TRU`, `D = DIA_CHI`, `T = TO_DAN_PHO`, `B = BIEN_DONG_CU_TRU`. Dùng **đúng tên thuộc tính thực tế** khi viết biểu thức cuối; đổi tên hợp lý để tránh trùng `ma_to`, `ma_ho`.
 
-**Chọn mốc `d = DATE '2026-11-20'` trong phần đối chiếu đại số–SQL** (cố định để kết quả không đổi khi giảng viên kiểm lại). Định nghĩa tập đợt còn hiệu lực `Q_d = σ_(ngay_bat_dau ≤ d ∧ (ngay_ket_thuc IS NULL ∨ ngay_ket_thuc ≥ d))(Q)`; ký hiệu `IS NULL` dùng như một quy ước trong mô tả đại số quan hệ mở rộng có null. **Để thuần đại số quan hệ cổ điển**, nên xây dựng quan hệ/view `CU_TRU_HIEU_LUC_D` ở khâu chuẩn bị với thuộc tính đã xác định theo mốc ngày, rồi dùng quan hệ này trong các biểu thức; không coi xử lý NULL là toán tử chuẩn của đại số quan hệ cổ điển.
+**Chọn mốc `d = DATE '2026-11-20'` trong phần đối chiếu đại số–SQL** (cố định để kết quả không đổi khi giảng viên kiểm lại). Một đợt có hiệu lực tại d khi `ngay_bat_dau ≤ d` và `ngay_ket_thuc` rỗng hoặc `≥ d` (quy tắc B05). Đại số quan hệ cổ điển không có giá trị rỗng, nên bước lọc này làm bằng SQL ở khâu chuẩn bị, bỏ cột `ngay_ket_thuc`, tạo quan hệ đầu vào `Q_d = CU_TRU_HIEU_LUC_D(ma_qua_trinh, ma_cu_dan, ma_ho, loai_cu_tru, ngay_bat_dau)`. Các biểu thức đại số chỉ dùng `Q_d` như một quan hệ đã cho, không chứa phép so sánh với giá trị rỗng (xem `docs/06a_dai_so_quan_he.md`, mục 0.3).
 
 | ID | Câu hỏi thực tiễn | Phép đại số trọng tâm | Kịch bản |
 |---|---|---|---|

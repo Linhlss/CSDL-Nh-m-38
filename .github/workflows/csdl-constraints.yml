@@ -1,20 +1,21 @@
-name: Kiem thu rang buoc CSDL tuan 2
-
+name: Gate 2 - Database, RA, SQL and Security Integration
 on:
   push:
+    branches: [main, "fix/**"]
     paths:
       - "sql/**"
-      - "README.md"
+      - "tests/**"
+      - "scripts/**"
       - "docs/**"
-      - "scripts/verify_week1.py"
-      - "tests/week1_manifest.json"
-      - "tests/week2_constraints_execution_log.md"
-      - "tests/constraints_week2.sql"
+      - "README.md"
+      - "data/README.md"
       - ".github/workflows/csdl-constraints.yml"
+  pull_request:
+    branches: [main, "fix/**"]
   workflow_dispatch:
 
 jobs:
-  postgresql-constraints:
+  integrated-postgresql:
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -36,28 +37,89 @@ jobs:
       PGDATABASE: postgres
     steps:
       - uses: actions/checkout@v4
-      - name: Verify historical week 1 handoff and file hashes
-        run: python3 scripts/verify_week1.py
+        with:
+          fetch-depth: 0
+      - name: Unit-test named RA SQL parser (11 and 12 blocks)
+        run: |
+          python3 -m unittest discover -s tests -p 'test_ra_parser.py' -v
+          python3 scripts/ra_sql_blocks.py
+      - name: Verify historical week 1 records without modifying old runtime evidence
+        run: |
+          python3 scripts/verify_week1.py
       - name: Install PostgreSQL client
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y postgresql-client
-      - name: Test schema, constraints, seed and negative cases
+      - name: Create schema, constraints, seed636, negative tests, validation
         run: |
           set -euo pipefail
-          psql -v ON_ERROR_STOP=1 -f sql/01_schema.sql
-          psql -v ON_ERROR_STOP=1 -f sql/02_constraints.sql
-          psql -v ON_ERROR_STOP=1 -f sql/03_seed.sql
-          psql -v ON_ERROR_STOP=1 -f tests/constraints_week2.sql
-          psql -v ON_ERROR_STOP=1 -f sql/06_validation.sql
-      - name: Check all 10 SQL queries still execute
+          psql -X -v ON_ERROR_STOP=1 -f sql/01_schema.sql > /tmp/schema.log 2>&1
+          psql -X -v ON_ERROR_STOP=1 -f sql/02_constraints.sql > /tmp/constraints.log 2>&1
+          psql -X -v ON_ERROR_STOP=1 -f sql/03_seed.sql > /tmp/seed.log 2>&1
+          psql -X -v ON_ERROR_STOP=1 -f tests/constraints_week2.sql > /tmp/negative-tests.log 2>&1
+          psql -X -v ON_ERROR_STOP=1 -f sql/06_validation.sql > /tmp/validation.log 2>&1
+          psql -X -v ON_ERROR_STOP=1 -f sql/04_queries.sql > /tmp/queries.log 2>&1
+          cat /tmp/negative-tests.log | grep '\[PASS\]'
+          cat /tmp/validation.log | grep '\[PASS\]'
+      - name: B1 B2 permissions and view on seed636
         run: |
-          psql -v ON_ERROR_STOP=1 -f sql/04_queries.sql > /tmp/csdl17-queries.log
-          echo "10 queries executed; full result in artifact."
-      - name: Upload textual execution evidence
+          psql -X -f sql/05_security.sql > /tmp/security-seed.log 2>&1
+          test $? -eq 0
+          # Demo B1/B2 có đúng 6 lệnh bị từ chối cố ý; ít/nhiều hơn đều là lỗi.
+          denied=$(grep -c 'permission denied' /tmp/security-seed.log)
+          echo "B1/B2 permission denied: $denied (expected 6)"
+          test "$denied" -eq 6
+      - name: Independent RA fixture database and security
+        run: |
+          set -euo pipefail
+          createdb csdl17_ra_fixture
+          psql -X -d csdl17_ra_fixture -v ON_ERROR_STOP=1 -f sql/01_schema.sql > /tmp/fixture-schema.log 2>&1
+          psql -X -d csdl17_ra_fixture -v ON_ERROR_STOP=1 -f sql/02_constraints.sql > /tmp/fixture-constraints.log 2>&1
+          psql -X -d csdl17_ra_fixture -f sql/05_security.sql > /tmp/security-fixture.log 2>&1
+          psql -X -d csdl17_ra_fixture -v ON_ERROR_STOP=1 -f tests/ra_fixture.sql > /tmp/ra-fixture.log 2>&1
+      - name: PR5 seed checks S01-S16 and QRA02/03/06/08
+        run: |
+          set -euo pipefail
+          psql -X -v ON_ERROR_STOP=1 -f tests/seed636_qra02_03_06_08.sql > /tmp/ra-seed-cases.log 2>&1
+          # S01-S16: chạy tệp TV3 rồi khẳng định kỳ vọng/thực tế trong CÙNG phiên.
+          psql -X -v ON_ERROR_STOP=1 -f tests/seed636_s01_s16_tv3.sql \
+            -f tests/assert_s01_s16_tv1.sql > /tmp/s-cases.log 2>&1
+          grep 'TONG S01-S16' /tmp/s-cases.log
+      - name: Assert 10 RA, division, SQL, view and actual role-denials on two DBs
+        run: |
+          set -euo pipefail
+          python3 scripts/verify_gate2_integration.py \
+            --seed-db postgres --fixture-db csdl17_ra_fixture | tee /tmp/gate2-results.log
+      - name: Security catalog C01-C15 and B12 privilege matrix
+        run: |
+          set -euo pipefail
+          psql -X -v ON_ERROR_STOP=1 -f tests/security_catalog_tv3.sql > /tmp/security-catalog.log 2>&1
+          psql -X -Atq -v ON_ERROR_STOP=1 -f tests/security_catalog_tv3.sql \
+            | awk -F'|' '{print $3}' | sort | uniq -c | tee /tmp/security-catalog-counts.log
+          grep -Eq '^ *15 PASS$' /tmp/security-catalog-counts.log
+          if grep -q FAIL /tmp/security-catalog-counts.log; then exit 1; fi
+          psql -X -v ON_ERROR_STOP=1 -f tests/security_b12_tv1.sql > /tmp/security-b12.log 2>&1
+          grep 'TONG' /tmp/security-b12.log
+      - name: Real TCP login as reader and report (temporary scram passwords)
+        run: |
+          set -euo pipefail
+          TMPPW=$(openssl rand -hex 16)
+          echo "::add-mask::$TMPPW"
+          psql -X -q -c "ALTER ROLE csdl17_reader PASSWORD '$TMPPW'" \
+                     -c "ALTER ROLE csdl17_report PASSWORD '$TMPPW'"
+          PGPASSWORD=$TMPPW psql -X -h 127.0.0.1 -U csdl17_reader -d postgres \
+            -f tests/security_login_tv3.sql > /tmp/security-login-reader.log 2>&1
+          PGPASSWORD=$TMPPW psql -X -h 127.0.0.1 -U csdl17_report -d postgres \
+            -f tests/security_login_tv3.sql > /tmp/security-login-report.log 2>&1
+          psql -X -q -c "ALTER ROLE csdl17_reader PASSWORD NULL" \
+                     -c "ALTER ROLE csdl17_report PASSWORD NULL"
+          # Tệp TV3 thoát 0 nếu đăng nhập nhầm role, nên khẳng định đúng dòng tổng.
+          grep 'TONG csdl17_reader: 12/12 PASS' /tmp/security-login-reader.log
+          grep 'TONG csdl17_report: 10/10 PASS' /tmp/security-login-report.log
+      - name: Upload PostgreSQL evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: csdl17-sql-queries
-          path: /tmp/csdl17-queries.log
-          if-no-files-found: ignore
+          name: gate2-postgresql-evidence
+          path: /tmp/*.log
+          if-no-files-found: warn

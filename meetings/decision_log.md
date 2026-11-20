@@ -242,3 +242,56 @@ Quyền repo kiểm tra 16/11: Linhlss admin, Ngocdeezet write, ninhdn07 write. 
 - Không thay đổi ERD/7 bảng lõi, lược đồ khóa, 10 câu SQL, 10 RA hoặc seed636; chỉ bổ sung loại constraint/index GiST, trigger, hàm và test.
 - [Chi tiết expected/actual và mã SQLSTATE](../tests/week2_constraints_execution_log.md).
 
+
+
+## 8. TV1 bàn giao kỹ thuật ngày 20/11/2026 — chờ review chính thức
+
+TV1 hoàn thành bản ứng viên tại nhánh `fix/tv1-integration-gate2`; **không sửa main, không merge PR #5**. [Hồ sơ TV1](../docs/09_ho_so_tv1_gate2.md) trình bày mã, expected/actual, những hạn chế và người review.
+
+**Bằng chứng:** [CI PostgreSQL 17 run 44654667107](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44654667107) — 6 unit parser, 14/14 kiểm tra tệp, 40 trường hợp ràng buộc/rollback, 3 validation và 71 đối soát tích hợp đều PASS. Seed636 không đổi. Lỗi quyền ở B1/B2 là kết quả kiểm thử âm mong đợi.
+
+E1: assertion chỉ dùng ở khâu nghiệm thu, chưa chống ghi trùng ngay lúc INSERT. B15: CHECK và trigger trên hai chiều ghi dữ liệu. S04: 47–50; S14b: bẫy COUNT DISTINCT tạm trên fixture và rollback, không thay đổi seed.
+
+**Đề xuất TV1 về 3NF:** giữ `ngay_bien_dong` là dư thừa có kiểm soát bởi trigger B09; không khẳng định 7 bảng đều tuyệt đối 3NF theo mọi phụ thuộc hàm có điều kiện. Cần TV2/TV3 review. Gate 2 cả nhóm, môi trường Windows TV2, hình chứng minh và báo cáo nộp cuối vẫn chờ nghiệm thu.
+
+**Cập nhật trạng thái mục 8 (20/11/2026):** PR #5 **đã đóng, không merge**. Nội dung cần thiết của PR #5 nằm trong PR #7.
+
+<a id="issue9"></a>
+
+## 9. Tích hợp PR #8 và xử lý X01–X07 — TV1, 20/11/2026 (Issue #9)
+
+**Trạng thái:** đây là quyết định kỹ thuật do TV1 đề xuất, **chưa phải Gate 2 của cả nhóm**. Không có chữ ký hay review thay TV2/TV3.
+
+**Tích hợp:**
+- PR #8 (`tv3/gate2-w2-t3` @ `432600e`) có base là nhánh PR #7. Nhánh này là hậu duệ trực tiếp của `52eb8d9`, nên được gộp vào `fix/tv1-integration-gate2` bằng `git merge --ff-only`: không xung đột, không force-push, không merge thẳng vào `main`.
+- PR #6 (TV2 → `main`) không bị đụng tới. Sau khi PR #7 vào `main`, TV2 cần cập nhật nhánh và ghi lại manifest (T3-07).
+
+**Các quyết định:**
+
+| ID | Quyết định | Người đề xuất / đồng ý | Chờ |
+|---|---|---|---|
+| X01 | Phương án (b): `tai_khoan.vai_tro` chỉ là thuộc tính mô tả và không thực thi quyền ghi; quyền thật do role PostgreSQL thực thi. Giữ nguyên seed636 (13/63 sự kiện do `THONG_KE` ghi, 11/63 do `QUAN_TRI` ghi) và công bố là giới hạn. Không sửa seed, expected hay hash | TV1 đề xuất; TV3 nghiêng về (b) trong W3-T3-08 | **TV2 xác nhận** |
+| X02 | Chấp nhận `REVOKE DELETE` (B12) và việc đưa `05_security.sql` vào `week2_evolved`. Phần kiểm chứng bù cho điều này là catalog C15 và K01–K05, chạy trong CI | TV3 sửa; TV1 đã review | — |
+| X03 | Từ điển dữ liệu: các câu "chưa có trigger/B06" chỉ mang nghĩa tuần 1. Chuẩn hóa: 3NF có điều kiện, không khẳng định tuyệt đối | TV1; TV3 đồng ý về `ngay_bien_dong` | TV2 review |
+| X04 | Phụ đề ERD là "Thiết kế v1 — Gate 1 PASS 16/11/2026"; ảnh được sinh lại từ nguồn | TV1 | — |
+| X05 | Cho phép ghi nhận trước biến động có hiệu lực trong tương lai; `thoi_diem_ghi` khác `ngay_bien_dong` | TV1 | — |
+| X06 | Ngày sinh hoặc ngày lập hộ ở tương lai khi chưa có đợt nằm ngoài phạm vi B15; không thêm ràng buộc phụ thuộc `CURRENT_DATE` | TV1 | — |
+| X07 | Giữ E1 là assertion. Test âm được gia cố để chứng minh INSERT trùng đã được ghi trước khi assertion báo lỗi | TV1 | — |
+
+**Bằng chứng:** [log kiểm thử từ DB trắng](../tests/week2_tv1_integration_log.md) và CI trên commit tích hợp cuối, liên kết ghi trong log.
+
+
+<a id="gate2"></a>
+## 10. Chốt Gate 2 — 20/11/2026 (xác nhận do TV1 báo lại từ nhóm)
+
+| Trường | Giá trị / phạm vi |
+|---|---|
+| **Gate 2** | **PASS — phần kỹ thuật và nội dung sáu chương** |
+| Ngày tiếp nhận xác nhận | **20/11/2026** (ngày chủ repo thông báo trong cuộc trò chuyện; không suy diễn ngày/giờ họp) |
+| TV1, TV2, TV3 | **Theo TV1, cả ba đã đồng ý bản tích hợp**. Chưa có review riêng trực tiếp của TV2/TV3 trên GitHub; đây là **xác nhận gián tiếp từ trưởng nhóm**, không phải chữ ký hoặc comment cá nhân của hai người. |
+| X01 | **Chọn (b)**: `tai_khoan.vai_tro` chỉ mang tính mô tả; quyền ghi thực tế do PostgreSQL role. **Giữ nguyên seed636**, gồm 13/63 sự kiện gắn `THONG_KE`; không đổi QSQL10/expected. Đây là giới hạn được công bố, không khẳng định kiểm soát vai trò nghiệp vụ. |
+| Phần được duyệt | 7 bảng/ERD, B06–B15 và E1; dữ liệu seed636; Chương 1–6 (Chương 3.5/5 của TV2, Chương 4/6 của TV3); 10 SQL, 10 RA và QRA07 phép chia; 2 demo bảo mật B1/B2 và B12. |
+| Bằng chứng thực thi trước khi chốt | [CI push](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44670909035), [CI PR](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44670911673) trên `4bf6e738`: PASS; 40 ca ràng buộc, 3 validation, 71 đối soát, S01–S16 18/18, catalog 15/15, reader 12/12, report 10/10. |
+| Việc chưa nằm trong Gate 2 | 10 ảnh SQL, ảnh B1/B2, bản PDF chính thức, review hình thức, môi trường Windows TV2, nguồn giáo trình, xếp loại/chữ ký và nghiệm thu Gate 3/4. Người phụ trách và hạn nằm trong `docs/10_ban_giao_tv2_tv3.md`. |
+
+**Quy tắc lưu vết:** Đây là ghi nhận lời xác nhận của trưởng nhóm, **không mạo danh review của TV2/TV3**. Khi có xác nhận trực tiếp trên PR, có thể bổ sung liên kết. Các log tuần 1 và các trạng thái "chờ review" trong phần nhật ký lịch sử trước ngày chốt được giữ lại để truy vết. Sau khi merge PR #7 lên `main`, phải chạy CI lại trên commit `main` thực tế. Không đánh dấu Gate 3/4 hoặc nộp báo cáo hoàn thành.

@@ -1,4 +1,4 @@
-# BIÊN BẢN KIỂM TRA TỆP DỰ ÁN — 16/11/2026
+# BIÊN BẢN KIỂM TRA TỆP DỰ ÁN — 20/11/2026
 
 **Lệnh đã chạy:** `python3 scripts/verify_week1.py --record` từ thư mục gốc.
 **Python thực tế:** 3.13.5. **Hệ điều hành:** Darwin 25.6.0.
@@ -14,11 +14,11 @@
 | PNG exports | PASS | 2 valid 2300×1626 PNGs, A4 landscape proportions, all PNG chunk CRCs valid |
 | Question/rule/case coverage | PASS | 10 RA + 10 SQL design mappings; 30 design cases; 18 business rules; 10 review notes |
 | Report and task handoff | PASS | Chapters 1–3 filled; all 20 TV1 tasks traced; Gate 1 PASS / v1; confirmation source and DB-test limits explicit |
-| Local file links | PASS | 171 local Markdown file links resolve (anchors and external URLs are not network-tested) |
+| Local file links | PASS | 249 local Markdown file links resolve (anchors and external URLs are not network-tested) |
 | SQL compatibility | PASS | Executable SQL unchanged from GitHub main d20b394; only comments differ |
 | Utility syntax | PASS | Python utility sources parse successfully; no cache files written |
 | Week1 task trace | PASS | 142 unique project IDs; shared ledger: 53 week1 IDs, 52 completed, 1 deferred to week2, 0 awaiting confirmation; deferred tasks stay unchecked |
-| Recorded runtime evidence | PASS | 96/96 recorded PostgreSQL checks; exact input hashes and all 20 SQL/counterpart query hashes verified (DB not rerun) |
+| Recorded runtime evidence | PASS | 96/96 historical PostgreSQL checks; week1 input versions preserved in log; week2 validation/runtime tooling tracked by new manifest and CI (DB not rerun by this script) |
 | LF text policy | PASS | LF policy and repository text verified; PNG/binary content unchanged; no unperformed Windows test claimed |
 
 ## Kiểm tra trực quan

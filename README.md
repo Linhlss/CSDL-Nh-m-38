@@ -18,15 +18,15 @@ Xây dựng CSDL quản lý cư dân và biến động cư trú tại một ph�
 
 **Tuần 2 — 16–22/11:**
 
-- **TV1:** triển khai ràng buộc/transaction trong `sql/02_constraints.sql` đang TODO; kiểm thử, chốt chuẩn hóa và Chương 1–3.
+- **TV1:** đã triển khai B06/B08–B11/B14 và bổ sung B15/E1 trong nhánh tích hợp Gate 2; kiểm thử từ DB sạch, chốt báo cáo, bàn giao review TV2/TV3.
 - **TV2:** kiểm thử dữ liệu/10 SQL cùng ràng buộc mới, ghi expected/actual; viết Chương 3.5 và Chương 5.
-- **TV3:** bổ sung kết quả QRA02/03/06/08 trên seed636, hoàn thiện đối soát và Chương 4/6; chuẩn bị ảnh B1/B2 ngày 24/11.
+- **TV3:** đã có QRA07 bằng phép chia, kết quả seed636 của QRA02/03/06/08, kiểm thử đăng nhập thật và sửa X02. Nội dung PR #5 đã vào nhánh tích hợp; PR #5 đã đóng, không merge. PR #8 đã được gộp (fast-forward) vào nhánh TV1. Việc còn lại: review bản tích hợp, chốt Chương 4/6, chụp B1/B2 ngày 24/11.
 
-[Checklist và lịch phối hợp](docs/03_CHECKLIST_DU_AN.md#tuan-2-hien-hanh) giữ đầy đủ 142 mã việc và reviewer. Gate 2 ngày 22/11 chốt nội dung kỹ thuật; tuần 3 (23–27/11) dành cho rebuild cuối, minh chứng, báo cáo, in/nộp.
+[Checklist và lịch phối hợp](docs/03_CHECKLIST_DU_AN.md#tuan-2-hien-hanh) giữ đầy đủ 142 mã việc và reviewer. **Gate 2 PASS (chốt theo xác nhận nhóm do TV1 báo lại ngày 20/11)**; các nội dung còn mở thuộc Gate 3/4 gồm minh chứng, báo cáo PDF, chữ ký và nộp. [Biên bản chốt Gate 2](meetings/decision_log.md#gate2).
 
 ## Kiểm thử ràng buộc nâng cao (TV1 — tuần 2)
 
-B06 (chống chồng lấn), B08–B09 (đợt cũ/mới và ngày sự kiện), B10 (chuyển nội bộ nguyên tử), B11 (không di chuyển ngầm địa chỉ lịch sử) và B14 (tài khoản đang hoạt động) được triển khai trong `sql/02_constraints.sql`.
+B06 (chống chồng lấn), B08–B09 (sự kiện và ngày), B10 (chuyển nội bộ nguyên tử), B11 (địa chỉ lịch sử), B14 (tài khoản hoạt động), B15 (ngày và tên) và E1 (assertion nghiệm thu) được triển khai tại `sql/02_constraints.sql` trên nhánh tích hợp Gate 2.
 
 Dựng lại trên **PostgreSQL ≥15** với quyền bật extension `btree_gist`:
 
@@ -39,6 +39,17 @@ psql -v ON_ERROR_STOP=1 -f sql/06_validation.sql
 ```
 
 Tệp `tests/constraints_week2.sql` chạy ca dương/âm trong transaction và `ROLLBACK` để giữ seed. Kết quả đã kiểm chứng tại [GitHub Actions 19/11/2026](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44533515990); nhật ký ở [tests/week2_constraints_execution_log.md](tests/week2_constraints_execution_log.md). Log này **chưa phải** biên bản nghiệm thu cuối Gate 3/4.
+
+Xem **[Hướng dẫn dựng CSDL thống nhất](docs/08_huong_dan_dung_csdl.md)** để chạy hai DB riêng (seed636 và fixture RA), hai demo bảo mật và bộ đối soát tích hợp.
+
+## Hồ sơ TV1 Gate 2 — nhánh ứng viên
+
+- [Dựng từ CSDL trắng](docs/08_huong_dan_dung_csdl.md), chia DB seed636 và fixture RA.
+- [Hồ sơ TV1, kết quả CI và vấn đề chờ review](docs/09_ho_so_tv1_gate2.md).
+- **[Hồ sơ bàn giao TV1 → TV2, TV3 (20/11/2026)](docs/10_ban_giao_tv2_tv3.md):** bản tích hợp đủ sáu chương (gồm Chương 5 của TV2 từ PR #6), việc đã xong, việc còn lại theo người, hạn và reviewer.
+- [Kiểm thử PostgreSQL 17: run 44654667107](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44654667107): 6 unit parser, 14/14 kiểm tra tệp, 40 PASS ràng buộc, 3 PASS validation, 71 đối soát tích hợp; giữ seed636.
+- [Kiểm thử từ DB trắng ngày 20/11 sau tích hợp PR #8](tests/week2_tv1_integration_log.md): PostgreSQL 17.12 có đăng nhập scram. Kết quả: catalog đạt 15/15, B12 K01–K05 đạt, reader đạt 12/12, report đạt 10/10, S01–S16 đạt 18/18.
+- PR #5 đã đóng không merge riêng; PR #8 (TV3) và nội dung PR #6 (TV2) đã được tích hợp vào PR #7 (TV1). **PR #7 là đầu mối hợp nhất về `main` theo biên bản Gate 2**; trạng thái merge cuối xem [PR #7](https://github.com/Linhlss/CSDL-Nh-m-38/pull/7). Kết quả CI không thay ảnh hay chữ ký Gate 3/4.
 
 ## Đọc và làm việc
 

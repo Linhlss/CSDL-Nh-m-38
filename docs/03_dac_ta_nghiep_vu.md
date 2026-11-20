@@ -35,10 +35,17 @@ Phạm vi chỉ gồm một phường mô phỏng, dữ liệu giả lập, Post
 | Tác nhân | Nhu cầu | Giới hạn |
 |---|---|---|
 | Cán bộ quản lý cư dân | Quản lý địa bàn/hộ/hồ sơ; mở, đóng đợt và ghi biến động; tra cứu lịch sử | Không tự sửa cấu trúc hoặc cấp quyền DB |
-| Cán bộ tổng hợp | Tra cứu, thống kê theo tổ, loại và thời gian | Không sửa dữ liệu gốc; chỉ xem cột hoặc VIEW được cấp quyền |
+| Cán bộ tổng hợp | Tra cứu, thống kê theo tổ, loại và thời gian | Không sửa dữ liệu gốc; chỉ xem cột hoặc VIEW được cấp quyền (thực thi bằng role `csdl17_report`, không bằng cột `vai_tro`; xem quyết định X01 bên dưới) |
 | Quản trị CSDL | Tạo bảng, duy trì ràng buộc, cấp/thu hồi quyền và hỗ trợ kiểm thử | Không dùng quyền quản trị để đóng vai role chỉ đọc trong minh họa bảo mật |
 
 Đây là phân công chức năng. Việc các quyền được PostgreSQL thực thi thuộc script bảo mật tuần 2, chưa được suy ra từ cột `vai_tro`.
+
+**Quyết định X01 — phương án (b), 20/11/2026.** TV1 chọn phương án (b), TV3 đã đồng thuận trong review W3-T3-08; **TV1 thông báo ngày 20/11/2026 rằng TV2 và TV3 đã thống nhất**. Gate 2 được ghi nhận trong [nhật ký quyết định mục 10](../meetings/decision_log.md#gate2) dựa trên nguồn TV1 báo lại (không thay cho comment review/chữ ký độc lập).
+
+- **Bản chất của `vai_tro`:** cột `tai_khoan.vai_tro` (`QUAN_TRI`, `CAN_BO`, `THONG_KE`) là thuộc tính nghiệp vụ mô tả người ghi nhận. Nó **không** là cơ chế phân quyền. Không trigger hay CHECK nào dùng cột này để chặn ghi; B14 chỉ yêu cầu tài khoản tồn tại và ở trạng thái `HOAT_DONG`.
+- **Quyền thật:** PostgreSQL thực thi qua các role `csdl17_admin`, `csdl17_reader` và `csdl17_report` trong `sql/05_security.sql`. Role `csdl17_report` (vai trò thống kê ở mức CSDL) chỉ đọc VIEW tổng hợp và bị từ chối mọi lệnh ghi.
+- **Hệ quả công bố:** trong seed636 có 13/63 sự kiện do `thongke_01` (`THONG_KE`) ghi và 11/63 do `admin_demo` (`QUAN_TRI`) ghi. Đây là dữ liệu mô phỏng hợp lệ theo lược đồ hiện tại. Không được diễn giải số liệu này thành "cán bộ thống kê đã bị CSDL ngăn ghi".
+- **Phạm vi:** ràng buộc "chỉ tài khoản `CAN_BO` được ghi biến động" nằm ngoài thiết kế v1 (xem mục giới hạn ở Chương 3). Nếu nhóm muốn thực thi ràng buộc này, phải làm theo phương án (a): thêm trigger kiểm `vai_tro` và tái sinh seed. Việc đó kéo theo cập nhật QSQL10, manifest và log.
 
 ## 4. Phân rã chức năng và dữ liệu đọc/ghi
 
@@ -73,14 +80,14 @@ Các đường nối trên sơ đồ thể hiện phân rã chức năng, không
 | B12 | Không xóa vật lý hồ sơ/đợt đang được tham chiếu; không xóa lịch sử để biểu diễn chuyển đi. DDL dùng FK không cascade |
 | B13 | `qua_trinh_cu_tru` là nguồn sự thật theo thời gian. Biến động chỉ ghi sự kiện, ngày, các mã đợt và người ghi; không sao chép tên hay địa chỉ. Đợt nhập/hiệu chỉnh lịch sử hoặc tạm trú hết hạn có thể không có sự kiện theo phạm vi C1/P3 |
 | B14 | Tài khoản ghi nhận phải tồn tại; quy trình ghi mới dùng tài khoản `HOAT_DONG`. Việc khóa tài khoản không làm mất nhật ký cũ hoặc thu hồi role PostgreSQL tự động |
-| B15 | Bộ dữ liệu có ngày sinh <= ngày bắt đầu cư trú và ngày lập hộ <= ngày bắt đầu. Cấm chuỗi tên/địa chỉ rỗng hoặc chỉ khoảng trắng khi chuẩn bị dữ liệu. Đây là kiểm tra đầu vào/seed, chưa là CHECK trong DDL v1 |
+| B15 | Bộ dữ liệu có ngày sinh <= ngày bắt đầu cư trú và ngày lập hộ <= ngày bắt đầu. Cấm chuỗi tên/địa chỉ rỗng hoặc chỉ khoảng trắng khi chuẩn bị dữ liệu. Trong DDL cơ bản v1 chưa có; tại `02_constraints.sql` đã bổ sung CHECK tên/địa chỉ rỗng và trigger ngày hai chiều |
 | B16 | Các câu “đang” dùng d. QRA09/QSQL07 chỉ coi người đã từng cư trú khi có đợt bắt đầu <= d. QRA04/QRA07/QSQL05/QSQL06 xét toàn bộ đợt đã lưu; nếu có đợt tương lai, phải ghi rõ đó là toàn bộ dữ liệu đã ghi nhận |
 | B17 | Số người trong mỗi hộ/tổ là số mã cư dân phân biệt. Một người có thể thuộc hai tổ theo hai loại; tổng số người của các tổ không luôn bằng số người phân biệt toàn phường |
 | B18 | Mọi dữ liệu dân cư và địa chỉ là giả lập; không có CCCD/số điện thoại thật. Mật khẩu không được lưu trong danh mục tài khoản hoặc mã nguồn |
 
-Không áp đặt một đợt chỉ được tham chiếu bởi một sự kiện đầu vào/đầu ra. Không thêm UNIQUE cho hai FK đợt cũ/mới trong phiên bản này. Các quy tắc B06, B08–B11, phần hoạt động tài khoản ở B14 cần được hiện thực trong tuần 2; đã có thiết kế không có nghĩa DB đã chặn được vi phạm.
+Không áp đặt một đợt chỉ được tham chiếu bởi một sự kiện đầu vào/đầu ra. Không thêm UNIQUE cho hai FK đợt cũ/mới trong phiên bản này. B06, B08–B11, B14, B15 được hiện thực trong `sql/02_constraints.sql` và kiểm thử Gate 2. Cơ chế E1 chỉ là validation bắt buộc, chưa phải ràng buộc chống trùng ngay lúc ghi.
 
-**Làm rõ E1, 12/11/2026:** Giữ khả năng lưu 0..N tham chiếu ở mức schema để tương thích bộ bàn giao, nhưng nhiều sự kiện dùng cùng đợt trong **cùng vai trò** là cảnh báo ghi trùng phải xử lý trước nghiệm thu. Chạy riêng V_E1_CU và V_E1_MOI trong `sql/06_validation.sql`, yêu cầu cả hai trả 0 dòng. Một đợt là đợt mới của sự kiện đến, rồi là đợt cũ của sự kiện đi/nội bộ, không bị coi là trùng. Validation không tự chặn thao tác ghi, không tự xóa hoặc gộp nhật ký. Quyết định này không thay thế các ràng buộc xuyên bảng tuần 2.
+**Làm rõ E1, 12/11/2026:** Giữ khả năng lưu 0..N tham chiếu ở mức schema để tương thích bộ bàn giao, nhưng nhiều sự kiện dùng cùng đợt trong **cùng vai trò** là cảnh báo ghi trùng phải xử lý trước nghiệm thu. Chạy riêng V_E1_CU và V_E1_MOI trong `sql/06_validation.sql`, yêu cầu cả hai trả 0 dòng. Một đợt là đợt mới của sự kiện đến, rồi là đợt cũ của sự kiện đi/nội bộ, không bị coi là trùng. Validation gọi `fn_assert_e1()` để báo lỗi và làm FAIL đợt nghiệm thu khi có trùng; không tự chặn thao tác INSERT trước thời điểm validation, không tự xóa hoặc gộp nhật ký. Quyết định này không thay thế các ràng buộc xuyên bảng tuần 2.
 
 ## 6. Đặc tả sáu quy trình
 
@@ -98,6 +105,7 @@ Không áp đặt một đợt chỉ được tham chiếu bởi một sự ki�
 - **Điều kiện:** họ tên không rỗng, ngày sinh hợp lệ; giới tính thuộc `Nam`, `Nu`, `Khac`. Khi hiệu chỉnh phải tìm thấy mã và giữ tương thích với các đợt đã lưu.
 - **Xử lý:** kiểm tra đầu vào; tạo hồ sơ hoặc sửa thuộc tính mô tả. Không dùng họ tên làm khóa và không gắn hộ/địa chỉ hiện tại trực tiếp vào hồ sơ.
 - **Đọc/ghi:** `cu_dan`; đọc đợt cư trú khi kiểm tra hiệu chỉnh ngày sinh. **Đầu ra:** hồ sơ theo mã. **Lỗi:** thiếu trường, sai miền giới tính, mã không tồn tại hoặc ngày sinh mâu thuẫn lịch sử.
+- **Giới hạn X06 (chốt 20/11/2026):** B15 chỉ so `ngay_sinh` và `ngay_lap` với **ngày bắt đầu các đợt cư trú**, theo hai chiều: khi ghi đợt và khi sửa ngày của người/hộ đã có đợt. Với cư dân hoặc hộ **chưa có đợt nào**, CSDL không có mốc để so, nên vẫn nhập được ngày sinh hoặc ngày lập hộ ở tương lai. `tests/constraints_week2.sql` chứng minh điều này bằng cư dân và hộ 99011 có ngày `2027-01-01`. Trường hợp này nằm **ngoài phạm vi B15 hiện tại** và được ghi vào giới hạn ở Chương 3. Nhóm không thêm CHECK so với `CURRENT_DATE` vì ràng buộc phụ thuộc thời điểm chạy sẽ làm kiểm thử không tái lập được. Khi người hoặc hộ đó được mở đợt đầu tiên, B15 sẽ chặn nếu ngày bắt đầu đợt sớm hơn ngày sinh hoặc ngày lập hộ.
 
 ### P3 — Mở và quản lý đợt cư trú
 
@@ -113,6 +121,11 @@ Không áp đặt một đợt chỉ được tham chiếu bởi một sự ki�
 
 - **Đầu vào:** thông tin đợt mới, ngày chuyển t, tài khoản ghi nhận và ghi chú tùy chọn.
 - **Điều kiện:** P3 hợp lệ; tài khoản tồn tại và đang hoạt động; ngày bắt đầu mới = t.
+- **Ngày hiệu lực và thời điểm ghi (X05, chốt 20/11/2026):**
+  - `ngay_bien_dong` = t là **ngày hiệu lực** của biến động. `thoi_diem_ghi` là **thời điểm hệ thống ghi nhận** sự kiện. Hai giá trị độc lập với nhau.
+  - Được phép ghi nhận trước một biến động có hiệu lực trong tương lai (đăng ký trước), nên trường hợp `ngay_bien_dong > thoi_diem_ghi::date` là hợp lệ. Giống P3, đợt tương lai không thuộc tập hiệu lực trước ngày t.
+  - Không có ràng buộc so sánh hai cột này, và không ràng buộc nào dùng `CURRENT_DATE`, để kiểm thử tái lập được.
+  - Lưu ý về dữ liệu: seed636 không nạp giá trị `thoi_diem_ghi`, nên cột nhận `DEFAULT CURRENT_TIMESTAMP` lúc nạp. Vì vậy số dòng có `ngay_bien_dong > thoi_diem_ghi::date` phụ thuộc ngày nạp và không phải dữ liệu nghiệp vụ cố định. Ví dụ nạp ngày 20/11/2026 thì có 2 sự kiện như vậy, với ngày hiệu lực 25/11 và 01/12/2026.
 - **Xử lý:** bắt đầu giao dịch → tạo đợt mới → tạo `CHUYEN_DEN` chỉ tham chiếu đợt mới → commit. Nếu lỗi, rollback cả hai bước ghi.
 - **Đọc/ghi:** đọc người/hộ/tài khoản/đợt; ghi đợt và biến động. **Đầu ra:** hai mã liên kết. **Lỗi:** mọi lỗi P3, tài khoản khóa, hình dạng sự kiện hoặc ngày không khớp.
 

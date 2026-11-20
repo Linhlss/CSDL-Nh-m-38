@@ -154,6 +154,10 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO csdl17_ad
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO csdl17_admin;
 -- "ALL TABLES" gồm cả VIEW; VIEW tổng hợp không ghi được nên chỉ để SELECT.
 REVOKE INSERT, UPDATE, DELETE ON vw_thong_ke_cu_dan_theo_to FROM csdl17_admin;
+-- B12 (không xóa lịch sử): admin được thêm/sửa đợt và sự kiện (trigger vẫn
+-- kiểm B06-B15) nhưng KHÔNG được xóa vật lý đợt cư trú hay nhật ký biến động.
+-- Bổ sung 20/11/2026 theo review W3-T3-08, mục X02 trong docs/07.
+REVOKE DELETE ON qua_trinh_cu_tru, bien_dong_cu_tru FROM csdl17_admin;
 
 -- 2.3. Reader (Demo B1): chỉ SELECT 6 bảng nghiệp vụ.
 --      Không cấp tai_khoan vì tra cứu cư dân không cần thông tin tài khoản.
