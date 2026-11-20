@@ -241,6 +241,12 @@ Schema/ERD/từ điển đã thống nhất về cấu trúc 7 bảng/35 cột. 
 
 > **TV1: kiểm chứng ngày 20/11/2026** — W2-T1-01/02/03/08/10/11/13 đã được xác minh kỹ thuật bằng [CI PostgreSQL 17](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44654667107) và [hồ sơ TV1](09_ho_so_tv1_gate2.md) trên hai DB tạm sạch; chưa phải môi trường Windows TV2. W2-T1-14/15 và Gate 2 chung vẫn mở cho review của TV2/TV3.
 
+> **TV1: Issue #9 ngày 20/11/2026.**
+> - **Đã làm:** gộp PR #8 vào nhánh tích hợp bằng fast-forward; review B12 có kiểm chứng; chốt X01 theo (b) và đang chờ TV2 xác nhận; sửa X03–X06; gia cố test E1 (X07). Kiểm thử lại từ DB trắng: [log](../tests/week2_tv1_integration_log.md), [hồ sơ mục 5](09_ho_so_tv1_gate2.md).
+> - **Tiến độ W2-T1-14:** Chương 1–3 đã cập nhật giới hạn X01–X07 và kết quả kiểm thử. Mục này **chưa đánh dấu** vì còn chờ nhận xét của TV2.
+> - **Tiến độ W2-T1-15:** danh sách lỗi còn lại có owner và hạn nằm ở hồ sơ mục 5.5. Mục này **chưa đánh dấu** vì việc kiểm tra G2 diễn ra ngày 22/11 cùng cả nhóm.
+> - **Ghi nhận cho TV3:** sản phẩm của W2-T3-10, 11, 12, 13 và W3-T3-08 đã có trong repo (docs/07 mục 8–10). TV1 không tự đánh dấu thay TV3; TV3 tự xác nhận các ô này.
+
 ## W2 / Cả nhóm — Gate 2 (22/11)
 
 - [ ] **W2-G-01:** Chạy và kiểm tra ít nhất một lần DDL → nạp dữ liệu → QSQL → RA đối soát → demo bảo mật, ghi mọi lỗi bằng ID/owner/hạn.

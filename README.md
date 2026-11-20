@@ -20,7 +20,7 @@ Xây dựng CSDL quản lý cư dân và biến động cư trú tại một ph�
 
 - **TV1:** đã triển khai B06/B08–B11/B14 và bổ sung B15/E1 trong nhánh tích hợp Gate 2; kiểm thử từ DB sạch, chốt báo cáo, bàn giao review TV2/TV3.
 - **TV2:** kiểm thử dữ liệu/10 SQL cùng ràng buộc mới, ghi expected/actual; viết Chương 3.5 và Chương 5.
-- **TV3:** PR #5 có lời giải QRA07 bằng phép chia và kết quả seed636 của QRA02/03/06/08; cần review tích hợp, chốt Chương 4/6 và chụp B1/B2 ngày 24/11.
+- **TV3:** đã có QRA07 bằng phép chia, kết quả seed636 của QRA02/03/06/08, kiểm thử đăng nhập thật và sửa X02. Nội dung PR #5 đã vào nhánh tích hợp; PR #5 đã đóng, không merge. PR #8 đã được gộp (fast-forward) vào nhánh TV1. Việc còn lại: review bản tích hợp, chốt Chương 4/6, chụp B1/B2 ngày 24/11.
 
 [Checklist và lịch phối hợp](docs/03_CHECKLIST_DU_AN.md#tuan-2-hien-hanh) giữ đầy đủ 142 mã việc và reviewer. Gate 2 ngày 22/11 chốt nội dung kỹ thuật; tuần 3 (23–27/11) dành cho rebuild cuối, minh chứng, báo cáo, in/nộp.
 
@@ -47,7 +47,8 @@ Xem **[Hướng dẫn dựng CSDL thống nhất](docs/08_huong_dan_dung_csdl.md
 - [Dựng từ CSDL trắng](docs/08_huong_dan_dung_csdl.md), chia DB seed636 và fixture RA.
 - [Hồ sơ TV1, kết quả CI và vấn đề chờ review](docs/09_ho_so_tv1_gate2.md).
 - [Kiểm thử PostgreSQL 17: run 44654667107](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44654667107): 6 unit parser, 14/14 kiểm tra tệp, 40 PASS ràng buộc, 3 PASS validation, 71 đối soát tích hợp; giữ seed636.
-- PR #5 của TV3 chưa merge vào main; thay đổi TV1 nằm trên nhánh `fix/tv1-integration-gate2`. Kết quả CI không thay chữ ký hay review TV2/TV3.
+- [Kiểm thử từ DB trắng ngày 20/11 sau tích hợp PR #8](tests/week2_tv1_integration_log.md): PostgreSQL 17.12 có đăng nhập scram. Kết quả: catalog đạt 15/15, B12 K01–K05 đạt, reader đạt 12/12, report đạt 10/10, S01–S16 đạt 18/18.
+- PR #5 đã đóng, không merge; nội dung cần thiết đã nằm trong nhánh `fix/tv1-integration-gate2` (PR #7). PR #8 của TV3 đã được gộp vào nhánh này. Chưa có gì merge vào `main`. Kết quả CI không thay chữ ký hay review TV2/TV3.
 
 ## Đọc và làm việc
 

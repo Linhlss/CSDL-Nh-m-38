@@ -2,7 +2,9 @@
 
 **Ngày chạy:** 20/11/2026. **Owner:** TV1 — Trần Bùi Tùng Linh (20227057).
 **Nhánh nghiệm thu:** `fix/tv1-integration-gate2` (chưa merge `main`).
-**Lần thực thi PostgreSQL cuối cùng đã kiểm chứng:** [GitHub Actions run 44654667107](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44654667107), commit `025c64b3`.
+**Lần thực thi PostgreSQL cuối cùng đã kiểm chứng:**
+- **Trước Issue #9:** [GitHub Actions run 44654667107](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44654667107), commit `025c64b3`.
+- **Sau khi tích hợp PR #8 và xử lý X01–X07:** xem mục 5 và [log kiểm thử từ DB trắng](../tests/week2_tv1_integration_log.md). Log này ghi cả máy local lẫn liên kết CI của commit cuối.
 
 ## 1. Nội dung đã thực hiện và bằng chứng
 
@@ -46,10 +48,58 @@ Không được tự gán chữ ký TV2/TV3, không đánh dấu Gate 2 đã đ�
 
 ## 4. Trạng thái còn mở
 
-- PR #5 của TV3 vẫn **mở**; nhánh `fix/tv1-integration-gate2` là tích hợp thử, không phải merge hai PR độc lập vào main.
+- PR #5 của TV3 **đã đóng, không merge** (20/11). Nội dung cần thiết nằm trong nhánh `fix/tv1-integration-gate2` (PR #7). PR #8 đã được gộp vào nhánh này bằng fast-forward (mục 5). Chưa có gì merge vào `main`.
 - Review chuyên môn của TV2/TV3, Gate 2 xác nhận cả nhóm và Gate 3 chạy/bằng chứng ảnh trên môi trường nộp bài vẫn phải thực hiện.
 - Báo cáo cuối còn các phần TODO từ TV2 ở Chương 5, ảnh SQL/bảo mật, kết luận, trang cuối và chữ ký.
 - Môi trường Windows TV2 chưa được xác nhận từ log CI.
-- Bản phân tích 3NF ghi nhận một điểm dư thừa có điều kiện ở bảng sự kiện; quyết định thiết kế chờ TV2/TV3 review, không phát biểu rằng “3NF tuyệt đối” đã được chứng minh.
+- Bản phân tích 3NF ghi nhận một điểm dư thừa có điều kiện ở bảng sự kiện. TV3 đã đồng ý giữ `ngay_bien_dong` (W3-T3-08); quyết định vẫn chờ TV2 review. Không phát biểu rằng "3NF tuyệt đối" đã được chứng minh.
 
 **Kết luận kỹ thuật TV1:** 5 nhóm việc PR5 parser, E1/B15, tích hợp RA/SQL/bảo mật, hướng dẫn dựng DB và phân tích chuẩn hóa đã có **mã + test + báo cáo đề xuất**. Nghiệm thu nhóm/nộp bài là một mốc riêng.
+
+## 5. Issue #9 — tích hợp PR #8, xử lý X01–X07, kiểm thử lại (20/11/2026)
+
+### 5.1. Review PR #8 (P0-A1)
+
+| Mục kiểm | Kết luận TV1 | Bằng chứng |
+|---|---|---|
+| `sql/05_security.sql` B12: `REVOKE DELETE ON qua_trinh_cu_tru, bien_dong_cu_tru FROM csdl17_admin` | **Đúng.** Lệnh chạy sau `GRANT … ON ALL TABLES` nên chạy lại vẫn an toàn. Không role nào còn quyền `DELETE`/`TRUNCATE` trên hai bảng lịch sử. PUBLIC đã bị thu hồi quyền, và preflight chặn mọi membership | K01: ma trận 120 ô (3 role × 8 đối tượng × 5 quyền) khớp thiết kế, có 34 quyền được cấp. C15 đạt |
+| `fn_chuyen_noi_bo` sau REVOKE | **Vẫn chạy được.** Hàm là SECURITY INVOKER và chỉ dùng `SELECT … FOR UPDATE`, `UPDATE` và hai `INSERT`, không có `DELETE` | K05: admin gọi thành công trong giao dịch rồi ROLLBACK; không có lỗi `42501` |
+| Admin xóa hoặc truncate lịch sử | **Bị chặn** | K02, K03, K04: kết quả `42501` |
+| VIEW không cập nhật được (`55000`) và lỗi quyền (`42501`) | **Không bị nhầm lẫn.** P06 kỳ vọng `55000`. Quyền ghi VIEW được kiểm riêng bằng ACL ở C12 và K01 | `tests/security_login_tv3.sql` dòng 98–101; C12 và K01 đạt |
+| `scripts/verify_week1.py` thêm `sql/05_security.sql` vào `week2_evolved` | **Chấp nhận.** Tệp thay đổi có chủ đích theo X02. Phần kiểm chứng bị bỏ khỏi đây được bù bằng catalog C01–C15 và K01–K05 trong CI | Workflow có thêm bước "Security catalog C01-C15 and B12 privilege matrix" |
+| Đăng nhập thật B1/B2 | **Đạt** trên PostgreSQL 17.12 macOS: TCP, scram-sha-256, mật khẩu tạm được xóa ngay sau khi chạy; mật khẩu sai bị từ chối | Reader đạt 12/12, report đạt 10/10 |
+
+**Phát hiện thêm, không chặn merge:**
+1. Admin vẫn có `UPDATE` trên hai bảng lịch sử, nằm trong giới hạn của trigger B08–B09. Điều này đã ghi vào giới hạn ở Chương 3.
+2. Tệp `security_login_tv3.sql` thoát với mã 0 nếu đăng nhập nhầm role. CI bù lại bằng cách khẳng định đúng dòng `TONG … PASS`.
+3. `security_catalog_tv3.sql` không có mã thoát lỗi. CI bù lại bằng cách đếm đủ 15 PASS và không có FAIL.
+4. `seed636_s01_s16_tv3.sql` chỉ in kết quả. TV1 thêm `tests/assert_s01_s16_tv1.sql` để khẳng định kết quả mà không sửa kỳ vọng của TV3.
+5. `tests/week2_security_login_log.md` dẫn số dòng 207–209, 212, 253, 254 của `05_security.sql`. Sau khi sửa X02, các dòng thực tế là 211–213, 216, 257, 258. Đây là ghi chú để TV3 cập nhật khi chụp ảnh Gate 3.
+
+### 5.2. Tích hợp (P0-A8)
+
+`git merge --ff-only origin/tv3/gate2-w2-t3` đã đưa nhánh từ `52eb8d9` lên `432600e`, gồm 15 commit của PR #8, không xung đột. Không force-push, không merge PR #5, không đụng `main`. PR #6 của TV2 cũng không bị đụng tới.
+
+### 5.3. X01–X07 (P0-A2, A3; P1-A4…A7)
+
+Xem bảng [docs/07 mục 10.1](07_ma_tran_truy_van_va_review.md) và [nhật ký quyết định mục 9](../meetings/decision_log.md#issue9). Tóm tắt:
+- **X01:** chọn phương án (b), **chờ TV2 xác nhận**.
+- **X02:** đã review và chấp nhận.
+- **X03–X06:** đã sửa tài liệu và ERD.
+- **X07:** giữ quyết định E1 là assertion; test âm được gia cố.
+
+### 5.4. Kiểm thử từ DB trắng (P0-A9)
+
+Chi tiết lệnh, expected/actual/SQLSTATE và md5 nằm ở [tests/week2_tv1_integration_log.md](../tests/week2_tv1_integration_log.md).
+
+### 5.5. Đã làm / chưa làm / cần review
+
+- **Đã làm (TV1):** A1, A2 (đề xuất b), A3–A8, A9 (local và CI), A10 (tài liệu và bằng chứng).
+- **Chưa làm:**
+  - Merge `main` (B4).
+  - Gate 2 (B3).
+  - Ảnh chụp và chữ ký (B5).
+  - Kiểm thử trên Windows của TV2.
+- **Cần review:**
+  - **TV2:** xác nhận X01(b); review seed636, QSQL01–10, S01–S16 và Chương 5; dựng DB trên Windows.
+  - **TV3:** review bản tích hợp, B12/K01–K05, QRA01–10, QRA07 phép chia, và quyết định X03–X07.

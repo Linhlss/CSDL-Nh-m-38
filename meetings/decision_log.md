@@ -253,3 +253,29 @@ TV1 hoàn thành bản ứng viên tại nhánh `fix/tv1-integration-gate2`; **k
 E1: assertion chỉ dùng ở khâu nghiệm thu, chưa chống ghi trùng ngay lúc INSERT. B15: CHECK và trigger trên hai chiều ghi dữ liệu. S04: 47–50; S14b: bẫy COUNT DISTINCT tạm trên fixture và rollback, không thay đổi seed.
 
 **Đề xuất TV1 về 3NF:** giữ `ngay_bien_dong` là dư thừa có kiểm soát bởi trigger B09; không khẳng định 7 bảng đều tuyệt đối 3NF theo mọi phụ thuộc hàm có điều kiện. Cần TV2/TV3 review. Gate 2 cả nhóm, môi trường Windows TV2, hình chứng minh và báo cáo nộp cuối vẫn chờ nghiệm thu.
+
+**Cập nhật trạng thái mục 8 (20/11/2026):** PR #5 **đã đóng, không merge**. Nội dung cần thiết của PR #5 nằm trong PR #7.
+
+<a id="issue9"></a>
+
+## 9. Tích hợp PR #8 và xử lý X01–X07 — TV1, 20/11/2026 (Issue #9)
+
+**Trạng thái:** đây là quyết định kỹ thuật do TV1 đề xuất, **chưa phải Gate 2 của cả nhóm**. Không có chữ ký hay review thay TV2/TV3.
+
+**Tích hợp:**
+- PR #8 (`tv3/gate2-w2-t3` @ `432600e`) có base là nhánh PR #7. Nhánh này là hậu duệ trực tiếp của `52eb8d9`, nên được gộp vào `fix/tv1-integration-gate2` bằng `git merge --ff-only`: không xung đột, không force-push, không merge thẳng vào `main`.
+- PR #6 (TV2 → `main`) không bị đụng tới. Sau khi PR #7 vào `main`, TV2 cần cập nhật nhánh và ghi lại manifest (T3-07).
+
+**Các quyết định:**
+
+| ID | Quyết định | Người đề xuất / đồng ý | Chờ |
+|---|---|---|---|
+| X01 | Phương án (b): `tai_khoan.vai_tro` chỉ là thuộc tính mô tả và không thực thi quyền ghi; quyền thật do role PostgreSQL thực thi. Giữ nguyên seed636 (13/63 sự kiện do `THONG_KE` ghi, 11/63 do `QUAN_TRI` ghi) và công bố là giới hạn. Không sửa seed, expected hay hash | TV1 đề xuất; TV3 nghiêng về (b) trong W3-T3-08 | **TV2 xác nhận** |
+| X02 | Chấp nhận `REVOKE DELETE` (B12) và việc đưa `05_security.sql` vào `week2_evolved`. Phần kiểm chứng bù cho điều này là catalog C15 và K01–K05, chạy trong CI | TV3 sửa; TV1 đã review | — |
+| X03 | Từ điển dữ liệu: các câu "chưa có trigger/B06" chỉ mang nghĩa tuần 1. Chuẩn hóa: 3NF có điều kiện, không khẳng định tuyệt đối | TV1; TV3 đồng ý về `ngay_bien_dong` | TV2 review |
+| X04 | Phụ đề ERD là "Thiết kế v1 — Gate 1 PASS 16/11/2026"; ảnh được sinh lại từ nguồn | TV1 | — |
+| X05 | Cho phép ghi nhận trước biến động có hiệu lực trong tương lai; `thoi_diem_ghi` khác `ngay_bien_dong` | TV1 | — |
+| X06 | Ngày sinh hoặc ngày lập hộ ở tương lai khi chưa có đợt nằm ngoài phạm vi B15; không thêm ràng buộc phụ thuộc `CURRENT_DATE` | TV1 | — |
+| X07 | Giữ E1 là assertion. Test âm được gia cố để chứng minh INSERT trùng đã được ghi trước khi assertion báo lỗi | TV1 | — |
+
+**Bằng chứng:** [log kiểm thử từ DB trắng](../tests/week2_tv1_integration_log.md) và CI trên commit tích hợp cuối, liên kết ghi trong log.

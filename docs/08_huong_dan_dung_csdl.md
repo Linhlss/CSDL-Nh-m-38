@@ -36,7 +36,24 @@ psql -X -U postgres -d csdl17_ra_fixture -v ON_ERROR_STOP=1 -f tests/ra_fixture.
 python3 -m unittest discover -s tests -p 'test_ra_parser.py' -v
 python3 scripts/verify_gate2_integration.py \
   --seed-db csdl17_seed636 --fixture-db csdl17_ra_fixture
+
+# S01–S16 (TV3) kèm khẳng định kỳ vọng/thực tế (TV1), cùng một phiên psql
+psql -X -U postgres -d csdl17_seed636 -v ON_ERROR_STOP=1 \
+  -f tests/seed636_s01_s16_tv3.sql -f tests/assert_s01_s16_tv1.sql
+
+# Bảo mật: catalog C01–C15 (TV3) và ma trận quyền B12 K01–K05 (TV1)
+psql -X -U postgres -d csdl17_seed636 -f tests/security_catalog_tv3.sql
+psql -X -U postgres -d csdl17_seed636 -v ON_ERROR_STOP=1 -f tests/security_b12_tv1.sql
+
+# Đăng nhập thật qua TCP: đặt mật khẩu TẠM (không ghi vào repo), chạy, rồi xóa
+psql -X -U postgres -d csdl17_seed636 -c "\password csdl17_reader" -c "\password csdl17_report"
+psql -X -h localhost -U csdl17_reader -d csdl17_seed636 -f tests/security_login_tv3.sql   # kỳ vọng 12/12
+psql -X -h localhost -U csdl17_report -d csdl17_seed636 -f tests/security_login_tv3.sql   # kỳ vọng 10/10
+psql -X -U postgres -d csdl17_seed636 \
+  -c "ALTER ROLE csdl17_reader PASSWORD NULL" -c "ALTER ROLE csdl17_report PASSWORD NULL"
 ```
+
+Lần chạy đầy đủ chuỗi này trên macOS ngày 20/11/2026 được ghi tại [tests/week2_tv1_integration_log.md](../tests/week2_tv1_integration_log.md). Trong lần chạy đó, `pg_hba` dùng `scram-sha-256` cho kết nối TCP, nên đăng nhập bằng mật khẩu sai bị từ chối.
 
 ### Bằng chứng thành công
 

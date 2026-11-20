@@ -129,7 +129,7 @@ Nền: nhánh `tv3/gate2-w2-t3`, dựng trên `fix/tv1-integration-gate2` @ `025
 | T3-03 | Tên ảnh lệch nhau: checklist W3-T3-05 dùng `B1_select_ok.png`, `B1_update_denied.png`, `B2_view_ok.png`, `B2_table_denied.png`; Chương 6 và 06b dùng 7 ảnh `SEC_B1_*`, `SEC_B2_*`. Cần chốt một bộ tên trước khi chụp | TV3 + TV1 | 23/11 |
 | T3-04 | Chụp ảnh chính thức B1/B2 từ phiên đăng nhập thật, lưu `evidence/security/` | TV3 | 24/11 |
 | T3-05 | Nguồn giáo trình học phần cho Chương 4 và 6 còn trống ("chờ nhóm bổ sung"); không tự điền nguồn chưa dùng | TV3 + TV1 | 25/11 |
-| T3-06 | PR #5 trùng nội dung với nhánh tích hợp của TV1. Khi TV1 mở PR cho `fix/tv1-integration-gate2` (hoặc gộp nhánh này), đóng PR #5 để tránh merge hai lần | TV1 mở PR, TV3 đóng #5 | 22/11 |
+| T3-06 | PR #5 trùng nội dung với nhánh tích hợp của TV1. Khi TV1 mở PR cho `fix/tv1-integration-gate2` (hoặc gộp nhánh này), đóng PR #5 để tránh merge hai lần. **Đã xong 20/11:** TV1 mở PR #7; PR #5 đã đóng, không merge | TV1 mở PR, TV3 đóng #5 | 22/11 |
 | T3-07 | Manifest `tests/week1_manifest.json` phải ghi lại từ bản checkout LF sau mỗi lần sửa `docs/` hoặc `tests/`. Máy TV3 dùng `core.autocrlf=true` nên `verify_week1.py` báo 2 FAIL xuống dòng (`sql/01_schema.sql`, `diagrams/erd_v1.drawio`) không liên quan nội dung | Người merge cuối | Mỗi lần merge |
 
 Không còn lỗi chặn nào ở phần RA và bảo mật. Các mục T3-03 đến T3-05 thuộc Gate 3 (ảnh và báo cáo cuối), nêu ở đây để có owner và hạn.
@@ -159,3 +159,19 @@ Phạm vi: `01_schema.sql`, `02_constraints.sql`, `diagrams/erd_v1.drawio`, [03]
 | X07 | Thông tin | Ghi trùng một đợt trong cùng vai trò lúc INSERT không bị chặn | Hai `CHUYEN_DI` cùng đợt cũ chèn được | Đúng quyết định E1 (chỉ bắt khi validation); không sửa | — |
 
 Không có lỗi nghiêm trọng chặn Gate 3. X02 đã sửa; X01, X03–X06 chờ TV1/TV2 quyết.
+
+### 10.1. TV1 xử lý X01–X07 — 20/11/2026 (Issue #9)
+
+TV1 xử lý trên nhánh `fix/tv1-integration-gate2`, sau khi đã fast-forward PR #8 (`432600e`). Bảng gốc ở trên được giữ nguyên để truy vết. Kết quả chạy lại từ DB trắng nằm ở [log tích hợp TV1](../tests/week2_tv1_integration_log.md).
+
+| ID | Trạng thái | Thay đổi | Còn chờ |
+|---|---|---|---|
+| X01 | **Đã chọn (b)**, chờ TV2 xác nhận | [03](03_dac_ta_nghiep_vu.md) mục 3: `vai_tro` chỉ là thuộc tính mô tả; quyền thật do role PostgreSQL thực thi. Công bố 13/63 sự kiện do `THONG_KE` ghi và 11/63 do `QUAN_TRI` ghi. Chương 3 mục 3.3 có bảng giới hạn. Seed, expected và hash nghiệp vụ không đổi | TV2 xác nhận phương án (b) |
+| X02 | Đã review, chấp nhận | TV1 thêm `tests/security_b12_tv1.sql`, kiểm ma trận quyền 3 role × 8 đối tượng × 5 quyền. Admin `DELETE`/`TRUNCATE` hai bảng lịch sử bị từ chối với `42501`. Admin vẫn gọi được `fn_chuyen_noi_bo` (rollback). CI chạy thêm catalog C01–C15 và đăng nhập thật. TV1 chấp nhận đưa `05_security.sql` vào `week2_evolved` | — |
+| X03 | Đã sửa | [04](04_data_dictionary_va_chuan_hoa.md): mọi câu "chưa có trigger/B06" được gắn rõ "DDL tuần 1" kèm trạng thái tuần 2. Chốt 3NF có điều kiện; `ngay_bien_dong` là dư thừa có kiểm soát qua B09 | TV2 review chuẩn hóa |
+| X04 | Đã sửa | Phụ đề đổi thành "Thiết kế v1 — Gate 1 PASS 16/11/2026" trong nguồn `scripts/render_week1_diagrams.py`; sinh lại `.drawio`, `.svg` và `.png` (2300×1626). Sơ đồ phân rã chức năng không đổi byte | — |
+| X05 | Đã sửa | [03](03_dac_ta_nghiep_vu.md) P4: `ngay_bien_dong` là ngày hiệu lực, `thoi_diem_ghi` là thời điểm ghi nhận. Cho phép đăng ký trước. Số dòng tương lai của seed phụ thuộc ngày nạp | — |
+| X06 | Đã chốt là giới hạn | [03](03_dac_ta_nghiep_vu.md) P2 và Chương 3: nằm ngoài phạm vi B15. Không thêm CHECK theo `CURRENT_DATE` vì sẽ làm kiểm thử không tái lập được | — |
+| X07 | Giữ quyết định E1 | Test âm E1 trong `tests/constraints_week2.sql` được gia cố: xác nhận INSERT trùng thực sự được ghi, rồi assertion mới báo `23514` và INSERT được hoàn tác. Không còn PASS nhầm khi một trigger khác chặn INSERT | — |
+
+TV1 không tự đánh dấu Gate 2 PASS. Gate 2 chờ TV2 và TV3 xác nhận bản tích hợp.
