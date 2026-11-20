@@ -105,3 +105,31 @@ Chạy [tests/seed636_s01_s16_tv3.sql](../tests/seed636_s01_s16_tv3.sql) trên C
 3. **S16:** seed636 có 6 họ tên bị trùng (15 người). Nếu viết `EXCEPT` trên `ho_ten` thay vì `ma_cu_dan`, QRA09 ra 16 người thay vì 17. Đây là ví dụ thật để Chương 4/5 giải thích vì sao phép hiệu/giao phải chiếu theo khóa.
 
 **Bổ sung review tích hợp TV1 (20/11/2026, chưa thay chữ ký TV3):** Seed636 S04 được sửa kỳ vọng từ 49–50 thành đúng tập địa chỉ 47–50. S14b được mô tả trung thực là *chưa có đối chứng trên seed636*; kiểm tra đối chứng bằng cách thêm một đợt khác loại trong **transaction ROLLBACK** trên fixture RA tại `scripts/verify_gate2_integration.py`. Đây là thay đổi mô tả/test, không phải sinh lại seed hoặc thay câu hỏi SQL.
+
+## 9. Bàn giao TV3 cho Gate 2 — 20/11/2026 (W2-T3-13)
+
+Nền: nhánh `tv3/gate2-w2-t3`, dựng trên `fix/tv1-integration-gate2` @ `025c64b` (đã gồm toàn bộ PR #5). Đây là bàn giao kỹ thuật của TV3, không thay biên bản Gate 2 hoặc chữ ký của TV1/TV2.
+
+**Sản phẩm bàn giao**
+
+| Sản phẩm | Tệp | Trạng thái kiểm chứng |
+|---|---|---|
+| 10 biểu thức RA (QRA01–10, kèm QRA07 cách phép chia), đủ 8 mục mỗi câu | [06a](06a_dai_so_quan_he.md), Chương 4 trong [02](02_bao_cao_suon.md) | Seed636: 10/10 câu khớp SQL kiểm chứng theo tập mã ([phụ lục 06a](06a_dai_so_quan_he.md), [seed636_qra02_03_06_08.sql](../tests/seed636_qra02_03_06_08.sql)); fixture: [ra_fixture.sql](../tests/ra_fixture.sql) |
+| Kiểm tra chéo S01–S16 trên seed636 | [seed636_s01_s16_tv3.sql](../tests/seed636_s01_s16_tv3.sql), mục 8 | 16/16 ca có dữ liệu và đúng; ghi chú S04/S14b đã được TV1, TV2 xử lý |
+| Script bảo mật B1/B2 | [05_security.sql](../sql/05_security.sql) | Chạy trên bản có `02_constraints`: đúng 6 lỗi cố ý, không lỗi khác |
+| Kiểm tra quyền thật (S20/S21) | [security_catalog_tv3.sql](../tests/security_catalog_tv3.sql), [security_login_tv3.sql](../tests/security_login_tv3.sql), [biên bản](../tests/week2_security_login_log.md) | Catalog 14/14, reader 12/12, report 10/10 PASS bằng phiên đăng nhập thật; dữ liệu không đổi |
+| Chương 6 | Chương 6 trong [02](02_bao_cao_suon.md), [06b](06b_bao_mat.md) | Đã cập nhật kết quả tuần 2; chờ TV2 review |
+
+**Vấn đề còn lại (sửa trước 24/11 trừ khi ghi khác)**
+
+| ID | Vấn đề | Owner | Hạn |
+|---|---|---|---|
+| T3-01 | Mục (8) "người kiểm tra" của QRA01–10 trong 06a còn ghi "Nháp v0"; cần TV1 kiểm tra và đổi trạng thái | TV1 | 22/11 |
+| T3-02 | TV2 chưa review Chương 6 (reviewer được phân công) | TV2 | 22/11 |
+| T3-03 | Tên ảnh lệch nhau: checklist W3-T3-05 dùng `B1_select_ok.png`, `B1_update_denied.png`, `B2_view_ok.png`, `B2_table_denied.png`; Chương 6 và 06b dùng 7 ảnh `SEC_B1_*`, `SEC_B2_*`. Cần chốt một bộ tên trước khi chụp | TV3 + TV1 | 23/11 |
+| T3-04 | Chụp ảnh chính thức B1/B2 từ phiên đăng nhập thật, lưu `evidence/security/` | TV3 | 24/11 |
+| T3-05 | Nguồn giáo trình học phần cho Chương 4 và 6 còn trống ("chờ nhóm bổ sung"); không tự điền nguồn chưa dùng | TV3 + TV1 | 25/11 |
+| T3-06 | PR #5 trùng nội dung với nhánh tích hợp của TV1. Khi TV1 mở PR cho `fix/tv1-integration-gate2` (hoặc gộp nhánh này), đóng PR #5 để tránh merge hai lần | TV1 mở PR, TV3 đóng #5 | 22/11 |
+| T3-07 | Manifest `tests/week1_manifest.json` phải ghi lại từ bản checkout LF sau mỗi lần sửa `docs/` hoặc `tests/`. Máy TV3 dùng `core.autocrlf=true` nên `verify_week1.py` báo 2 FAIL xuống dòng (`sql/01_schema.sql`, `diagrams/erd_v1.drawio`) không liên quan nội dung | Người merge cuối | Mỗi lần merge |
+
+Không còn lỗi chặn nào ở phần RA và bảo mật. Các mục T3-03 đến T3-05 thuộc Gate 3 (ảnh và báo cáo cuối), nêu ở đây để có owner và hạn.
