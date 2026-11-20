@@ -102,6 +102,18 @@ WITH demo AS (
            NOT bool_or(prosecdef),
            count(*) || ' hàm, ' || count(*) FILTER (WHERE has_function_privilege('public', oid, 'EXECUTE')) || ' hàm PUBLIC được EXECUTE'
     FROM fn
+    UNION ALL
+    -- B12: không xóa lịch sử (review W3-T3-08, X02). Admin vẫn ghi được qua trigger.
+    SELECT 'C15', 'admin: INSERT/UPDATE được nhưng KHÔNG DELETE đợt cư trú và nhật ký biến động (B12)',
+           -- has_table_privilege với danh sách quyền trả true nếu có BẤT KỲ quyền nào, nên tách riêng
+           has_table_privilege('csdl17_admin', 'qua_trinh_cu_tru', 'INSERT')
+       AND has_table_privilege('csdl17_admin', 'qua_trinh_cu_tru', 'UPDATE')
+       AND has_table_privilege('csdl17_admin', 'bien_dong_cu_tru', 'INSERT')
+       AND has_table_privilege('csdl17_admin', 'bien_dong_cu_tru', 'UPDATE')
+       AND NOT has_table_privilege('csdl17_admin', 'qua_trinh_cu_tru', 'DELETE')
+       AND NOT has_table_privilege('csdl17_admin', 'bien_dong_cu_tru', 'DELETE'),
+           'DELETE qua_trinh=' || has_table_privilege('csdl17_admin', 'qua_trinh_cu_tru', 'DELETE')
+           || ', DELETE bien_dong=' || has_table_privilege('csdl17_admin', 'bien_dong_cu_tru', 'DELETE')
 )
 SELECT ma, mo_ta, CASE WHEN dat THEN 'PASS' ELSE 'FAIL' END AS ket_qua, chi_tiet
 FROM kq ORDER BY ma;

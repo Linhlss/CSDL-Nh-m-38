@@ -479,11 +479,11 @@ Mô hình phân quyền của đồ án:
 | Role | Tác nhân (đặc tả mục 3) | 6 bảng nghiệp vụ | `tai_khoan` | VIEW thống kê |
 |---|---|---|---|---|
 | `postgres` | Quản trị CSDL: tạo bảng, role, cấp quyền | Chủ sở hữu | Chủ sở hữu | Chủ sở hữu |
-| `csdl17_admin` | Cán bộ quản lý cư dân | SELECT, INSERT, UPDATE, DELETE | SELECT, INSERT, UPDATE, DELETE | SELECT |
+| `csdl17_admin` | Cán bộ quản lý cư dân | SELECT, INSERT, UPDATE; DELETE trừ `qua_trinh_cu_tru` và `bien_dong_cu_tru` | SELECT, INSERT, UPDATE, DELETE | SELECT |
 | `csdl17_reader` | Cán bộ tổng hợp, mức tra cứu chi tiết | Chỉ SELECT | Không | Không |
 | `csdl17_report` | Cán bộ tổng hợp, mức chỉ xem số liệu tổng hợp | Không | Không | Chỉ SELECT |
 
-Role `reader` minh họa việc giới hạn thao tác (demo B1), còn role `report` minh họa việc giới hạn dữ liệu nhìn thấy (demo B2).
+Role `reader` minh họa việc giới hạn thao tác (demo B1), còn role `report` minh họa việc giới hạn dữ liệu nhìn thấy (demo B2). Ngay cả `csdl17_admin` cũng không có quyền `DELETE` trên hai bảng lịch sử `qua_trinh_cu_tru` và `bien_dong_cu_tru`: theo quy tắc B12, lịch sử cư trú và nhật ký biến động chỉ được thêm hoặc hiệu chỉnh (có trigger kiểm tra), không được xóa vật lý.
 
 ### 6.3. Demo B1: GRANT/REVOKE cho tài khoản chỉ đọc
 
@@ -558,7 +558,7 @@ Ngày 20/11/2026, TV3 chạy lại cả hai demo trên bản tích hợp tuần 
 | Kiểm tra | Cách chạy | Kết quả |
 |---|---|---|
 | `05_security.sql` | `psql -f` dưới `postgres` | Đúng 6 lỗi `permission denied` cố ý, không lỗi nào khác |
-| Cấu hình quyền trong catalog | [security_catalog_tv3.sql](../tests/security_catalog_tv3.sql) | 14/14 PASS: role không đặc quyền, không sở hữu đối tượng, không là thành viên role khác; `PUBLIC` không có `CONNECT`/`TEMP`/`CREATE` trên database, không có quyền trên bảng; không có quyền mặc định ẩn |
+| Cấu hình quyền trong catalog | [security_catalog_tv3.sql](../tests/security_catalog_tv3.sql) | 15/15 PASS: role không đặc quyền, không sở hữu đối tượng, không là thành viên role khác; `PUBLIC` không có `CONNECT`/`TEMP`/`CREATE` trên database, không có quyền trên bảng; không có quyền mặc định ẩn; admin không có `DELETE` trên hai bảng lịch sử |
 | Demo B1 | Đăng nhập thật `psql -h localhost -U csdl17_reader` | 12/12 PASS: đọc được; ghi, `TRUNCATE`, đọc `tai_khoan`, đọc VIEW, gọi `fn_chuyen_noi_bo`, tạo bảng, tạo bảng tạm và `SET ROLE csdl17_admin` đều bị chặn `42501` |
 | Demo B2 | Đăng nhập thật `psql -h localhost -U csdl17_report` | 10/10 PASS: đọc VIEW được 8 dòng; đọc 4 bảng gốc, gọi hàm, tạo bảng và `SET ROLE` đều bị chặn |
 | Dữ liệu | md5 bốn bảng trước và sau hai phiên | Không đổi |

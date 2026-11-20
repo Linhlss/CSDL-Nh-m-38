@@ -311,7 +311,9 @@ def runtime_evidence():
     assert all(f"{db}/QSQL{n:02}/full-tuples" in keys for db in ("w1_tiny","w1_seed") for n in range(1,11))
     # Lịch sử tuần 1 được giữ nguyên; 06_validation.sql đã được mở rộng
     # trong tuần 2. Không sửa hash trong log chạy PostgreSQL ngày 16/11.
-    week2_evolved = {"sql/06_validation.sql", "scripts/verify_week1_runtime.py"}
+    # 05_security.sql: TV3 thu hồi DELETE bảng lịch sử khỏi admin (B12, X02, 20/11).
+    week2_evolved = {"sql/06_validation.sql", "scripts/verify_week1_runtime.py",
+                     "sql/05_security.sql"}
     for path,digest in result["files_sha256"].items():
         if path in week2_evolved:
             continue  # version hiện tại được xác thực qua manifest + CI tuần 2
