@@ -234,7 +234,7 @@ Quy ước:
    HO_TO = π ma_ho, ma_to (HO_CU_TRU ⋈(HO_CU_TRU.ma_dia_chi = DIA_CHI.ma_dia_chi) DIA_CHI)
    ```
    `HO_TO` chỉ có hai thuộc tính `ma_ho` và `ma_to`, nên nối tự nhiên với `Q_d`, `QUA_TRINH_CU_TRU` hay `TO_DAN_PHO` đều đúng.
-4. **Tên thuộc tính sau phép chiếu.** Thuộc tính có tiền tố như `Q1.ma_cu_dan` được gọi lại theo tên gốc `ma_cu_dan` để nối tiếp với `CU_DAN`.
+4. **Tên thuộc tính sau phép chiếu.** Thuộc tính có tiền tố như `Q1.ma_cu_dan` không trùng tên với `CU_DAN.ma_cu_dan`, nên nhóm dùng `ρ R(ma_cu_dan) (...)` đổi tên về `ma_cu_dan` trước khi nối tự nhiên với `CU_DAN` (QRA04, QRA10).
 5. **So sánh theo mã.** Mọi phép `∪`, `∩`, `−` đều so trên `ma_cu_dan` hoặc `ma_dia_chi`, nên hai vế khả hợp. Hai người trùng họ tên vẫn là hai bộ khác nhau.
 6. **Đối chiếu với SQL.** Đại số làm việc trên tập, SQL làm việc trên đa tập. SQL kiểm chứng dùng `DISTINCT` hoặc phép tập hợp khi cần loại trùng. Hai bên được đối chiếu đầy đủ các thuộc tính đầu ra sau khi đưa về cùng mức hạt; số dòng chỉ là thông tin tóm tắt.
 
@@ -286,7 +286,7 @@ Câu hỏi: liệt kê mã và họ tên cư dân từng có đợt cư trú ở
 ```text
 Q1 = ρ Q1 (QUA_TRINH_CU_TRU)
 Q2 = ρ Q2 (QUA_TRINH_CU_TRU)
-R1 = π Q1.ma_cu_dan (Q1 ⋈(Q1.ma_cu_dan = Q2.ma_cu_dan ∧ Q1.ma_ho ≠ Q2.ma_ho) Q2)
+R1 = ρ R1(ma_cu_dan) (π Q1.ma_cu_dan (Q1 ⋈(Q1.ma_cu_dan = Q2.ma_cu_dan ∧ Q1.ma_ho ≠ Q2.ma_ho) Q2))
 KQ = π ma_cu_dan, ho_ten (CU_DAN ⋈ R1)
 ```
 
@@ -385,7 +385,7 @@ CU  = ρ CU (QT)
 MOI = ρ MOI (QT)
 R1  = B ⋈(B.ma_qua_trinh_cu = CU.ma_qua_trinh) CU
         ⋈(B.ma_qua_trinh_moi = MOI.ma_qua_trinh ∧ CU.ma_cu_dan = MOI.ma_cu_dan ∧ CU.ma_to ≠ MOI.ma_to) MOI
-R2  = π CU.ma_cu_dan (R1)
+R2  = ρ R2(ma_cu_dan) (π CU.ma_cu_dan (R1))
 KQ  = π ma_cu_dan, ho_ten (CU_DAN ⋈ R2)
 ```
 

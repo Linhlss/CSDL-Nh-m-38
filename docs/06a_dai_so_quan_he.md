@@ -1,6 +1,6 @@
 # 10 CÂU HỎI VÀ BIỂU THỨC ĐẠI SỐ QUAN HỆ (QRA01–QRA10)
 
-> **Nguồn lời giải:** TV3 · **Reviewer kỹ thuật:** TV1 · **Phiên bản:** v0.3 (16/11/2026: viết lại ký hiệu theo cách trình bày trên lớp, khớp Chương 4 của báo cáo; thêm cách viết phép chia cho QRA07. v0.2 bàn giao tuần 1, cập nhật 15/11/2026)
+> **Nguồn lời giải:** TV3 · **Reviewer kỹ thuật:** TV1 · **Phiên bản:** v0.4 (20/11/2026: thêm ρ đổi tên thuộc tính có tiền tố ở QRA04, QRA10. v0.3 16/11/2026: viết lại ký hiệu theo cách trình bày trên lớp, khớp Chương 4 của báo cáo; thêm cách viết phép chia cho QRA07. v0.2 bàn giao tuần 1, cập nhật 15/11/2026)
 > **Căn cứ:** `sql/01_schema.sql` v1 (cấu trúc giữ nguyên v0) và mục 6 của `docs/01_de_cuong.md`.
 > **Phân công nhóm:** TV3 — Trần Bùi Tùng Linh, MSSV 20227057. Phần bổ sung ngày 15/11 do agent hỗ trợ kỹ thuật theo yêu cầu chủ repo; không thay lời xác nhận của thành viên hoặc suy ra chủ tài khoản GitHub từ tên người.
 > **Phạm vi:** lời giải, quy ước và đáp án trên fixture kiểm chứng tuần 1; phần kết quả chính thức/ảnh của Chương 4 tiếp tục đối soát trong tuần 2–3. Nếu đổi schema sau Gate 1, phải cập nhật đồng thời công thức, SQL kiểm chứng và expected.
@@ -29,7 +29,7 @@ Thiết kế v1 chốt theo xác nhận chủ repo tiếp nhận16/11/2026; ngu�
 
 Mười câu dưới đây không dùng phép gom nhóm (đếm, nhóm theo) và không sắp xếp. Các phép `∪`, `∩`, `−` chỉ áp dụng cho hai quan hệ **khả hợp**, tức là cùng số thuộc tính và cùng miền giá trị.
 
-Thuộc tính có tiền tố như `Q1.ma_cu_dan`, sau phép chiếu, được gọi lại theo tên gốc `ma_cu_dan` để nối tiếp với `CU_DAN`.
+Thuộc tính có tiền tố như `Q1.ma_cu_dan` không trùng tên với `CU_DAN.ma_cu_dan`. Vì vậy, trước khi nối tự nhiên với `CU_DAN`, biểu thức dùng `ρ R(ma_cu_dan) (...)` để đổi tên thuộc tính về `ma_cu_dan` (QRA04, QRA10).
 
 ### 0.2. Lược đồ quan hệ (theo `01_schema.sql` v1, cấu trúc như v0)
 
@@ -256,7 +256,7 @@ ORDER BY c.ma_cu_dan;
 ```text
 Q1 = ρ Q1 (QUA_TRINH_CU_TRU)
 Q2 = ρ Q2 (QUA_TRINH_CU_TRU)
-R1 = π Q1.ma_cu_dan (Q1 ⋈(Q1.ma_cu_dan = Q2.ma_cu_dan ∧ Q1.ma_ho ≠ Q2.ma_ho) Q2)
+R1 = ρ R1(ma_cu_dan) (π Q1.ma_cu_dan (Q1 ⋈(Q1.ma_cu_dan = Q2.ma_cu_dan ∧ Q1.ma_ho ≠ Q2.ma_ho) Q2))
 KQ = π ma_cu_dan, ho_ten (CU_DAN ⋈ R1)
 ```
 
@@ -265,6 +265,7 @@ KQ = π ma_cu_dan, ho_ten (CU_DAN ⋈ R1)
 - Hai bản sao của bảng quá trình được **đổi tên** thành Q1 và Q2, để gọi được thuộc tính của từng bản.
 - Điều kiện `Q1.ma_cu_dan = Q2.ma_cu_dan` ghép mọi cặp đợt của **cùng một người**; điều kiện `Q1.ma_ho ≠ Q2.ma_ho` chỉ giữ các cặp mà hai đợt thuộc hai hộ khác nhau.
 - Chiếu lấy mã cư dân. Phép chiếu loại bộ trùng, nên mỗi người chỉ xuất hiện một lần dù có nhiều cặp thỏa mãn.
+- `ρ R1(ma_cu_dan)` đổi tên `Q1.ma_cu_dan` về `ma_cu_dan`, để phép nối tự nhiên với `CU_DAN` có đúng một thuộc tính chung.
 
 **(6) Kết quả mong đợi:** Trả về đúng cư dân của kịch bản S06. Người có hai đợt **trong cùng một hộ** không được trả về.
 
@@ -555,7 +556,7 @@ CU  = ρ CU (QT)
 MOI = ρ MOI (QT)
 R1  = B ⋈(B.ma_qua_trinh_cu = CU.ma_qua_trinh) CU
         ⋈(B.ma_qua_trinh_moi = MOI.ma_qua_trinh ∧ CU.ma_cu_dan = MOI.ma_cu_dan ∧ CU.ma_to ≠ MOI.ma_to) MOI
-R2  = π CU.ma_cu_dan (R1)
+R2  = ρ R2(ma_cu_dan) (π CU.ma_cu_dan (R1))
 KQ  = π ma_cu_dan, ho_ten (CU_DAN ⋈ R2)
 ```
 
@@ -565,6 +566,7 @@ KQ  = π ma_cu_dan, ho_ten (CU_DAN ⋈ R2)
 - Bảng biến động có hai khóa ngoại cùng trỏ tới `QUA_TRINH_CU_TRU`, nên QT được **đổi tên** thành hai bản: CU (vai trò đợt cũ) và MOI (vai trò đợt mới).
 - Nối B với CU theo đợt cũ, rồi với MOI theo đợt mới. Điều kiện `CU.ma_cu_dan = MOI.ma_cu_dan` **bắt buộc đợt cũ và đợt mới thuộc cùng một người** (quy tắc B08); sự kiện vi phạm bị loại khỏi kết quả.
 - Điều kiện `CU.ma_to ≠ MOI.ma_to`: chỉ giữ sự kiện mà tổ cũ khác tổ mới.
+- R2: chiếu `CU.ma_cu_dan` rồi đổi tên về `ma_cu_dan` bằng ρ, để nối tự nhiên với `CU_DAN`.
 - Đây là câu dùng nhiều phép nhất: chọn, chiếu, nối nhiều lần và đổi tên để dùng một quan hệ ở hai vai trò.
 
 **(6) Kết quả mong đợi:** Trả về cư dân của S13 (chuyển nội bộ **khác tổ**). Sự kiện chuyển nội bộ **cùng tổ, khác hộ** phải bị loại để chứng minh điều kiện `≠` hoạt động.
