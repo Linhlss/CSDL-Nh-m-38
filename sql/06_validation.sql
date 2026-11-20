@@ -114,3 +114,41 @@ END
 $assert$;
 
 -- Đối soát expected/actual S01–S21 và 10 truy vấn: tests/ và Gate 3.
+
+
+
+-- E1: kiểm tra lỗi ghi trùng trong CÙNG vai trò (cũ/mới).
+-- Hai SELECT phía trên vẫn phục vụ phần báo cáo; câu lệnh này phải FAIL nếu
+-- kết quả V_E1_CU hoặc V_E1_MOI có bất kỳ dòng nào.
+DO $assert_e1$
+BEGIN
+    PERFORM fn_assert_e1();
+    RAISE NOTICE '[PASS] E1: không trùng đợt trong cùng vai trò cũ/mới';
+END
+$assert_e1$;
+
+-- B15: ngày sinh và ngày lập hộ không muộn hơn ngày bắt đầu cư trú.
+-- Các CHECK tên rỗng ở 02_constraints.sql đã bảo vệ khi INSERT/UPDATE.
+DO $assert_b15$
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM qua_trinh_cu_tru q
+        JOIN cu_dan c ON c.ma_cu_dan = q.ma_cu_dan
+        JOIN ho_cu_tru h ON h.ma_ho = q.ma_ho
+        WHERE c.ngay_sinh > q.ngay_bat_dau
+           OR h.ngay_lap > q.ngay_bat_dau
+    ) THEN
+        RAISE EXCEPTION 'B15 validation FAIL: có ngày sinh/ngày lập hộ sau ngày cư trú';
+    END IF;
+    IF EXISTS (SELECT 1 FROM cu_dan WHERE LENGTH(BTRIM(ho_ten)) = 0)
+        OR EXISTS (SELECT 1 FROM to_dan_pho WHERE LENGTH(BTRIM(ten_to)) = 0)
+        OR EXISTS (SELECT 1 FROM dia_chi WHERE LENGTH(BTRIM(dia_chi_chuan)) = 0)
+        OR EXISTS (SELECT 1 FROM tai_khoan
+                   WHERE LENGTH(BTRIM(ten_dang_nhap)) = 0
+                      OR LENGTH(BTRIM(ten_hien_thi)) = 0)
+    THEN
+        RAISE EXCEPTION 'B15 validation FAIL: tên/địa chỉ rỗng';
+    END IF;
+    RAISE NOTICE '[PASS] B15: ngày và tên/địa chỉ hợp lệ trên bộ seed';
+END
+$assert_b15$;

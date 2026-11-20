@@ -243,10 +243,11 @@ def main():
     if original.returncode:
         raise SystemExit(original.stderr)
     ra = read(tv3 / "docs/06a_dai_so_quan_he.md")
-    blocks = re.findall(r"```sql\n(.*?)```", ra, re.S)
-    if len(blocks) != 11:
-        raise SystemExit("Expected Q_d and ten SQL counterparts in RA document")
-    queries = {f"QRA{i:02}": clean(sql) for i, sql in enumerate(blocks[1:], 1)}
+    from ra_sql_blocks import parse_ra_sql_blocks
+    named = parse_ra_sql_blocks(ra)
+    queries = {name:clean(query) for name,query in named.items()
+               if name.startswith("QRA") and name != "QRA07_DIV"}
+    qra07_div = clean(named["QRA07_DIV"]) if "QRA07_DIV" in named else None
     v = {name: validation(name) for name in ("V_E1_CU", "V_E1_MOI", "V_B09")}
     schema = read(ROOT / "sql/01_schema.sql")
     for db, source in [("review_original", original.stdout), ("review_fixed", fixture)]:
@@ -264,7 +265,9 @@ def main():
         fragment = fixture.split(f"-- ----- {name} ·", 1)[1].split("-- -----", 1)[0]
         fragment = "\n".join(line for line in fragment.splitlines()[1:] if not line.startswith("\\"))
         compare(f"fixture/{name}/full-rows", rows(clean(fragment), db), EXPECTED[name])
-    qd = rows(clean(blocks[0]), db)
+    if qra07_div:
+        compare("core/QRA07_DIV/full-rows", rows(qra07_div, db), EXPECTED["QRA07"])
+    qd = rows(clean(named["Q_d"]), db)
     qd_expected = [dict(zip(["ma_qua_trinh", "ma_cu_dan", "ma_ho", "loai_cu_tru", "ngay_bat_dau"], row)) for row in [
         (1,1,1,"THUONG_TRU","2010-01-01"), (2,2,3,"TAM_TRU","2024-03-01"),
         (3,3,3,"THUONG_TRU","2008-01-01"), (5,4,4,"TAM_TRU","2021-01-01"),

@@ -73,14 +73,14 @@ Các đường nối trên sơ đồ thể hiện phân rã chức năng, không
 | B12 | Không xóa vật lý hồ sơ/đợt đang được tham chiếu; không xóa lịch sử để biểu diễn chuyển đi. DDL dùng FK không cascade |
 | B13 | `qua_trinh_cu_tru` là nguồn sự thật theo thời gian. Biến động chỉ ghi sự kiện, ngày, các mã đợt và người ghi; không sao chép tên hay địa chỉ. Đợt nhập/hiệu chỉnh lịch sử hoặc tạm trú hết hạn có thể không có sự kiện theo phạm vi C1/P3 |
 | B14 | Tài khoản ghi nhận phải tồn tại; quy trình ghi mới dùng tài khoản `HOAT_DONG`. Việc khóa tài khoản không làm mất nhật ký cũ hoặc thu hồi role PostgreSQL tự động |
-| B15 | Bộ dữ liệu có ngày sinh <= ngày bắt đầu cư trú và ngày lập hộ <= ngày bắt đầu. Cấm chuỗi tên/địa chỉ rỗng hoặc chỉ khoảng trắng khi chuẩn bị dữ liệu. Đây là kiểm tra đầu vào/seed, chưa là CHECK trong DDL v1 |
+| B15 | Bộ dữ liệu có ngày sinh <= ngày bắt đầu cư trú và ngày lập hộ <= ngày bắt đầu. Cấm chuỗi tên/địa chỉ rỗng hoặc chỉ khoảng trắng khi chuẩn bị dữ liệu. Trong DDL cơ bản v1 chưa có; tại `02_constraints.sql` đã bổ sung CHECK tên/địa chỉ rỗng và trigger ngày hai chiều |
 | B16 | Các câu “đang” dùng d. QRA09/QSQL07 chỉ coi người đã từng cư trú khi có đợt bắt đầu <= d. QRA04/QRA07/QSQL05/QSQL06 xét toàn bộ đợt đã lưu; nếu có đợt tương lai, phải ghi rõ đó là toàn bộ dữ liệu đã ghi nhận |
 | B17 | Số người trong mỗi hộ/tổ là số mã cư dân phân biệt. Một người có thể thuộc hai tổ theo hai loại; tổng số người của các tổ không luôn bằng số người phân biệt toàn phường |
 | B18 | Mọi dữ liệu dân cư và địa chỉ là giả lập; không có CCCD/số điện thoại thật. Mật khẩu không được lưu trong danh mục tài khoản hoặc mã nguồn |
 
-Không áp đặt một đợt chỉ được tham chiếu bởi một sự kiện đầu vào/đầu ra. Không thêm UNIQUE cho hai FK đợt cũ/mới trong phiên bản này. Các quy tắc B06, B08–B11, phần hoạt động tài khoản ở B14 cần được hiện thực trong tuần 2; đã có thiết kế không có nghĩa DB đã chặn được vi phạm.
+Không áp đặt một đợt chỉ được tham chiếu bởi một sự kiện đầu vào/đầu ra. Không thêm UNIQUE cho hai FK đợt cũ/mới trong phiên bản này. B06, B08–B11, B14, B15 được hiện thực trong `sql/02_constraints.sql` và kiểm thử Gate 2. Cơ chế E1 chỉ là validation bắt buộc, chưa phải ràng buộc chống trùng ngay lúc ghi.
 
-**Làm rõ E1, 12/11/2026:** Giữ khả năng lưu 0..N tham chiếu ở mức schema để tương thích bộ bàn giao, nhưng nhiều sự kiện dùng cùng đợt trong **cùng vai trò** là cảnh báo ghi trùng phải xử lý trước nghiệm thu. Chạy riêng V_E1_CU và V_E1_MOI trong `sql/06_validation.sql`, yêu cầu cả hai trả 0 dòng. Một đợt là đợt mới của sự kiện đến, rồi là đợt cũ của sự kiện đi/nội bộ, không bị coi là trùng. Validation không tự chặn thao tác ghi, không tự xóa hoặc gộp nhật ký. Quyết định này không thay thế các ràng buộc xuyên bảng tuần 2.
+**Làm rõ E1, 12/11/2026:** Giữ khả năng lưu 0..N tham chiếu ở mức schema để tương thích bộ bàn giao, nhưng nhiều sự kiện dùng cùng đợt trong **cùng vai trò** là cảnh báo ghi trùng phải xử lý trước nghiệm thu. Chạy riêng V_E1_CU và V_E1_MOI trong `sql/06_validation.sql`, yêu cầu cả hai trả 0 dòng. Một đợt là đợt mới của sự kiện đến, rồi là đợt cũ của sự kiện đi/nội bộ, không bị coi là trùng. Validation gọi `fn_assert_e1()` để báo lỗi và làm FAIL đợt nghiệm thu khi có trùng; không tự chặn thao tác INSERT trước thời điểm validation, không tự xóa hoặc gộp nhật ký. Quyết định này không thay thế các ràng buộc xuyên bảng tuần 2.
 
 ## 6. Đặc tả sáu quy trình
 

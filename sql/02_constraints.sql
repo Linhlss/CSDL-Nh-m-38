@@ -252,6 +252,127 @@ BEGIN
     RETURN QUERY SELECT v_moi, v_sk;
 END
 $fn$;
+-- E1: assertion CHỈ dùng khi validation, không đặt UNIQUE lên lịch sử.
+-- Một đợt có thể xuất hiện một lần mỗi vai trò (mới rồi cũ), nhưng không
+-- được xuất hiện nhiều lần TRONG CÙNG MỘT VAI TRÒ ở bộ dữ liệu nghiệm thu.
+CREATE OR REPLACE FUNCTION fn_assert_e1()
+RETURNS void LANGUAGE plpgsql AS $fn$
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM bien_dong_cu_tru
+        WHERE ma_qua_trinh_cu IS NOT NULL
+        GROUP BY ma_qua_trinh_cu HAVING COUNT(*) > 1
+    ) THEN
+        RAISE EXCEPTION 'E1: trùng đợt trong vai trò CU'
+            USING ERRCODE = '23514';
+    END IF;
+    IF EXISTS (
+        SELECT 1 FROM bien_dong_cu_tru
+        WHERE ma_qua_trinh_moi IS NOT NULL
+        GROUP BY ma_qua_trinh_moi HAVING COUNT(*) > 1
+    ) THEN
+        RAISE EXCEPTION 'E1: trùng đợt trong vai trò MOI'
+            USING ERRCODE = '23514';
+    END IF;
+END
+$fn$;
+
+-- B15: tên không rỗng sau khi bỏ khoảng trắng.
+DO $ddl$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname='ck_b15_ten_to'
+       AND conrelid='to_dan_pho'::regclass) THEN
+        ALTER TABLE to_dan_pho ADD CONSTRAINT ck_b15_ten_to
+            CHECK (LENGTH(BTRIM(ten_to)) > 0);
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname='ck_b15_dia_chi'
+       AND conrelid='dia_chi'::regclass) THEN
+        ALTER TABLE dia_chi ADD CONSTRAINT ck_b15_dia_chi
+            CHECK (LENGTH(BTRIM(dia_chi_chuan)) > 0);
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname='ck_b15_ho_ten'
+       AND conrelid='cu_dan'::regclass) THEN
+        ALTER TABLE cu_dan ADD CONSTRAINT ck_b15_ho_ten
+            CHECK (LENGTH(BTRIM(ho_ten)) > 0);
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname='ck_b15_ten_dang_nhap'
+       AND conrelid='tai_khoan'::regclass) THEN
+        ALTER TABLE tai_khoan ADD CONSTRAINT ck_b15_ten_dang_nhap
+            CHECK (LENGTH(BTRIM(ten_dang_nhap)) > 0);
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname='ck_b15_ten_hien_thi'
+       AND conrelid='tai_khoan'::regclass) THEN
+        ALTER TABLE tai_khoan ADD CONSTRAINT ck_b15_ten_hien_thi
+            CHECK (LENGTH(BTRIM(ten_hien_thi)) > 0);
+    END IF;
+END
+$ddl$;
+
+-- B15: kiểm tra cả chiều INSERT/UPDATE đợt và sửa hồ sơ cha.
+CREATE OR REPLACE FUNCTION fn_b15_kiem_tra_dot()
+RETURNS trigger LANGUAGE plpgsql AS $fn$
+DECLARE
+    v_ngay_sinh DATE;
+    v_ngay_lap DATE;
+BEGIN
+    SELECT ngay_sinh INTO v_ngay_sinh FROM cu_dan
+    WHERE ma_cu_dan = NEW.ma_cu_dan FOR SHARE;
+    SELECT ngay_lap INTO v_ngay_lap FROM ho_cu_tru
+    WHERE ma_ho = NEW.ma_ho FOR SHARE;
+
+    -- FK còn bảo vệ trường hợp mã cư dân / mã hộ không tồn tại.
+    IF v_ngay_sinh > NEW.ngay_bat_dau
+       OR v_ngay_lap > NEW.ngay_bat_dau THEN
+        RAISE EXCEPTION 'B15: ngày sinh hoặc ngày lập hộ sau ngày bắt đầu cư trú'
+            USING ERRCODE = '23514';
+    END IF;
+    RETURN NEW;
+END
+$fn$;
+
+DROP TRIGGER IF EXISTS trg_b15_dot ON qua_trinh_cu_tru;
+CREATE TRIGGER trg_b15_dot
+BEFORE INSERT OR UPDATE OF ma_cu_dan, ma_ho, ngay_bat_dau
+ON qua_trinh_cu_tru
+FOR EACH ROW EXECUTE FUNCTION fn_b15_kiem_tra_dot();
+
+CREATE OR REPLACE FUNCTION fn_b15_kiem_tra_cha()
+RETURNS trigger LANGUAGE plpgsql AS $fn$
+BEGIN
+    IF TG_TABLE_NAME = 'cu_dan' THEN
+        IF EXISTS (
+            SELECT 1 FROM qua_trinh_cu_tru
+            WHERE ma_cu_dan = NEW.ma_cu_dan
+              AND ngay_bat_dau < NEW.ngay_sinh
+        ) THEN
+            RAISE EXCEPTION 'B15: sửa ngày sinh mâu thuẫn lịch sử cư trú'
+                USING ERRCODE = '23514';
+        END IF;
+    ELSIF TG_TABLE_NAME = 'ho_cu_tru' THEN
+        IF EXISTS (
+            SELECT 1 FROM qua_trinh_cu_tru
+            WHERE ma_ho = NEW.ma_ho
+              AND ngay_bat_dau < NEW.ngay_lap
+        ) THEN
+            RAISE EXCEPTION 'B15: sửa ngày lập hộ mâu thuẫn lịch sử cư trú'
+                USING ERRCODE = '23514';
+        END IF;
+    END IF;
+    RETURN NEW;
+END
+$fn$;
+
+DROP TRIGGER IF EXISTS trg_b15_ngay_sinh ON cu_dan;
+CREATE TRIGGER trg_b15_ngay_sinh
+BEFORE UPDATE OF ngay_sinh ON cu_dan
+FOR EACH ROW EXECUTE FUNCTION fn_b15_kiem_tra_cha();
+
+DROP TRIGGER IF EXISTS trg_b15_ngay_lap_ho ON ho_cu_tru;
+CREATE TRIGGER trg_b15_ngay_lap_ho
+BEFORE UPDATE OF ngay_lap ON ho_cu_tru
+FOR EACH ROW EXECUTE FUNCTION fn_b15_kiem_tra_cha();
+
+
 COMMIT;
 
 -- Mẫu sử dụng (không tự chạy):

@@ -170,9 +170,9 @@ Khi B06 được thực thi, bộ `{ma_cu_dan, loai_cu_tru, ngay_bat_dau}` cũng
 
 Xét riêng tập phụ thuộc nội bảng do PK/UNIQUE công bố, bảng `bien_dong_cu_tru` có định thức là khóa chính và đáp ứng phép kiểm 3NF theo tập đó. Tuy nhiên quy tắc B09 làm ngày sự kiện suy ra từ ngày bắt đầu đợt mới hoặc ngày kết thúc đợt cũ. Khi nhiều sự kiện được phép tham chiếu cùng một đợt, các tập con có FK không NULL có phụ thuộc có điều kiện từ mã đợt tới ngày biến động. Vì vậy **không kết luận toàn bộ mô hình đạt 3NF tuyệt đối chỉ từ khóa số tự tăng**, cũng không bỏ qua tính dư thừa của ngày sự kiện.
 
-Ở bản bàn giao tuần 1, giữ `ngay_bien_dong` để bảo toàn giao diện SQL và mô hình nhật ký hiện có; ghi nhận đây là **dư thừa có kiểm soát cần review**, không phải đã có chứng minh hình thức đầy đủ cho mọi quy tắc có NULL. Tuần 2, TV1 cùng reviewer quyết định chốt phần chuẩn hóa cuối: giữ ngày với luận giải/trigger nhất quán hoặc điều chỉnh cách lưu/tính ngày nếu học phần đòi 3NF nghiêm ngặt cho toàn bộ ràng buộc. Mọi sửa cấu trúc cần cập nhật ma trận và báo TV2/TV3 trước khi triển khai. Không tự thêm bảng hoặc âm thầm đổi các câu hỏi để che điểm này.
+**Quyết định đề xuất của TV1 cho Gate 2 (20/11):** Giữ `ngay_bien_dong` nhằm thể hiện thời điểm nghiệp vụ ngay trong nhật ký, dù B09 tạo ra tính dư thừa có điều kiện: ở bản ghi tham chiếu đợt mới, ngày biến động bằng `ngay_bat_dau`; ở bản ghi tham chiếu đợt cũ, ngày biến động bằng `ngay_ket_thuc + 1`. Các trigger kiểm cả INSERT/UPDATE sự kiện lẫn UPDATE đợt nên giữ nhất quán dữ liệu đã lưu. Sáu bảng còn lại có luận chứng 3NF theo tập FD trình bày; **không tuyên bố toàn bộ 7 bảng 3NF nghiêm ngặt theo mọi FD điều kiện và NULL**. Đây là đánh đổi có kiểm soát của đồ án, không tự chỉnh cấu trúc/schema khi chưa được TV2/TV3 review. Nếu giảng viên bắt buộc chứng minh 3NF toàn bộ một cách hình thức, cần thảo luận phương án tính ngày thay vì lưu lặp trước khi chốt cuối.
 
-Đây là phần phân tích chuẩn hóa bản nháp tuần 1; nhiệm vụ hoàn thiện luận chứng tuần 2 vẫn được giữ đúng phân công. Báo cáo bản nộp phải dùng quyết định cuối đã được reviewer xác nhận, không sao chép tuyên bố vượt quá kết quả phân tích.
+TV1 đã hoàn thiện phân tích và đề xuất cách diễn giải ở bản tuần 2. **Quyết định chỉ thành kết luận nhóm sau khi TV2/TV3 review**; báo cáo bản nộp không được biến đề xuất thành lời xác nhận của cả ba.
 
 C1 làm rõ trường hợp một đợt không có sự kiện; không đổi khóa, FD đã công bố hoặc số bảng/cột. Không suy ra quan hệ bắt buộc một–một giữa đợt và sự kiện để đơn giản hóa chứng minh. Bản tuần 1 giữ đủ khóa/FD, phân tích 1NF–3NF theo phạm vi đã nêu và câu hỏi DEC12; chưa tuyên bố đã chốt chuẩn hóa cuối của toàn mô hình.
 
@@ -190,7 +190,7 @@ C1 làm rõ trường hợp một đợt không có sự kiện; không đổi k
 | B11: liên kết lịch sử ổn định | FK không ngăn đổi liên kết hợp lệ | Trigger bảo vệ `ho_cu_tru.ma_dia_chi` và `dia_chi.ma_to` nếu đã có lịch sử; khóa SHARE khi thêm đợt để giảm nguy cơ cập nhật song song |
 | B12: không xóa dây chuyền | FK NO ACTION | Không xóa cascade; kiểm soát DELETE qua vai trò/quy trình |
 | B14: tài khoản ghi mới hoạt động | FK chỉ kiểm tồn tại | Trigger B14 chỉ kiểm khi INSERT sự kiện hoặc đổi người ghi, không hồi tố khi trạng thái tài khoản đổi |
-| B15: chất lượng đầu vào | Chưa có CHECK liên bảng cho B15 | Bộ sinh dữ liệu kiểm ngày sinh/ngày lập hộ/tên; giới hạn cần nêu trung thực, chưa tự chặn mọi UPDATE trực tiếp |
+| B15: chất lượng đầu vào | Chưa có trong `01_schema.sql` | CHECK tên/địa chỉ và trigger cả hai chiều tại `02_constraints.sql`, có test âm/dương |
 | B17–B18: thống kê, mô phỏng | Seed, query, role | COUNT DISTINCT, bộ 636 bản ghi và 2 demo bảo mật |
 
 **Thứ tự chạy PostgreSQL:** `sql/01_schema.sql` → `sql/02_constraints.sql` → `sql/03_seed.sql` → `tests/constraints_week2.sql` → `sql/06_validation.sql`. File kiểm thử mở transaction và rollback nên không thay đổi bộ seed chính. `sql/02_constraints.sql` có mã hiện thực nhưng chỉ được đánh dấu PASS sau khi có log chạy PostgreSQL và kiểm tra đầu ra thực.

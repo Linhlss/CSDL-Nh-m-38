@@ -311,7 +311,7 @@ def runtime_evidence():
     assert all(f"{db}/QSQL{n:02}/full-tuples" in keys for db in ("w1_tiny","w1_seed") for n in range(1,11))
     # Lịch sử tuần 1 được giữ nguyên; 06_validation.sql đã được mở rộng
     # trong tuần 2. Không sửa hash trong log chạy PostgreSQL ngày 16/11.
-    week2_evolved = {"sql/06_validation.sql"}
+    week2_evolved = {"sql/06_validation.sql", "scripts/verify_week1_runtime.py"}
     for path,digest in result["files_sha256"].items():
         if path in week2_evolved:
             continue  # version hiện tại được xác thực qua manifest + CI tuần 2
@@ -323,7 +323,7 @@ def runtime_evidence():
     assert len(blocks)==11
     sql.update({f"QRA{i:02}":clean(s) for i,s in enumerate(blocks[1:],1)})
     assert {k:hashlib.sha256(v.encode()).hexdigest() for k,v in sql.items()}==result["query_sha256"]
-    return f"{result['summary']['passed']}/{len(result['checks'])} historical PostgreSQL checks; immutable week1 inputs and 20 queries verified; 06_validation.sql evolved in week2 (DB not rerun)"
+    return f"{result['summary']['passed']}/{len(result['checks'])} historical PostgreSQL checks; week1 input versions preserved in log; week2 validation/runtime tooling tracked by new manifest and CI (DB not rerun by this script)"
 
 
 def newline_policy():

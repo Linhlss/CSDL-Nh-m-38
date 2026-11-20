@@ -133,9 +133,11 @@ def main():
     parts = re.split(r"^-- (QSQL\d{2})\.[^\n]*\n", (ROOT/"sql/04_queries.sql").read_text(), flags=re.M)
     sql = {parts[i]:h.clean(parts[i+1]) for i in range(1,len(parts),2)}
     if len(sql)!=10: raise RuntimeError("Expected exactly ten QSQL")
-    blocks = re.findall(r"```sql\n(.*?)```",(ROOT/"docs/06a_dai_so_quan_he.md").read_text(),re.S)
-    if len(blocks)!=11: raise RuntimeError("Expected Q_d and ten RA counterparts")
-    ra = {f"QRA{i:02}":h.clean(x) for i,x in enumerate(blocks[1:],1)}
+    from ra_sql_blocks import from_repo
+    named = from_repo(ROOT)
+    ra = {key:h.clean(value) for key,value in named.items()
+          if key.startswith("QRA") and key != "QRA07_DIV"}
+    ra07_div = h.clean(named["QRA07_DIV"]) if "QRA07_DIV" in named else None
     fixture=(ROOT/"tests/week1_fixture.sql").read_text()
     inserts=fixture.split("-- BEGIN_FIXTURE_DATA",1)[1].split("-- END_FIXTURE_DATA",1)[0]
     tiny_expected=json.loads((ROOT/"tests/week1_expected.json").read_text())
@@ -163,6 +165,8 @@ def main():
             if rak=="QRA04": expected_rows=[{k:r[k] for k in ("ma_cu_dan","ho_ten")} for r in expected_rows]
             if rak=="QRA10": expected_rows=unique([{"ma_cu_dan":r["ma_cu_dan"],"ho_ten":names[r["ma_cu_dan"]]} for r in expected_rows])
             compare(f"{db}/{rak}-vs-{sqk}",rows(ra[rak],db),expected_rows)
+        if ra07_div:
+            compare(f"{db}/QRA07_DIV-vs-QRA07", rows(ra07_div,db), rows(ra["QRA07"],db))
         compare(f"{db}/VIEW-vs-QSQL03",rows("SELECT * FROM vw_thong_ke_cu_dan_theo_to",db,role="csdl17_report",direct=True),actual["QSQL03"])
         before=h.snapshot(db)
         h.denied(f"{db}/S20-reader-update","UPDATE cu_dan SET ghi_chu='forbidden' WHERE ma_cu_dan=1;",db,"csdl17_reader",True)

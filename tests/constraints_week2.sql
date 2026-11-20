@@ -169,6 +169,87 @@ BEGIN
     RAISE NOTICE '[PASS] B10-positive: 3 bước ghi thành công nhất quán';
 END $$;
 
+
+-- E1: phải FAIL khi một đợt xuất hiện nhiều lần trong cùng vai trò.
+-- Cả hai lệnh INSERT đều hợp lệ theo B08/B09; chỉ assertion E1 phát hiện.
+DO $e1_old$
+BEGIN
+    INSERT INTO bien_dong_cu_tru(
+       loai_bien_dong,ma_qua_trinh_cu,ma_qua_trinh_moi,ngay_bien_dong,ma_tai_khoan
+    ) VALUES ('CHUYEN_DI',99002,NULL,'2026-06-15',99001);
+    PERFORM fn_assert_e1();
+    RAISE EXCEPTION 'E1 OLD: assertion không phát hiện dữ liệu trùng';
+EXCEPTION WHEN SQLSTATE '23514' THEN
+    RAISE NOTICE '[PASS] E1_CU: trùng vai trò cũ bị phát hiện và rollback';
+END
+$e1_old$;
+
+DO $e1_new$
+BEGIN
+    INSERT INTO bien_dong_cu_tru(
+       loai_bien_dong,ma_qua_trinh_cu,ma_qua_trinh_moi,ngay_bien_dong,ma_tai_khoan
+    ) VALUES ('CHUYEN_DEN',NULL,99003,'2026-06-15',99001);
+    PERFORM fn_assert_e1();
+    RAISE EXCEPTION 'E1 NEW: assertion không phát hiện dữ liệu trùng';
+EXCEPTION WHEN SQLSTATE '23514' THEN
+    RAISE NOTICE '[PASS] E1_MOI: trùng vai trò mới bị phát hiện và rollback';
+END
+$e1_new$;
+
+-- Một đợt là "mới" của chuyển đến và "cũ" của chuyển đi được phép.
+INSERT INTO bien_dong_cu_tru(
+    loai_bien_dong,ma_qua_trinh_cu,ma_qua_trinh_moi,ngay_bien_dong,ma_tai_khoan
+) VALUES ('CHUYEN_DEN',NULL,99002,'2026-01-01',99001);
+SELECT fn_assert_e1();
+DO $
+BEGIN
+    RAISE NOTICE '[PASS] E1-positive: đợt được dùng ở hai vai trò khác nhau';
+END $;
+
+-- B15: tên/địa chỉ rỗng bị từ chối bởi CHECK.
+SELECT pg_temp.expect_sqlstate('B15_whitespace_person',
+    $sql$INSERT INTO cu_dan(ho_ten,ngay_sinh,gioi_tinh)
+         VALUES ('    ','1990-01-01','Nam')$sql$, '23514');
+SELECT pg_temp.expect_sqlstate('B15_whitespace_address',
+    $sql$INSERT INTO dia_chi(ma_to,dia_chi_chuan)
+         VALUES (99001,'   ')$sql$, '23514');
+SELECT pg_temp.expect_sqlstate('B15_whitespace_login',
+    $sql$INSERT INTO tai_khoan(ten_dang_nhap,ten_hien_thi,vai_tro)
+         VALUES ('   ','A','CAN_BO')$sql$, '23514');
+
+INSERT INTO cu_dan(ma_cu_dan,ho_ten,ngay_sinh,gioi_tinh) VALUES
+    (99011,'B15 Sinh muộn','2027-01-01','Nam'),
+    (99012,'B15 Hộ lập muộn','1990-01-01','Nam'),
+    (99013,'B15 Hợp lệ','1990-01-01','Nam');
+INSERT INTO ho_cu_tru(ma_ho,ma_dia_chi,ngay_lap) VALUES
+    (99011,99002,'2027-01-01'),
+    (99012,99001,'2020-01-01');
+
+SELECT pg_temp.expect_sqlstate('B15_birth_after_start',
+    $sql$INSERT INTO qua_trinh_cu_tru(ma_cu_dan,ma_ho,loai_cu_tru,ngay_bat_dau)
+         VALUES (99011,99002,'THUONG_TRU','2026-06-01')$sql$, '23514');
+SELECT pg_temp.expect_sqlstate('B15_house_open_after_start',
+    $sql$INSERT INTO qua_trinh_cu_tru(ma_cu_dan,ma_ho,loai_cu_tru,ngay_bat_dau)
+         VALUES (99012,99011,'THUONG_TRU','2026-06-01')$sql$, '23514');
+SELECT pg_temp.expect_sqlstate('B15_reverse_birth_change',
+    $sql$UPDATE cu_dan SET ngay_sinh='2027-01-01'
+         WHERE ma_cu_dan=99003$sql$, '23514');
+SELECT pg_temp.expect_sqlstate('B15_reverse_house_open',
+    $sql$UPDATE ho_cu_tru SET ngay_lap='2027-01-01'
+         WHERE ma_ho=99001$sql$, '23514');
+
+-- Dương tính: cư dân và hộ đã được lập trước ngày cư trú.
+INSERT INTO qua_trinh_cu_tru(
+    ma_cu_dan,ma_ho,loai_cu_tru,ngay_bat_dau
+) VALUES (99013,99012,'TAM_TRU','2026-08-01');
+DO $
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM qua_trinh_cu_tru
+      WHERE ma_cu_dan=99013 AND ma_ho=99012 AND ngay_bat_dau='2026-08-01')
+    THEN RAISE EXCEPTION 'B15 positive test failed'; END IF;
+    RAISE NOTICE '[PASS] B15-positive: bộ cư trú hợp lệ được ghi';
+END $;
+
 -- B14: khóa tài khoản không làm mất nhật ký trước đó.
 UPDATE tai_khoan SET trang_thai='KHOA' WHERE ma_tai_khoan=99001;
 UPDATE bien_dong_cu_tru SET ghi_chu='sự kiện lịch sử vẫn được phép ghi chú'
