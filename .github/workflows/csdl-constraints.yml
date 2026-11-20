@@ -81,6 +81,7 @@ jobs:
           psql -X -v ON_ERROR_STOP=1 -f tests/seed636_s01_s16_tv3.sql > /tmp/s-cases.log 2>&1
       - name: Assert 10 RA, division, SQL, view and actual role-denials on two DBs
         run: |
+          set -euo pipefail
           python3 scripts/verify_gate2_integration.py \
             --seed-db postgres --fixture-db csdl17_ra_fixture | tee /tmp/gate2-results.log
       - name: Upload PostgreSQL evidence

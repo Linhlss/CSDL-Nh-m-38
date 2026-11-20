@@ -162,15 +162,29 @@ def main():
     psql(args.fixture_db,fixture_data())
     check_data(args.fixture_db,ra,sql,False)
     security(args.fixture_db)
-    # S14b không có ở seed636 nhưng phải có đối chứng DISTINCT tại fixture.
-    duplicates=rows(args.fixture_db, """
-      SELECT q.ma_ho FROM qua_trinh_cu_tru q
-      WHERE q.ngay_bat_dau <= DATE '2026-11-20'
-        AND (q.ngay_ket_thuc IS NULL OR q.ngay_ket_thuc >= DATE '2026-11-20')
-      GROUP BY q.ma_ho
-      HAVING COUNT(*) > COUNT(DISTINCT q.ma_cu_dan)
-    """)
-    assert_pred("fixture/S14b-count-distinct-counterexample",len(duplicates)>=1)
+    # S14b: bổ sung một đợt KHÁC LOẠI ở cùng hộ, cùng ngày hiệu lực
+    # trong transaction ROLLBACK. Fixture gốc không có ca này.
+    before=rows(args.fixture_db,"SELECT COUNT(*) AS n FROM qua_trinh_cu_tru")
+    statement="""
+    BEGIN;
+    INSERT INTO qua_trinh_cu_tru(ma_cu_dan,ma_ho,loai_cu_tru,ngay_bat_dau)
+    VALUES (1,1,'TAM_TRU',DATE '2026-01-01');
+    SELECT row_to_json(x) FROM (
+       SELECT q.ma_ho, COUNT(*) AS n_dot, COUNT(DISTINCT q.ma_cu_dan) AS n_nguoi
+       FROM qua_trinh_cu_tru q
+       WHERE q.ngay_bat_dau <= DATE '2026-11-20'
+         AND (q.ngay_ket_thuc IS NULL OR q.ngay_ket_thuc >= DATE '2026-11-20')
+       GROUP BY q.ma_ho
+       HAVING COUNT(*) > COUNT(DISTINCT q.ma_cu_dan)
+    ) x;
+    ROLLBACK;
+    """
+    p=psql(args.fixture_db,statement)
+    duplicates=[json.loads(line) for line in p.stdout.splitlines() if line.strip()]
+    assert_pred("fixture/S14b-count-distinct-counterexample",
+                any(row["n_dot"]>row["n_nguoi"] for row in duplicates))
+    assert_equal("fixture/S14b-rollback-clean",
+                 rows(args.fixture_db,"SELECT COUNT(*) AS n FROM qua_trinh_cu_tru"),before)
     print(f"RESULT: {PASSED} checks PASS (2 DB, 10 QRA + division, 10 QSQL, roles, VIEW)")
 
 if __name__=="__main__":
