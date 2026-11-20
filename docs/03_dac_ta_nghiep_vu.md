@@ -40,7 +40,7 @@ Phạm vi chỉ gồm một phường mô phỏng, dữ liệu giả lập, Post
 
 Đây là phân công chức năng. Việc các quyền được PostgreSQL thực thi thuộc script bảo mật tuần 2, chưa được suy ra từ cột `vai_tro`.
 
-**Quyết định X01 — phương án (b), 20/11/2026.** TV1 chọn phương án (b). TV3 đã đồng thuận trong review W3-T3-08. **Còn chờ TV2 xác nhận**, chưa phải kết luận Gate 2.
+**Quyết định X01 — phương án (b), 20/11/2026.** TV1 chọn phương án (b), TV3 đã đồng thuận trong review W3-T3-08; **TV1 thông báo ngày 20/11/2026 rằng TV2 và TV3 đã thống nhất**. Gate 2 được ghi nhận trong [nhật ký quyết định mục 10](../meetings/decision_log.md#gate2) dựa trên nguồn TV1 báo lại (không thay cho comment review/chữ ký độc lập).
 
 - **Bản chất của `vai_tro`:** cột `tai_khoan.vai_tro` (`QUAN_TRI`, `CAN_BO`, `THONG_KE`) là thuộc tính nghiệp vụ mô tả người ghi nhận. Nó **không** là cơ chế phân quyền. Không trigger hay CHECK nào dùng cột này để chặn ghi; B14 chỉ yêu cầu tài khoản tồn tại và ở trạng thái `HOAT_DONG`.
 - **Quyền thật:** PostgreSQL thực thi qua các role `csdl17_admin`, `csdl17_reader` và `csdl17_report` trong `sql/05_security.sql`. Role `csdl17_report` (vai trò thống kê ở mức CSDL) chỉ đọc VIEW tổng hợp và bị từ chối mọi lệnh ghi.

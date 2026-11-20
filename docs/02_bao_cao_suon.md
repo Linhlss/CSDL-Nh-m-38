@@ -4,7 +4,7 @@
 
 > **Trạng thái bản tích hợp ngày 20/11/2026 (nhánh `fix/tv1-integration-gate2`):**
 > - **Đủ sáu chương:** Chương 1–3, Mở đầu, Kết luận và phụ lục do TV1 viết; Chương 3.5 và Chương 5 do TV2 viết (PR #6); Chương 4 và 6 do TV3 viết (PR #5, #8).
-> - **Chưa là báo cáo cuối.** Còn thiếu ảnh minh chứng (`evidence/sql/`, `evidence/security/`), review chéo, Gate 2/Gate 3, nguồn giáo trình, xếp loại và chữ ký. Danh sách việc còn lại theo người nằm ở [hồ sơ bàn giao](10_ban_giao_tv2_tv3.md).
+> - **Chưa là báo cáo cuối.** Nội dung kỹ thuật **Gate 2 PASS theo TV1 báo cả nhóm xác nhận ngày 20/11**; vẫn thiếu ảnh minh chứng (`evidence/sql/`, `evidence/security/`), Gate 3/4, nguồn giáo trình, xếp loại và chữ ký. Danh sách việc còn lại theo người nằm ở [hồ sơ bàn giao](10_ban_giao_tv2_tv3.md).
 >
 > Lịch sử: TV1 viết thiết kế Chương 1–3 và Mở đầu ngày 11/11/2026; bản nháp Chương 4 và 6 của TV3 được tích hợp ngày 16/11/2026; thông tin bìa theo chủ repo cung cấp.
 
@@ -60,7 +60,7 @@
 
 Quản lý cư dân cần trả lời được một người cư trú ở đâu tại một thời điểm, đã thay đổi nơi ở ra sao và ai ghi nhận biến động đó. Lưu duy nhất địa chỉ hiện tại sẽ không đáp ứng được câu hỏi lịch sử. Đề tài xây dựng mô hình quan hệ tách hồ sơ cư dân, vị trí cư trú, khoảng thời gian và nhật ký sự kiện để bảo toàn những thông tin này.
 
-Mục tiêu là phân tích nghiệp vụ, thiết kế ERD, ánh xạ quan hệ, phân tích chuẩn hóa, triển khai ràng buộc và kiểm chứng truy vấn/bảo mật trên PostgreSQL. Trong tuần 1, nhóm chuẩn bị bộ thiết kế để các thành viên triển khai thống nhất. Đến tuần 2, nhóm đã có thêm dữ liệu chính thức (seed636), 10 SQL, 10 biểu thức đại số quan hệ, ràng buộc nâng cao và hai demo bảo mật, đều được kiểm thử trên PostgreSQL 17. Phần nghiệm thu chung của cả nhóm vẫn theo Gate 2 và Gate 3.
+Mục tiêu là phân tích nghiệp vụ, thiết kế ERD, ánh xạ quan hệ, phân tích chuẩn hóa, triển khai ràng buộc và kiểm chứng truy vấn/bảo mật trên PostgreSQL. Trong tuần 1, nhóm chuẩn bị bộ thiết kế để các thành viên triển khai thống nhất. Đến tuần 2, nhóm đã có thêm dữ liệu chính thức (seed636), 10 SQL, 10 biểu thức đại số quan hệ, ràng buộc nâng cao và hai demo bảo mật, đều được kiểm thử trên PostgreSQL 17. Gate 2 đã được ghi nhận đạt theo xác nhận nhóm do TV1 báo lại ngày 20/11; Gate 3 và bản nộp chính thức vẫn chưa hoàn thành.
 
 Mọi nhân vật và địa chỉ đều là dữ liệu mô phỏng. Đề tài giới hạn một phường giả lập, không có giá trị pháp lý, không kết nối dữ liệu dân cư thật và không xây dựng ứng dụng web/mobile.
 
@@ -207,7 +207,7 @@ Lược đồ cơ bản trong `sql/01_schema.sql` có 7 PK, 7 FK, 3 UNIQUE nghi�
 
 | Mã | Giới hạn hoặc quyết định | Cách xử lý trong đồ án |
 |---|---|---|
-| X01 | `tai_khoan.vai_tro` chỉ mang tính mô tả và không thực thi quyền ghi. Trong seed636, 13/63 sự kiện do tài khoản `THONG_KE` ghi và 11/63 do `QUAN_TRI` ghi | Chọn phương án (b): quyền thật do role PostgreSQL thực thi, và `csdl17_report` không ghi được. Ràng buộc "chỉ `CAN_BO` được ghi biến động" nằm ngoài phạm vi v1. **Chờ TV2 xác nhận** |
+| X01 | `tai_khoan.vai_tro` chỉ mang tính mô tả và không thực thi quyền ghi. Trong seed636, 13/63 sự kiện do tài khoản `THONG_KE` ghi và 11/63 do `QUAN_TRI` ghi | Chọn phương án (b): quyền thật do role PostgreSQL thực thi, và `csdl17_report` không ghi được. Ràng buộc "chỉ `CAN_BO` được ghi biến động" nằm ngoài phạm vi v1. **Đã được TV1 báo TV2 đồng ý ngày 20/11 (Gate 2); chưa có comment GitHub riêng** |
 | X02 | Admin không được xóa vật lý lịch sử (B12) | `REVOKE DELETE` trên hai bảng lịch sử. Admin vẫn còn `UPDATE` trong giới hạn của trigger B08–B09 |
 | X05 | `ngay_bien_dong` là ngày hiệu lực, `thoi_diem_ghi` là thời điểm ghi nhận | Cho phép đăng ký trước biến động có hiệu lực trong tương lai; không có ràng buộc so với `CURRENT_DATE` |
 | X06 | Người hoặc hộ chưa có đợt nào vẫn nhập được ngày sinh hoặc ngày lập hộ ở tương lai | Ngoài phạm vi B15 hiện tại. B15 sẽ chặn khi mở đợt đầu tiên |
@@ -231,9 +231,9 @@ Bộ kiểm thử tích hợp `tests/constraints_week2.sql` được thiết k�
 
 Với tập phụ thuộc đã công bố, sáu bảng danh mục/hồ sơ/lịch sử không có phụ thuộc bắc cầu giữa các thuộc tính không khóa và đáp ứng phân tích 3NF. Tách tên tổ khỏi địa chỉ, địa chỉ khỏi đợt và tên người khỏi nhật ký tránh cập nhật cùng thông tin ở nhiều nơi.
 
-Riêng ngày biến động có thể suy ra từ biên ngày của đợt theo quy tắc đã chọn. Khi FK nullable và một đợt được nhiều sự kiện tham chiếu, xuất hiện phụ thuộc có điều kiện trên các tập con. Bản đề xuất TV1 tại Gate 2 quyết định giữ `ngay_bien_dong` là **dư thừa có kiểm soát**, có trigger B09 đồng bộ, đồng thời không khẳng định cả 7 bảng đạt 3NF nghiêm ngặt theo mọi phụ thuộc có điều kiện. TV3 đã đồng ý giữ `ngay_bien_dong` (review W3-T3-08 ngày 20/11). Kết luận chỉ thành kết luận chung khi TV2 cũng kiểm tra chéo. Phân tích đầy đủ, phạm vi kết luận và việc chốt tuần 2 được ghi ở mục 5 của tài liệu chuẩn hóa.
+Riêng ngày biến động có thể suy ra từ biên ngày của đợt theo quy tắc đã chọn. Khi FK nullable và một đợt được nhiều sự kiện tham chiếu, xuất hiện phụ thuộc có điều kiện trên các tập con. Bản đề xuất TV1 tại Gate 2 quyết định giữ `ngay_bien_dong` là **dư thừa có kiểm soát**, có trigger B09 đồng bộ, đồng thời không khẳng định cả 7 bảng đạt 3NF nghiêm ngặt theo mọi phụ thuộc có điều kiện. TV3 đã đồng ý giữ `ngay_bien_dong` (review W3-T3-08 ngày 20/11). TV1 báo cả nhóm đã đồng ý bản thiết kế tại Gate 2 ngày 20/11; xác nhận GitHub riêng của TV2 chưa được lưu. Phân tích đầy đủ, phạm vi kết luận và việc chốt tuần 2 được ghi ở mục 5 của tài liệu chuẩn hóa.
 
-Quyết định C1 không đổi tập khóa/FD đã công bố và không làm đợt–sự kiện thành quan hệ bắt buộc một–một. TV1 đã hoàn thiện đề xuất chốt DEC12 ở `docs/04_data_dictionary_va_chuan_hoa.md`. TV3 đã review xong. Review độc lập của TV2 vẫn là điều kiện nghiệm thu Gate 2.
+Quyết định C1 không đổi tập khóa/FD đã công bố và không làm đợt–sự kiện thành quan hệ bắt buộc một–một. TV1 đã hoàn thiện đề xuất chốt DEC12 ở `docs/04_data_dictionary_va_chuan_hoa.md`. TV3 đã review xong. TV1 báo TV2 đã đồng ý khi chốt Gate 2; vẫn khuyến khích bổ sung comment review độc lập để truy vết.
 
 ### 3.5. Dữ liệu mô phỏng và kế hoạch kiểm tra
 
@@ -541,7 +541,7 @@ Khi đối soát, cần xử lý các khác biệt sau:
 
 > Người viết: TV2 (Trần Tuấn Ngọc). Reviewer được phân công: TV1 và TV3. Nháp tuần 2 ngày 19/11/2026. Toàn bộ mã SQL lấy nguyên vẹn từ [sql/04_queries.sql](../sql/04_queries.sql); số liệu kết quả trên `fixture29` và `seed636` trích từ log chạy PostgreSQL 17.11 tại [tests/week1_execution_results.json](../tests/week1_execution_results.json) và lượt CI PostgreSQL 17 ([run 44533515990](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44533515990)). Ảnh chụp kết quả chạy từng câu trong `evidence/sql/` và log môi trường Windows cá nhân (`W2-T2-01`) sẽ được bổ sung trước Gate 3 (24/11).
 
-> **Ghi chú tích hợp của TV1 (20/11/2026, chờ TV2 review):** Nội dung Chương 5 lấy nguyên từ PR #6 của TV2 (commit `19c4a440`, `6c479e19`, tác giả Ngocdeezet). TV1 đã chạy lại 10 câu trên `seed636` và `fixture29` bằng PostgreSQL 17.12. Mọi số dòng và mọi bảng trích kết quả bên dưới đều **khớp với kết quả thực tế**. Các khẳng định về từng mã cư dân cũng khớp: 16 (chuyển nội bộ cùng tổ), 17 (hai đợt cùng hộ), 23–24 (chỉ có đợt tương lai), 25–27 (chưa có đợt), và S03 (ngày sinh 1966-11-20 và 1966-11-21). TV1 chỉ sửa hai lỗi:
+> **Ghi chú tích hợp của TV1 (20/11/2026, đã được TV1 báo nhóm chấp thuận Gate 2; chưa có comment review cá nhân):** Nội dung Chương 5 lấy nguyên từ PR #6 của TV2 (commit `19c4a440`, `6c479e19`, tác giả Ngocdeezet). TV1 đã chạy lại 10 câu trên `seed636` và `fixture29` bằng PostgreSQL 17.12. Mọi số dòng và mọi bảng trích kết quả bên dưới đều **khớp với kết quả thực tế**. Các khẳng định về từng mã cư dân cũng khớp: 16 (chuyển nội bộ cùng tổ), 17 (hai đợt cùng hộ), 23–24 (chỉ có đợt tương lai), 25–27 (chưa có đợt), và S03 (ngày sinh 1966-11-20 và 1966-11-21). TV1 chỉ sửa hai lỗi:
 > 1. Tên VIEW đúng là `vw_thong_ke_cu_dan_theo_to`.
 > 2. Các lệnh ở mục 5.1 được thêm `-d csdl17_seed636`, theo góp ý review tự động trên PR #6, và thống nhất tên DB với `docs/08`.
 >
@@ -952,7 +952,7 @@ Bảng tổng hợp dưới đây đối chiếu 10 câu SQL trên cả hai tậ
 
 ## CHƯƠNG 6 — BẢO MẬT CSDL
 
-> Người viết: TV3. Reviewer được phân công: TV2. Nháp ngày 16/11/2026, cập nhật 20/11/2026 theo bản tích hợp có `02_constraints.sql`. Bằng chứng tuần 2: [biên bản kiểm thử quyền bằng phiên đăng nhập thật](../tests/week2_security_login_log.md) trên PostgreSQL 17.11, seed636; bằng chứng tuần 1: [review TV3 trong nhật ký](../meetings/decision_log.md#review-tv3). Đây không phải chữ ký review của TV2. Ảnh minh chứng chụp trên seed đã merge, hạn 24/11. Script: [sql/05_security.sql](../sql/05_security.sql). Kế hoạch chi tiết: [06b_bao_mat.md](06b_bao_mat.md).
+> Người viết: TV3. Reviewer được phân công: TV2. Nháp ngày 16/11/2026, cập nhật 20/11/2026 theo bản tích hợp có `02_constraints.sql`. Bằng chứng tuần 2: [biên bản kiểm thử quyền bằng phiên đăng nhập thật](../tests/week2_security_login_log.md) trên PostgreSQL 17.11, seed636; bằng chứng tuần 1: [review TV3 trong nhật ký](../meetings/decision_log.md#review-tv3). TV1 báo nhóm đã chấp thuận kỹ thuật Gate 2, không có chữ ký review cá nhân trên GitHub. Ảnh minh chứng chụp trên seed đã merge, hạn 24/11. Script: [sql/05_security.sql](../sql/05_security.sql). Kế hoạch chi tiết: [06b_bao_mat.md](06b_bao_mat.md).
 
 ### 6.1. Khái quát và các rủi ro
 
@@ -1089,7 +1089,7 @@ Hướng mở rộng gồm Row-Level Security theo tổ, ngưỡng k cho VIEW t�
 
 ## KẾT LUẬN
 
-> Người viết: TV1. Bản 20/11/2026, chờ TV2/TV3 review. Các số liệu dẫn từ [log kiểm thử từ DB trắng](../tests/week2_tv1_integration_log.md) và CI trên nhánh tích hợp.
+> Người viết: TV1. Bản 20/11/2026, Gate 2 được ghi nhận PASS theo TV1 báo nhóm chấp thuận; Gate 3/bản nộp còn mở. Các số liệu dẫn từ [log kiểm thử từ DB trắng](../tests/week2_tv1_integration_log.md) và CI trên nhánh tích hợp.
 
 ### Kết quả đạt được
 

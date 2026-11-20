@@ -3,7 +3,7 @@
 **Người bàn giao:** TV1 — Trần Bùi Tùng Linh (20227057). **Ngày:** 20/11/2026.
 **Nhánh ứng viên duy nhất:** `fix/tv1-integration-gate2`, tức [PR #7](https://github.com/Linhlss/CSDL-Nh-m-38/pull/7) vào `main`.
 **Commit bàn giao:** commit HEAD của nhánh trên tại thời điểm TV1 bình luận "bàn giao" trong [Issue #9](https://github.com/Linhlss/CSDL-Nh-m-38/issues/9). Bình luận đó ghi đúng SHA và liên kết CI. Tệp này không tự ghi được SHA của chính commit chứa nó.
-**Trạng thái:** đây là **bản ứng viên**. Chưa merge `main`, chưa có Gate 2, chưa có chữ ký. TV1 không review hay ký thay TV2/TV3.
+**Trạng thái cập nhật 20/11:** bản ứng viên kỹ thuật đã **Gate 2 PASS theo xác nhận nhóm do TV1 báo lại**, chưa có review GitHub độc lập hoặc chữ ký. Lịch sử PR và trạng thái merge xem GitHub; Gate 3/4, ảnh, PDF và ký nhận còn mở. [Nguồn](../meetings/decision_log.md#gate2).
 
 ## 1. Lấy bản bàn giao và dựng lại
 
@@ -39,7 +39,7 @@ git pull --ff-only
 | # | Việc | Đầu ra | Cách kiểm chứng | Hạn | Reviewer |
 |---|---|---|---|---|---|
 | T2-1 | Review Chương 3.5 và Chương 5 đã tích hợp, gồm hai chỗ TV1 sửa: tên VIEW `vw_…` và `psql -d` | Comment trên PR #7: đồng ý hoặc yêu cầu sửa | So diff của commit merge với PR #6 | 21/11 | TV1 |
-| T2-2 | Xác nhận phương án **X01(b)** (`vai_tro` chỉ mô tả, giữ seed636) | Comment trên PR #7 hoặc Issue #9: đồng ý hoặc chọn (a) | Nếu chọn (a), báo TV1 trước 21/11 để tái sinh seed | 21/11 | TV1, TV3 |
+| T2-2 | **Đã có xác nhận qua TV1**: phương án X01(b), giữ seed636 | TV1 đã báo cả nhóm đồng ý ngày 20/11; TV2 có thể bổ sung comment trực tiếp để lưu vết | Không đổi seed/QSQL10; nguồn Gate 2 tại nhật ký mục 10 | Đã ghi nhận Gate 2 | TV1, TV3 |
 | T2-3 | Review chuẩn hóa (`docs/04` mục 5, Chương 3.4) và Chương 6 (T3-02) | Comment review | — | 22/11 | TV1 / TV3 |
 | T2-4 | Dựng DB trên **Windows** theo `docs/08`; lưu `SELECT version();` và log | Cập nhật `tests/final_test_log.md` mục 1 (W2-T2-01) | 40 + 3 PASS, 71 PASS, S01–S16 18/18 như log TV1 | 22/11 | TV1 |
 | T2-5 | Chụp 10 ảnh `evidence/sql/QSQL01_result.png` … `QSQL10_result.png` từ seed636 | 10 tệp PNG; thay dòng "Chờ bổ sung" ở mục 5.2–5.11 | Số dòng khớp bảng 5.12 | 24/11 | TV3 |
@@ -61,8 +61,8 @@ git pull --ff-only
 
 ## 5. Việc còn lại của TV1 sau phản hồi (giai đoạn C)
 
-1. Xử lý mọi góp ý của TV2 và TV3 trên PR #7. Nếu TV2 chọn X01(a): tái sinh seed bằng cách ánh xạ lại sau khi rút số ngẫu nhiên, cập nhật QSQL10, manifest và log.
-2. **Gate 2 (22/11):** chỉ ghi PASS khi cả ba đã xác nhận; ghi owner, lỗi còn mở và hạn xử lý.
+1. X01(b) đã được nhóm đồng ý theo lời TV1 báo lại. Giữ seed636 và QSQL10; chỉ thay đổi phương án nếu cả nhóm ra quyết định mới có ghi nhận. Xử lý góp ý phát sinh từ Gate 3 trên PR/main.
+2. **Gate 2: PASS theo báo cáo TV1 ngày 20/11** (xem nhật ký quyết định mục 10); chưa có comment GitHub cá nhân của TV2/TV3.
 3. Merge PR #7 vào `main` sau khi review đạt. Đóng PR #6 (đã nằm trong #7). PR #8 đã được gộp. Chạy CI trên `main` sau merge.
 4. **Gate 3 (24/11):** rebuild cuối, chèn ảnh, điền tên trường/khoa trên bìa.
 5. Xuất PDF cuối, rà từng trang, in A4 hai mặt (26/11). Nộp 27/11, tiết 3.
@@ -71,7 +71,7 @@ git pull --ff-only
 
 | Mã | Mô tả | Mức | Owner | Hạn |
 |---|---|---|---|---|
-| X01 | Chờ TV2 xác nhận phương án (b) | Trung bình (nghiệp vụ) | TV2 | 21/11 |
+| X01 | **Đóng ở Gate 2:** chọn (b), giữ seed, giới hạn được công bố | Đã quyết định | TV1 báo nhóm đã đồng ý | 20/11 |
 | T3-01 | 06a mục (8) còn ghi "Nháp v0" | Thấp | TV3 + TV1 | 22/11 |
 | T3-03 | Chốt tên ảnh `SEC_*` | Thấp | TV3 | 23/11 |
 | T3-04 | Ảnh B1/B2 | Gate 3 | TV3 | 24/11 |
@@ -81,3 +81,6 @@ git pull --ff-only
 | BÌA | Tên trường/khoa theo mẫu bìa | Gate 4 | TV1 | 26/11 |
 
 Không có lỗi kỹ thuật nghiêm trọng nào chưa có người xử lý. Mọi kiểm thử bắt buộc đều PASS trên commit bàn giao: xem log mục 7 và liên kết CI trong Issue #9.
+
+
+> **Ghi chú sau Gate 2:** các mục T2-1/T2-3, T3-A/B/C nếu đã được thành viên trao đổi trực tiếp thì TV1 ghi nhận nhóm đã đồng ý về nội dung chung; các minh chứng review cá nhân chưa được lưu trên GitHub nên vẫn có thể bổ sung. Các mục môi trường Windows, ảnh SQL/SEC, nguồn giáo trình, PDF và chữ ký không vì vậy mà được coi là hoàn tất.

@@ -22,7 +22,7 @@ Xây dựng CSDL quản lý cư dân và biến động cư trú tại một ph�
 - **TV2:** kiểm thử dữ liệu/10 SQL cùng ràng buộc mới, ghi expected/actual; viết Chương 3.5 và Chương 5.
 - **TV3:** đã có QRA07 bằng phép chia, kết quả seed636 của QRA02/03/06/08, kiểm thử đăng nhập thật và sửa X02. Nội dung PR #5 đã vào nhánh tích hợp; PR #5 đã đóng, không merge. PR #8 đã được gộp (fast-forward) vào nhánh TV1. Việc còn lại: review bản tích hợp, chốt Chương 4/6, chụp B1/B2 ngày 24/11.
 
-[Checklist và lịch phối hợp](docs/03_CHECKLIST_DU_AN.md#tuan-2-hien-hanh) giữ đầy đủ 142 mã việc và reviewer. Gate 2 ngày 22/11 chốt nội dung kỹ thuật; tuần 3 (23–27/11) dành cho rebuild cuối, minh chứng, báo cáo, in/nộp.
+[Checklist và lịch phối hợp](docs/03_CHECKLIST_DU_AN.md#tuan-2-hien-hanh) giữ đầy đủ 142 mã việc và reviewer. **Gate 2 PASS (chốt theo xác nhận nhóm do TV1 báo lại ngày 20/11)**; các nội dung còn mở thuộc Gate 3/4 gồm minh chứng, báo cáo PDF, chữ ký và nộp. [Biên bản chốt Gate 2](meetings/decision_log.md#gate2).
 
 ## Kiểm thử ràng buộc nâng cao (TV1 — tuần 2)
 
@@ -49,7 +49,7 @@ Xem **[Hướng dẫn dựng CSDL thống nhất](docs/08_huong_dan_dung_csdl.md
 - **[Hồ sơ bàn giao TV1 → TV2, TV3 (20/11/2026)](docs/10_ban_giao_tv2_tv3.md):** bản tích hợp đủ sáu chương (gồm Chương 5 của TV2 từ PR #6), việc đã xong, việc còn lại theo người, hạn và reviewer.
 - [Kiểm thử PostgreSQL 17: run 44654667107](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44654667107): 6 unit parser, 14/14 kiểm tra tệp, 40 PASS ràng buộc, 3 PASS validation, 71 đối soát tích hợp; giữ seed636.
 - [Kiểm thử từ DB trắng ngày 20/11 sau tích hợp PR #8](tests/week2_tv1_integration_log.md): PostgreSQL 17.12 có đăng nhập scram. Kết quả: catalog đạt 15/15, B12 K01–K05 đạt, reader đạt 12/12, report đạt 10/10, S01–S16 đạt 18/18.
-- PR #5 đã đóng, không merge; nội dung cần thiết đã nằm trong nhánh `fix/tv1-integration-gate2` (PR #7). PR #8 của TV3 đã được gộp vào nhánh này. Chưa có gì merge vào `main`. Kết quả CI không thay chữ ký hay review TV2/TV3.
+- PR #5 đã đóng không merge riêng; PR #8 (TV3) và nội dung PR #6 (TV2) đã được tích hợp vào PR #7 (TV1). **PR #7 là đầu mối hợp nhất về `main` theo biên bản Gate 2**; trạng thái merge cuối xem [PR #7](https://github.com/Linhlss/CSDL-Nh-m-38/pull/7). Kết quả CI không thay ảnh hay chữ ký Gate 3/4.
 
 ## Đọc và làm việc
 

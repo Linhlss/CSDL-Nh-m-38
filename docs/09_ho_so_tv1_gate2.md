@@ -83,7 +83,7 @@ Không được tự gán chữ ký TV2/TV3, không đánh dấu Gate 2 đã đ�
 ### 5.3. X01–X07 (P0-A2, A3; P1-A4…A7)
 
 Xem bảng [docs/07 mục 10.1](07_ma_tran_truy_van_va_review.md) và [nhật ký quyết định mục 9](../meetings/decision_log.md#issue9). Tóm tắt:
-- **X01:** chọn phương án (b), **chờ TV2 xác nhận**.
+- **X01:** chọn phương án (b); **TV1 báo nhóm đã thống nhất ngày 20/11** (xem nhật ký Gate 2; không phải comment review cá nhân).
 - **X02:** đã review và chấp nhận.
 - **X03–X06:** đã sửa tài liệu và ERD.
 - **X07:** giữ quyết định E1 là assertion; test âm được gia cố.
@@ -103,3 +103,10 @@ Chi tiết lệnh, expected/actual/SQLSTATE và md5 nằm ở [tests/week2_tv1_i
 - **Cần review:**
   - **TV2:** xác nhận X01(b); review seed636, QSQL01–10, S01–S16 và Chương 5; dựng DB trên Windows.
   - **TV3:** review bản tích hợp, B12/K01–K05, QRA01–10, QRA07 phép chia, và quyết định X03–X07.
+
+
+## 6. Chốt Gate 2 theo xác nhận chủ repo — 20/11/2026
+
+- **PASS phần kỹ thuật và nội dung:** theo TV1 báo lại TV2 và TV3 đã đồng ý, bao gồm X01(b) và bản tích hợp sáu chương. Nguồn: [`meetings/decision_log.md` mục 10](../meetings/decision_log.md#gate2). **Không tạo giả review hoặc chữ ký cá nhân.**
+- Đối chứng kỹ thuật trước chốt: commit `4bf6e738`, [CI `44670911673`](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44670911673) PASS; dữ liệu mô phỏng không đổi. Khi PR #7 về main, cần ghi lại SHA và kết quả CI trên main trong bình luận PR/Issue, không suy ra CI cũ là CI sau merge.
+- Chưa hoàn tất: ảnh QSQL/SEC, xác nhận Windows của TV2, nguồn giáo trình, PDF cuối, phân công xếp loại/chữ ký, Gate 3/4 và nộp.

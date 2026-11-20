@@ -166,7 +166,7 @@ TV1 xử lý trên nhánh `fix/tv1-integration-gate2`, sau khi đã fast-forward
 
 | ID | Trạng thái | Thay đổi | Còn chờ |
 |---|---|---|---|
-| X01 | **Đã chọn (b)**, chờ TV2 xác nhận | [03](03_dac_ta_nghiep_vu.md) mục 3: `vai_tro` chỉ là thuộc tính mô tả; quyền thật do role PostgreSQL thực thi. Công bố 13/63 sự kiện do `THONG_KE` ghi và 11/63 do `QUAN_TRI` ghi. Chương 3 mục 3.3 có bảng giới hạn. Seed, expected và hash nghiệp vụ không đổi | TV2 xác nhận phương án (b) |
+| X01 | **Chốt (b) — theo TV1 báo nhóm đồng ý 20/11** | [03](03_dac_ta_nghiep_vu.md) mục 3: `vai_tro` chỉ là thuộc tính mô tả; quyền thật do role PostgreSQL thực thi. Công bố 13/63 sự kiện do `THONG_KE` ghi và 11/63 do `QUAN_TRI` ghi. Chương 3 mục 3.3 có bảng giới hạn. Seed, expected và hash nghiệp vụ không đổi | TV1 báo TV2 đã xác nhận; không có comment GitHub riêng |
 | X02 | Đã review, chấp nhận | TV1 thêm `tests/security_b12_tv1.sql`, kiểm ma trận quyền 3 role × 8 đối tượng × 5 quyền. Admin `DELETE`/`TRUNCATE` hai bảng lịch sử bị từ chối với `42501`. Admin vẫn gọi được `fn_chuyen_noi_bo` (rollback). CI chạy thêm catalog C01–C15 và đăng nhập thật. TV1 chấp nhận đưa `05_security.sql` vào `week2_evolved` | — |
 | X03 | Đã sửa | [04](04_data_dictionary_va_chuan_hoa.md): mọi câu "chưa có trigger/B06" được gắn rõ "DDL tuần 1" kèm trạng thái tuần 2. Chốt 3NF có điều kiện; `ngay_bien_dong` là dư thừa có kiểm soát qua B09 | TV2 review chuẩn hóa |
 | X04 | Đã sửa | Phụ đề đổi thành "Thiết kế v1 — Gate 1 PASS 16/11/2026" trong nguồn `scripts/render_week1_diagrams.py`; sinh lại `.drawio`, `.svg` và `.png` (2300×1626). Sơ đồ phân rã chức năng không đổi byte | — |
@@ -174,4 +174,4 @@ TV1 xử lý trên nhánh `fix/tv1-integration-gate2`, sau khi đã fast-forward
 | X06 | Đã chốt là giới hạn | [03](03_dac_ta_nghiep_vu.md) P2 và Chương 3: nằm ngoài phạm vi B15. Không thêm CHECK theo `CURRENT_DATE` vì sẽ làm kiểm thử không tái lập được | — |
 | X07 | Giữ quyết định E1 | Test âm E1 trong `tests/constraints_week2.sql` được gia cố: xác nhận INSERT trùng thực sự được ghi, rồi assertion mới báo `23514` và INSERT được hoàn tác. Không còn PASS nhầm khi một trigger khác chặn INSERT | — |
 
-TV1 không tự đánh dấu Gate 2 PASS. Gate 2 chờ TV2 và TV3 xác nhận bản tích hợp.
+**Cập nhật sau review 20/11:** theo TV1 báo lại, cả nhóm đã đồng ý và Gate 2 **PASS (phần kỹ thuật/nội dung)**; nguồn xác nhận gián tiếp ở [nhật ký quyết định mục 10](../meetings/decision_log.md#gate2). Chưa có comment/chữ ký riêng của TV2/TV3; Gate 3/4 vẫn mở.

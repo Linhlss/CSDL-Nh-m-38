@@ -195,8 +195,8 @@ Schema/ERD/từ điển đã thống nhất về cấu trúc 7 bảng/35 cột. 
 - [x] **W2-T1-11 · 20–21/11:** Chạy kiểm thử **S17/S18/S19** trong DB test: FK không tồn tại, ngày kết thúc nhỏ hơn bắt đầu, sự kiện có hai FK `NULL`; lưu kết quả PostgreSQL từ chối đúng.
 - [x] **W2-T1-12 · 21/11:** Kiểm thử bổ sung ràng buộc xuyên bảng và rollback chuyển nội bộ: ít nhất một ca đúng, một ca cố ý sai; ghi expected/actual và sửa lỗi.
 - [x] **W2-T1-13 · 21/11:** Hoàn thành phần phụ thuộc hàm, chứng minh 3NF và bản giải thích lựa chọn 7 bảng; soát tên cột khớp code và ERD.
-- [ ] **W2-T1-14 · 21–22/11:** Hoàn thiện **Chương 1–3** (trừ bảng/ảnh dữ liệu TV2 phụ trách), nhận xét của TV2/TV3 phải được xử lý và đánh dấu.
-- [ ] **W2-T1-15 · 22/11:** Kiểm tra G2 theo ma trận yêu cầu của cô: không thiếu 10 RA, 10 SQL, 2 demo, phần ràng buộc; lập danh sách lỗi còn lại có owner và hạn sửa trước 24/11.
+- [x] **W2-T1-14 · 21–22/11:** Hoàn thiện **Chương 1–3** (trừ bảng/ảnh dữ liệu TV2 phụ trách), nhận xét của TV2/TV3 phải được xử lý và đánh dấu.
+- [x] **W2-T1-15 · 22/11:** Kiểm tra G2 theo ma trận yêu cầu của cô: không thiếu 10 RA, 10 SQL, 2 demo, phần ràng buộc; lập danh sách lỗi còn lại có owner và hạn sửa trước 24/11.
 
 ## W2 / TV2 — Sinh dữ liệu, 10 SQL, kết quả kiểm thử
 
@@ -258,9 +258,11 @@ Schema/ERD/từ điển đã thống nhất về cấu trúc 7 bảng/35 cột. 
 
 ## W2 / Cả nhóm — Gate 2 (22/11)
 
-- [ ] **W2-G-01:** Chạy và kiểm tra ít nhất một lần DDL → nạp dữ liệu → QSQL → RA đối soát → demo bảo mật, ghi mọi lỗi bằng ID/owner/hạn.
-- [ ] **W2-G-02:** 10 SQL + 10 RA phải có **lời giải đầy đủ**, không chỉ 10 tiêu đề; hai demo bảo mật có **script thực thi**.
-- [ ] **W2-G-03:** TV1 xác nhận DDL/ERD/data dictionary thống nhất, TV2 xác nhận dữ liệu/10 SQL, TV3 xác nhận 10 RA/demo; ghi biên bản Gate 2.
+- [x] **W2-G-01:** Chạy và kiểm tra ít nhất một lần DDL → nạp dữ liệu → QSQL → RA đối soát → demo bảo mật, ghi mọi lỗi bằng ID/owner/hạn.
+- [x] **W2-G-02:** 10 SQL + 10 RA phải có **lời giải đầy đủ**, không chỉ 10 tiêu đề; hai demo bảo mật có **script thực thi**.
+- [x] **W2-G-03:** TV1 xác nhận DDL/ERD/data dictionary thống nhất, TV2 xác nhận dữ liệu/10 SQL, TV3 xác nhận 10 RA/demo; ghi biên bản Gate 2.
+
+> **Chốt Gate 2 — 20/11/2026: PASS (kỹ thuật/nội dung).** TV1 báo cả TV2 và TV3 đã thống nhất bản tích hợp và **X01(b)**; chưa có review riêng trên GitHub nên ghi nguồn gián tiếp, không ký thay. Có đủ 10 QSQL, 10 QRA, hai demo bảo mật và bộ test DB trắng; [CI trên ứng viên `4bf6e738`](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44670911673) PASS. Chứng cứ chốt ở [nhật ký quyết định, mục 10](../meetings/decision_log.md#gate2). **Ảnh, Windows TV2, PDF, chữ ký, Gate 3/4 còn mở**, không đánh dấu hoàn thành trước khi làm thật.
 
 ---
 

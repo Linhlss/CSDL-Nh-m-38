@@ -279,3 +279,19 @@ E1: assertion chỉ dùng ở khâu nghiệm thu, chưa chống ghi trùng ngay 
 | X07 | Giữ E1 là assertion. Test âm được gia cố để chứng minh INSERT trùng đã được ghi trước khi assertion báo lỗi | TV1 | — |
 
 **Bằng chứng:** [log kiểm thử từ DB trắng](../tests/week2_tv1_integration_log.md) và CI trên commit tích hợp cuối, liên kết ghi trong log.
+
+
+<a id="gate2"></a>
+## 10. Chốt Gate 2 — 20/11/2026 (xác nhận do TV1 báo lại từ nhóm)
+
+| Trường | Giá trị / phạm vi |
+|---|---|
+| **Gate 2** | **PASS — phần kỹ thuật và nội dung sáu chương** |
+| Ngày tiếp nhận xác nhận | **20/11/2026** (ngày chủ repo thông báo trong cuộc trò chuyện; không suy diễn ngày/giờ họp) |
+| TV1, TV2, TV3 | **Theo TV1, cả ba đã đồng ý bản tích hợp**. Chưa có review riêng trực tiếp của TV2/TV3 trên GitHub; đây là **xác nhận gián tiếp từ trưởng nhóm**, không phải chữ ký hoặc comment cá nhân của hai người. |
+| X01 | **Chọn (b)**: `tai_khoan.vai_tro` chỉ mang tính mô tả; quyền ghi thực tế do PostgreSQL role. **Giữ nguyên seed636**, gồm 13/63 sự kiện gắn `THONG_KE`; không đổi QSQL10/expected. Đây là giới hạn được công bố, không khẳng định kiểm soát vai trò nghiệp vụ. |
+| Phần được duyệt | 7 bảng/ERD, B06–B15 và E1; dữ liệu seed636; Chương 1–6 (Chương 3.5/5 của TV2, Chương 4/6 của TV3); 10 SQL, 10 RA và QRA07 phép chia; 2 demo bảo mật B1/B2 và B12. |
+| Bằng chứng thực thi trước khi chốt | [CI push](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44670909035), [CI PR](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44670911673) trên `4bf6e738`: PASS; 40 ca ràng buộc, 3 validation, 71 đối soát, S01–S16 18/18, catalog 15/15, reader 12/12, report 10/10. |
+| Việc chưa nằm trong Gate 2 | 10 ảnh SQL, ảnh B1/B2, bản PDF chính thức, review hình thức, môi trường Windows TV2, nguồn giáo trình, xếp loại/chữ ký và nghiệm thu Gate 3/4. Người phụ trách và hạn nằm trong `docs/10_ban_giao_tv2_tv3.md`. |
+
+**Quy tắc lưu vết:** Đây là ghi nhận lời xác nhận của trưởng nhóm, **không mạo danh review của TV2/TV3**. Khi có xác nhận trực tiếp trên PR, có thể bổ sung liên kết. Các log tuần 1 và các trạng thái "chờ review" trong phần nhật ký lịch sử trước ngày chốt được giữ lại để truy vết. Sau khi merge PR #7 lên `main`, phải chạy CI lại trên commit `main` thực tế. Không đánh dấu Gate 3/4 hoặc nộp báo cáo hoàn thành.

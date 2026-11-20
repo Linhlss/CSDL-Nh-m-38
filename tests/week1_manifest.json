@@ -25,8 +25,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 7237,
-      "sha256": "f045ea3ad1d1597f4d773eb9b33d630a7716c0e0ae45be9b385c555ec8815306"
+      "bytes": 7423,
+      "sha256": "c36d88b105834bda7ef1bf681ac34a45260ae995a31c0dc0110a5d251e29371c"
     },
     {
       "path": "data/README.md",
@@ -115,18 +115,18 @@
     },
     {
       "path": "docs/02_bao_cao_suon.md",
-      "bytes": 108144,
-      "sha256": "8b7209b3ab1e84804dc61504ec669a88631587b88bfa65e653ae1a413d16816a"
+      "bytes": 108686,
+      "sha256": "71878136b558b6596234a5e3e598bd034e723ac1b96b07546fc2e3b131ba07ee"
     },
     {
       "path": "docs/03_CHECKLIST_DU_AN.md",
-      "bytes": 62683,
-      "sha256": "da0f2cd46cde98bfbbc6e29d835e5bbdb2e17d9834202f5144156b609701ab44"
+      "bytes": 63315,
+      "sha256": "07cba54883d8cbe228efcec7f3ea9afc0e2c238c876361dfd3f6d7800be1fdf4"
     },
     {
       "path": "docs/03_dac_ta_nghiep_vu.md",
-      "bytes": 22945,
-      "sha256": "ce36603b96eebb9978cfbbcca3385315d56e70c215381a9f77b301ab06786117"
+      "bytes": 23154,
+      "sha256": "3afe6969fbf9525b8ee7e73548e3fc38e589d8180f2b69eb4238b1a7684105c7"
     },
     {
       "path": "docs/04_data_dictionary_va_chuan_hoa.md",
@@ -150,8 +150,8 @@
     },
     {
       "path": "docs/07_ma_tran_truy_van_va_review.md",
-      "bytes": 25731,
-      "sha256": "b2377b1e6fcaf4c34e27e35a7ada46134fda2721db026fdda6bafd322d3f2a7c"
+      "bytes": 25996,
+      "sha256": "3f28e9cdb65384c0e6d41f8d33dcb91fb6dddbc227f16b75bec409962ecbb2fa"
     },
     {
       "path": "docs/08_huong_dan_dung_csdl.md",
@@ -160,13 +160,13 @@
     },
     {
       "path": "docs/09_ho_so_tv1_gate2.md",
-      "bytes": 10839,
-      "sha256": "794542c2609b4ee6880ec1431fd25999e3648cf6ccceb711002e3ab74896c445"
+      "bytes": 11778,
+      "sha256": "27007f67d7eb169524ac4c182ca0085821933c194eae0c5304d5eedcb5fe4cee"
     },
     {
       "path": "docs/10_ban_giao_tv2_tv3.md",
-      "bytes": 8638,
-      "sha256": "a37b509e88de4cffb6135b8809d210e5c1f2bcb113e993ba59566ff5c6a90607"
+      "bytes": 9432,
+      "sha256": "7577b1b532e2ece42841ee322caf5d663e7426f797bf4b80a1ba91bacc7e9818"
     },
     {
       "path": "evidence/security/.gitkeep",
@@ -180,8 +180,8 @@
     },
     {
       "path": "meetings/decision_log.md",
-      "bytes": 40329,
-      "sha256": "4d005234703d19e4045a38a4d1fe6fa353e8cbef23d009402ba9168c6541aed1"
+      "bytes": 42662,
+      "sha256": "7bdb55e0c9836185fab759b45474484a500c30ee5828e403a8c43f5850fde68c"
     },
     {
       "path": "report/.gitkeep",
