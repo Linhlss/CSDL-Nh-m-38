@@ -129,7 +129,7 @@ class Drawing:
 
 
 def erd(tables):
-    d = Drawing("erd_v1", "MÔ HÌNH THỰC THỂ – LIÊN KẾT", "Đề tài 17 • Bộ bàn giao TV1 • Cấu trúc v1 / chờ review chéo • 11/11/2026")
+    d = Drawing("erd_v1", "MÔ HÌNH THỰC THỂ – LIÊN KẾT", "Đề tài 17 • Bộ bàn giao TV1 • Thiết kế v1 — Gate 1 PASS 16/11/2026")
     positions = {
         "to_dan_pho": (30, 110, 250), "dia_chi": (30, 335, 250), "ho_cu_tru": (30, 580, 250),
         "cu_dan": (395, 110, 325), "qua_trinh_cu_tru": (395, 410, 325),

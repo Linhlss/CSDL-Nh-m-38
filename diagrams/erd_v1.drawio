@@ -8,7 +8,7 @@
         <mxCell id="n1" value="MÔ HÌNH THỰC THỂ – LIÊN KẾT" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=23;fontColor=#183153;fontStyle=1;spacingLeft=5;" vertex="1" parent="1">
           <mxGeometry x="30" y="20" width="1090" height="28" as="geometry" />
         </mxCell>
-        <mxCell id="n2" value="Đề tài 17 • Bộ bàn giao TV1 • Cấu trúc v1 / chờ review chéo • 11/11/2026" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#52657b;fontStyle=0;spacingLeft=5;" vertex="1" parent="1">
+        <mxCell id="n2" value="Đề tài 17 • Bộ bàn giao TV1 • Thiết kế v1 — Gate 1 PASS 16/11/2026" style="text;html=1;whiteSpace=wrap;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=#52657b;fontStyle=0;spacingLeft=5;" vertex="1" parent="1">
           <mxGeometry x="30" y="55" width="1090" height="22" as="geometry" />
         </mxCell>
         <mxCell id="n3" value="" edge="1" parent="1" style="endArrow=none;startArrow=none;rounded=0;strokeColor=#52657b;strokeWidth=1.6;" relationship="dia_chi.ma_to">

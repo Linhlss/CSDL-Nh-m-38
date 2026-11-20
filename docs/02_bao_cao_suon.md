@@ -24,7 +24,7 @@
 
 Quản lý cư dân cần trả lời được một người cư trú ở đâu tại một thời điểm, đã thay đổi nơi ở ra sao và ai ghi nhận biến động đó. Lưu duy nhất địa chỉ hiện tại sẽ không đáp ứng được câu hỏi lịch sử. Đề tài xây dựng mô hình quan hệ tách hồ sơ cư dân, vị trí cư trú, khoảng thời gian và nhật ký sự kiện để bảo toàn những thông tin này.
 
-Mục tiêu là phân tích nghiệp vụ, thiết kế ERD, ánh xạ quan hệ, phân tích chuẩn hóa, triển khai ràng buộc và kiểm chứng truy vấn/bảo mật trên PostgreSQL. Trong tuần 1, nhóm chuẩn bị bộ thiết kế để các thành viên triển khai thống nhất; việc tạo dữ liệu chính thức, 10 SQL, 10 biểu thức đại số quan hệ và hai demo là sản phẩm tiếp theo.
+Mục tiêu là phân tích nghiệp vụ, thiết kế ERD, ánh xạ quan hệ, phân tích chuẩn hóa, triển khai ràng buộc và kiểm chứng truy vấn/bảo mật trên PostgreSQL. Trong tuần 1, nhóm chuẩn bị bộ thiết kế để các thành viên triển khai thống nhất. Đến tuần 2, nhóm đã có thêm dữ liệu chính thức (seed636), 10 SQL, 10 biểu thức đại số quan hệ, ràng buộc nâng cao và hai demo bảo mật, đều được kiểm thử trên PostgreSQL 17. Phần nghiệm thu chung của cả nhóm vẫn theo Gate 2 và Gate 3.
 
 Mọi nhân vật và địa chỉ đều là dữ liệu mô phỏng. Đề tài giới hạn một phường giả lập, không có giá trị pháp lý, không kết nối dữ liệu dân cư thật và không xây dựng ứng dụng web/mobile.
 
@@ -65,7 +65,7 @@ Một đợt có hiệu lực tại d khi đã bắt đầu và chưa kết thú
 
 Với ngày chuyển t, đợt cũ kết thúc t−1, đợt mới bắt đầu t. Sự kiện đến chỉ có đợt mới; đi chỉ có đợt cũ; nội bộ có hai đợt của cùng cư dân và khác hộ. Ví dụ cũ ở H-A tới hết 14/11, mới ở H-B từ 15/11 thì sự kiện chuyển ghi ngày 15/11. Nhiều thao tác phải cùng một giao dịch để không xuất hiện lịch sử đã đóng nhưng thiếu nơi mới hoặc thiếu sự kiện.
 
-Không đổi liên kết hộ–địa chỉ/tổ đã được lịch sử dùng để biểu diễn chuyển nơi ở. Nhật ký không sao chép tên người hoặc địa chỉ. Quy tắc B01–B18 và các giới hạn thực thi hiện tại được công bố trong đặc tả; chưa coi các trigger/transaction dự kiến là đã chạy.
+Không đổi liên kết hộ–địa chỉ/tổ đã được lịch sử dùng để biểu diễn chuyển nơi ở. Nhật ký không sao chép tên người hoặc địa chỉ. Quy tắc B01–B18 và các giới hạn thực thi hiện tại được công bố trong đặc tả. Từ tuần 2, các trigger, ràng buộc loại trừ và transaction trong `sql/02_constraints.sql` đã được chạy thật và có log (mục 3.6). Những gì chưa thực thi được nêu ở mục 3.3.
 
 Một người chỉ có đợt tạm trú 01/11–19/11/2026 đã hết hạn, không có `CHUYEN_DI`, vẫn thuộc QRA09/QSQL07 tại ngày 20/11; ngày 19/11 đợt còn hiệu lực nên người đó không thuộc kết quả này. Điều kiện truy vấn dựa vào khoảng ngày, không bắt buộc có sự kiện chuyển đi. Người chưa có đợt hoặc chỉ có đợt tương lai vẫn bị loại đúng theo B16.
 
@@ -93,7 +93,7 @@ Một sự kiện có tối đa một đợt cũ và tối đa một đợt mớ
 
 ![Hình 2 — ERD của bộ bàn giao v1](../diagrams/erd_v1.png)
 
-ERD thể hiện đủ 35 cột và 7 FK. Ký hiệu ? là cột cho phép NULL. Tính duy nhất ghép của địa chỉ là `(ma_to, dia_chi_chuan)`, không phải từng cột riêng. Bản nguồn `.drawio` và bản vector `.svg` được lưu cùng ảnh để chỉnh sửa hoặc in rõ hơn.
+ERD thể hiện đủ 35 cột và 7 FK. Ký hiệu ? là cột cho phép NULL. Tính duy nhất ghép của địa chỉ là `(ma_to, dia_chi_chuan)`, không phải từng cột riêng. Bản nguồn `.drawio` và bản vector `.svg` được lưu cùng ảnh để chỉnh sửa hoặc in rõ hơn. Ngày 20/11/2026 (X04), phụ đề của sơ đồ được đổi thành "Thiết kế v1 — Gate 1 PASS 16/11/2026". Cả ba tệp `.drawio`, `.svg` và `.png` được sinh lại từ cùng nguồn `scripts/render_week1_diagrams.py`; cấu trúc ERD không đổi.
 
 ### 2.4. Giải thích thiết kế lịch sử
 
@@ -143,6 +143,16 @@ Lược đồ cơ bản trong `sql/01_schema.sql` có 7 PK, 7 FK, 3 UNIQUE nghi�
 
 **B15 (bổ sung tuần 2):** `sql/02_constraints.sql` hiện có CHECK tên/địa chỉ không chỉ là khoảng trắng và trigger chặn ngày sinh, ngày lập hộ đứng sau ngày bắt đầu cư trú. Kiểm cả chiều INSERT/UPDATE đợt và UPDATE ngày ở hồ sơ cư dân/hộ; dữ liệu lỗi được thử trong transaction rollback. B11 chỉ khóa **liên kết địa lý đã có lịch sử**, không cấm sửa ghi chú hay các liên kết chưa sử dụng. B10 là một đường thao tác có hỗ trợ; quyền ghi SQL trực tiếp vẫn phải được quản lý và ứng dụng phải dùng giao dịch đúng quy trình. Không khẳng định đã kiểm chứng concurrency đa kết nối ngoài các ca thực tế có trong biên bản.
 
+**Giới hạn công bố (chốt 20/11/2026 theo review X01–X07 của TV3):**
+
+| Mã | Giới hạn hoặc quyết định | Cách xử lý trong đồ án |
+|---|---|---|
+| X01 | `tai_khoan.vai_tro` chỉ mang tính mô tả và không thực thi quyền ghi. Trong seed636, 13/63 sự kiện do tài khoản `THONG_KE` ghi và 11/63 do `QUAN_TRI` ghi | Chọn phương án (b): quyền thật do role PostgreSQL thực thi, và `csdl17_report` không ghi được. Ràng buộc "chỉ `CAN_BO` được ghi biến động" nằm ngoài phạm vi v1. **Chờ TV2 xác nhận** |
+| X02 | Admin không được xóa vật lý lịch sử (B12) | `REVOKE DELETE` trên hai bảng lịch sử. Admin vẫn còn `UPDATE` trong giới hạn của trigger B08–B09 |
+| X05 | `ngay_bien_dong` là ngày hiệu lực, `thoi_diem_ghi` là thời điểm ghi nhận | Cho phép đăng ký trước biến động có hiệu lực trong tương lai; không có ràng buộc so với `CURRENT_DATE` |
+| X06 | Người hoặc hộ chưa có đợt nào vẫn nhập được ngày sinh hoặc ngày lập hộ ở tương lai | Ngoài phạm vi B15 hiện tại. B15 sẽ chặn khi mở đợt đầu tiên |
+| X07 | E1 là assertion `fn_assert_e1` trong validation, không phải UNIQUE | Không chặn INSERT tức thì. Test âm xác nhận rằng INSERT trùng vẫn được ghi, rồi assertion báo `23514` |
+
 Bộ kiểm thử tích hợp `tests/constraints_week2.sql` được thiết kế chạy trên database có seed trong một `BEGIN…ROLLBACK` riêng; gồm ca hợp lệ và lỗi `23P01` (exclusion), `23514` (vi phạm nghiệp vụ) và `23503` (FK). Log CI/psql của lần chạy thật là căn cứ để ghi PASS, không phải sự tồn tại của file SQL. `sql/06_validation.sql` bổ sung kiểm tra không còn vi phạm trong dữ liệu đã nạp.
 
 ### 3.4. Chuẩn hóa
@@ -161,15 +171,20 @@ Bộ kiểm thử tích hợp `tests/constraints_week2.sql` được thiết k�
 
 Với tập phụ thuộc đã công bố, sáu bảng danh mục/hồ sơ/lịch sử không có phụ thuộc bắc cầu giữa các thuộc tính không khóa và đáp ứng phân tích 3NF. Tách tên tổ khỏi địa chỉ, địa chỉ khỏi đợt và tên người khỏi nhật ký tránh cập nhật cùng thông tin ở nhiều nơi.
 
-Riêng ngày biến động có thể suy ra từ biên ngày của đợt theo quy tắc đã chọn. Khi FK nullable và một đợt được nhiều sự kiện tham chiếu, xuất hiện phụ thuộc có điều kiện trên các tập con. Bản đề xuất TV1 tại Gate 2 quyết định giữ `ngay_bien_dong` là **dư thừa có kiểm soát**, có trigger B09 đồng bộ, đồng thời không khẳng định cả 7 bảng đạt 3NF nghiêm ngặt theo mọi phụ thuộc có điều kiện. Chờ TV2/TV3 kiểm tra chéo trước khi đưa thành kết luận chung. Phân tích đầy đủ, phạm vi kết luận và việc chốt tuần 2 được ghi ở mục 5 của tài liệu chuẩn hóa.
+Riêng ngày biến động có thể suy ra từ biên ngày của đợt theo quy tắc đã chọn. Khi FK nullable và một đợt được nhiều sự kiện tham chiếu, xuất hiện phụ thuộc có điều kiện trên các tập con. Bản đề xuất TV1 tại Gate 2 quyết định giữ `ngay_bien_dong` là **dư thừa có kiểm soát**, có trigger B09 đồng bộ, đồng thời không khẳng định cả 7 bảng đạt 3NF nghiêm ngặt theo mọi phụ thuộc có điều kiện. TV3 đã đồng ý giữ `ngay_bien_dong` (review W3-T3-08 ngày 20/11). Kết luận chỉ thành kết luận chung khi TV2 cũng kiểm tra chéo. Phân tích đầy đủ, phạm vi kết luận và việc chốt tuần 2 được ghi ở mục 5 của tài liệu chuẩn hóa.
 
-Quyết định C1 không đổi tập khóa/FD đã công bố và không làm đợt–sự kiện thành quan hệ bắt buộc một–một. TV1 đã hoàn thiện đề xuất chốt DEC12 ở `docs/04_data_dictionary_va_chuan_hoa.md`; review độc lập của TV2/TV3 là điều kiện nghiệm thu Gate 2.
+Quyết định C1 không đổi tập khóa/FD đã công bố và không làm đợt–sự kiện thành quan hệ bắt buộc một–một. TV1 đã hoàn thiện đề xuất chốt DEC12 ở `docs/04_data_dictionary_va_chuan_hoa.md`. TV3 đã review xong. Review độc lập của TV2 vẫn là điều kiện nghiệm thu Gate 2.
 
 ### 3.5. Kế hoạch dữ liệu và kiểm tra
 
 **Phạm vi bàn giao tuần 1:** TV2 chuẩn bị kế hoạch dữ liệu/SQL, fixture nhỏ có đáp án tay và ma trận kịch bản; việc nghiệm thu bộ dữ liệu lớn là bước riêng của tuần 2. Bộ seed chính thức hiện có 636 bản ghi giả lập: **8 tổ, 50 địa chỉ, 60 hộ, 200 cư dân, 250 đợt, 63 sự kiện, 5 tài khoản**. Dùng `sql/03_seed.sql`, không nạp CSV chồng lên seed. Cách tái lập hai database tách biệt nằm tại `docs/08_huong_dan_dung_csdl.md`. TV2 vẫn cần hoàn thiện phần giải thích nguồn/thiết kế sinh dữ liệu và Chương 5.
 
-TV1 đã chuẩn bị 30 tình huống kiểm tra thiết kế với đầu ra kỳ vọng trong `tests/week1_design_cases.md` và ma trận 20 câu hỏi. Kết quả thực thi PostgreSQL, S01–S21, ảnh SQL và kiểm chứng dữ liệu chính thức sẽ được bổ sung sau; tự kiểm tra tài liệu không thay thế kiểm thử DB.
+TV1 đã chuẩn bị 30 tình huống kiểm tra thiết kế với đầu ra kỳ vọng trong `tests/week1_design_cases.md` và ma trận 20 câu hỏi. Kết quả thực thi PostgreSQL trên seed636 đã có cho các nhóm ca sau:
+- S01–S16: 18/18 ca có chấm điểm đạt, cộng 2 ca chỉ để thông tin.
+- S17–S19: kiểm FK, NULL và trùng khóa.
+- S20–S21: catalog quyền và đăng nhập thật.
+
+Kết quả được ghi trong CI và [log kiểm thử từ DB trắng ngày 20/11](../tests/week2_tv1_integration_log.md). Ảnh SQL cho bản nộp vẫn chờ Gate 3. Tự kiểm tra tài liệu không thay thế kiểm thử DB.
 
 ### 3.6. Kiểm thử ràng buộc nâng cao và giao dịch
 
@@ -189,6 +204,14 @@ TV1 đã chuẩn bị 30 tình huống kiểm tra thiết kế với đầu ra k
 | B15: tên rỗng, ngày sinh/đặt hộ muộn; sửa ngược hồ sơ | Lỗi `23514`; dữ liệu hợp lệ được nhận | B15 |
 
 **Kiểm chứng ngày 19/11:** Workflow PostgreSQL 17 tại [run 44533515990](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44533515990) đã thành công: 20 thông báo PASS của fixture, 1 PASS validation, không có lỗi PostgreSQL bất ngờ; chuỗi SQL01–10 thực thi thành công. Log này là kết quả kỹ thuật tuần 2, chưa thay thế biên bản Gate 3.
+
+**Kiểm chứng ngày 20/11 (TV1, sau khi tích hợp PR #8):** nhóm dựng lại hai database trắng (seed636 và fixture RA) trên PostgreSQL 17.12, đăng nhập bằng mật khẩu scram qua TCP. Kết quả:
+- Ràng buộc và E1/B15: `constraints_week2` đạt 40 PASS, validation đạt 3 PASS.
+- Truy vấn và VIEW: 71 phép đối soát RA–SQL–VIEW–role đều PASS; S01–S16 đạt 18/18.
+- Bảo mật: catalog C01–C15 đạt 15/15; ma trận quyền B12 K01–K05 đạt; đăng nhập thật reader đạt 12/12 và report đạt 10/10.
+- Toàn vẹn dữ liệu: md5 của seed636 không đổi sau các test có rollback.
+
+Chi tiết lệnh, expected/actual/SQLSTATE và đường dẫn workflow CI nằm trong [log tích hợp TV1](../tests/week2_tv1_integration_log.md).
 
 **Trình tự nghiệm thu cuối TV1:** Schema → Constraints → Seed → Validation (gồm E1/B15) → 10 SQL → Security; chạy riêng DB fixture RA với security và kiểm phép chia QRA07. Python đối soát tự động tại `scripts/verify_gate2_integration.py`. Hướng dẫn thống nhất ở `docs/08_huong_dan_dung_csdl.md`. Việc chạy CI chưa tự thay cho review của hai thành viên.
 

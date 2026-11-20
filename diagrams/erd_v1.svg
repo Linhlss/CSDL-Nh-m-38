@@ -2,7 +2,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1150" height="813" viewBox="0 0 1150 813">
   <rect width="1150" height="813" fill="white" />
   <text x="35" y="42.625" fill="#183153" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="start">MÔ HÌNH THỰC THỂ – LIÊN KẾT</text>
-  <text x="35" y="70.5" fill="#52657b" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">Đề tài 17 • Bộ bàn giao TV1 • Cấu trúc v1 / chờ review chéo • 11/11/2026</text>
+  <text x="35" y="70.5" fill="#52657b" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">Đề tài 17 • Bộ bàn giao TV1 • Thiết kế v1 — Gate 1 PASS 16/11/2026</text>
   <polyline points="155,216 155,335" fill="none" stroke="#52657b" stroke-width="1.6" />
   <text x="170" y="243.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">1</text>
   <text x="170" y="324.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">0..N</text>
