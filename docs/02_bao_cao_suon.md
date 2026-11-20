@@ -442,7 +442,7 @@ Khi đối soát, cần xử lý các khác biệt sau:
 
 ## CHƯƠNG 6 — BẢO MẬT CSDL
 
-> Người viết: TV3. Reviewer được phân công: TV2. Nháp ngày 16/11/2026. Bằng chứng kỹ thuật do agent hỗ trợ ghi: [review TV3 trong nhật ký](../meetings/decision_log.md#review-tv3) và [log tuần 1 ngày 16/11](../tests/week1_execution_results.json) trên PostgreSQL 17.11, tiny29 và seed636 hiện hành. Đây không phải chữ ký review của TV2. Ảnh minh chứng sẽ chụp trên seed đã merge, hạn 24/11. Script: [sql/05_security.sql](../sql/05_security.sql). Kế hoạch chi tiết: [06b_bao_mat.md](06b_bao_mat.md).
+> Người viết: TV3. Reviewer được phân công: TV2. Nháp ngày 16/11/2026, cập nhật 20/11/2026 theo bản tích hợp có `02_constraints.sql`. Bằng chứng tuần 2: [biên bản kiểm thử quyền bằng phiên đăng nhập thật](../tests/week2_security_login_log.md) trên PostgreSQL 17.11, seed636; bằng chứng tuần 1: [review TV3 trong nhật ký](../meetings/decision_log.md#review-tv3). Đây không phải chữ ký review của TV2. Ảnh minh chứng chụp trên seed đã merge, hạn 24/11. Script: [sql/05_security.sql](../sql/05_security.sql). Kế hoạch chi tiết: [06b_bao_mat.md](06b_bao_mat.md).
 
 ### 6.1. Khái quát và các rủi ro
 
@@ -470,7 +470,9 @@ Xác thực trả lời câu hỏi "bạn là ai", ví dụ đăng nhập bằng
 
 Đồ án có hai thứ cùng gọi là "tài khoản". Bảng `tai_khoan` là tài khoản nghiệp vụ mô phỏng, chỉ ghi lại ai đã ghi nhận một biến động; nó không cấp hay chặn quyền nào. Role PostgreSQL là tầng quyền thật, được hệ quản trị kiểm tra trên mọi câu lệnh. Hai tầng độc lập với nhau: khóa một dòng trong `tai_khoan` không tự thu hồi role nào.
 
-Ràng buộc toàn vẹn (PK, FK, CHECK) giữ cho dữ liệu đúng và áp dụng cho mọi người, kể cả quản trị. Ai được đọc hay sửa bảng nào thì do `GRANT` và `REVOKE` quyết định.
+Ràng buộc toàn vẹn (PK, FK, CHECK, cùng các trigger và ràng buộc loại trừ trong `02_constraints.sql`) giữ cho dữ liệu đúng và áp dụng cho mọi người, kể cả quản trị. Ai được đọc hay sửa bảng nào thì do `GRANT` và `REVOKE` quyết định.
+
+Hai cơ chế này phối hợp với nhau qua các hàm của `02_constraints.sql`. PostgreSQL mặc định cho `PUBLIC` quyền `EXECUTE` trên mọi hàm mới, nên về hình thức `csdl17_reader` gọi được hàm `fn_chuyen_noi_bo`. Tuy nhiên cả 9 hàm `fn_*` đều ở chế độ `SECURITY INVOKER`: câu lệnh bên trong hàm chạy với quyền của người gọi. Reader không có quyền `UPDATE`/`INSERT` nên lời gọi bị chặn với mã `42501`, giống như khi sửa bảng trực tiếp. Ngược lại, khi `csdl17_admin` ghi một biến động, các trigger vẫn kiểm tra chồng lấn, ngày và hai FK cũ/mới như với mọi người dùng khác. Nếu sau này có hàm chuyển sang `SECURITY DEFINER` (chạy bằng quyền chủ sở hữu), phải thu hồi `EXECUTE` của `PUBLIC` trên hàm đó.
 
 Mô hình phân quyền của đồ án:
 
@@ -551,14 +553,27 @@ Kết quả VIEW trùng từng dòng với QSQL03 cho cùng ngày 20/11/2026 tro
 
 ### 6.5. Đánh giá
 
-Cả hai demo chạy bằng role thật. Khi chạy toàn bộ script có đúng 6 lỗi `permission denied` cố ý và không lỗi nào khác. TV1 đã kiểm chứng hai cách chạy, chuyển role bằng `SET ROLE` và đăng nhập trực tiếp bằng role; dữ liệu của 7 bảng không đổi sau các lệnh bị từ chối. Script chạy lại được an toàn vì có bước kiểm tra role có sẵn, và toàn bộ phần thiết lập nằm trong một giao dịch nên lỗi ở đâu cũng rollback hết.
+Ngày 20/11/2026, TV3 chạy lại cả hai demo trên bản tích hợp tuần 2: DB dựng mới theo thứ tự `01_schema` → `02_constraints` → `03_seed` → kiểm thử ràng buộc → `06_validation` → `04_queries` → `05_security`. Kết quả ([biên bản](../tests/week2_security_login_log.md)):
+
+| Kiểm tra | Cách chạy | Kết quả |
+|---|---|---|
+| `05_security.sql` | `psql -f` dưới `postgres` | Đúng 6 lỗi `permission denied` cố ý, không lỗi nào khác |
+| Cấu hình quyền trong catalog | [security_catalog_tv3.sql](../tests/security_catalog_tv3.sql) | 14/14 PASS: role không đặc quyền, không sở hữu đối tượng, không là thành viên role khác; `PUBLIC` không có `CONNECT`/`TEMP`/`CREATE` trên database, không có quyền trên bảng; không có quyền mặc định ẩn |
+| Demo B1 | Đăng nhập thật `psql -h localhost -U csdl17_reader` | 12/12 PASS: đọc được; ghi, `TRUNCATE`, đọc `tai_khoan`, đọc VIEW, gọi `fn_chuyen_noi_bo`, tạo bảng, tạo bảng tạm và `SET ROLE csdl17_admin` đều bị chặn `42501` |
+| Demo B2 | Đăng nhập thật `psql -h localhost -U csdl17_report` | 10/10 PASS: đọc VIEW được 8 dòng; đọc 4 bảng gốc, gọi hàm, tạo bảng và `SET ROLE` đều bị chặn |
+| Dữ liệu | md5 bốn bảng trước và sau hai phiên | Không đổi |
+
+Hai phiên trên là đăng nhập thật (`session_user = current_user` = role demo, `is_superuser = off`), không phải chuyển role bằng `SET ROLE` từ tài khoản quản trị. Mật khẩu chỉ đặt tạm khi chạy và đã xóa ngay sau đó. Script chạy lại được an toàn vì có bước kiểm tra role có sẵn, và toàn bộ phần thiết lập nằm trong một giao dịch nên lỗi ở đâu cũng rollback hết.
+
+Có một chi tiết cần giải thích khi trình bày: lệnh `UPDATE` trên VIEW thống kê trả về lỗi `55000` ("cannot update view") chứ không phải `42501`. VIEW có `GROUP BY` nên PostgreSQL xác định nó không cập nhật được ngay khi phân tích câu lệnh, trước khi xét quyền. Việc `csdl17_report` không có quyền ghi trên VIEW được kiểm tra riêng trong catalog.
 
 Các hạn chế:
 
 - Số liệu tổng hợp vẫn có thể lộ thông tin khi nhóm quá nhỏ. Nếu một tổ chỉ có 1 người, con số kết hợp với hiểu biết bên ngoài có thể giúp đoán ra người đó. Có thể khắc phục bằng cách chỉ hiển thị tổ có từ k người trở lên.
 - VIEW dùng ngày tham chiếu cố định 20/11/2026 để kết quả tái lập được. Khi dùng thật sẽ thay bằng `CURRENT_DATE`.
 - Đồ án chưa demo bảo mật mức dòng (Row-Level Security), ví dụ mỗi cán bộ chỉ xem cư dân thuộc tổ mình phụ trách.
-- Đồ án chưa cấu hình xác thực thật (mật khẩu mạnh, `pg_hba.conf`, mã hóa kết nối TLS) và chưa bật ghi nhật ký truy cập. Các bước này cần khi triển khai thật và nằm ngoài phạm vi bài tập.
+- Kiểm thử đăng nhập dùng xác thực `scram-sha-256` mặc định của bản cài, qua `localhost`, với mật khẩu tạm. Đồ án chưa cấu hình chính sách mật khẩu, mã hóa kết nối TLS hay giới hạn địa chỉ trong `pg_hba.conf`, và chưa bật ghi nhật ký truy cập. Các bước này cần khi triển khai thật và nằm ngoài phạm vi bài tập.
+- Schema `public` vẫn giữ quyền `USAGE` mặc định cho `PUBLIC`. Điều này không làm lộ dữ liệu vì `PUBLIC` không còn quyền kết nối vào database demo và không có quyền trên bảng nào, nhưng một cấu hình chặt hơn sẽ thu hồi luôn quyền này.
 
 Hướng mở rộng gồm Row-Level Security theo tổ, ngưỡng k cho VIEW tổng hợp, ghi nhật ký truy cập bằng `log_statement` và `log_connections`, và sao lưu định kỳ bằng `pg_dump` kèm thử khôi phục bằng `pg_restore`.
 
@@ -575,6 +590,8 @@ Hướng mở rộng gồm Row-Level Security theo tổ, ngưỡng k cho VIEW t�
 - PostgreSQL 17 Documentation — [Privileges](https://www.postgresql.org/docs/17/ddl-priv.html), [GRANT](https://www.postgresql.org/docs/17/sql-grant.html), [REVOKE](https://www.postgresql.org/docs/17/sql-revoke.html) (Chương 6).
 - PostgreSQL 17 Documentation — [CREATE VIEW](https://www.postgresql.org/docs/17/sql-createview.html), tùy chọn `security_invoker` (Chương 6).
 - PostgreSQL 17 Documentation — [Database Roles](https://www.postgresql.org/docs/17/user-manag.html), [Role Membership](https://www.postgresql.org/docs/17/role-membership.html) (Chương 6).
+- PostgreSQL 17 Documentation — [CREATE FUNCTION](https://www.postgresql.org/docs/17/sql-createfunction.html), mục `SECURITY INVOKER`/`SECURITY DEFINER` và quyền `EXECUTE` mặc định của `PUBLIC` (Chương 6).
+- PostgreSQL 17 Documentation — [ALTER DEFAULT PRIVILEGES](https://www.postgresql.org/docs/17/sql-alterdefaultprivileges.html) và [Password Authentication](https://www.postgresql.org/docs/17/auth-password.html) (Chương 6).
 - [Đại số quan hệ QRA01–QRA10](06a_dai_so_quan_he.md) và [kế hoạch bảo mật](06b_bao_mat.md) của nhóm (Chương 4, 6).
 - Giáo trình học phần: chờ nhóm bổ sung đúng tài liệu thực sự sử dụng.
 
