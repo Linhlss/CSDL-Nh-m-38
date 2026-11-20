@@ -319,9 +319,10 @@ def runtime_evidence():
     clean=lambda s:re.sub(r"--[^\n]*","",s).strip().rstrip(";")
     parts=re.split(r"^-- (QSQL\d{2})\.[^\n]*\n",read("sql/04_queries.sql"),flags=re.M)
     sql={parts[i]:clean(parts[i+1]) for i in range(1,len(parts),2)}
-    blocks=re.findall(r"```sql\n(.*?)```",read("docs/06a_dai_so_quan_he.md"),re.S)
-    assert len(blocks)==11
-    sql.update({f"QRA{i:02}":clean(s) for i,s in enumerate(blocks[1:],1)})
+    from ra_sql_blocks import parse_ra_sql_blocks
+    named = parse_ra_sql_blocks(read("docs/06a_dai_so_quan_he.md"))
+    sql.update({k:clean(v) for k,v in named.items()
+                if k.startswith("QRA") and k != "QRA07_DIV"})
     current_hashes = {k:hashlib.sha256(v.encode()).hexdigest() for k,v in sql.items()}
     mismatches = [k for k,v in current_hashes.items() if result["query_sha256"].get(k) != v]
     missing = sorted(set(result["query_sha256"]) - set(current_hashes))

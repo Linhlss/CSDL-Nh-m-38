@@ -201,10 +201,10 @@ INSERT INTO bien_dong_cu_tru(
     loai_bien_dong,ma_qua_trinh_cu,ma_qua_trinh_moi,ngay_bien_dong,ma_tai_khoan
 ) VALUES ('CHUYEN_DEN',NULL,99002,'2026-01-01',99001);
 SELECT fn_assert_e1();
-DO $
+DO $positive$
 BEGIN
     RAISE NOTICE '[PASS] E1-positive: đợt được dùng ở hai vai trò khác nhau';
-END $;
+END $positive$;
 
 -- B15: tên/địa chỉ rỗng bị từ chối bởi CHECK.
 SELECT pg_temp.expect_sqlstate('B15_whitespace_person',
@@ -242,13 +242,13 @@ SELECT pg_temp.expect_sqlstate('B15_reverse_house_open',
 INSERT INTO qua_trinh_cu_tru(
     ma_cu_dan,ma_ho,loai_cu_tru,ngay_bat_dau
 ) VALUES (99013,99012,'TAM_TRU','2026-08-01');
-DO $
+DO $positive$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM qua_trinh_cu_tru
       WHERE ma_cu_dan=99013 AND ma_ho=99012 AND ngay_bat_dau='2026-08-01')
     THEN RAISE EXCEPTION 'B15 positive test failed'; END IF;
     RAISE NOTICE '[PASS] B15-positive: bộ cư trú hợp lệ được ghi';
-END $;
+END $positive$;
 
 -- B14: khóa tài khoản không làm mất nhật ký trước đó.
 UPDATE tai_khoan SET trang_thai='KHOA' WHERE ma_tai_khoan=99001;
