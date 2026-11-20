@@ -150,8 +150,8 @@
     },
     {
       "path": "docs/07_ma_tran_truy_van_va_review.md",
-      "bytes": 17946,
-      "sha256": "239ab07b7cb7ce57b08c41b24e828ce8f27206bad85112e593756b91892a1cc4"
+      "bytes": 22831,
+      "sha256": "b6a2533952bebd1d6f6a988d4ecb9d909a56142a6c61232f888dc89890a5611c"
     },
     {
       "path": "docs/08_huong_dan_dung_csdl.md",
@@ -336,7 +336,7 @@
     {
       "path": "tests/week1_verification_log.md",
       "bytes": 4560,
-      "sha256": "d6b3a6e2bf336b13973496748aa197cbc3a8e240025c4a142da41628ce400271"
+      "sha256": "948313a9868f3b8c0ee1d7f4e89ec82fe5e087952e63a9db98679aaba2aeb8fa"
     },
     {
       "path": "tests/week2_constraints_execution_log.md",
