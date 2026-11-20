@@ -246,6 +246,15 @@ Schema/ERD/từ điển đã thống nhất về cấu trúc 7 bảng/35 cột. 
 > - **Tiến độ W2-T1-14:** Chương 1–3 đã cập nhật giới hạn X01–X07 và kết quả kiểm thử. Mục này **chưa đánh dấu** vì còn chờ nhận xét của TV2.
 > - **Tiến độ W2-T1-15:** danh sách lỗi còn lại có owner và hạn nằm ở hồ sơ mục 5.5. Mục này **chưa đánh dấu** vì việc kiểm tra G2 diễn ra ngày 22/11 cùng cả nhóm.
 > - **Ghi nhận cho TV3:** sản phẩm của W2-T3-10, 11, 12, 13 và W3-T3-08 đã có trong repo (docs/07 mục 8–10). TV1 không tự đánh dấu thay TV3; TV3 tự xác nhận các ô này.
+>
+> **TV1: hoàn tất giai đoạn A, 20/11/2026.**
+> - **Đã làm:**
+>   - Tích hợp Chương 3.5, Chương 5 và `final_test_log` của TV2 (PR #6) vào nhánh ứng viên.
+>   - Viết Bìa, Mục lục, Mở đầu, Kết luận, Tài liệu tham khảo, Phụ lục A–E và trang cuối.
+>   - Chốt đề xuất tên ảnh `SEC_*` (T3-03).
+>   - Kiểm thử lại toàn bộ trên commit bàn giao.
+> - **Việc còn lại theo người:** xem [hồ sơ bàn giao](10_ban_giao_tv2_tv3.md).
+> - **Các ô chưa tick:** W2-T1-14/15 và W3-T1 chờ phản hồi của TV2/TV3 và Gate 2.
 
 ## W2 / Cả nhóm — Gate 2 (22/11)
 
@@ -297,7 +306,7 @@ Schema/ERD/từ điển đã thống nhất về cấu trúc 7 bảng/35 cột. 
 - [ ] **W3-T3-02 · 23–24/11:** Chạy SQL kiểm chứng 10 RA trên bộ dữ liệu cố định; đối chiếu theo tập ID và ghi pass/fail, không chỉ đối chiếu số dòng.
 - [ ] **W3-T3-03 · 24/11:** Chạy B1 bằng role thật: SELECT được phép; UPDATE bị chặn; nếu role còn quyền ngoài ý muốn thì chỉnh lại quyền và chạy lại.
 - [ ] **W3-T3-04 · 24/11:** Chạy B2 bằng role thật: SELECT VIEW tổng hợp thành công; SELECT bảng `cu_dan` gốc bị chặn; đảm bảo VIEW không hiển thị thông tin nhận diện.
-- [ ] **W3-T3-05 · 24/11:** Lưu code và ảnh rõ `B1_select_ok.png`, `B1_update_denied.png`, `B2_view_ok.png`, `B2_table_denied.png`; ghi role thực hiện và lý do đúng/sai.
+- [ ] **W3-T3-05 · 24/11:** Lưu code và ảnh rõ theo bộ tên thống nhất `SEC_B1_*`/`SEC_B2_*` (06b mục 7; Phụ lục E báo cáo — T3-03, TV1 đề xuất 20/11, chờ TV3 xác nhận; thay bộ tên cũ `B1_select_ok.png`, `B1_update_denied.png`, `B2_view_ok.png`, `B2_table_denied.png`); ghi role thực hiện và lý do đúng/sai.
 - [ ] **W3-T3-06 · 24/11:** Ghi lại kết quả S20/S21 trong test log, kiểm tra tên/tài khoản nghiệp vụ khác với role thực PostgreSQL; không commit mật khẩu thật.
 - [ ] **W3-T3-07 · 24–25/11:** Hoàn thiện Chương 4 RA và Chương 6 bảo mật, gồm lý thuyết ngắn, 10 biểu thức, kết quả kiểm chứng, 2 demo/ảnh, nhận xét và nguồn tài liệu.
 - [ ] **W3-T3-08 · 25/11:** Kiểm tra chéo toàn bộ schema/ERD của TV1 về quan hệ, NULL và ràng buộc thời gian; đánh dấu các lỗi đã được xử lý.

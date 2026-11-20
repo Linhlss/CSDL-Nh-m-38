@@ -93,6 +93,37 @@ kiểm    : test_ra_parser + ra_sql_blocks → seed636_qra02_03_06_08 → seed63
 
 CI GitHub Actions trên commit tích hợp cuối được liên kết trong mô tả PR #7 và bình luận Issue #9. Log không thể tự chứa hash của chính commit chứa nó. Workflow có thêm bốn kiểm tra: catalog C01–C15, B12 K01–K05, đăng nhập thật bằng mật khẩu scram tạm, và khẳng định S01–S16. B1/B2 được đếm đúng 6 lỗi từ chối.
 
+## 7. Chạy lại sau khi tích hợp Chương 5 của TV2 (PR #6) — 20/11/2026, giai đoạn A
+
+**Bối cảnh.** PR #6 chỉ thay đổi tài liệu: `docs/02`, `tests/final_test_log.md` và manifest. Không có tệp SQL, test hay script nào đổi. SHA-256 của các tệp ở mục 1 vẫn y nguyên. Dù vậy, TV1 vẫn chạy lại toàn bộ chuỗi ở mục 2 trên một **cluster PostgreSQL 17.12 mới khởi tạo**, trên commit merge `99e99ec`, cùng các thay đổi tài liệu của giai đoạn A.
+
+| Bộ kiểm | Actual | Kết luận |
+|---|---|---|
+| Nạp seed636 | 8/50/60/200/250/63/5 | PASS |
+| `constraints_week2.sql` / `06_validation.sql` | 40 `[PASS]`, 0 `[FAIL]` / 3 `[PASS]` | PASS |
+| B1/B2 | 6 `permission denied` (dòng 211, 212, 213, 216, 257, 258) | PASS |
+| `verify_gate2_integration.py` | `RESULT: 71 checks PASS` | PASS |
+| S01–S16 | 18/18 ca có chấm điểm | PASS |
+| Catalog / B12 | 15/15 / K01–K05 | PASS |
+| Đăng nhập thật (scram) | reader 12/12, report 10/10; mật khẩu sai bị từ chối; mật khẩu tạm đã xóa | PASS |
+| md5 seed636 | `59d7ca1b5f14788ee35a84cdd6d228d9` trước = sau | PASS |
+| X01 / X05 | Số sự kiện theo người ghi 11/21/18/13/0; 2 sự kiện tương lai (nạp ngày 20/11) | Khớp mục 3.2 |
+
+**Kiểm chứng Chương 5 (TV2).** TV1 chạy 10 QSQL trên seed636 và trên dữ liệu `fixture29` (đoạn `BEGIN_FIXTURE_DATA` của `tests/week1_fixture.sql`, nạp vào DB mới chỉ có `01_schema.sql`):
+
+| Câu | seed636 (expected TV2 = actual) | fixture29 (expected TV2 = actual) |
+|---|---:|---:|
+| QSQL01 … QSQL10 | 36, 24, 8, 4, 54, 31, 17, 45, 22, 5 | 5, 1, 3, 1, 1, 2, 1, 3, 1, 2 |
+
+Mọi bảng trích kết quả trong mục 5.2–5.11 cũng trùng với kết quả thật, và các khẳng định theo từng mã đều đúng:
+- 16: chuyển nội bộ trong cùng tổ (Tổ 2 → Tổ 2).
+- 17: 2 đợt trong cùng 1 hộ.
+- 23 và 24: chỉ có đợt tương lai (bắt đầu 01/12 và 25/11).
+- 25–27: chưa có đợt nào.
+- QSQL09: 22 cư dân phân biệt.
+
+`verify_week1.py --record` được chạy sau các bước trên; kết quả nằm ở commit bàn giao. Liên kết CI của commit bàn giao được ghi trong bình luận Issue #9.
+
 ## 6. Giới hạn của lần chạy
 
 - Đây là macOS và Homebrew PostgreSQL 17.12, không phải máy Windows của TV2. TV2 vẫn phải dựng lại trên máy của mình và ghi log riêng.

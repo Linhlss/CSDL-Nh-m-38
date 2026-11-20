@@ -14,7 +14,7 @@
 | PNG exports | PASS | 2 valid 2300×1626 PNGs, A4 landscape proportions, all PNG chunk CRCs valid |
 | Question/rule/case coverage | PASS | 10 RA + 10 SQL design mappings; 30 design cases; 18 business rules; 10 review notes |
 | Report and task handoff | PASS | Chapters 1–3 filled; all 20 TV1 tasks traced; Gate 1 PASS / v1; confirmation source and DB-test limits explicit |
-| Local file links | PASS | 224 local Markdown file links resolve (anchors and external URLs are not network-tested) |
+| Local file links | PASS | 249 local Markdown file links resolve (anchors and external URLs are not network-tested) |
 | SQL compatibility | PASS | Executable SQL unchanged from GitHub main d20b394; only comments differ |
 | Utility syntax | PASS | Python utility sources parse successfully; no cache files written |
 | Week1 task trace | PASS | 142 unique project IDs; shared ledger: 53 week1 IDs, 52 completed, 1 deferred to week2, 0 awaiting confirmation; deferred tasks stay unchecked |

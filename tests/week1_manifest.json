@@ -25,8 +25,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 7000,
-      "sha256": "835808d0105a196e182e8a20878ba02770f8b6c70619eaf13696ee8a63024231"
+      "bytes": 7237,
+      "sha256": "f045ea3ad1d1597f4d773eb9b33d630a7716c0e0ae45be9b385c555ec8815306"
     },
     {
       "path": "data/README.md",
@@ -115,13 +115,13 @@
     },
     {
       "path": "docs/02_bao_cao_suon.md",
-      "bytes": 61783,
-      "sha256": "a33bd0ea0b98c3614f9a11d6c433a7d11ee323d35753a313e05681b9e1e94020"
+      "bytes": 108144,
+      "sha256": "8b7209b3ab1e84804dc61504ec669a88631587b88bfa65e653ae1a413d16816a"
     },
     {
       "path": "docs/03_CHECKLIST_DU_AN.md",
-      "bytes": 61916,
-      "sha256": "8dfe53f608ec5b0a3486526ed8f29847bd43524d9b1c217faf87e3e66afef809"
+      "bytes": 62683,
+      "sha256": "da0f2cd46cde98bfbbc6e29d835e5bbdb2e17d9834202f5144156b609701ab44"
     },
     {
       "path": "docs/03_dac_ta_nghiep_vu.md",
@@ -162,6 +162,11 @@
       "path": "docs/09_ho_so_tv1_gate2.md",
       "bytes": 10839,
       "sha256": "794542c2609b4ee6880ec1431fd25999e3648cf6ccceb711002e3ab74896c445"
+    },
+    {
+      "path": "docs/10_ban_giao_tv2_tv3.md",
+      "bytes": 8638,
+      "sha256": "a37b509e88de4cffb6135b8809d210e5c1f2bcb113e993ba59566ff5c6a90607"
     },
     {
       "path": "evidence/security/.gitkeep",
@@ -265,8 +270,8 @@
     },
     {
       "path": "tests/final_test_log.md",
-      "bytes": 647,
-      "sha256": "e3fdb816c2e3e38ce9bd59ff250ab34e77ae926aad6c04055ee7a67a922ad4ae"
+      "bytes": 6016,
+      "sha256": "8aa5520020985810b45c42ebdc4ddcefcfba33e9a03be49754f1156e43fd4147"
     },
     {
       "path": "tests/ra_fixture.sql",
@@ -346,7 +351,7 @@
     {
       "path": "tests/week1_verification_log.md",
       "bytes": 4562,
-      "sha256": "75f913b52b6f72831216049458233ca7256bc8a72c71c8655aaf0653047be5d3"
+      "sha256": "81a2559f03d0f291408d79d3e006bf466b32dcf13c5421d00020514e1aaae84a"
     },
     {
       "path": "tests/week2_constraints_execution_log.md",
@@ -360,8 +365,8 @@
     },
     {
       "path": "tests/week2_tv1_integration_log.md",
-      "bytes": 9358,
-      "sha256": "05310625652ff7c3995e07e1859c96256db40d6540a7b4940652bd709c0cf04c"
+      "bytes": 11649,
+      "sha256": "e7e1f7d0a642f5df08ffcdc05bf6913ceaa0c69255d26c646183fcd588bf7bf4"
     }
   ]
 }

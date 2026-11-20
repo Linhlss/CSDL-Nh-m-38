@@ -46,6 +46,7 @@ Xem **[Hướng dẫn dựng CSDL thống nhất](docs/08_huong_dan_dung_csdl.md
 
 - [Dựng từ CSDL trắng](docs/08_huong_dan_dung_csdl.md), chia DB seed636 và fixture RA.
 - [Hồ sơ TV1, kết quả CI và vấn đề chờ review](docs/09_ho_so_tv1_gate2.md).
+- **[Hồ sơ bàn giao TV1 → TV2, TV3 (20/11/2026)](docs/10_ban_giao_tv2_tv3.md):** bản tích hợp đủ sáu chương (gồm Chương 5 của TV2 từ PR #6), việc đã xong, việc còn lại theo người, hạn và reviewer.
 - [Kiểm thử PostgreSQL 17: run 44654667107](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44654667107): 6 unit parser, 14/14 kiểm tra tệp, 40 PASS ràng buộc, 3 PASS validation, 71 đối soát tích hợp; giữ seed636.
 - [Kiểm thử từ DB trắng ngày 20/11 sau tích hợp PR #8](tests/week2_tv1_integration_log.md): PostgreSQL 17.12 có đăng nhập scram. Kết quả: catalog đạt 15/15, B12 K01–K05 đạt, reader đạt 12/12, report đạt 10/10, S01–S16 đạt 18/18.
 - PR #5 đã đóng, không merge; nội dung cần thiết đã nằm trong nhánh `fix/tv1-integration-gate2` (PR #7). PR #8 của TV3 đã được gộp vào nhánh này. Chưa có gì merge vào `main`. Kết quả CI không thay chữ ký hay review TV2/TV3.
