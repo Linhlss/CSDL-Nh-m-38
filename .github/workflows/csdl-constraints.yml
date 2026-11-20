@@ -45,16 +45,7 @@ jobs:
           python3 scripts/ra_sql_blocks.py
       - name: Verify historical week 1 records without modifying old runtime evidence
         run: |
-          python3 scripts/verify_week1.py --record
           python3 scripts/verify_week1.py
-      - name: Export regenerated manifest and verification log for release
-        run: |
-          echo '__TV1_MANIFEST_BEGIN__'
-          cat tests/week1_manifest.json
-          echo '__TV1_MANIFEST_END__'
-          echo '__TV1_WEEK1_LOG_BEGIN__'
-          cat tests/week1_verification_log.md
-          echo '__TV1_WEEK1_LOG_END__'
       - name: Install PostgreSQL client
         run: |
           sudo apt-get update -qq
