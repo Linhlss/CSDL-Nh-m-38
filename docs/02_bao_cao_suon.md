@@ -2,16 +2,6 @@
 
 **Chủ đề số 17** — Xây dựng cơ sở dữ liệu quản lý cư dân và biến động cư trú tại một phường.
 
-> **Trạng thái bản tích hợp ngày 20/11/2026 (nhánh `fix/tv1-integration-gate2`):**
-> - **Đủ sáu chương:** Chương 1–3, Mở đầu, Kết luận và phụ lục do TV1 viết; Chương 3.5 và Chương 5 do TV2 viết (PR #6); Chương 4 và 6 do TV3 viết (PR #5, #8).
-> - **Chưa là báo cáo cuối.** Nội dung kỹ thuật **Gate 2 PASS theo TV1 báo cả nhóm xác nhận ngày 20/11**; vẫn thiếu ảnh minh chứng (`evidence/sql/`, `evidence/security/`), Gate 3/4, nguồn giáo trình, xếp loại và chữ ký. Danh sách việc còn lại theo người nằm ở [hồ sơ bàn giao](10_ban_giao_tv2_tv3.md).
->
-> Lịch sử: TV1 viết thiết kế Chương 1–3 và Mở đầu ngày 11/11/2026; bản nháp Chương 4 và 6 của TV3 được tích hợp ngày 16/11/2026; thông tin bìa theo chủ repo cung cấp.
-
-> Cập nhật 15/11/2026 bởi agent hỗ trợ TV1: làm rõ C1 ở P3/chức năng 3.2, đồng bộ ý nghĩa đợt–sự kiện và phạm vi chuẩn hóa nháp. Giữ nguyên schema; không thay lời xác nhận hoặc chữ ký của thành viên.
-
-> Thiết kế v1/Gate 1 PASS theo xác nhận chủ repo tiếp nhận16/11/2026; [nguồn xác nhận](../meetings/decision_log.md#gate1). Đây là chốt thiết kế, các chương/kết quả/ảnh và chữ ký báo cáo cuối tiếp tục theo tuần 2–3.
-
 ## TRANG BÌA
 
 > Bố cục in A4. Trường/khoa ghi đúng theo mẫu bìa của học phần; nhóm điền khi chuyển sang công cụ biên tập chính. Không tự suy diễn từ dữ liệu.
@@ -60,7 +50,7 @@
 
 Quản lý cư dân cần trả lời được một người cư trú ở đâu tại một thời điểm, đã thay đổi nơi ở ra sao và ai ghi nhận biến động đó. Lưu duy nhất địa chỉ hiện tại sẽ không đáp ứng được câu hỏi lịch sử. Đề tài xây dựng mô hình quan hệ tách hồ sơ cư dân, vị trí cư trú, khoảng thời gian và nhật ký sự kiện để bảo toàn những thông tin này.
 
-Mục tiêu là phân tích nghiệp vụ, thiết kế ERD, ánh xạ quan hệ, phân tích chuẩn hóa, triển khai ràng buộc và kiểm chứng truy vấn/bảo mật trên PostgreSQL. Trong tuần 1, nhóm chuẩn bị bộ thiết kế để các thành viên triển khai thống nhất. Đến tuần 2, nhóm đã có thêm dữ liệu chính thức (seed636), 10 SQL, 10 biểu thức đại số quan hệ, ràng buộc nâng cao và hai demo bảo mật, đều được kiểm thử trên PostgreSQL 17. Gate 2 đã được ghi nhận đạt theo xác nhận nhóm do TV1 báo lại ngày 20/11; Gate 3 và bản nộp chính thức vẫn chưa hoàn thành.
+Mục tiêu là phân tích nghiệp vụ, thiết kế ERD, ánh xạ quan hệ, phân tích chuẩn hóa, triển khai ràng buộc và kiểm chứng truy vấn/bảo mật trên PostgreSQL. Sản phẩm gồm bộ dữ liệu mô phỏng 636 bản ghi, 10 biểu thức đại số quan hệ, 10 câu SQL, các ràng buộc nâng cao và hai minh họa bảo mật, tất cả được kiểm thử trên PostgreSQL 17.
 
 Mọi nhân vật và địa chỉ đều là dữ liệu mô phỏng. Đề tài giới hạn một phường giả lập, không có giá trị pháp lý, không kết nối dữ liệu dân cư thật và không xây dựng ứng dụng web/mobile.
 
@@ -106,13 +96,33 @@ Cán bộ quản lý cập nhật danh mục, hồ sơ, đợt và sự kiện. 
 | P5 — Chuyển đi/nội bộ | Đóng đợt cũ; nếu nội bộ tạo đợt mới; ghi sự kiện | Nội bộ cùng người/khác hộ; cũ kết thúc trước ngày chuyển một ngày; rollback khi lỗi |
 | P6 — Tra cứu/thống kê | Danh sách theo ngày và thống kê người/sự kiện | Đúng ngày tham chiếu, đếm mã người phân biệt, giữ nhóm 0 khi câu hỏi yêu cầu |
 
-Đặc tả đầu vào, tiền điều kiện, bước xử lý, bảng đọc/ghi và lỗi của từng quy trình được trình bày đầy đủ trong [đặc tả nghiệp vụ](03_dac_ta_nghiep_vu.md). P5 có hai nhánh riêng; không dùng một thao tác xóa lịch sử để biểu diễn chuyển đi.
+Bảng 1.2 nêu đầu vào, dữ liệu đọc/ghi và các lỗi chính của từng quy trình.
+
+| Quy trình | Đầu vào | Dữ liệu đọc / ghi | Lỗi chính |
+|---|---|---|---|
+| P1 | Tên tổ; mã tổ và địa chỉ chuẩn; mã địa chỉ và ngày lập khi tạo hộ | Đọc `to_dan_pho`, `dia_chi`; ghi `to_dan_pho`, `dia_chi` hoặc `ho_cu_tru` tùy tác vụ | Tổ/địa chỉ cha không tồn tại; trùng tên tổ hoặc cặp tổ + địa chỉ; thiếu ngày lập; đổi quan hệ địa lý đã có lịch sử (B11) |
+| P2 | Họ tên, ngày sinh, giới tính, ghi chú; mã cư dân khi hiệu chỉnh | Đọc/ghi `cu_dan`; đọc `qua_trinh_cu_tru` khi sửa ngày sinh | Thiếu trường; giới tính ngoài `Nam/Nu/Khac`; mã không tồn tại; ngày sinh mâu thuẫn với lịch sử cư trú (B15) |
+| P3 | Mã cư dân, mã hộ, loại cư trú, ngày bắt đầu, ngày kết thúc (tùy chọn) | Đọc `cu_dan`, `ho_cu_tru`, `qua_trinh_cu_tru`, `bien_dong_cu_tru`; ghi `qua_trinh_cu_tru` | FK sai; loại sai; ngày kết thúc trước ngày bắt đầu; chồng lấn cùng loại (B06); ngày bắt đầu sớm hơn ngày sinh hoặc ngày lập hộ (B15); sửa đợt làm sai sự kiện đã tham chiếu (B08–B09) |
+| P4 | Thông tin đợt mới, ngày chuyển t, tài khoản ghi nhận, ghi chú | Đọc `cu_dan`, `ho_cu_tru`, `tai_khoan`, `qua_trinh_cu_tru`; ghi `qua_trinh_cu_tru`, `bien_dong_cu_tru` | Mọi lỗi của P3; tài khoản bị khóa (B14); sai hình dạng sự kiện; ngày bắt đầu đợt mới khác t (B09) |
+| P5 | Mã đợt cũ, ngày chuyển t, tài khoản; chuyển nội bộ thêm hộ mới và loại cư trú mới | Đọc cư dân, hộ, đợt, tài khoản; cập nhật đợt cũ, thêm đợt mới (nhánh nội bộ) và thêm sự kiện | Khác cư dân hoặc cùng hộ (B08); sai thứ tự ngày; chồng lấn; tài khoản khóa; một bước ghi thất bại. Mọi lỗi đều hủy toàn bộ giao dịch (B10) |
+| P6 | Ngày d; tổ, địa chỉ hoặc hộ; loại cư trú; khoảng tháng; loại sự kiện | Chỉ đọc các bảng hoặc VIEW được cấp quyền | Tham số sai kiểu; thiếu quyền. Kết quả rỗng khi đúng điều kiện không phải lỗi |
+
+P4 và P5 thực hiện trong một giao dịch: P4 tạo đợt mới rồi ghi `CHUYEN_DEN`; nhánh chuyển đi của P5 đặt ngày kết thúc đợt cũ là t−1 rồi ghi `CHUYEN_DI`; nhánh nội bộ đóng đợt cũ, mở đợt mới cùng cư dân từ ngày t và ghi `CHUYEN_NOI_BO` tham chiếu cả hai đợt.
 
 ### 1.4. Sơ đồ phân rã chức năng
 
 ![Hình 1 — Phân rã chức năng cấp 0–1–2](../diagrams/phan_ra_chuc_nang.png)
 
-Sơ đồ có sáu nhóm chức năng và 14 chức năng cấp 2. Quan hệ nối thể hiện chức năng con thuộc chức năng cha; không thể hiện trình tự thực hiện. Bảng chức năng → dữ liệu đọc/ghi nằm trong mục 4 của đặc tả nghiệp vụ, giúp đối chiếu mỗi chức năng với dữ liệu được mô hình hóa.
+Sơ đồ có sáu nhóm chức năng và 14 chức năng cấp 2. Quan hệ nối thể hiện chức năng con thuộc chức năng cha; không thể hiện trình tự thực hiện. Bảng 1.3 đối chiếu từng chức năng với dữ liệu được mô hình hóa.
+
+| Nhóm cấp 1 | Chức năng cấp 2 | Dữ liệu đọc | Dữ liệu ghi |
+|---|---|---|---|
+| 1. Quản lý địa bàn | 1.1 Tổ dân phố; 1.2 Địa chỉ | `to_dan_pho`, `dia_chi` | `to_dan_pho`, `dia_chi` |
+| 2. Quản lý hộ và cư dân | 2.1 Nhóm hộ; 2.2 Hồ sơ cư dân | `dia_chi`, `ho_cu_tru`, `cu_dan` | `ho_cu_tru`, `cu_dan` |
+| 3. Quản lý quá trình cư trú | 3.1 Mở đợt; 3.2 Kết thúc đợt | `cu_dan`, `ho_cu_tru`, `qua_trinh_cu_tru` | `qua_trinh_cu_tru` |
+| 4. Ghi nhận biến động | 4.1 Chuyển đến; 4.2 Chuyển đi; 4.3 Chuyển nội bộ | `cu_dan`, `ho_cu_tru`, `qua_trinh_cu_tru`, `tai_khoan` | `qua_trinh_cu_tru`, `bien_dong_cu_tru` |
+| 5. Tra cứu và thống kê | 5.1 Hiện tại; 5.2 Lịch sử; 5.3 Thống kê | Bảy bảng hoặc VIEW được cấp quyền | Không ghi dữ liệu nghiệp vụ |
+| 6. Quản trị và bảo mật | 6.1 Vai trò; 6.2 Giới hạn truy cập | Danh mục role và quyền của PostgreSQL | Role, quyền, VIEW; không ghi `tai_khoan` để cấp quyền |
 
 Chức năng **3.2 Kết thúc đợt** dùng cho nhập/hiệu chỉnh lịch sử hoặc hết hạn tạm trú không phát sinh hành vi chuyển chỗ ở; khi đó không bắt buộc tạo `CHUYEN_DI` (C1). Các chuyển đến/đi/nội bộ thực tế vẫn do nhóm chức năng 4 và P4/P5 ghi sự kiện trong cùng giao dịch. C1 phân định phạm vi hai nhóm chức năng, không cho phép bỏ nhật ký của thao tác chuyển thực tế.
 
@@ -150,7 +160,7 @@ Một sự kiện có tối đa một đợt cũ và tối đa một đợt mớ
 
 ![Hình 2 — ERD của bộ bàn giao v1](../diagrams/erd_v1.png)
 
-ERD thể hiện đủ 35 cột và 7 FK. Ký hiệu ? là cột cho phép NULL. Tính duy nhất ghép của địa chỉ là `(ma_to, dia_chi_chuan)`, không phải từng cột riêng. Bản nguồn `.drawio` và bản vector `.svg` được lưu cùng ảnh để chỉnh sửa hoặc in rõ hơn. Ngày 20/11/2026 (X04), phụ đề của sơ đồ được đổi thành "Thiết kế v1 — Gate 1 PASS 16/11/2026". Cả ba tệp `.drawio`, `.svg` và `.png` được sinh lại từ cùng nguồn `scripts/render_week1_diagrams.py`; cấu trúc ERD không đổi.
+ERD thể hiện đủ 35 cột và 7 FK. Ký hiệu ? là cột cho phép NULL. Tính duy nhất ghép của địa chỉ là `(ma_to, dia_chi_chuan)`, không phải từng cột riêng. Bản nguồn `.drawio` và bản vector `.svg` được lưu cùng ảnh để chỉnh sửa hoặc in rõ hơn.
 
 ### 2.4. Giải thích thiết kế lịch sử
 
@@ -181,7 +191,91 @@ bien_dong_cu_tru(ma_bien_dong PK, loai_bien_dong, ma_qua_trinh_cu FK nullable,
 
 Bảy bảng có lần lượt 3, 4, 4, 5, 6, 5 và 8 cột theo thứ tự trong lược đồ trên, tổng 35 cột. Tên dùng VARCHAR có giới hạn; ghi chú dùng TEXT; các ngày nghiệp vụ dùng DATE; thời điểm ghi sự kiện dùng TIMESTAMPTZ. Khóa mã dùng BIGINT. Mọi cột bắt buộc được NOT NULL; các ghi chú, kết thúc đợt và hai FK điều kiện là nullable.
 
-Các miền giá trị gồm giới tính `Nam/Nu/Khac`, loại cư trú `THUONG_TRU/TAM_TRU`, vai trò `QUAN_TRI/CAN_BO/THONG_KE`, trạng thái `HOAT_DONG/KHOA` và ba loại biến động. Default nghiệp vụ duy nhất là tài khoản hoạt động và thời điểm ghi CURRENT_TIMESTAMP; mã được sinh IDENTITY. Từ điển đầy đủ từng cột, kiểu, NULL, default, PK/FK/UNIQUE/CHECK và ý nghĩa nằm trong [tài liệu dữ liệu, mục 3](04_data_dictionary_va_chuan_hoa.md#3-từ-điển-dữ-liệu-đầy-đủ), là phụ lục kỹ thuật của bản nháp này.
+Các miền giá trị gồm giới tính `Nam/Nu/Khac`, loại cư trú `THUONG_TRU/TAM_TRU`, vai trò `QUAN_TRI/CAN_BO/THONG_KE`, trạng thái `HOAT_DONG/KHOA` và ba loại biến động. Default nghiệp vụ duy nhất là tài khoản hoạt động và thời điểm ghi CURRENT_TIMESTAMP; mã được sinh IDENTITY. Các bảng dưới đây là từ điển dữ liệu đầy đủ của 35 cột.
+
+**Bảng `to_dan_pho`** — danh mục tổ (3 cột)
+
+| Cột | Kiểu | NULL? | Khóa / miền | Default | Ý nghĩa |
+|---|---|---|---|---|---|
+| `ma_to` | BIGINT | Không | PK | IDENTITY BY DEFAULT | Mã tổ nội bộ |
+| `ten_to` | VARCHAR(60) | Không | UNIQUE | Không | Tên mô phỏng, ví dụ Tổ 01 |
+| `ghi_chu` | TEXT | Có | Tự do | Không | Mô tả tổ |
+
+Tổ chưa có địa chỉ vẫn được phép tồn tại.
+
+**Bảng `dia_chi`** — vị trí thuộc tổ (4 cột)
+
+| Cột | Kiểu | NULL? | Khóa / miền | Default | Ý nghĩa |
+|---|---|---|---|---|---|
+| `ma_dia_chi` | BIGINT | Không | PK | IDENTITY BY DEFAULT | Mã địa chỉ |
+| `ma_to` | BIGINT | Không | FK → `to_dan_pho(ma_to)` | Không | Tổ quản lý |
+| `dia_chi_chuan` | VARCHAR(200) | Không | Thành phần UQ | Không | Chuỗi vị trí giả lập |
+| `ghi_chu` | TEXT | Có | Tự do | Không | Mô tả địa chỉ |
+
+`uq_dia_chi_to = UNIQUE(ma_to, dia_chi_chuan)`: cùng một chuỗi địa chỉ ở hai tổ khác nhau được phép. Địa chỉ đã có lịch sử không được chuyển sang tổ khác (B11).
+
+**Bảng `ho_cu_tru`** — nhóm hộ tại địa chỉ (4 cột)
+
+| Cột | Kiểu | NULL? | Khóa / miền | Default | Ý nghĩa |
+|---|---|---|---|---|---|
+| `ma_ho` | BIGINT | Không | PK | IDENTITY BY DEFAULT | Mã hộ giả lập |
+| `ma_dia_chi` | BIGINT | Không | FK → `dia_chi(ma_dia_chi)` | Không | Địa chỉ cố định của hộ |
+| `ngay_lap` | DATE | Không | Ngày hợp lệ | Không | Ngày ghi nhận nhóm hộ |
+| `ghi_chu` | TEXT | Có | Tự do | Không | Ghi chú mô phỏng |
+
+Không đặt UNIQUE trên `ma_dia_chi` vì một địa chỉ có thể có nhiều hộ. `ngay_lap` không được muộn hơn ngày bắt đầu các đợt của hộ (B15, trigger hai chiều).
+
+**Bảng `cu_dan`** — hồ sơ cư dân (5 cột)
+
+| Cột | Kiểu | NULL? | Khóa / miền | Default | Ý nghĩa |
+|---|---|---|---|---|---|
+| `ma_cu_dan` | BIGINT | Không | PK | IDENTITY BY DEFAULT | Định danh nhân vật giả lập |
+| `ho_ten` | VARCHAR(120) | Không | Không UNIQUE | Không | Họ tên mô phỏng, được trùng |
+| `ngay_sinh` | DATE | Không | Ngày hợp lệ | Không | Ngày sinh, dùng cho câu tuổi |
+| `gioi_tinh` | VARCHAR(10) | Không | `Nam`, `Nu`, `Khac` | Không | Giá trị mô phỏng |
+| `ghi_chu` | TEXT | Có | Tự do | Không | Ghi chú không định danh thật |
+
+`ck_cu_dan_gioi_tinh` kiểm miền giới tính. Ngày sinh không được sau ngày bắt đầu cư trú đầu tiên (B15). Hồ sơ không lưu địa chỉ hiện tại hay tuổi vì hai giá trị này phụ thuộc ngày truy vấn.
+
+**Bảng `qua_trinh_cu_tru`** — đợt cư trú (6 cột)
+
+| Cột | Kiểu | NULL? | Khóa / miền | Default | Ý nghĩa |
+|---|---|---|---|---|---|
+| `ma_qua_trinh` | BIGINT | Không | PK | IDENTITY BY DEFAULT | Mã đợt |
+| `ma_cu_dan` | BIGINT | Không | FK → `cu_dan(ma_cu_dan)` | Không | Người thuộc đợt |
+| `ma_ho` | BIGINT | Không | FK → `ho_cu_tru(ma_ho)` | Không | Hộ của đợt |
+| `loai_cu_tru` | VARCHAR(20) | Không | `THUONG_TRU`, `TAM_TRU` | Không | Loại cư trú mô phỏng |
+| `ngay_bat_dau` | DATE | Không | Ngày hợp lệ | Không | Ngày đầu, được tính bao gồm |
+| `ngay_ket_thuc` | DATE | Có | NULL hoặc >= bắt đầu | Không | Ngày cuối, được tính bao gồm |
+
+`ck_qt_loai` kiểm loại cư trú; `ck_qt_ngay` kiểm trật tự ngày; ràng buộc loại trừ GiST `ex_qt_cu_tru_khong_chong_lan` chặn hai đợt cùng người, cùng loại giao nhau (B06). Không đặt UNIQUE `(ma_cu_dan, ma_ho)` vì một người có thể quay lại cùng hộ.
+
+**Bảng `tai_khoan`** — danh mục người ghi nhận (5 cột)
+
+| Cột | Kiểu | NULL? | Khóa / miền | Default | Ý nghĩa |
+|---|---|---|---|---|---|
+| `ma_tai_khoan` | BIGINT | Không | PK | IDENTITY BY DEFAULT | Mã tài khoản nghiệp vụ |
+| `ten_dang_nhap` | VARCHAR(60) | Không | UNIQUE | Không | Nhãn đăng nhập mô phỏng |
+| `ten_hien_thi` | VARCHAR(120) | Không | Không UNIQUE | Không | Tên hiển thị người ghi |
+| `vai_tro` | VARCHAR(20) | Không | `QUAN_TRI`, `CAN_BO`, `THONG_KE` | Không | Vai trò nghiệp vụ |
+| `trang_thai` | VARCHAR(20) | Không | `HOAT_DONG`, `KHOA` | `'HOAT_DONG'` | Trạng thái nghiệp vụ |
+
+`ck_tk_vai_tro` và `ck_tk_trang_thai` kiểm miền. Bảng không lưu mật khẩu.
+
+**Bảng `bien_dong_cu_tru`** — nhật ký biến động (8 cột)
+
+| Cột | Kiểu | NULL? | Khóa / miền | Default | Ý nghĩa |
+|---|---|---|---|---|---|
+| `ma_bien_dong` | BIGINT | Không | PK | IDENTITY BY DEFAULT | Mã sự kiện |
+| `loai_bien_dong` | VARCHAR(20) | Không | `CHUYEN_DEN`, `CHUYEN_DI`, `CHUYEN_NOI_BO` | Không | Loại sự kiện |
+| `ma_qua_trinh_cu` | BIGINT | Có | FK → `qua_trinh_cu_tru(ma_qua_trinh)` | Không | Đợt trước chuyển |
+| `ma_qua_trinh_moi` | BIGINT | Có | FK → `qua_trinh_cu_tru(ma_qua_trinh)` | Không | Đợt sau chuyển |
+| `ngay_bien_dong` | DATE | Không | Ngày hợp lệ | Không | Ngày chuyển theo B09 |
+| `ma_tai_khoan` | BIGINT | Không | FK → `tai_khoan(ma_tai_khoan)` | Không | Người ghi nhận |
+| `thoi_diem_ghi` | TIMESTAMPTZ | Không | Thời điểm, không là khóa | CURRENT_TIMESTAMP | Thời điểm ghi trong DB |
+| `ghi_chu` | TEXT | Có | Tự do | Không | Diễn giải sự kiện |
+
+`ck_bd_hinh_dang` kiểm ba dạng sự kiện: chuyển đến = (NULL, có đợt mới), chuyển đi = (có đợt cũ, NULL), chuyển nội bộ = (có, có, hai mã khác nhau). Điều kiện cùng cư dân, khác hộ và khớp ngày do trigger B08–B09 kiểm.
 
 ### 3.3. Khóa, ràng buộc và giới hạn thực thi
 
@@ -201,19 +295,144 @@ Lược đồ cơ bản trong `sql/01_schema.sql` có 7 PK, 7 FK, 3 UNIQUE nghi�
 
 **Phân biệt cơ chế:** FK/CHECK bảo đảm cấu trúc và miền dữ liệu; GiST exclusion ràng buộc **giữa nhiều dòng**; trigger bảo vệ **liên bảng và chiều cập nhật ngược**; transaction bảo đảm tính nguyên tử của thao tác nhiều bước. `01_schema.sql` không có các cơ chế sau, nên chỉ chạy file đầu sẽ chưa thực thi được B06, B08–B11, B14.
 
+**Mã DDL tiêu biểu.** Ba đoạn dưới đây trích nguyên văn từ `sql/01_schema.sql` và `sql/02_constraints.sql`, minh họa ba loại cơ chế: CHECK trên một dòng, ràng buộc loại trừ giữa nhiều dòng và trigger liên bảng.
+
+(a) Bảng `bien_dong_cu_tru` với CHECK `ck_bd_hinh_dang` kiểm hình dạng của ba loại sự kiện:
+
+```sql
+CREATE TABLE IF NOT EXISTS bien_dong_cu_tru (
+    ma_bien_dong       BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    loai_bien_dong     VARCHAR(20) NOT NULL,
+    ma_qua_trinh_cu    BIGINT REFERENCES qua_trinh_cu_tru(ma_qua_trinh),
+    ma_qua_trinh_moi   BIGINT REFERENCES qua_trinh_cu_tru(ma_qua_trinh),
+    ngay_bien_dong     DATE NOT NULL,
+    ma_tai_khoan       BIGINT NOT NULL REFERENCES tai_khoan(ma_tai_khoan),
+    thoi_diem_ghi      TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ghi_chu            TEXT,
+    CONSTRAINT ck_bd_hinh_dang CHECK (
+        (loai_bien_dong = 'CHUYEN_DEN'
+         AND ma_qua_trinh_cu IS NULL AND ma_qua_trinh_moi IS NOT NULL)
+     OR (loai_bien_dong = 'CHUYEN_DI'
+         AND ma_qua_trinh_cu IS NOT NULL AND ma_qua_trinh_moi IS NULL)
+     OR (loai_bien_dong = 'CHUYEN_NOI_BO'
+         AND ma_qua_trinh_cu IS NOT NULL AND ma_qua_trinh_moi IS NOT NULL
+         AND ma_qua_trinh_cu <> ma_qua_trinh_moi)
+    )
+);
+```
+
+(b) Ràng buộc loại trừ GiST cho B06. Khoảng `daterange(..., '[]')` tính cả ngày kết thúc; `NULL` ở ngày kết thúc là khoảng không giới hạn trên. Toán tử `&&` phát hiện hai khoảng giao nhau khi cùng cư dân và cùng loại cư trú. Trong script, lệnh này được bọc trong khối `DO` để chạy lại nhiều lần không lỗi.
+
+```sql
+ALTER TABLE qua_trinh_cu_tru
+  ADD CONSTRAINT ex_qt_cu_tru_khong_chong_lan
+  EXCLUDE USING gist (
+    ma_cu_dan WITH =,
+    loai_cu_tru WITH =,
+    daterange(ngay_bat_dau, ngay_ket_thuc, '[]') WITH &&
+  );
+```
+
+(c) Hàm `fn_kiem_tra_su_kien` kiểm B08–B09 cho một sự kiện. Hàm được gọi từ trigger `trg_bien_dong_hop_le` (BEFORE INSERT OR UPDATE trên `bien_dong_cu_tru`), trigger này đồng thời kiểm B14. Khóa `FOR SHARE` ngăn một giao dịch khác sửa đợt cư trú trong lúc sự kiện đang được kiểm.
+
+```sql
+CREATE OR REPLACE FUNCTION fn_kiem_tra_su_kien(
+    p_loai VARCHAR, p_cu BIGINT, p_moi BIGINT, p_ngay DATE
+) RETURNS void LANGUAGE plpgsql AS $fn$
+DECLARE
+    v_cu qua_trinh_cu_tru%ROWTYPE;
+    v_moi qua_trinh_cu_tru%ROWTYPE;
+BEGIN
+    -- CHECK gốc chạy sau BEFORE trigger: giữ mã lỗi nhất quán cho dạng thiếu FK.
+    IF p_loai = 'CHUYEN_NOI_BO' AND (p_cu IS NULL OR p_moi IS NULL) THEN
+        RAISE EXCEPTION 'B08: chuyển nội bộ phải có cả đợt cũ và mới'
+            USING ERRCODE = '23514';
+    END IF;
+
+    IF p_cu IS NOT NULL THEN
+        SELECT * INTO v_cu FROM qua_trinh_cu_tru
+        WHERE ma_qua_trinh = p_cu FOR SHARE;
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'B09: đợt cũ % không tồn tại', p_cu
+                USING ERRCODE = '23503';
+        END IF;
+        IF v_cu.ngay_ket_thuc IS DISTINCT FROM (p_ngay - 1) THEN
+            RAISE EXCEPTION 'B09: đợt cũ % phải kết thúc trước ngày chuyển % đúng 1 ngày',
+                p_cu, p_ngay USING ERRCODE = '23514';
+        END IF;
+    END IF;
+
+    IF p_moi IS NOT NULL THEN
+        SELECT * INTO v_moi FROM qua_trinh_cu_tru
+        WHERE ma_qua_trinh = p_moi FOR SHARE;
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'B09: đợt mới % không tồn tại', p_moi
+                USING ERRCODE = '23503';
+        END IF;
+        IF v_moi.ngay_bat_dau IS DISTINCT FROM p_ngay THEN
+            RAISE EXCEPTION 'B09: đợt mới % phải bắt đầu đúng ngày chuyển %',
+                p_moi, p_ngay USING ERRCODE = '23514';
+        END IF;
+    END IF;
+
+    IF p_loai = 'CHUYEN_NOI_BO' THEN
+        IF v_cu.ma_cu_dan IS DISTINCT FROM v_moi.ma_cu_dan
+           OR v_cu.ma_ho IS NOT DISTINCT FROM v_moi.ma_ho THEN
+            RAISE EXCEPTION 'B08: chuyển nội bộ phải cùng cư dân, khác hộ'
+                USING ERRCODE = '23514';
+        END IF;
+    END IF;
+END
+$fn$;
+
+CREATE OR REPLACE FUNCTION fn_truoc_ghi_bien_dong()
+RETURNS trigger LANGUAGE plpgsql AS $fn$
+DECLARE
+    v_kiem_tra_tai_khoan BOOLEAN := FALSE;
+    v_trang_thai VARCHAR(20);
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        v_kiem_tra_tai_khoan := TRUE;
+    ELSIF NEW.ma_tai_khoan IS DISTINCT FROM OLD.ma_tai_khoan THEN
+        v_kiem_tra_tai_khoan := TRUE;
+    END IF;
+
+    IF v_kiem_tra_tai_khoan THEN
+        SELECT trang_thai INTO v_trang_thai FROM tai_khoan
+        WHERE ma_tai_khoan = NEW.ma_tai_khoan FOR SHARE;
+        IF v_trang_thai IS DISTINCT FROM 'HOAT_DONG' THEN
+            RAISE EXCEPTION 'B14: tài khoản % không ở trạng thái HOAT_DONG', NEW.ma_tai_khoan
+                USING ERRCODE = '23514';
+        END IF;
+    END IF;
+
+    PERFORM fn_kiem_tra_su_kien(
+        NEW.loai_bien_dong, NEW.ma_qua_trinh_cu,
+        NEW.ma_qua_trinh_moi, NEW.ngay_bien_dong
+    );
+    RETURN NEW;
+END
+$fn$;
+
+DROP TRIGGER IF EXISTS trg_bien_dong_hop_le ON bien_dong_cu_tru;
+CREATE TRIGGER trg_bien_dong_hop_le
+BEFORE INSERT OR UPDATE ON bien_dong_cu_tru
+FOR EACH ROW EXECUTE FUNCTION fn_truoc_ghi_bien_dong();
+```
+
 **B15 (bổ sung tuần 2):** `sql/02_constraints.sql` hiện có CHECK tên/địa chỉ không chỉ là khoảng trắng và trigger chặn ngày sinh, ngày lập hộ đứng sau ngày bắt đầu cư trú. Kiểm cả chiều INSERT/UPDATE đợt và UPDATE ngày ở hồ sơ cư dân/hộ; dữ liệu lỗi được thử trong transaction rollback. B11 chỉ khóa **liên kết địa lý đã có lịch sử**, không cấm sửa ghi chú hay các liên kết chưa sử dụng. B10 là một đường thao tác có hỗ trợ; quyền ghi SQL trực tiếp vẫn phải được quản lý và ứng dụng phải dùng giao dịch đúng quy trình. Không khẳng định đã kiểm chứng concurrency đa kết nối ngoài các ca thực tế có trong biên bản.
 
-**Giới hạn công bố (chốt 20/11/2026 theo review X01–X07 của TV3):**
+**Giới hạn của thiết kế:**
 
 | Mã | Giới hạn hoặc quyết định | Cách xử lý trong đồ án |
 |---|---|---|
-| X01 | `tai_khoan.vai_tro` chỉ mang tính mô tả và không thực thi quyền ghi. Trong seed636, 13/63 sự kiện do tài khoản `THONG_KE` ghi và 11/63 do `QUAN_TRI` ghi | Chọn phương án (b): quyền thật do role PostgreSQL thực thi, và `csdl17_report` không ghi được. Ràng buộc "chỉ `CAN_BO` được ghi biến động" nằm ngoài phạm vi v1. **Đã được TV1 báo TV2 đồng ý ngày 20/11 (Gate 2); chưa có comment GitHub riêng** |
+| X01 | `tai_khoan.vai_tro` chỉ mang tính mô tả và không thực thi quyền ghi. Trong seed636, 13/63 sự kiện do tài khoản `THONG_KE` ghi và 11/63 do `QUAN_TRI` ghi | Chọn phương án (b): quyền thật do role PostgreSQL thực thi, và `csdl17_report` không ghi được. Ràng buộc "chỉ `CAN_BO` được ghi biến động" nằm ngoài phạm vi v1. |
 | X02 | Admin không được xóa vật lý lịch sử (B12) | `REVOKE DELETE` trên hai bảng lịch sử. Admin vẫn còn `UPDATE` trong giới hạn của trigger B08–B09 |
 | X05 | `ngay_bien_dong` là ngày hiệu lực, `thoi_diem_ghi` là thời điểm ghi nhận | Cho phép đăng ký trước biến động có hiệu lực trong tương lai; không có ràng buộc so với `CURRENT_DATE` |
 | X06 | Người hoặc hộ chưa có đợt nào vẫn nhập được ngày sinh hoặc ngày lập hộ ở tương lai | Ngoài phạm vi B15 hiện tại. B15 sẽ chặn khi mở đợt đầu tiên |
 | X07 | E1 là assertion `fn_assert_e1` trong validation, không phải UNIQUE | Không chặn INSERT tức thì. Test âm xác nhận rằng INSERT trùng vẫn được ghi, rồi assertion báo `23514` |
 
-Bộ kiểm thử tích hợp `tests/constraints_week2.sql` được thiết kế chạy trên database có seed trong một `BEGIN…ROLLBACK` riêng; gồm ca hợp lệ và lỗi `23P01` (exclusion), `23514` (vi phạm nghiệp vụ) và `23503` (FK). Log CI/psql của lần chạy thật là căn cứ để ghi PASS, không phải sự tồn tại của file SQL. `sql/06_validation.sql` bổ sung kiểm tra không còn vi phạm trong dữ liệu đã nạp.
+Bộ kiểm thử tích hợp `tests/constraints_week2.sql` được thiết kế chạy trên database có seed trong một `BEGIN…ROLLBACK` riêng; gồm ca hợp lệ và lỗi `23P01` (exclusion), `23514` (vi phạm nghiệp vụ) và `23503` (FK). `sql/06_validation.sql` bổ sung kiểm tra không còn vi phạm trong dữ liệu đã nạp.
 
 ### 3.4. Chuẩn hóa
 
@@ -231,26 +450,26 @@ Bộ kiểm thử tích hợp `tests/constraints_week2.sql` được thiết k�
 
 Với tập phụ thuộc đã công bố, sáu bảng danh mục/hồ sơ/lịch sử không có phụ thuộc bắc cầu giữa các thuộc tính không khóa và đáp ứng phân tích 3NF. Tách tên tổ khỏi địa chỉ, địa chỉ khỏi đợt và tên người khỏi nhật ký tránh cập nhật cùng thông tin ở nhiều nơi.
 
-Riêng ngày biến động có thể suy ra từ biên ngày của đợt theo quy tắc đã chọn. Khi FK nullable và một đợt được nhiều sự kiện tham chiếu, xuất hiện phụ thuộc có điều kiện trên các tập con. Bản đề xuất TV1 tại Gate 2 quyết định giữ `ngay_bien_dong` là **dư thừa có kiểm soát**, có trigger B09 đồng bộ, đồng thời không khẳng định cả 7 bảng đạt 3NF nghiêm ngặt theo mọi phụ thuộc có điều kiện. TV3 đã đồng ý giữ `ngay_bien_dong` (review W3-T3-08 ngày 20/11). TV1 báo cả nhóm đã đồng ý bản thiết kế tại Gate 2 ngày 20/11; xác nhận GitHub riêng của TV2 chưa được lưu. Phân tích đầy đủ, phạm vi kết luận và việc chốt tuần 2 được ghi ở mục 5 của tài liệu chuẩn hóa.
+Riêng ngày biến động có thể suy ra từ biên ngày của đợt theo quy tắc đã chọn. Khi FK nullable và một đợt được nhiều sự kiện tham chiếu, xuất hiện phụ thuộc có điều kiện trên các tập con. Nhóm quyết định giữ `ngay_bien_dong` là **dư thừa có kiểm soát**, có trigger B09 đồng bộ, đồng thời không khẳng định cả 7 bảng đạt 3NF nghiêm ngặt theo mọi phụ thuộc có điều kiện. Phân tích đầy đủ và phạm vi kết luận được trình bày ở mục 5 của tài liệu chuẩn hóa.
 
-Quyết định C1 không đổi tập khóa/FD đã công bố và không làm đợt–sự kiện thành quan hệ bắt buộc một–một. TV1 đã hoàn thiện đề xuất chốt DEC12 ở `docs/04_data_dictionary_va_chuan_hoa.md`. TV3 đã review xong. TV1 báo TV2 đã đồng ý khi chốt Gate 2; vẫn khuyến khích bổ sung comment review độc lập để truy vết.
+Quyết định C1 không đổi tập khóa/FD đã công bố và không làm đợt–sự kiện thành quan hệ bắt buộc một–một. Lập luận chi tiết được trình bày trong `docs/04_data_dictionary_va_chuan_hoa.md`.
 
 ### 3.5. Dữ liệu mô phỏng và kế hoạch kiểm tra
 
-> Người viết: TV2 (Trần Tuấn Ngọc). Reviewer được phân công: TV1 và TV3. Cập nhật tuần 2 ngày 19/11/2026; số liệu trích từ bộ sinh tái lập `scripts/generate_data.py`, `sql/03_seed.sql` và log PostgreSQL tại [tests/week1_execution_results.json](../tests/week1_execution_results.json) cùng [tests/week2_constraints_execution_log.md](../tests/week2_constraints_execution_log.md).
+> Số liệu trong mục này được sinh bằng bộ sinh tái lập `scripts/generate_data.py` và nạp bằng `sql/03_seed.sql`.
 
 **Tuyên bố nguồn dữ liệu:** Bộ dữ liệu sử dụng trong đồ án là **dữ liệu giả lập do nhóm thiết kế nhằm kiểm thử các ràng buộc và truy vấn**, không phải dữ liệu nhân khẩu học thực tế, không sử dụng thông tin cá nhân của cư dân thật. Địa danh phường/đường/ngõ tại Hà Nội được dùng để tên địa chỉ tự nhiên; mọi số nhà, hộ cư trú, hồ sơ cư dân, đợt cư trú, biến động và tài khoản đều là mô phỏng và không phản ánh tình hình dân cư của một địa phương cụ thể.
 
 **Kiến trúc hai lớp và quy mô thực tế:**
 
-- **Lớp 1 — `fixture29` ([tests/week1_fixture.sql](../tests/week1_fixture.sql)):** 29 bản ghi trên 7 bảng (3 tổ, 3 địa chỉ, 3 hộ, 7 cư dân, 8 đợt cư trú, 2 tài khoản, 3 biến động), có đáp án tính tay độc lập tại [tests/week1_expected.json](../tests/week1_expected.json) để đối chiếu từng tuple của 10 câu SQL và 10 câu RA.
-- **Lớp 2 — `seed636` ([sql/03_seed.sql](../sql/03_seed.sql) và 7 tệp CSV UTF-8 tại `data/generated/`):** sinh bằng [scripts/generate_data.py](../scripts/generate_data.py) với seed cố định `random.Random(20261110)`, tổng **636 bản ghi**:
+- **Lớp 1 — `fixture29` (`tests/week1_fixture.sql`):** 29 bản ghi trên 7 bảng (3 tổ, 3 địa chỉ, 3 hộ, 7 cư dân, 8 đợt cư trú, 2 tài khoản, 3 biến động), có đáp án tính tay độc lập tại `tests/week1_expected.json` để đối chiếu từng tuple của 10 câu SQL và 10 câu RA.
+- **Lớp 2 — `seed636` (`sql/03_seed.sql` và 7 tệp CSV UTF-8 tại `data/generated/`):** sinh bằng `scripts/generate_data.py` với seed cố định `random.Random(20261110)`, tổng **636 bản ghi**:
 
 | STT | Bảng | Số bản ghi (`seed636`) | Quy mô gợi ý ban đầu | Ghi chú kiểm phủ kịch bản |
 |---|---|---:|---:|---|
 | 1 | `to_dan_pho` | 8 | 8 | `Tổ 01`–`Tổ 07` có cư dân; `Tổ 08` có 0 cư dân đang cư trú tại ngày `d` |
 | 2 | `dia_chi` | 50 | 50 | 4 địa chỉ chưa có nhóm hộ (`ma_dia_chi` 47–50, S04) |
-| 3 | `ho_cu_tru` | 60 | 60 | Có hộ `>= 4` người (S14), hộ 3 người, hộ 1 người và hộ trống (`ma_ho` 59–60, S05) |
+| 3 | `ho_cu_tru` | 60 | 60 | Có hộ `>= 4` người (S14), hộ 3 người, hộ 1 người và 4 hộ không có người tại d (`ma_ho` 36, 37, 59, 60; S05), trong đó hộ 37 chưa từng có đợt cư trú |
 | 4 | `cu_dan` | 200 | 200 | Có ca trùng tên (`ma_cu_dan` 4–5, S16), sát ngày cắt 60 tuổi (`1966-11-20` và `1966-11-21`, S03), người chưa có đợt (S10), người chỉ có đợt tương lai |
 | 5 | `tai_khoan` | 5 | 5 | 4 tài khoản có ghi sự kiện; `ma_tai_khoan = 5` ghi 0 sự kiện (QSQL10) |
 | 6 | `qua_trinh_cu_tru` | 250 | 250 | Không chồng lấn cùng người + cùng loại (B06); có người 2 loại cùng lúc (S07), người 2 đợt cùng hộ (đối chứng QSQL05), người hết hiệu lực (S09) |
@@ -262,9 +481,9 @@ Quyết định C1 không đổi tập khóa/FD đã công bố và không làm 
 - Sinh và nạp theo thứ tự khóa ngoại `to_dan_pho` → `dia_chi` → `ho_cu_tru` → `cu_dan` / `tai_khoan` → `qua_trinh_cu_tru` → `bien_dong_cu_tru`, cuối cùng đồng bộ lại 7 sequence bằng `setval(...)`.
 - Chỉ nạp bằng `sql/03_seed.sql` (có `TRUNCATE ... RESTART IDENTITY CASCADE` trong transaction); không nạp chồng thêm CSV vào cùng DB.
 - Quy tắc B15 (`ngay_lap <= ngay_bat_dau` sớm nhất của hộ) được hiệu chỉnh trước khi xuất tệp; bộ validator trong `scripts/generate_data.py` tự kiểm PK/FK, miền giá trị, B06/B08/B09/E1/B15 trước khi ghi tệp.
-- Kết quả kiểm tra tự động `sql/06_validation.sql` trên PostgreSQL 17 (`week1_execution_results.json` và CI run `44533515990`): `so_dot_sai_ngay = 0`, `V_E1_CU = 0` dòng, `V_E1_MOI = 0` dòng, `V_B09 = 0` dòng. Ca kiểm thử âm `S17–S19` và bộ test ràng buộc nâng cao chạy trong transaction `ROLLBACK`, không làm bẩn `seed636`. Ảnh minh chứng chạy trên máy cá nhân Windows (`W2-T2-01`) và ảnh kết quả SQL cuối kỳ (`evidence/sql/`) sẽ được bổ sung trước Gate 3.
+- Kết quả kiểm tra tự động `sql/06_validation.sql` trên PostgreSQL 17: `so_dot_sai_ngay = 0`, `V_E1_CU = 0` dòng, `V_E1_MOI = 0` dòng, `V_B09 = 0` dòng. Ca kiểm thử âm `S17–S19` và bộ test ràng buộc nâng cao chạy trong transaction `ROLLBACK`, không làm bẩn `seed636`.
 
-**Ghi chú tích hợp của TV1 (20/11/2026):** mục 3.5 ở trên được giữ nguyên theo bản của TV2 (PR #6). Bổ sung trạng thái kiểm thử mới hơn bản 19/11: ngoài 30 tình huống thiết kế trong `tests/week1_design_cases.md`, kết quả PostgreSQL trên seed636 nay có S01–S16 (18/18 ca có chấm điểm đạt, 2 ca chỉ để thông tin), S17–S19 (FK, NULL, trùng khóa) và S20–S21 (catalog quyền, đăng nhập thật), ghi trong CI và [log kiểm thử từ DB trắng](../tests/week2_tv1_integration_log.md). Cách tái lập hai database tách biệt nằm tại `docs/08_huong_dan_dung_csdl.md`. Ảnh SQL cho bản nộp vẫn chờ Gate 3.
+Ngoài 30 tình huống thiết kế trong `tests/week1_design_cases.md`, kiểm thử trên PostgreSQL với seed636 bao phủ S01–S16 (18/18 ca có chấm điểm đạt, 2 ca chỉ mang tính thông tin), S17–S19 (FK, NULL, trùng khóa), S20 (role reader đăng nhập thật, lệnh UPDATE bị từ chối với mã `42501`, dữ liệu không đổi) và S21 (role report đọc được VIEW tổng hợp nhưng bị từ chối khi đọc bảng gốc); ngoài ra có 15 kiểm tra catalog quyền C01–C15. Cách tái lập hai CSDL tách biệt được trình bày trong `docs/08_huong_dan_dung_csdl.md`.
 
 ### 3.6. Kiểm thử ràng buộc nâng cao và giao dịch
 
@@ -283,23 +502,21 @@ Quyết định C1 không đổi tập khóa/FD đã công bố và không làm 
 | Kiểm tra E1: trùng cùng vai trò | Assertion FAIL; một đợt từng là mới rồi là cũ vẫn hợp lệ | E1 |
 | B15: tên rỗng, ngày sinh/đặt hộ muộn; sửa ngược hồ sơ | Lỗi `23514`; dữ liệu hợp lệ được nhận | B15 |
 
-**Kiểm chứng ngày 19/11:** Workflow PostgreSQL 17 tại [run 44533515990](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44533515990) đã thành công: 20 thông báo PASS của fixture, 1 PASS validation, không có lỗi PostgreSQL bất ngờ; chuỗi QSQL01–QSQL10 thực thi thành công. Log này là kết quả kỹ thuật tuần 2, chưa thay thế biên bản Gate 3.
+**Kết quả kiểm thử.** Nhóm dựng hai CSDL trắng (seed636 và fixture đại số quan hệ) trên PostgreSQL 17, đăng nhập bằng mật khẩu xác thực `scram-sha-256` qua TCP. Kết quả:
+- Ràng buộc và E1/B15: 40 ca kiểm thử ràng buộc đều đạt, mỗi ca âm trả đúng mã lỗi mong đợi; 3 kiểm tra validation đạt.
+- Truy vấn và VIEW: 71 phép đối soát giữa đại số quan hệ, SQL, VIEW và role đều đạt; các ca biên S01–S16 đạt 18/18.
+- Bảo mật: 15/15 kiểm tra catalog quyền đạt; ma trận quyền B12 (K01–K05) đúng thiết kế; đăng nhập thật bằng role reader đạt 12/12 và role report đạt 10/10.
+- Toàn vẹn dữ liệu: mã băm md5 của seed636 không đổi sau các ca kiểm thử có rollback.
 
-**Kiểm chứng ngày 20/11 (TV1, sau khi tích hợp PR #8):** nhóm dựng lại hai database trắng (seed636 và fixture RA) trên PostgreSQL 17.12, đăng nhập bằng mật khẩu scram qua TCP. Kết quả:
-- Ràng buộc và E1/B15: `constraints_week2` đạt 40 PASS, validation đạt 3 PASS.
-- Truy vấn và VIEW: 71 phép đối soát RA–SQL–VIEW–role đều PASS; S01–S16 đạt 18/18.
-- Bảo mật: catalog C01–C15 đạt 15/15; ma trận quyền B12 K01–K05 đạt; đăng nhập thật reader đạt 12/12 và report đạt 10/10.
-- Toàn vẹn dữ liệu: md5 của seed636 không đổi sau các test có rollback.
+Chi tiết lệnh, kết quả mong đợi/thực tế và SQLSTATE của từng ca nằm trong nhật ký kiểm thử (tệp `tests/week2_tv1_integration_log.md`).
 
-Chi tiết lệnh, expected/actual/SQLSTATE và đường dẫn workflow CI nằm trong [log tích hợp TV1](../tests/week2_tv1_integration_log.md).
+**Trình tự kiểm thử:** Schema → Constraints → Seed → Validation (gồm E1/B15) → 10 SQL → Security. CSDL fixture đại số quan hệ được chạy riêng, gồm cả phần bảo mật và phép chia QRA07. Việc đối soát được tự động hóa bằng `scripts/verify_gate2_integration.py`; hướng dẫn dựng CSDL ở `docs/08_huong_dan_dung_csdl.md`.
 
-**Trình tự nghiệm thu cuối TV1:** Schema → Constraints → Seed → Validation (gồm E1/B15) → 10 SQL → Security; chạy riêng DB fixture RA với security và kiểm phép chia QRA07. Python đối soát tự động tại `scripts/verify_gate2_integration.py`. Hướng dẫn thống nhất ở `docs/08_huong_dan_dung_csdl.md`. Việc chạy CI chưa tự thay cho review của hai thành viên.
-
-**Minh chứng nghiệm thu:** Lưu log PostgreSQL thực thi từ CSDL trắng và kết quả `06_validation.sql` vào `tests/final_test_log.md`, kèm ảnh các ca tiêu biểu trong `evidence/sql/`. Không sử dụng log kiểm tra tệp tuần 1 để thay thế kiểm thử ràng buộc tuần 2.
+**Minh chứng:** log PostgreSQL thực thi từ CSDL trắng và kết quả `06_validation.sql` được lưu tại `tests/final_test_log.md`; ảnh các ca tiêu biểu nằm trong `evidence/sql/`.
 
 ## CHƯƠNG 4 — ĐẠI SỐ QUAN HỆ (10 CÂU)
 
-> Người viết: TV3. Reviewer được phân công: TV1. Nháp ngày 16/11/2026; cùng ngày viết lại ký hiệu theo cách trình bày trên lớp (chỉ đổi cách viết công thức, không đổi câu hỏi và SQL kiểm chứng). PR #3 đã merge; seed hiện hành có 636 dòng. Kết quả bên dưới trích từ [log kiểm chứng tuần 1](../tests/week1_execution_results.json), không phải một lần chạy mới hay xác nhận nghiệm thu của thành viên. Riêng QRA02, 03, 06, 08 chưa có trong log tuần 1; kết quả của bốn câu này lấy từ lần chạy bổ sung ngày 16/11, ghi rõ ở mục 4.12. SQL kiểm chứng của từng câu nằm trong [06a_dai_so_quan_he.md](06a_dai_so_quan_he.md).
+> SQL kiểm chứng của từng câu nằm trong `docs/06a_dai_so_quan_he.md`. Số bộ kết quả đo trên bộ dữ liệu seed636 (636 bản ghi) và được tổng hợp ở mục 4.12.
 
 ### 4.1. Ký hiệu và quy ước
 
@@ -353,7 +570,7 @@ KQ = π ma_cu_dan, ho_ten (CU_DAN ⋈ R2)
 
 R1 là các hộ thuộc Tổ 01. R2 là những người có đợt còn hiệu lực tại d ở một trong các hộ đó. R2 chỉ còn `ma_cu_dan`, nên khi nối với `CU_DAN` không bị vướng cột `ghi_chu`.
 
-Kết quả trên seed636: **34 bộ**, trích kiểm tra `QRA01` ở mục 4.12; tập kết quả đầy đủ có trong log tuần 1.
+Kết quả trên seed636: **34 bộ**, mã cư dân 1, 2, 3, 4, 5, 6, 41, 49, 56, 68, 73, 74, 76, 81, 85, 92, 99, 100, 102, 107, 109, 118, 122, 129, 136, 140, 143, 158, 168, 177, 180, 185, 193, 195. Đối soát với SQL ở mục 4.12.
 
 ### 4.3. QRA02: Cư dân đang tạm trú tại Tổ 02 tại ngày d
 
@@ -395,7 +612,7 @@ KQ = π ma_cu_dan, ho_ten (CU_DAN ⋈ R1)
 
 Đây là câu tự nối. Q1 và Q2 là hai bản sao của cùng một bảng. Điều kiện nối ghép hai đợt của cùng một người và giữ cặp đợt thuộc hai hộ khác nhau, vì vậy người có hai đợt trong cùng một hộ bị loại.
 
-Kết quả trên seed636: **54 bộ**, trích kiểm tra `QRA04` ở mục 4.12; tập kết quả đầy đủ có trong log tuần 1.
+Kết quả trên seed636: **54 bộ**, mã cư dân 6, 15, 16, 28, 29, 41, 42, 47, 51, 52, 54, 55, 60, 62, 65, 69, 75, 76, 79, 81, 82, 83, 88, 89, 92, 93, 99, 107, 118, 120, 122, 126, 134, 140, 144, 145, 146, 149, 151, 152, 158, 160, 162, 163, 165, 169, 176, 177, 178, 188, 190, 192, 193, 195. Đối soát với SQL ở mục 4.12.
 
 ### 4.6. QRA05: Địa chỉ chưa được gán cho nhóm hộ nào
 
@@ -406,9 +623,9 @@ R1 = π ma_dia_chi (DIA_CHI) − π ma_dia_chi (HO_CU_TRU)
 KQ = π ma_dia_chi, dia_chi_chuan (DIA_CHI ⋈ R1)
 ```
 
-Phép hiệu lấy mọi mã địa chỉ trừ đi các mã địa chỉ đã có hộ. Địa chỉ có hộ nhưng hộ không có người ở (S05) vẫn có mặt trong `HO_CU_TRU`, nên không thuộc kết quả.
+Phép hiệu lấy mọi mã địa chỉ trừ đi các mã địa chỉ đã có hộ. Địa chỉ có hộ nhưng hộ không có người tại d (S05) vẫn có mặt trong `HO_CU_TRU`, nên không thuộc kết quả.
 
-Kết quả trên seed636: **4 bộ**, trích kiểm tra `QRA05` ở mục 4.12; tập kết quả đầy đủ có trong log tuần 1.
+Kết quả trên seed636: **4 bộ**, mã địa chỉ 47 (Số 57 Phố Đại La), 48 (Số 58 Đường Giải Phóng), 49 (Số 59 Phố Tạ Quang Bửu), 50 (Số 60 Phố Lê Thanh Nghị); cả bốn thuộc Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội. Đối soát với SQL ở mục 4.12.
 
 ### 4.7. QRA06: Cư dân có hồ sơ nhưng chưa từng có đợt cư trú
 
@@ -446,7 +663,7 @@ KQ   = π ma_cu_dan, ho_ten (CU_DAN ⋈ R3)
 
 Không thể viết một phép chọn `loai_cu_tru='THUONG_TRU' ∧ loai_cu_tru='TAM_TRU'`, vì mỗi bộ chỉ có một loại cư trú nên kết quả luôn rỗng. Cách 1 lấy giao của hai tập người. Cách 2 đọc là "người có đủ mọi loại cư trú trong LOAI". LOAI được viết thành quan hệ hằng gồm hai bộ, không lấy bằng `π loai_cu_tru (QUA_TRINH_CU_TRU)`. Nếu lấy từ dữ liệu mà dữ liệu chỉ có một loại, số chia sẽ thiếu một loại và kết quả bị sai. Hai cách cho cùng một kết quả trên bộ dữ liệu thử.
 
-Kết quả trên seed636: **31 bộ**, trích kiểm tra `QRA07` ở mục 4.12; tập kết quả đầy đủ có trong log tuần 1. Cách 2 (phép chia) cũng cho 31 bộ, tập mã trùng hoàn toàn với cách 1 (kiểm tra riêng ngày 16/11 trên CSDL tạm nạp `01_schema.sql`, `02_constraints.sql`, `03_seed.sql`; chưa có trong log tuần 1).
+Kết quả trên seed636: **31 bộ**, mã cư dân 6, 17, 18, 41, 42, 51, 52, 54, 55, 60, 62, 75, 76, 81, 82, 83, 88, 89, 92, 99, 107, 118, 126, 140, 145, 146, 160, 163, 177, 192, 193. Đối soát với SQL ở mục 4.12. Cách 2 (phép chia) cũng cho 31 bộ, tập mã trùng hoàn toàn với cách 1.
 
 ### 4.9. QRA08: Cư dân đang cư trú tại Tổ 01 hoặc Tổ 02 tại ngày d
 
@@ -460,7 +677,7 @@ KQ = R1 ∪ R2
 
 Phép hợp gộp hai tập mã cư dân. Một người ở cả hai tổ, ví dụ thường trú ở tổ này và tạm trú ở tổ kia, chỉ xuất hiện một lần. Câu này có thể viết bằng một phép chọn với điều kiện "hoặc"; nhóm dùng `∪` để minh họa phép hợp.
 
-Kết quả trên seed636: **61 bộ** (34 người ở Tổ 01, 29 người ở Tổ 02, 2 người có mặt ở cả hai tổ). Đã khớp đáp án tay trên tiny29; kiểm tra trên seed636 ở mục 4.12.
+Kết quả trên seed636: **61 bộ** (34 người ở Tổ 01, 29 người ở Tổ 02, 2 người có mặt ở cả hai tổ), mã cư dân 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 16, 32, 35, 41, 42, 44, 49, 56, 60, 62, 67, 68, 73, 74, 76, 77, 79, 81, 85, 88, 92, 95, 99, 100, 102, 107, 109, 112, 118, 122, 129, 133, 136, 140, 143, 151, 154, 158, 162, 168, 169, 170, 177, 178, 180, 181, 185, 190, 193, 195. Đã khớp đáp án tay trên tiny29; kiểm tra trên seed636 ở mục 4.12.
 
 ### 4.10. QRA09: Cư dân đã từng cư trú nhưng không còn đợt hiệu lực tại d
 
@@ -475,7 +692,7 @@ KQ = π ma_cu_dan, ho_ten (CU_DAN ⋈ R3)
 
 Cột `ngay_bat_dau` là `NOT NULL`, nên phép chọn của R1 không gặp giá trị rỗng. Phép hiệu cho ra người từng ở nhưng tại d không còn đợt nào hiệu lực. Người chưa từng có đợt (kết quả QRA06) và người chỉ có đợt tương lai đều không thuộc R1, nên không xuất hiện ở đây.
 
-Kết quả trên seed636: **17 bộ**, trích kiểm tra `QRA09` ở mục 4.12; tập kết quả đầy đủ có trong log tuần 1.
+Kết quả trên seed636: **17 bộ**, mã cư dân 19, 20, 21, 22, 46, 53, 57, 59, 61, 86, 91, 117, 119, 121, 141, 161, 174. Đối soát với SQL ở mục 4.12.
 
 ### 4.11. QRA10: Cư dân chuyển nội bộ giữa hai tổ dân phố khác nhau
 
@@ -494,7 +711,7 @@ KQ  = π ma_cu_dan, ho_ten (CU_DAN ⋈ R2)
 
 Bảng biến động có hai khóa ngoại cùng trỏ tới `QUA_TRINH_CU_TRU`: đợt cũ và đợt mới. Vì vậy QT được dùng hai lần dưới hai tên CU và MOI. Điều kiện `CU.ma_cu_dan = MOI.ma_cu_dan` buộc đợt cũ và đợt mới thuộc cùng một người (quy tắc B08). Điều kiện `CU.ma_to ≠ MOI.ma_to` loại các lần chuyển giữa hai hộ cùng tổ.
 
-Kết quả trên seed636: **22 bộ**, trích kiểm tra `QRA10` ở mục 4.12; tập kết quả đầy đủ có trong log tuần 1.
+Kết quả trên seed636: **22 bộ**, mã cư dân 15, 28, 29, 47, 65, 69, 79, 92, 93, 122, 134, 140, 144, 149, 151, 158, 169, 176, 178, 188, 190, 195. Đối soát với SQL ở mục 4.12.
 
 ### 4.12. Nhận xét
 
@@ -513,20 +730,20 @@ Theo giáo trình, các phép cơ bản của đại số quan hệ là σ, π, 
 | QRA09 | ✓ | ✓ | ✓ | | | | | ✓ | |
 | QRA10 | ✓ | ✓ | ✓ | ✓ | ✓ | | | | |
 
-Mỗi câu có một SQL kiểm chứng viết riêng, khác với 10 câu SQL nghiệp vụ ở Chương 5. Trên bộ dữ liệu thử nhỏ đã biết đáp án (`tests/ra_fixture.sql`), cả 10 câu và cách viết phép chia của QRA07 đều cho đúng đáp án tính tay. Lần review kỹ thuật độc lập hỗ trợ TV1 đạt **146/146**, gồm 144 kiểm tra chức năng và 2 phép tái hiện; không phải 146 phép thử riêng cho đại số quan hệ. Xem [review TV3 trong nhật ký](../meetings/decision_log.md#review-tv3).
+Mỗi câu có một SQL kiểm chứng viết riêng, khác với 10 câu SQL nghiệp vụ ở Chương 5. Trên bộ dữ liệu thử nhỏ đã biết đáp án (`tests/ra_fixture.sql`), cả 10 câu và cách viết phép chia của QRA07 đều cho đúng đáp án tính tay.
 
-Lần kiểm chứng tuần 1 ngày 16/11 đạt **96/96**, gồm 95 kiểm tra chức năng và 1 tái hiện B15 bản cũ. [Log đầy đủ](../tests/week1_execution_results.json) lưu expected/actual và hash đầu vào; [môi trường](../tests/week1_environment.md) nêu giới hạn lần chạy. Sáu cặp RA/SQL đã khớp đầy đủ các thuộc tính sau khi chuẩn hóa mức hạt trên seed636. QRA02/03/06/08 đã khớp đáp án tay trên tiny29 nhưng log tuần 1 chưa lưu kết quả trên seed636. Ngày 16/11, TV3 chạy bổ sung SQL kiểm chứng của bốn câu này ([tests/seed636_qra02_03_06_08.sql](../tests/seed636_qra02_03_06_08.sql)) trên CSDL tạm nạp `01_schema.sql`, `02_constraints.sql`, `03_seed.sql`; hash `03_seed.sql` trùng log tuần 1. Bốn câu không có SQL nghiệp vụ tương ứng ở Chương 5, nên mỗi câu được đối chiếu với một cách viết SQL độc lập: QRA02 bằng `EXISTS`, QRA03 bằng tập người đang ở Tổ 01 lọc theo ngày sinh, QRA06 bằng `NOT EXISTS`, QRA08 bằng một phép chọn điều kiện "hoặc". Cả bốn cặp lệch 0 mã. Với QRA08, 34 + 29 − 2 = 61; số người Tổ 01 (34) trùng QRA01, số người Tổ 01 và Tổ 02 trùng VIEW ở mục 6.4. Lần chạy bổ sung này chưa được đưa vào log tuần 1. Bảng đối soát trên seed hiện hành:
+Kết quả đại số quan hệ được đối chiếu với SQL trên seed636 sau khi chuẩn hóa về cùng mức hạt. Sáu câu có câu SQL nghiệp vụ tương ứng ở Chương 5. Bốn câu QRA02, 03, 06, 08 không có SQL nghiệp vụ tương ứng, nên mỗi câu được đối chiếu với một cách viết SQL độc lập (`tests/seed636_qra02_03_06_08.sql`): QRA02 bằng `EXISTS`, QRA03 bằng tập người đang ở Tổ 01 lọc theo ngày sinh, QRA06 bằng `NOT EXISTS`, QRA08 bằng một phép chọn điều kiện "hoặc". Cả mười cặp lệch 0 mã. Với QRA08, 34 + 29 − 2 = 61; số người Tổ 01 (34) trùng QRA01, số người Tổ 01 và Tổ 02 trùng VIEW ở mục 6.4. Bảng đối soát:
 
 | Câu | Số bộ kết quả | Câu SQL đối chiếu | Kết quả ở cùng mức hạt |
 |---|---|---|---|
 | QRA01 | 34 | QSQL01 | Khớp |
-| QRA02 | 10 | SQL riêng trong 06a; đối chiếu bằng `EXISTS` | Khớp (chạy bổ sung 16/11) |
-| QRA03 | 2 | SQL riêng trong 06a; đối chiếu với tập Tổ 01 lọc ngày sinh | Khớp (chạy bổ sung 16/11) |
+| QRA02 | 10 | SQL riêng trong 06a; đối chiếu bằng `EXISTS` | Khớp |
+| QRA03 | 2 | SQL riêng trong 06a; đối chiếu với tập Tổ 01 lọc ngày sinh | Khớp |
 | QRA04 | 54 | QSQL05 | Khớp |
 | QRA05 | 4 | QSQL04 | Khớp |
-| QRA06 | 8 | SQL riêng trong 06a; đối chiếu bằng `NOT EXISTS` | Khớp (chạy bổ sung 16/11) |
+| QRA06 | 8 | SQL riêng trong 06a; đối chiếu bằng `NOT EXISTS` | Khớp |
 | QRA07 | 31 | QSQL06 | Khớp |
-| QRA08 | 61 | SQL riêng trong 06a; đối chiếu bằng điều kiện "hoặc" | Khớp (chạy bổ sung 16/11) |
+| QRA08 | 61 | SQL riêng trong 06a; đối chiếu bằng điều kiện "hoặc" | Khớp |
 | QRA09 | 17 | QSQL07 | Khớp |
 | QRA10 | 22 | QSQL09 | Khớp |
 
@@ -539,13 +756,7 @@ Khi đối soát, cần xử lý các khác biệt sau:
 
 ## CHƯƠNG 5 — SQL (10 CÂU)
 
-> Người viết: TV2 (Trần Tuấn Ngọc). Reviewer được phân công: TV1 và TV3. Nháp tuần 2 ngày 19/11/2026. Toàn bộ mã SQL lấy nguyên vẹn từ [sql/04_queries.sql](../sql/04_queries.sql); số liệu kết quả trên `fixture29` và `seed636` trích từ log chạy PostgreSQL 17.11 tại [tests/week1_execution_results.json](../tests/week1_execution_results.json) và lượt CI PostgreSQL 17 ([run 44533515990](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44533515990)). Ảnh chụp kết quả chạy từng câu trong `evidence/sql/` và log môi trường Windows cá nhân (`W2-T2-01`) sẽ được bổ sung trước Gate 3 (24/11).
-
-> **Ghi chú tích hợp của TV1 (20/11/2026, đã được TV1 báo nhóm chấp thuận Gate 2; chưa có comment review cá nhân):** Nội dung Chương 5 lấy nguyên từ PR #6 của TV2 (commit `19c4a440`, `6c479e19`, tác giả Ngocdeezet). TV1 đã chạy lại 10 câu trên `seed636` và `fixture29` bằng PostgreSQL 17.12. Mọi số dòng và mọi bảng trích kết quả bên dưới đều **khớp với kết quả thực tế**. Các khẳng định về từng mã cư dân cũng khớp: 16 (chuyển nội bộ cùng tổ), 17 (hai đợt cùng hộ), 23–24 (chỉ có đợt tương lai), 25–27 (chưa có đợt), và S03 (ngày sinh 1966-11-20 và 1966-11-21). TV1 chỉ sửa hai lỗi:
-> 1. Tên VIEW đúng là `vw_thong_ke_cu_dan_theo_to`.
-> 2. Các lệnh ở mục 5.1 được thêm `-d csdl17_seed636`, theo góp ý review tự động trên PR #6, và thống nhất tên DB với `docs/08`.
->
-> Bằng chứng mới nhất nằm ở [log kiểm thử TV1](../tests/week2_tv1_integration_log.md).
+> Mã SQL trong chương này lấy nguyên từ `sql/04_queries.sql`. Số liệu kết quả đo trên hai tập dữ liệu `fixture29` và `seed636` bằng PostgreSQL 17, chạy từ CSDL trắng.
 
 ### 5.1. Hệ quản trị và cách tạo dữ liệu
 
@@ -621,7 +832,7 @@ ORDER BY so_cu_dan DESC, h.ma_ho;
 ```
 
 - **Giải thích kỹ thuật:** Lọc các đợt hiệu lực tại `d` trong `WHERE`, gom nhóm theo `h.ma_ho`, dùng `COUNT(DISTINCT q.ma_cu_dan)` để không đếm trùng một cư dân nếu có hai loại cư trú trong cùng hộ, sau đó lọc ngưỡng `>= 4` ở `HAVING`.
-- **Kết quả kiểm chứng:** `fixture29` trả **1 hộ** (`ma_ho = 1`, `so_cu_dan = 4`; loại đúng hộ 1 người và hộ rỗng); `seed636` trả **24 hộ** (loại đúng hộ 3 người, hộ 1 người và hai hộ rỗng S05 `ma_ho = 59, 60`). Trích 6 dòng đầu trên `seed636`:
+- **Kết quả kiểm chứng:** `fixture29` trả **1 hộ** (`ma_ho = 1`, `so_cu_dan = 4`; loại đúng hộ 1 người và hộ không có người tại d); `seed636` trả **24 hộ** (loại đúng hộ 3 người, hộ 1 người và 4 hộ không có người tại d: `ma_ho = 36, 37, 59, 60`, trong đó hộ 37 chưa từng có đợt cư trú; hộ 36, 59, 60 mỗi hộ có một đợt đã kết thúc trước d). Trích 6 dòng đầu trên `seed636`:
 
 | `ma_ho` | `so_cu_dan` |
 |---:|---:|
@@ -694,7 +905,7 @@ WHERE NOT EXISTS (
 ORDER BY d.ma_dia_chi;
 ```
 
-- **Giải thích kỹ thuật:** Dùng truy vấn con tương quan `NOT EXISTS` để tìm các địa chỉ không có bản ghi nào trong `ho_cu_tru`, an toàn với giá trị `NULL` hơn `NOT IN`. Địa chỉ đã có hộ nhưng hộ không có cư dân đang ở (`S05`, ví dụ địa chỉ chứa `ma_ho = 59, 60`) bị loại đúng vì vẫn tồn tại bản ghi trong `ho_cu_tru`.
+- **Giải thích kỹ thuật:** Dùng truy vấn con tương quan `NOT EXISTS` để tìm các địa chỉ không có bản ghi nào trong `ho_cu_tru`, an toàn với giá trị `NULL` hơn `NOT IN`. Địa chỉ đã có hộ nhưng hộ không có cư dân đang ở (`S05`, ví dụ địa chỉ của các hộ `ma_ho = 36, 37, 59, 60`) bị loại đúng vì vẫn tồn tại bản ghi trong `ho_cu_tru`.
 - **Kết quả kiểm chứng:** `fixture29` trả **1 dòng** (`ma_dia_chi = 3`); `seed636` trả đúng **4 dòng** (khớp `QRA05 = 4`):
 
 | `ma_dia_chi` | `dia_chi_chuan` |
@@ -931,14 +1142,14 @@ ORDER BY a.ma_tai_khoan;
 
 ### 5.12. Tổng hợp kiểm thử và đối soát
 
-Bảng tổng hợp dưới đây đối chiếu 10 câu SQL trên cả hai tập dữ liệu `fixture29` và `seed636`, kèm kết quả đối soát chéo với 6 câu RA tương ứng và VIEW bảo mật (nguồn: [tests/week1_execution_results.json](../tests/week1_execution_results.json) và CI PostgreSQL 17 [run 44533515990](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44533515990)):
+Bảng tổng hợp dưới đây đối chiếu 10 câu SQL trên cả hai tập dữ liệu `fixture29` và `seed636`, kèm kết quả đối soát chéo với 6 câu RA tương ứng và VIEW bảo mật:
 
 | Mã SQL | Kịch bản kiểm thử | `fixture29` (dòng) | `seed636` (dòng) | Đối soát chéo & ca bị loại đúng | Trạng thái kỹ thuật |
 |---|---|---:|---:|---|---|
 | QSQL01 | S01, S02, S16 | 5 | 36 | Khớp `QRA01 = 34` người phân biệt; loại đợt hết hạn và đợt tương lai | PASS |
-| QSQL02 | S05, S14 | 1 | 24 | Loại hộ 3 người, hộ 1 người và hộ trống S05 (`ma_ho = 59, 60`) | PASS |
+| QSQL02 | S05, S14 | 1 | 24 | Loại hộ 3 người, hộ 1 người và 4 hộ không có người tại d (`ma_ho = 36, 37, 59, 60`; S05) | PASS |
 | QSQL03 | S01, S15 | 3 | 8 | Khớp 100% VIEW `vw_thong_ke_cu_dan_theo_to`; giữ `Tổ 08 = 0` | PASS |
-| QSQL04 | S04, S05 | 1 | 4 | Khớp `QRA05 = 4`; địa chỉ có hộ trống S05 không lọt | PASS |
+| QSQL04 | S04, S05 | 1 | 4 | Khớp `QRA05 = 4`; địa chỉ có hộ không người tại d (S05) không lọt | PASS |
 | QSQL05 | S06 | 1 | 54 | Khớp `QRA04 = 54`; loại người có 2 đợt trong cùng 1 hộ (`ma_cu_dan = 17`) | PASS |
 | QSQL06 | S07, S08 | 2 | 31 | Khớp `QRA07 = 31`; loại người chỉ có 1 loại cư trú (`S08`) | PASS |
 | QSQL07 | S09, S10 | 1 | 17 | Khớp `QRA09 = 17`; loại người chưa có đợt (`S10`) và chỉ có đợt tương lai | PASS |
@@ -946,13 +1157,12 @@ Bảng tổng hợp dưới đây đối chiếu 10 câu SQL trên cả hai tậ
 | QSQL09 | S13 | 1 | 22 | Khớp `QRA10 = 22` cư dân; loại ca chuyển nội bộ cùng tổ (`ma_cu_dan = 16`) | PASS |
 | QSQL10 | S15 + TK trống | 2 | 5 | Tổng `63` sự kiện; giữ đúng `ma_tai_khoan = 5` với `so_su_kien = 0` | PASS |
 
-**Nhận xét và việc còn lại cho Gate 3:**
-- Cả 10 truy vấn SQL đều chạy không lỗi trên PostgreSQL 17 sau khi tích hợp bộ ràng buộc nâng cao `sql/02_constraints.sql`, tái nạp `sql/03_seed.sql` cho kết quả hoàn toàn nhất quán (`seed/reload/QSQL01..10 PASS`).
-- Các điểm cần hoàn thiện trước ngày 24/11 (Gate 3): bổ sung log môi trường PostgreSQL cá nhân trên Windows của TV2 (`W2-T2-01`) và chụp đủ 10 ảnh kết quả thực thi `evidence/sql/QSQL01_result.png` … `QSQL10_result.png` để chèn vào bản báo cáo cuối.
+**Nhận xét:**
+- Cả 10 truy vấn chạy không lỗi trên PostgreSQL 17 sau khi nạp bộ ràng buộc `sql/02_constraints.sql`; nạp lại `sql/03_seed.sql` cho kết quả giống hệt lần đầu.
 
 ## CHƯƠNG 6 — BẢO MẬT CSDL
 
-> Người viết: TV3. Reviewer được phân công: TV2. Nháp ngày 16/11/2026, cập nhật 20/11/2026 theo bản tích hợp có `02_constraints.sql`. Bằng chứng tuần 2: [biên bản kiểm thử quyền bằng phiên đăng nhập thật](../tests/week2_security_login_log.md) trên PostgreSQL 17.11, seed636; bằng chứng tuần 1: [review TV3 trong nhật ký](../meetings/decision_log.md#review-tv3). TV1 báo nhóm đã chấp thuận kỹ thuật Gate 2, không có chữ ký review cá nhân trên GitHub. Ảnh minh chứng chụp trên seed đã merge, hạn 24/11. Script: [sql/05_security.sql](../sql/05_security.sql). Kế hoạch chi tiết: [06b_bao_mat.md](06b_bao_mat.md).
+> Script: `sql/05_security.sql`. Kế hoạch chi tiết: `docs/06b_bao_mat.md`. Kết quả kiểm thử quyền bằng phiên đăng nhập thật được ghi trong biên bản kiểm thử (tệp `tests/week2_security_login_log.md`).
 
 ### 6.1. Khái quát và các rủi ro
 
@@ -999,7 +1209,7 @@ Role `reader` minh họa việc giới hạn thao tác (demo B1), còn role `rep
 
 Mục tiêu: cho thấy `csdl17_reader` tra cứu được nhưng không sửa được dữ liệu, và dữ liệu không đổi sau khi role này thử sửa.
 
-Trích đoạn minh họa quyền dưới `postgres`, **không chạy riêng khối này**. Khi thực thi, dùng đầy đủ [05_security.sql](../sql/05_security.sql), gồm preflight trước mọi thay đổi và transaction thiết lập. Với psql, script tự bật `ON_ERROR_STOP`; với GUI, chạy trọn khối thiết lập và chỉ tiếp tục khi đã COMMIT thành công:
+Trích đoạn minh họa quyền dưới `postgres`, **không chạy riêng khối này**. Khi thực thi, dùng đầy đủ `sql/05_security.sql`, gồm preflight trước mọi thay đổi và transaction thiết lập. Với psql, script tự bật `ON_ERROR_STOP`; với GUI, chạy trọn khối thiết lập và chỉ tiếp tục khi đã COMMIT thành công:
 
 ```sql
 CREATE ROLE csdl17_reader LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE;
@@ -1028,7 +1238,7 @@ PostgreSQL kiểm tra quyền trước khi thực hiện câu lệnh. `csdl17_re
 
 Mục tiêu: cho thấy `csdl17_report` xem được số cư dân theo tổ qua VIEW nhưng không đọc được các bảng gốc chứa họ tên và ngày sinh.
 
-Trích đoạn VIEW/quyền dưới `postgres`, **không phải khối thiết lập độc lập**. Chạy đầy đủ [05_security.sql](../sql/05_security.sql) để kiểm tra role và cấp đủ quyền database/schema trước demo:
+Trích đoạn VIEW/quyền dưới `postgres`, **không phải khối thiết lập độc lập**. Chạy đầy đủ `sql/05_security.sql` để kiểm tra role và cấp đủ quyền database/schema trước demo:
 
 ```sql
 CREATE OR REPLACE VIEW vw_thong_ke_cu_dan_theo_to
@@ -1059,16 +1269,16 @@ GRANT SELECT ON vw_thong_ke_cu_dan_theo_to TO csdl17_report;
 
 VIEW do chủ sở hữu bảng tạo, ở chế độ mặc định `security_invoker = false`, nên VIEW đọc bảng nền bằng quyền của chủ sở hữu VIEW. `csdl17_report` chỉ có quyền trên VIEW, vì vậy nhận được số liệu tổng hợp mà không xem được họ tên hay ngày sinh của ai. Nếu đặt `security_invoker = true` (có từ PostgreSQL 15), VIEW sẽ kiểm tra quyền của người gọi trên bảng nền, và role report bị từ chối cả khi đọc VIEW.
 
-Kết quả VIEW trùng từng dòng với QSQL03 cho cùng ngày 20/11/2026 trong kiểm tra `w1_seed/VIEW-vs-QSQL03` của [log tuần 1](../tests/week1_execution_results.json). Seed636 hiện hành cho số người ở Tổ 01–08 lần lượt **34, 29, 21, 33, 41, 30, 11, 0**; Tổ 08 vẫn có một dòng dù không có người. Đây là số người phân biệt trong từng tổ; không cộng các tổ để suy ra tổng người duy nhất toàn phường.
+Kết quả VIEW trùng từng dòng với QSQL03 cho cùng ngày 20/11/2026. Seed636 hiện hành cho số người ở Tổ 01–08 lần lượt **34, 29, 21, 33, 41, 30, 11, 0**; Tổ 08 vẫn có một dòng dù không có người. Đây là số người phân biệt trong từng tổ; không cộng các tổ để suy ra tổng người duy nhất toàn phường.
 
 ### 6.5. Đánh giá
 
-Ngày 20/11/2026, TV3 chạy lại cả hai demo trên bản tích hợp tuần 2: DB dựng mới theo thứ tự `01_schema` → `02_constraints` → `03_seed` → kiểm thử ràng buộc → `06_validation` → `04_queries` → `05_security`. Kết quả ([biên bản](../tests/week2_security_login_log.md)):
+Hai minh họa được chạy lại trên PostgreSQL 17 với CSDL dựng mới theo thứ tự `01_schema` → `02_constraints` → `03_seed` → kiểm thử ràng buộc → `06_validation` → `04_queries` → `05_security`. Kết quả (biên bản (tệp `tests/week2_security_login_log.md`)):
 
 | Kiểm tra | Cách chạy | Kết quả |
 |---|---|---|
 | `05_security.sql` | `psql -f` dưới `postgres` | Đúng 6 lỗi `permission denied` cố ý, không lỗi nào khác |
-| Cấu hình quyền trong catalog | [security_catalog_tv3.sql](../tests/security_catalog_tv3.sql) | 15/15 PASS: role không đặc quyền, không sở hữu đối tượng, không là thành viên role khác; `PUBLIC` không có `CONNECT`/`TEMP`/`CREATE` trên database, không có quyền trên bảng; không có quyền mặc định ẩn; admin không có `DELETE` trên hai bảng lịch sử |
+| Cấu hình quyền trong catalog | `tests/security_catalog_tv3.sql` | 15/15 PASS: role không đặc quyền, không sở hữu đối tượng, không là thành viên role khác; `PUBLIC` không có `CONNECT`/`TEMP`/`CREATE` trên database, không có quyền trên bảng; không có quyền mặc định ẩn; admin không có `DELETE` trên hai bảng lịch sử |
 | Demo B1 | Đăng nhập thật `psql -h localhost -U csdl17_reader` | 12/12 PASS: đọc được; ghi, `TRUNCATE`, đọc `tai_khoan`, đọc VIEW, gọi `fn_chuyen_noi_bo`, tạo bảng, tạo bảng tạm và `SET ROLE csdl17_admin` đều bị chặn `42501` |
 | Demo B2 | Đăng nhập thật `psql -h localhost -U csdl17_report` | 10/10 PASS: đọc VIEW được 8 dòng; đọc 4 bảng gốc, gọi hàm, tạo bảng và `SET ROLE` đều bị chặn |
 | Dữ liệu | md5 bốn bảng trước và sau hai phiên | Không đổi |
@@ -1084,18 +1294,17 @@ Các hạn chế:
 - Đồ án chưa demo bảo mật mức dòng (Row-Level Security), ví dụ mỗi cán bộ chỉ xem cư dân thuộc tổ mình phụ trách.
 - Kiểm thử đăng nhập dùng xác thực `scram-sha-256` mặc định của bản cài, qua `localhost`, với mật khẩu tạm. Đồ án chưa cấu hình chính sách mật khẩu, mã hóa kết nối TLS hay giới hạn địa chỉ trong `pg_hba.conf`, và chưa bật ghi nhật ký truy cập. Các bước này cần khi triển khai thật và nằm ngoài phạm vi bài tập.
 - Schema `public` vẫn giữ quyền `USAGE` mặc định cho `PUBLIC`. Điều này không làm lộ dữ liệu vì `PUBLIC` không còn quyền kết nối vào database demo và không có quyền trên bảng nào, nhưng một cấu hình chặt hơn sẽ thu hồi luôn quyền này.
+- `csdl17_admin` có đủ `SELECT`, `INSERT`, `UPDATE`, `DELETE` trên `tai_khoan`; B12 chỉ thu hồi `DELETE` trên hai bảng lịch sử. Kiểm thử trên seed636 (trong transaction rollback) cho thấy: xóa tài khoản đã ghi sự kiện bị FK chặn với mã `23503`, nhưng xóa tài khoản chưa ghi sự kiện nào (tài khoản 5) thành công. Admin cũng sửa được `vai_tro`, `ten_hien_thi` và `trang_thai` của tài khoản đã ghi sự kiện. Vì nhật ký chỉ lưu `ma_tai_khoan`, đổi tên hiển thị làm thay đổi cách đọc "ai đã ghi" của các sự kiện cũ; mở khóa một tài khoản `KHOA` cho phép tài khoản đó ghi tiếp vì B14 chỉ kiểm trạng thái tại lúc ghi. Đồ án chưa có trigger chặn sửa tài khoản đã ghi sự kiện hay nhật ký kiểm toán cho các thay đổi này.
 
 Hướng mở rộng gồm Row-Level Security theo tổ, ngưỡng k cho VIEW tổng hợp, ghi nhật ký truy cập bằng `log_statement` và `log_connections`, và sao lưu định kỳ bằng `pg_dump` kèm thử khôi phục bằng `pg_restore`.
 
 ## KẾT LUẬN
 
-> Người viết: TV1. Bản 20/11/2026, Gate 2 được ghi nhận PASS theo TV1 báo nhóm chấp thuận; Gate 3/bản nộp còn mở. Các số liệu dẫn từ [log kiểm thử từ DB trắng](../tests/week2_tv1_integration_log.md) và CI trên nhánh tích hợp.
-
 ### Kết quả đạt được
 
 1. **Phân tích và thiết kế.** Nhóm đã mô hình hóa bài toán cư trú theo thời gian:
    - Sáu quy trình P1–P6 và sơ đồ phân rã có 6 nhóm, 14 chức năng.
-   - ERD gồm 7 thực thể, 35 thuộc tính và 7 FK, chốt thiết kế v1 tại Gate 1 (16/11/2026).
+   - ERD gồm 7 thực thể, 35 thuộc tính và 7 FK.
    - Điểm cốt lõi là tách **đợt cư trú** (nguồn sự thật theo thời gian) khỏi **nhật ký biến động** (sự kiện và người ghi). Nhờ vậy CSDL trả lời được câu hỏi "ở đâu tại ngày d" mà không ghi đè lịch sử.
 2. **Ràng buộc toàn vẹn.** Ngoài 7 PK, 7 FK, 3 UNIQUE và 6 CHECK, nhóm hiện thực các quy tắc nhiều dòng và liên bảng bằng các công cụ phù hợp của PostgreSQL:
    - B06 bằng ràng buộc loại trừ GiST trên khoảng ngày.
@@ -1118,7 +1327,7 @@ Hướng mở rộng gồm Row-Level Security theo tổ, ngưỡng k cho VIEW t�
 - **X07:** E1 là assertion trong validation, không chặn INSERT trùng ngay lúc ghi.
 - **Chuẩn hóa:** cột `ngay_bien_dong` là dư thừa có kiểm soát (B09). Mô hình được trình bày là 3NF có điều kiện, không phải 3NF tuyệt đối.
 - **Quyền admin:** admin vẫn có `UPDATE` trên bảng lịch sử, trong giới hạn của trigger B08–B09.
-- **Kiểm thử:** chưa kiểm thử đồng thời nhiều kết nối, TLS hay chính sách mật khẩu production. Kết quả hiện có từ CI (Linux) và macOS; môi trường Windows và ảnh minh chứng chính thức hoàn thiện ở Gate 3.
+- **Kiểm thử:** chưa kiểm thử đồng thời nhiều kết nối, TLS hay chính sách mật khẩu production. Kết quả kiểm thử thu được trên PostgreSQL 17 chạy trên Linux và macOS; chưa kiểm chứng trên Windows.
 
 ### Hướng phát triển
 
@@ -1136,30 +1345,30 @@ Hướng mở rộng gồm Row-Level Security theo tổ, ngưỡng k cho VIEW t�
 
 **B. Tài liệu PostgreSQL 17** (The PostgreSQL Global Development Group, truy cập 11–20/11/2026)
 
-2. PostgreSQL 17 Documentation — [Constraints](https://www.postgresql.org/docs/17/ddl-constraints.html) (Chương 3).
-3. PostgreSQL 17 Documentation — [Range Types](https://www.postgresql.org/docs/17/rangetypes.html), mục ràng buộc loại trừ trên khoảng (B06, Chương 3).
-4. PostgreSQL 17 Documentation — [btree_gist](https://www.postgresql.org/docs/17/btree-gist.html) (B06, Chương 3).
-5. PostgreSQL 17 Documentation — [Triggers](https://www.postgresql.org/docs/17/triggers.html) và [PL/pgSQL](https://www.postgresql.org/docs/17/plpgsql.html) (B08–B11, B14, B15, Chương 3).
-6. PostgreSQL 17 Documentation — [Transactions](https://www.postgresql.org/docs/17/tutorial-transactions.html) và [Error Codes](https://www.postgresql.org/docs/17/errcodes-appendix.html) (B10, SQLSTATE trong kiểm thử, Chương 3).
-7. PostgreSQL 17 Documentation — [Privileges](https://www.postgresql.org/docs/17/ddl-priv.html), [GRANT](https://www.postgresql.org/docs/17/sql-grant.html), [REVOKE](https://www.postgresql.org/docs/17/sql-revoke.html) (Chương 6).
-8. PostgreSQL 17 Documentation — [CREATE VIEW](https://www.postgresql.org/docs/17/sql-createview.html), tùy chọn `security_invoker` (Chương 6).
-9. PostgreSQL 17 Documentation — [Database Roles](https://www.postgresql.org/docs/17/user-manag.html), [Role Membership](https://www.postgresql.org/docs/17/role-membership.html) (Chương 6).
-10. PostgreSQL 17 Documentation — [CREATE FUNCTION](https://www.postgresql.org/docs/17/sql-createfunction.html), mục `SECURITY INVOKER`/`SECURITY DEFINER` và quyền `EXECUTE` mặc định của `PUBLIC` (Chương 6).
-11. PostgreSQL 17 Documentation — [ALTER DEFAULT PRIVILEGES](https://www.postgresql.org/docs/17/sql-alterdefaultprivileges.html) và [Password Authentication](https://www.postgresql.org/docs/17/auth-password.html) (Chương 6).
-12. PostgreSQL 17 Documentation — [psql](https://www.postgresql.org/docs/17/app-psql.html) (hướng dẫn dựng CSDL, Chương 5).
+2. PostgreSQL 17 Documentation — Constraints (https://www.postgresql.org/docs/17/ddl-constraints.html) (Chương 3).
+3. PostgreSQL 17 Documentation — Range Types (https://www.postgresql.org/docs/17/rangetypes.html), mục ràng buộc loại trừ trên khoảng (B06, Chương 3).
+4. PostgreSQL 17 Documentation — btree_gist (https://www.postgresql.org/docs/17/btree-gist.html) (B06, Chương 3).
+5. PostgreSQL 17 Documentation — Triggers (https://www.postgresql.org/docs/17/triggers.html) và PL/pgSQL (https://www.postgresql.org/docs/17/plpgsql.html) (B08–B11, B14, B15, Chương 3).
+6. PostgreSQL 17 Documentation — Transactions (https://www.postgresql.org/docs/17/tutorial-transactions.html) và Error Codes (https://www.postgresql.org/docs/17/errcodes-appendix.html) (B10, SQLSTATE trong kiểm thử, Chương 3).
+7. PostgreSQL 17 Documentation — Privileges (https://www.postgresql.org/docs/17/ddl-priv.html), GRANT (https://www.postgresql.org/docs/17/sql-grant.html), REVOKE (https://www.postgresql.org/docs/17/sql-revoke.html) (Chương 6).
+8. PostgreSQL 17 Documentation — CREATE VIEW (https://www.postgresql.org/docs/17/sql-createview.html), tùy chọn `security_invoker` (Chương 6).
+9. PostgreSQL 17 Documentation — Database Roles (https://www.postgresql.org/docs/17/user-manag.html), Role Membership (https://www.postgresql.org/docs/17/role-membership.html) (Chương 6).
+10. PostgreSQL 17 Documentation — CREATE FUNCTION (https://www.postgresql.org/docs/17/sql-createfunction.html), mục `SECURITY INVOKER`/`SECURITY DEFINER` và quyền `EXECUTE` mặc định của `PUBLIC` (Chương 6).
+11. PostgreSQL 17 Documentation — ALTER DEFAULT PRIVILEGES (https://www.postgresql.org/docs/17/sql-alterdefaultprivileges.html) và Password Authentication (https://www.postgresql.org/docs/17/auth-password.html) (Chương 6).
+12. PostgreSQL 17 Documentation — psql (https://www.postgresql.org/docs/17/app-psql.html) (hướng dẫn dựng CSDL, Chương 5).
 
 **C. Tài liệu nội bộ của nhóm** (kho mã `Linhlss/CSDL-Nh-m-38`)
 
-13. [Đặc tả nghiệp vụ](03_dac_ta_nghiep_vu.md) — TV1, bàn giao 11/11/2026, cập nhật X01/X05/X06 ngày 20/11/2026.
-14. [Từ điển dữ liệu và chuẩn hóa](04_data_dictionary_va_chuan_hoa.md) — TV1, bàn giao 11/11/2026, cập nhật X03 ngày 20/11/2026.
-15. [Đại số quan hệ QRA01–QRA10](06a_dai_so_quan_he.md) và [kế hoạch bảo mật](06b_bao_mat.md) — TV3 (Chương 4, 6).
-16. [Ma trận truy vấn và review](07_ma_tran_truy_van_va_review.md), [hướng dẫn dựng CSDL](08_huong_dan_dung_csdl.md), [nhật ký quyết định](../meetings/decision_log.md).
+13. Đặc tả nghiệp vụ (tệp `docs/03_dac_ta_nghiep_vu.md`) — TV1, bàn giao 11/11/2026, cập nhật X01/X05/X06 ngày 20/11/2026.
+14. Từ điển dữ liệu và chuẩn hóa (tệp `docs/04_data_dictionary_va_chuan_hoa.md`) — TV1, bàn giao 11/11/2026, cập nhật X03 ngày 20/11/2026.
+15. Đại số quan hệ QRA01–QRA10 (tệp `docs/06a_dai_so_quan_he.md`) và kế hoạch bảo mật (tệp `docs/06b_bao_mat.md`) — TV3 (Chương 4, 6).
+16. Ma trận truy vấn và review (tệp `docs/07_ma_tran_truy_van_va_review.md`), hướng dẫn dựng CSDL (tệp `docs/08_huong_dan_dung_csdl.md`), nhật ký quyết định (tệp `meetings/decision_log.md`).
 
 ## PHỤ LỤC
 
 ### Phụ lục A — Danh sách 7 bảng
 
-Từ điển đầy đủ từng cột (kiểu, NULL, default, miền giá trị và ý nghĩa) nằm ở [tài liệu dữ liệu, mục 3](04_data_dictionary_va_chuan_hoa.md).
+Bảng dưới đây tóm tắt khóa và ràng buộc của từng bảng; từ điển chi tiết từng cột nằm ở mục 3.2.
 
 | STT | Bảng | Số cột | Khóa chính | Khóa ngoại | UNIQUE / CHECK chính | Số dòng `seed636` |
 |---:|---|---:|---|---|---|---:|
@@ -1223,15 +1432,16 @@ Số dòng QRA lấy từ `SEED_COUNTS` trong `scripts/verify_gate2_integration.
 | Ràng buộc cơ bản | S17 (FK), S18 (ngày đảo), S19 (nội bộ thiếu đợt), PK/UNIQUE/NOT NULL/CHECK | `constraints_week2.sql` | PASS (`23503`, `23514`, `23505`, `23502`) |
 | Ràng buộc nâng cao | B06, B08–B11, B14, B15, E1 | `constraints_week2.sql`, `06_validation.sql` | 40 + 3 PASS |
 | RA–SQL–VIEW–role | 10 QRA, QRA07_DIV, 10 QSQL, 6 cặp, VIEW, 2 DB | `verify_gate2_integration.py` | 71 PASS |
-| Quyền (catalog) | S20: C01–C15 | `security_catalog_tv3.sql` | 15/15 |
-| Đăng nhập thật | S21: reader R01–R12, report P01–P10 | `security_login_tv3.sql` | 12/12, 10/10 |
+| Quyền (catalog) | C01–C15 | `security_catalog_tv3.sql` | 15/15 |
+| S20 — reader đăng nhập thật | R01–R12: đọc được `cu_dan`, `qua_trinh_cu_tru`; UPDATE, INSERT, DELETE, TRUNCATE, đọc bảng không được cấp, gọi hàm chuyển, tạo bảng và đổi role đều bị từ chối `42501` | `security_login_tv3.sql` | 12/12 |
+| S21 — report đăng nhập thật | P01–P10: đọc được VIEW tổng hợp; đọc bảng gốc, gọi hàm chuyển, tạo bảng và đổi role bị từ chối `42501`; UPDATE trên VIEW bị từ chối `55000` | `security_login_tv3.sql` | 10/10 |
 | B12 | K01–K05 | `security_b12_tv1.sql` | PASS |
 | Demo B1/B2 | 6 lệnh bị từ chối cố ý | `05_security.sql` | 6/6 đúng |
 
 ### Phụ lục E — Danh mục ảnh minh chứng (vị trí chèn và tên tệp thống nhất)
 
 > **Quy ước chốt 20/11/2026 (T3-03, TV1 đề xuất, chờ TV3 xác nhận):**
-> - **Ảnh bảo mật:** dùng bộ 8 tên `SEC_B1_*` / `SEC_B2_*` theo [06b mục 7](06b_bao_mat.md), gồm 7 ảnh bắt buộc và 1 ảnh tùy chọn. Bộ tên ngắn `B1_select_ok.png`… trong checklist cũ không dùng nữa.
+> - **Ảnh bảo mật:** dùng bộ 8 tên `SEC_B1_*` / `SEC_B2_*` theo 06b mục 7 (tệp `docs/06b_bao_mat.md`), gồm 7 ảnh bắt buộc và 1 ảnh tùy chọn. Bộ tên ngắn `B1_select_ok.png`… trong checklist cũ không dùng nữa.
 > - **Ảnh SQL:** dùng tên `QSQLxx_result.png`.
 > - **Nguồn chụp:** ảnh phải chụp từ phiên chạy thật trên seed636 sau khi đã merge; không dùng ảnh minh họa giả.
 
