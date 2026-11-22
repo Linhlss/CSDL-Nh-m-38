@@ -21,6 +21,21 @@
 BEGIN;
 SET search_path = public;
 
+-- Dùng đúng VIEW hiện tại in trong báo cáo; ROLLBACK khôi phục VIEW kỹ thuật.
+CREATE OR REPLACE VIEW vw_thong_ke_cu_dan_theo_to
+WITH (security_invoker = false) AS
+SELECT t.ma_to,
+       t.ten_to,
+       COUNT(DISTINCT q.ma_cu_dan) AS so_cu_dan
+FROM to_dan_pho t
+LEFT JOIN dia_chi d          ON d.ma_to = t.ma_to
+LEFT JOIN ho_cu_tru h        ON h.ma_dia_chi = d.ma_dia_chi
+LEFT JOIN qua_trinh_cu_tru q ON q.ma_ho = h.ma_ho
+                            AND q.ngay_bat_dau <= CURRENT_DATE
+                            AND (q.ngay_ket_thuc IS NULL
+                                 OR q.ngay_ket_thuc >= CURRENT_DATE)
+GROUP BY t.ma_to, t.ten_to;
+
 -- Hàm thử: chạy một lệnh với quyền của role hiện hành (SECURITY INVOKER),
 -- in SQLSTATE thực tế. Lệnh chạy được thì bị hoàn tác ngay (trừ khi p_giu).
 CREATE FUNCTION pg_temp.thu(p_ma TEXT, p_ky_vong TEXT, p_sql TEXT) RETURNS void
@@ -39,6 +54,7 @@ BEGIN
     RAISE NOTICE '[%] % | ky vong % | thuc te % | %',
         CASE WHEN thuc_te LIKE p_ky_vong || '%' THEN 'PASS' ELSE 'FAIL' END,
         p_ma, p_ky_vong, thuc_te, current_user;
+    IF thuc_te NOT LIKE p_ky_vong || '%' THEN RAISE EXCEPTION 'Security example % failed',p_ma; END IF;
 END
 $f$;
 

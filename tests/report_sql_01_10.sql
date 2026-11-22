@@ -9,7 +9,7 @@
 -- sql/04_queries.sql. Hai bộ có câu hỏi khác nhau; tệp này không thay thế
 -- và không sửa sql/04_queries.sql.
 --
--- Ngày tham chiếu: d = DATE '2026-11-20' (cố định, kết quả lặp lại được).
+-- Các truy vấn về hiện tại dùng CURRENT_DATE của phiên PostgreSQL.
 --
 -- Cơ sở dữ liệu cần có (dựng mới, theo đúng thứ tự):
 --   sql/01_schema.sql -> sql/02_constraints.sql -> sql/03_seed.sql
@@ -19,15 +19,16 @@
 --   psql -X -v ON_ERROR_STOP=1 -d <db_seed636> -f tests/report_sql_01_10.sql
 --
 -- Tệp chỉ đọc dữ liệu (chỉ có SELECT và một khối DO chỉ đọc), không ghi gì
--- vào cơ sở dữ liệu. Phần cuối so số dòng/giá trị tiêu biểu với con số đang
--- in trong báo cáo và in [PASS]/[FAIL] theo kết quả chạy thực tế.
+-- vào cơ sở dữ liệu. Câu phụ thuộc ngày dùng oracle độc lập cùng CURRENT_DATE;
+-- các câu lịch sử giữ kiểm tra trên seed. Có FAIL thì dừng với lỗi.
 -- =====================================================================
 
 \set ON_ERROR_STOP on
 \pset footer on
 SET search_path = public;
+BEGIN READ ONLY;
 
-\echo '=== Câu 1. Cư dân đang thường trú tại tổ 1 tại d (báo cáo: 23 dòng)'
+\echo '=== Câu 1. Cư dân đang thường trú tại tổ 1 hiện tại'
 SELECT cd.ma_cu_dan, cd.ho_ten, h.ma_ho, dc.dia_chi_chuan
 FROM cu_dan cd
 JOIN qua_trinh_cu_tru qt ON qt.ma_cu_dan = cd.ma_cu_dan
@@ -35,11 +36,11 @@ JOIN ho_cu_tru h         ON h.ma_ho = qt.ma_ho
 JOIN dia_chi dc          ON dc.ma_dia_chi = h.ma_dia_chi
 WHERE dc.ma_to = 1
   AND qt.loai_cu_tru = 'THUONG_TRU'
-  AND qt.ngay_bat_dau <= DATE '2026-11-20'
-  AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= DATE '2026-11-20')
+  AND qt.ngay_bat_dau <= CURRENT_DATE
+  AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= CURRENT_DATE)
 ORDER BY dc.dia_chi_chuan, cd.ho_ten;
 
-\echo '=== Câu 2. Thống kê thường trú / tạm trú / tổng theo tổ (báo cáo: Tổ 05 = 41, Tổ 08 = 0/0/0)'
+\echo '=== Câu 2. Thống kê thường trú / tạm trú / tổng theo tổ'
 SELECT t.ma_to, t.ten_to,
        COUNT(DISTINCT qt.ma_cu_dan) FILTER (WHERE qt.loai_cu_tru = 'THUONG_TRU') AS so_thuong_tru,
        COUNT(DISTINCT qt.ma_cu_dan) FILTER (WHERE qt.loai_cu_tru = 'TAM_TRU')    AS so_tam_tru,
@@ -48,34 +49,34 @@ FROM to_dan_pho t
 LEFT JOIN dia_chi dc          ON dc.ma_to = t.ma_to
 LEFT JOIN ho_cu_tru h         ON h.ma_dia_chi = dc.ma_dia_chi
 LEFT JOIN qua_trinh_cu_tru qt ON qt.ma_ho = h.ma_ho
-                             AND qt.ngay_bat_dau <= DATE '2026-11-20'
-                             AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= DATE '2026-11-20')
+                             AND qt.ngay_bat_dau <= CURRENT_DATE
+                             AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= CURRENT_DATE)
 GROUP BY t.ma_to, t.ten_to
 ORDER BY tong_so_nguoi DESC, t.ma_to;
 
-\echo '=== Câu 3. Hộ có từ 3 nhân khẩu trở lên tại d (báo cáo: 40 hộ, lớn nhất 7)'
+\echo '=== Câu 3. Hộ có từ 3 nhân khẩu trở lên hiện tại'
 SELECT h.ma_ho, dc.dia_chi_chuan, COUNT(DISTINCT qt.ma_cu_dan) AS so_nhan_khau
 FROM ho_cu_tru h
 JOIN dia_chi dc          ON dc.ma_dia_chi = h.ma_dia_chi
 JOIN qua_trinh_cu_tru qt ON qt.ma_ho = h.ma_ho
-WHERE qt.ngay_bat_dau <= DATE '2026-11-20'
-  AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= DATE '2026-11-20')
+WHERE qt.ngay_bat_dau <= CURRENT_DATE
+  AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= CURRENT_DATE)
 GROUP BY h.ma_ho, dc.dia_chi_chuan
 HAVING COUNT(DISTINCT qt.ma_cu_dan) >= 3
 ORDER BY so_nhan_khau DESC, h.ma_ho;
 
-\echo '=== Câu 4. Đã từng cư trú nhưng không còn đợt hiệu lực tại d (báo cáo: 17 dòng)'
+\echo '=== Câu 4. Đã từng cư trú nhưng không còn đợt hiệu lực hiện tại'
 SELECT cd.ma_cu_dan, cd.ho_ten
 FROM cu_dan cd
 WHERE EXISTS (
         SELECT 1 FROM qua_trinh_cu_tru qt
         WHERE qt.ma_cu_dan = cd.ma_cu_dan
-          AND qt.ngay_bat_dau <= DATE '2026-11-20')
+          AND qt.ngay_bat_dau <= CURRENT_DATE)
   AND NOT EXISTS (
         SELECT 1 FROM qua_trinh_cu_tru qt
         WHERE qt.ma_cu_dan = cd.ma_cu_dan
-          AND qt.ngay_bat_dau <= DATE '2026-11-20'
-          AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= DATE '2026-11-20'))
+          AND qt.ngay_bat_dau <= CURRENT_DATE
+          AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= CURRENT_DATE))
 ORDER BY cd.ma_cu_dan;
 
 \echo '=== Câu 5. Lịch sử cư trú của cư dân 92 (báo cáo: 3 đợt — hộ 56, 15, 20)'
@@ -87,7 +88,7 @@ JOIN dia_chi dc  ON dc.ma_dia_chi = h.ma_dia_chi
 WHERE qt.ma_cu_dan = 92
 ORDER BY qt.ngay_bat_dau;
 
-\echo '=== Câu 6. Số biến động theo tháng và loại trong năm 2026 (báo cáo chưa in số)'
+\echo '=== Câu 6. Số biến động theo tháng và loại trong năm 2026 (đối chiếu dữ liệu mẫu)'
 SELECT EXTRACT(MONTH FROM ngay_bien_dong)::INT AS thang, loai_bien_dong,
        COUNT(*) AS so_bien_dong
 FROM bien_dong_cu_tru
@@ -128,41 +129,46 @@ WHERE cd.ma_cu_dan IN (
 )
 ORDER BY cd.ma_cu_dan;
 
-\echo '=== Câu 10. Cư dân từ 18 tuổi đang thường trú tại d (báo cáo: 131 dòng, có cư dân 1)'
+\echo '=== Câu 10. Cư dân từ 18 tuổi đang thường trú hiện tại'
 SELECT cd.ma_cu_dan, cd.ho_ten, cd.ngay_sinh, dc.dia_chi_chuan
 FROM cu_dan cd
 JOIN qua_trinh_cu_tru qt ON qt.ma_cu_dan = cd.ma_cu_dan
 JOIN ho_cu_tru h         ON h.ma_ho = qt.ma_ho
 JOIN dia_chi dc          ON dc.ma_dia_chi = h.ma_dia_chi
 WHERE qt.loai_cu_tru = 'THUONG_TRU'
-  AND qt.ngay_bat_dau <= DATE '2026-11-20'
-  AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= DATE '2026-11-20')
-  AND cd.ngay_sinh <= DATE '2026-11-20' - INTERVAL '18 years'
+  AND qt.ngay_bat_dau <= CURRENT_DATE
+  AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= CURRENT_DATE)
+  AND cd.ngay_sinh <= CURRENT_DATE - INTERVAL '18 years'
 ORDER BY dc.dia_chi_chuan, cd.ho_ten;
 
 -- =====================================================================
--- ĐỐI CHIẾU VỚI CON SỐ ĐANG IN TRONG CHƯƠNG 5
+-- ĐỐI CHIẾU NGỮ NGHĨA TRUY VẤN VÀ DỮ LIỆU MẪU
 -- Mỗi kiểm tra chạy lại đúng câu truy vấn ở trên (bọc trong COUNT/điều kiện)
 -- và in [PASS] hoặc [FAIL] cùng giá trị thực tế.
 -- =====================================================================
 \echo '=== Đối chiếu con số đang in trong báo cáo'
 DO $chk$
 DECLARE
-    n BIGINT; v TEXT; ok BOOLEAN; so_fail INT := 0;
+    n BIGINT; m BIGINT; v TEXT; w TEXT; ok BOOLEAN; so_fail INT := 0;
 BEGIN
-    -- Câu 1: 23 dòng
+    -- Câu 1: số dòng theo hiện tại, đối chiếu oracle EXISTS + daterange
     SELECT COUNT(*) INTO n FROM (
         SELECT cd.ma_cu_dan FROM cu_dan cd
         JOIN qua_trinh_cu_tru qt ON qt.ma_cu_dan = cd.ma_cu_dan
         JOIN ho_cu_tru h ON h.ma_ho = qt.ma_ho
         JOIN dia_chi dc ON dc.ma_dia_chi = h.ma_dia_chi
         WHERE dc.ma_to = 1 AND qt.loai_cu_tru = 'THUONG_TRU'
-          AND qt.ngay_bat_dau <= DATE '2026-11-20'
-          AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= DATE '2026-11-20')) q;
-    ok := n = 23; so_fail := so_fail + (NOT ok)::INT;
-    RAISE NOTICE '[%] SQL-C1: so_dong = % (bao cao: 23)', CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END, n;
+          AND qt.ngay_bat_dau <= CURRENT_DATE
+          AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= CURRENT_DATE)) q;
+    SELECT COUNT(*) INTO m FROM cu_dan c WHERE EXISTS (
+        SELECT 1 FROM qua_trinh_cu_tru q JOIN ho_cu_tru h USING (ma_ho)
+        JOIN dia_chi d USING (ma_dia_chi)
+        WHERE q.ma_cu_dan=c.ma_cu_dan AND q.loai_cu_tru='THUONG_TRU' AND d.ma_to=1
+          AND daterange(q.ngay_bat_dau,q.ngay_ket_thuc,'[]') @> CURRENT_DATE);
+    ok := n = m; so_fail := so_fail + (NOT ok)::INT;
+    RAISE NOTICE '[%] SQL-C1: so_dong = % (doi chieu doc lap theo CURRENT_DATE)', CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END, n;
 
-    -- Câu 2: 8 tổ; dòng đầu là Tổ 05 với tổng 41; Tổ 08 = 0/0/0
+    -- Câu 2: đối chiếu đủ thống kê từng tổ với các phép đếm tương quan
     SELECT string_agg(format('%s:%s/%s/%s', ten_to, tt, tm, tong), '; ' ORDER BY tong DESC, ma_to)
       INTO v
     FROM (
@@ -174,37 +180,52 @@ BEGIN
         LEFT JOIN dia_chi dc ON dc.ma_to = t.ma_to
         LEFT JOIN ho_cu_tru h ON h.ma_dia_chi = dc.ma_dia_chi
         LEFT JOIN qua_trinh_cu_tru qt ON qt.ma_ho = h.ma_ho
-             AND qt.ngay_bat_dau <= DATE '2026-11-20'
-             AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= DATE '2026-11-20')
+             AND qt.ngay_bat_dau <= CURRENT_DATE
+             AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= CURRENT_DATE)
         GROUP BY t.ma_to, t.ten_to) q;
-    ok := v LIKE 'Tổ 05:%/%/41;%' AND v LIKE '%Tổ 08:0/0/0%';
+    SELECT string_agg(format('%s:%s/%s/%s',t.ten_to,c.tt,c.tm,c.tong),'; ' ORDER BY c.tong DESC,t.ma_to)
+      INTO w FROM to_dan_pho t CROSS JOIN LATERAL (
+        SELECT COUNT(DISTINCT q.ma_cu_dan) FILTER(WHERE q.loai_cu_tru='THUONG_TRU') tt,
+               COUNT(DISTINCT q.ma_cu_dan) FILTER(WHERE q.loai_cu_tru='TAM_TRU') tm,
+               COUNT(DISTINCT q.ma_cu_dan) tong
+        FROM qua_trinh_cu_tru q JOIN ho_cu_tru h USING(ma_ho) JOIN dia_chi d USING(ma_dia_chi)
+        WHERE d.ma_to=t.ma_to AND daterange(q.ngay_bat_dau,q.ngay_ket_thuc,'[]') @> CURRENT_DATE) c;
+    ok := v IS NOT DISTINCT FROM w;
     so_fail := so_fail + (NOT ok)::INT;
-    RAISE NOTICE '[%] SQL-C2: % (bao cao: To 05 = 41 dung dau, To 08 = 0/0/0)',
+    RAISE NOTICE '[%] SQL-C2: % (doi chieu doc lap du ca 3 cot cua moi to)',
         CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END, v;
 
-    -- Câu 3: 40 hộ, lớn nhất 7 nhân khẩu
+    -- Câu 3: đối chiếu phép đếm theo hộ với truy vấn tương quan
     SELECT COUNT(*), MAX(so) INTO n, v FROM (
         SELECT h.ma_ho, COUNT(DISTINCT qt.ma_cu_dan) AS so
         FROM ho_cu_tru h
         JOIN dia_chi dc ON dc.ma_dia_chi = h.ma_dia_chi
         JOIN qua_trinh_cu_tru qt ON qt.ma_ho = h.ma_ho
-        WHERE qt.ngay_bat_dau <= DATE '2026-11-20'
-          AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= DATE '2026-11-20')
+        WHERE qt.ngay_bat_dau <= CURRENT_DATE
+          AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= CURRENT_DATE)
         GROUP BY h.ma_ho, dc.dia_chi_chuan
         HAVING COUNT(DISTINCT qt.ma_cu_dan) >= 3) q;
-    ok := n = 40 AND v = '7'; so_fail := so_fail + (NOT ok)::INT;
-    RAISE NOTICE '[%] SQL-C3: so_ho = %, max_nhan_khau = % (bao cao: 40, 7)',
+    SELECT COUNT(*), MAX(so)::TEXT INTO m,w FROM (
+        SELECT h.ma_ho,(SELECT COUNT(DISTINCT q.ma_cu_dan) FROM qua_trinh_cu_tru q
+                        WHERE q.ma_ho=h.ma_ho AND daterange(q.ngay_bat_dau,q.ngay_ket_thuc,'[]') @> CURRENT_DATE) so
+        FROM ho_cu_tru h) x WHERE so>=3;
+    ok := n = m AND v IS NOT DISTINCT FROM w; so_fail := so_fail + (NOT ok)::INT;
+    RAISE NOTICE '[%] SQL-C3: so_ho = %, max_nhan_khau = % (doi chieu doc lap theo CURRENT_DATE)',
         CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END, n, v;
 
-    -- Câu 4: 17 dòng
+    -- Câu 4: đối chiếu NOT EXISTS với phép hiệu tập hợp
     SELECT COUNT(*) INTO n FROM cu_dan cd
     WHERE EXISTS (SELECT 1 FROM qua_trinh_cu_tru qt WHERE qt.ma_cu_dan = cd.ma_cu_dan
-                    AND qt.ngay_bat_dau <= DATE '2026-11-20')
+                    AND qt.ngay_bat_dau <= CURRENT_DATE)
       AND NOT EXISTS (SELECT 1 FROM qua_trinh_cu_tru qt WHERE qt.ma_cu_dan = cd.ma_cu_dan
-                    AND qt.ngay_bat_dau <= DATE '2026-11-20'
-                    AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= DATE '2026-11-20'));
-    ok := n = 17; so_fail := so_fail + (NOT ok)::INT;
-    RAISE NOTICE '[%] SQL-C4: so_dong = % (bao cao: 17)', CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END, n;
+                    AND qt.ngay_bat_dau <= CURRENT_DATE
+                    AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= CURRENT_DATE));
+    SELECT COUNT(*) INTO m FROM (
+        SELECT ma_cu_dan FROM qua_trinh_cu_tru WHERE ngay_bat_dau <= CURRENT_DATE
+        EXCEPT SELECT ma_cu_dan FROM qua_trinh_cu_tru
+        WHERE daterange(ngay_bat_dau,ngay_ket_thuc,'[]') @> CURRENT_DATE) x;
+    ok := n = m; so_fail := so_fail + (NOT ok)::INT;
+    RAISE NOTICE '[%] SQL-C4: so_dong = % (doi chieu phep hieu tap hop)', CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END, n;
 
     -- Câu 5: 3 đợt theo thứ tự thời gian
     SELECT string_agg(format('%s@ho%s[%s..%s]', loai_cu_tru, ma_ho, ngay_bat_dau,
@@ -215,13 +236,14 @@ BEGIN
     so_fail := so_fail + (NOT ok)::INT;
     RAISE NOTICE '[%] SQL-C5: %', CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END, v;
 
-    -- Câu 6: báo cáo không in số; chỉ ghi lại thực tế
+    -- Câu 6: số nhóm và tổng biến động năm 2026 trên seed
     SELECT COUNT(*), SUM(so) INTO n, v FROM (
         SELECT EXTRACT(MONTH FROM ngay_bien_dong)::INT AS thang, loai_bien_dong, COUNT(*) AS so
         FROM bien_dong_cu_tru
         WHERE ngay_bien_dong >= DATE '2026-01-01' AND ngay_bien_dong < DATE '2027-01-01'
         GROUP BY thang, loai_bien_dong) q;
-    RAISE NOTICE '[INFO] SQL-C6: so_nhom (thang, loai) = %, tong_bien_dong_2026 = %', n, v;
+    ok := n = 21 AND v = '29'; so_fail := so_fail + (NOT ok)::INT;
+    RAISE NOTICE '[%] SQL-C6: so_nhom (thang, loai) = %, tong_bien_dong_2026 = %', CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END, n, v;
 
     -- Câu 7: 27 dòng; dòng đầu 2025-01-18, Dương Hữu Cường, hộ 13 -> 25
     SELECT COUNT(*) INTO n FROM bien_dong_cu_tru WHERE loai_bien_dong = 'CHUYEN_NOI_BO';
@@ -257,20 +279,27 @@ BEGIN
     ok := n = 31; so_fail := so_fail + (NOT ok)::INT;
     RAISE NOTICE '[%] SQL-C9: so_dong = % (bao cao: 31)', CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END, n;
 
-    -- Câu 10: 131 dòng, có cư dân 1 (sinh 1966-11-20)
+    -- Câu 10: so điều kiện đủ tuổi với age() và hiệu lực với daterange
     SELECT COUNT(*), bool_or(cd.ma_cu_dan = 1 AND cd.ngay_sinh = DATE '1966-11-20')::TEXT INTO n, v
     FROM cu_dan cd
     JOIN qua_trinh_cu_tru qt ON qt.ma_cu_dan = cd.ma_cu_dan
     JOIN ho_cu_tru h ON h.ma_ho = qt.ma_ho
     JOIN dia_chi dc ON dc.ma_dia_chi = h.ma_dia_chi
     WHERE qt.loai_cu_tru = 'THUONG_TRU'
-      AND qt.ngay_bat_dau <= DATE '2026-11-20'
-      AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= DATE '2026-11-20')
-      AND cd.ngay_sinh <= DATE '2026-11-20' - INTERVAL '18 years';
-    ok := n = 131 AND v = 'true'; so_fail := so_fail + (NOT ok)::INT;
-    RAISE NOTICE '[%] SQL-C10: so_dong = %, co_cu_dan_1_sinh_1966_11_20 = % (bao cao: 131, co)',
+      AND qt.ngay_bat_dau <= CURRENT_DATE
+      AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= CURRENT_DATE)
+      AND cd.ngay_sinh <= CURRENT_DATE - INTERVAL '18 years';
+    SELECT COUNT(*) INTO m FROM cu_dan c
+    WHERE EXTRACT(YEAR FROM age(CURRENT_DATE,c.ngay_sinh)) >= 18 AND EXISTS (
+      SELECT 1 FROM qua_trinh_cu_tru q WHERE q.ma_cu_dan=c.ma_cu_dan AND q.loai_cu_tru='THUONG_TRU'
+        AND daterange(q.ngay_bat_dau,q.ngay_ket_thuc,'[]') @> CURRENT_DATE);
+    ok := n = m; so_fail := so_fail + (NOT ok)::INT;
+    RAISE NOTICE '[%] SQL-C10: so_dong = %, co_cu_dan_1_sinh_1966_11_20 = % (doi chieu doc lap tuoi va dot con hieu luc)',
         CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END, n, v;
 
-    RAISE NOTICE 'TONG KET: % kiem tra co so lieu bao cao bi FAIL (C6 chi ghi nhan)', so_fail;
+    RAISE NOTICE 'TONG KET SQL: 10 kiem tra, % FAIL; ket qua phu thuoc ngay dung oracle cung CURRENT_DATE', so_fail;
+    IF so_fail > 0 THEN RAISE EXCEPTION 'SQL report comparison failed: %',so_fail; END IF;
 END
 $chk$;
+
+COMMIT;

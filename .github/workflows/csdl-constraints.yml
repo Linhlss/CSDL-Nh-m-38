@@ -116,6 +116,18 @@ jobs:
           # Tệp TV3 thoát 0 nếu đăng nhập nhầm role, nên khẳng định đúng dòng tổng.
           grep 'TONG csdl17_reader: 12/12 PASS' /tmp/security-login-reader.log
           grep 'TONG csdl17_report: 10/10 PASS' /tmp/security-login-report.log
+      - name: Report queries with CURRENT_DATE and semantic boundary cases
+        env:
+          PGOPTIONS: "-c timezone=Asia/Ho_Chi_Minh"
+        run: |
+          set -euo pipefail
+          psql -X -v ON_ERROR_STOP=1 -f tests/report_sql_01_10.sql > /tmp/report-sql.log 2>&1
+          psql -X -v ON_ERROR_STOP=1 -f tests/report_ra_01_10.sql > /tmp/report-ra.log 2>&1
+          psql -X -v ON_ERROR_STOP=1 -f tests/report_current_date.sql > /tmp/report-current-date.log 2>&1
+          psql -X -v ON_ERROR_STOP=1 -f tests/report_security_ch6.sql > /tmp/report-security.log 2>&1
+          if grep -q '\[FAIL\]' /tmp/report-*.log; then exit 1; fi
+          grep 'TONG KET' /tmp/report-sql.log /tmp/report-ra.log
+          test "$(grep -c '\[PASS\] B0' /tmp/report-current-date.log)" -eq 7
       - name: Upload PostgreSQL evidence
         if: always()
         uses: actions/upload-artifact@v4

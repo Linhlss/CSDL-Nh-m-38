@@ -89,9 +89,9 @@ FROM to_dan_pho t
 LEFT JOIN dia_chi d          ON d.ma_to = t.ma_to
 LEFT JOIN ho_cu_tru h        ON h.ma_dia_chi = d.ma_dia_chi
 LEFT JOIN qua_trinh_cu_tru q ON q.ma_ho = h.ma_ho
-                            AND q.ngay_bat_dau <= DATE '2026-11-20'
+                            AND q.ngay_bat_dau <= CURRENT_DATE
                             AND (q.ngay_ket_thuc IS NULL
-                                 OR q.ngay_ket_thuc >= DATE '2026-11-20')
+                                 OR q.ngay_ket_thuc >= CURRENT_DATE)
 GROUP BY t.ma_to, t.ten_to;
 
 GRANT SELECT ON vw_thong_ke_cu_dan_theo_to TO csdl17_report;
@@ -150,7 +150,7 @@ Hai hàm của Ví dụ 3 không nằm trong các script cài đặt của nhóm
 \subsection{Đánh giá kết quả và giới hạn bảo mật}
 \label{subsec:danhgia}
 
-\textbf{Kết quả kiểm thử.} Ngoài ba ví dụ trên, nhóm kiểm tra cấu hình quyền bằng các script tự chấm điểm, mỗi phép thử in kết quả kỳ vọng, kết quả thực tế và PASS/FAIL. Bảng \ref{tab:ketquabaomat} tóm tắt kết quả; các script và log nằm trong thư mục \texttt{tests/} của dự án. Lần chạy ngày 20/11/2026 dùng PostgreSQL 17.11 trên Windows 11, xác thực \texttt{scram-sha-256} qua kết nối TCP \texttt{localhost}; ngày 21/11/2026 các script được chạy lại trên PostgreSQL 17.12 với cơ sở dữ liệu dựng mới (cụm thử nghiệm cục bộ, đăng nhập qua \texttt{localhost} không dùng mật khẩu) và cho cùng kết quả.
+\textbf{Kết quả kiểm thử.} Nhóm kiểm tra cấu hình quyền, thao tác được phép và thao tác bị từ chối; mỗi phép thử đối chiếu kết quả kỳ vọng với kết quả thực tế. Bảng \ref{tab:ketquabaomat} tóm tắt kết quả. Các kiểm thử đã được thực hiện trên PostgreSQL 17.11 với Windows 11 và PostgreSQL 17.12 với CSDL thử nghiệm dựng mới. Phiên đăng nhập độc lập qua TCP được kiểm tra với SCRAM-SHA-256; phép thử cục bộ không dùng mật khẩu chỉ áp dụng trong cụm tạm biệt lập. Script và log chi tiết được lưu trong hồ sơ kiểm thử của dự án.
 
 \begin{table}[H]
 \centering
@@ -184,4 +184,4 @@ Khác với \texttt{SET ROLE} ở Ví dụ 1 và 2, các phép thử đăng nh�
     \item \textbf{Vai trò nghiệp vụ chỉ là nhãn mô tả (X01, phương án b).} Cột tai\_khoan.vai\_tro chỉ là nhãn mô tả người ghi; quyền thực tế do role PostgreSQL quyết định, và trigger B14 chỉ kiểm tra tài khoản đang HOAT\_DONG chứ không kiểm tra vai trò. Bộ dữ liệu mẫu được giữ nguyên: 13/63 biến động do tài khoản có vai trò THONG\_KE ghi và 11/63 do tài khoản QUAN\_TRI ghi. Báo cáo không khẳng định cơ sở dữ liệu ngăn tài khoản THONG\_KE ghi biến động.
 \end{itemize}
 
-\textbf{Các giới hạn khác.} VIEW tổng hợp vẫn có nguy cơ suy luận ở nhóm nhỏ và dùng mốc 20/11/2026 để kiểm thử. Đồ án chưa triển khai bảo mật mức dòng, kiểm toán đầy đủ, mã hóa kết nối TLS hay chính sách \texttt{pg\_hba.conf} cho vận hành. Các hàm \texttt{fn\_*} vẫn cho PUBLIC quyền EXECUTE nhưng chạy với quyền người gọi (SECURITY INVOKER); nếu đổi sang SECURITY DEFINER, phải rà soát và thu hồi quyền PUBLIC phù hợp. Khi vận hành cần bổ sung các cơ chế trên và tham số ngày cho thống kê.
+\textbf{Các giới hạn khác.} VIEW tổng hợp vẫn có nguy cơ suy luận ở nhóm nhỏ. Thống kê hiện tại dùng ngày hệ thống nên kết quả thay đổi theo thời gian. Đồ án chưa triển khai bảo mật mức dòng, kiểm toán đầy đủ, mã hóa kết nối TLS hay chính sách \texttt{pg\_hba.conf} cho vận hành. Các hàm \texttt{fn\_*} vẫn cho PUBLIC quyền EXECUTE nhưng chạy với quyền người gọi (SECURITY INVOKER); nếu đổi sang SECURITY DEFINER, phải rà soát và thu hồi quyền PUBLIC phù hợp.

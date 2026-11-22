@@ -15,8 +15,8 @@ Xây dựng CSDL quản lý cư dân và biến động cư trú tại một ph�
 ## Báo cáo chính
 
 - [Bản PDF để rà soát và in](Báo_cáo_CSDL_nhóm_38/main.pdf), [nguồn LaTeX](Báo_cáo_CSDL_nhóm_38/main.tex) và [cách biên dịch](Báo_cáo_CSDL_nhóm_38/README_COMPILE.md).
-- Bản cập nhật 22/11/2026 đã sửa diễn đạt, bổ sung khóa/phụ thuộc hàm/1NF–3NF và giới hạn dư thừa ngày biến động, làm rõ đầu vào `Q_d`; giữ nguyên ảnh ERD. Nhóm tự đánh giá và ký xác nhận trang cuối trước khi nộp; cập nhật này không tự đóng Gate 3/4.
-- Mười câu RA và mười câu SQL trong PDF là bộ câu hỏi của báo cáo, khác bộ QRA/QSQL trong hồ sơ kỹ thuật. Tái lập bằng [script RA](tests/report_ra_01_10.sql), [script SQL](tests/report_sql_01_10.sql), [thử ràng buộc](tests/report_bang_thu_rang_buoc.sql) và [ví dụ bảo mật](tests/report_security_ch6.sql). [Log chạy lại RA ngày 22/11](tests/report_ra_20261122_log.txt) ghi hash đầu vào và phạm vi kiểm chứng; các log ngày 21/11 giữ nguyên thời điểm lịch sử.
+- Bản cập nhật 22/11/2026 đã sửa diễn đạt, bổ sung khóa/phụ thuộc hàm/1NF–3NF và giới hạn dư thừa ngày biến động, dùng `CURRENT_DATE` cho truy vấn hiện tại, bỏ ngày truy cập và mốc ngày cố định trong PDF; giữ nguyên ảnh ERD. Nhóm tự đánh giá và ký xác nhận trang cuối trước khi nộp; cập nhật này không tự đóng Gate 3/4.
+- Mười câu RA và mười câu SQL trong PDF là bộ câu hỏi của báo cáo, khác bộ QRA/QSQL trong hồ sơ kỹ thuật. Tái lập bằng [script RA](tests/report_ra_01_10.sql), [script SQL](tests/report_sql_01_10.sql), [thử ràng buộc](tests/report_bang_thu_rang_buoc.sql) và [ví dụ bảo mật](tests/report_security_ch6.sql). [Kiểm chứng hiện hành](tests/report_current_date_log.txt) ghi hash, 10 SQL, đối chiếu RA, bảy ca biên và ví dụ bảo mật. Các log cũ được giữ làm hồ sơ lịch sử. Số liệu trong PDF là kết quả minh họa; kết quả hiện tại thay đổi theo ngày hệ thống.
 
 ## Hiện trạng và việc tiếp theo
 

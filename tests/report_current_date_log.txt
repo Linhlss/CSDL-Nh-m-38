@@ -1,0 +1,73 @@
+CURRENT_DATE report verification; fresh isolated seed636; local Unix socket, no TCP listener.
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/sql/06_validation.sql:114: NOTICE:  [PASS] B06, B08, B09: dữ liệu đang nạp không có vi phạm
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/sql/06_validation.sql:128: NOTICE:  [PASS] E1: không trùng đợt trong cùng vai trò cũ/mới
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/sql/06_validation.sql:154: NOTICE:  [PASS] B15: ngày và tên/địa chỉ hợp lệ trên bộ seed
+PostgreSQL 17.12 (Homebrew) on aarch64-apple-darwin25.6.0, compiled by Apple clang version 21.0.0 (clang-2100.4.1.1), 64-bit
+2026-11-22
+Asia/Ho_Chi_Minh
+RUN psql -X -v ON_ERROR_STOP=1 -f tests/report_sql_01_10.sql
+SHA256 tests/report_sql_01_10.sql: 6c6e2b2462d48b4b51d18efb892502b606713f65cac7502b0b9648f95a17d7a6
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_sql_01_10.sql:303: NOTICE:  [PASS] SQL-C1: so_dong = 23 (doi chieu doc lap theo CURRENT_DATE)
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_sql_01_10.sql:303: NOTICE:  [PASS] SQL-C2: Tổ 05:28/14/41; Tổ 01:23/13/34; Tổ 04:19/14/33; Tổ 06:22/8/30; Tổ 02:19/10/29; Tổ 03:10/11/21; Tổ 07:10/1/11; Tổ 08:0/0/0 (doi chieu doc lap du ca 3 cot cua moi to)
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_sql_01_10.sql:303: NOTICE:  [PASS] SQL-C3: so_ho = 40, max_nhan_khau = 7 (doi chieu doc lap theo CURRENT_DATE)
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_sql_01_10.sql:303: NOTICE:  [PASS] SQL-C4: so_dong = 17 (doi chieu phep hieu tap hop)
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_sql_01_10.sql:303: NOTICE:  [PASS] SQL-C5: THUONG_TRU@ho56[2022-08-01..2026-07-01] ; TAM_TRU@ho15[2025-08-11..NULL] ; THUONG_TRU@ho20[2026-07-02..NULL]
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_sql_01_10.sql:303: NOTICE:  [PASS] SQL-C6: so_nhom (thang, loai) = 21, tong_bien_dong_2026 = 29
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_sql_01_10.sql:303: NOTICE:  [PASS] SQL-C7: so_dong = 27, dong_dau = 2025-01-18|Dương Hữu Cường|13->25 (bao cao: 27; 2025-01-18 Duong Huu Cuong 13->25)
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_sql_01_10.sql:303: NOTICE:  [PASS] SQL-C8: so_dong = 1, ket_qua = 2|Cán bộ Cư trú 01|21 (bao cao: 2 | Can bo Cu tru 01 | 21)
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_sql_01_10.sql:303: NOTICE:  [PASS] SQL-C9: so_dong = 31 (bao cao: 31)
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_sql_01_10.sql:303: NOTICE:  [PASS] SQL-C10: so_dong = 131, co_cu_dan_1_sinh_1966_11_20 = true (doi chieu doc lap tuoi va dot con hieu luc)
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_sql_01_10.sql:303: NOTICE:  TONG KET SQL: 10 kiem tra, 0 FAIL; ket qua phu thuoc ngay dung oracle cung CURRENT_DATE
+RUN psql -X -v ON_ERROR_STOP=1 -f tests/report_ra_01_10.sql
+SHA256 tests/report_ra_01_10.sql: 5071e951cfda641c3eae9c056e04dbcaef1c56b3e9dc7a960c37f30672e2b842
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_ra_01_10.sql:211: NOTICE:  [INFO] RA1: so_bo = 98 (so cu dan nu = 98; chenh lech = so cap (ho_ten, ngay_sinh) trung)
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_ra_01_10.sql:211: NOTICE:  [PASS] RA2: so_bo = 8 ; doi chung COUNT dia_chi cua To 01 = 8
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_ra_01_10.sql:211: NOTICE:  [PASS] RA3: so_bo = 23, lech voi SQL cau 1 = 0 bo (ky vong lech 0 theo CURRENT_DATE)
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_ra_01_10.sql:211: NOTICE:  [PASS] RA4: so_bo = 17, lech voi SQL cau 4 = 0 bo (ky vong lech 0 theo CURRENT_DATE)
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_ra_01_10.sql:211: NOTICE:  [PASS] RA5: so_bo = 31 (ky vong 31 = SQL cau 9)
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_ra_01_10.sql:211: NOTICE:  [PASS] RA6: so_bo = 1, ma_bien_dong = {32}, lech voi cach viet OR = 0
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_ra_01_10.sql:211: NOTICE:  [PASS] RA7: so_bo = 27, lech voi SQL cau 7 (cung 4 cot) = 0 (ky vong 27, 0)
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_ra_01_10.sql:211: NOTICE:  [INFO] RA8: so_bo = 2 {Cán bộ Cư trú 01, Cán bộ Cư trú 02} (tu 2 bien dong CHUYEN_DI thang 10/2026)
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_ra_01_10.sql:211: NOTICE:  [PASS] RA9: NOT EXISTS = {1,2,3,4}, dem = {1,2,3,4}, so loai trong so chia = 3, bien dong cua TK5 = 0 (bao cao: 1,2,3,4; TK5 chua ghi)
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_ra_01_10.sql:211: NOTICE:  [PASS] RA10: so_ho_co_nguoi = 56, tong = 202, so_ho_>=3 = 40 (doi chieu SQL cau 3 cung CURRENT_DATE)
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_ra_01_10.sql:211: NOTICE:  [INFO] RA10: so ho se bi dem sai neu bo phep chieu truoc gamma = 0
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_ra_01_10.sql:211: NOTICE:  TONG KET RA: 0 kiem tra FAIL (RA1, RA8 chi ghi nhan)
+RUN psql -X -v ON_ERROR_STOP=1 -f tests/report_current_date.sql
+SHA256 tests/report_current_date.sql: ab3d274d7f332cbd3cd9b513bd71143f5982de3fd461bcbe2f192c0e1225df1e
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_current_date.sql:128: NOTICE:  [PASS] B01: starts today and ends today included; future/past excluded
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_current_date.sql:128: NOTICE:  [PASS] B02: former resident included; never-started person excluded
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_current_date.sql:128: NOTICE:  [PASS] B03: eighteenth birthday today included; birthday tomorrow excluded
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_current_date.sql:128: NOTICE:  [PASS] B04: two residence types in one household count a person once
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_current_date.sql:128: NOTICE:  [PASS] B05: grouped permanent/temporary/distinct totals match expected increments
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_current_date.sql:128: NOTICE:  [PASS] B06: empty group retained with zero counts
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_current_date.sql:128: NOTICE:  [PASS] B07: current-date report VIEW agrees with SQL and retains all eight groups
+RUN psql -X -v ON_ERROR_STOP=1 -f tests/report_security_ch6.sql
+SHA256 tests/report_security_ch6.sql: a0e77143d7d89ee27d4ab9f1f501daa8e3489acf0bd7d613191225ecd0d5e331
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_security_ch6.sql:67: NOTICE:  [PASS] E1-reader-UPDATE | ky vong 42501 | thuc te 42501 permission denied for table cu_dan | csdl17_reader
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_security_ch6.sql:71: NOTICE:  [PASS] E1-admin-DELETE-bien_dong | ky vong 42501 | thuc te 42501 permission denied for table bien_dong_cu_tru | csdl17_admin
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_security_ch6.sql:73: NOTICE:  [PASS] E1-admin-DELETE-qua_trinh | ky vong 42501 | thuc te 42501 permission denied for table qua_trinh_cu_tru | csdl17_admin
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_security_ch6.sql:83: NOTICE:  [PASS] E2-report-SELECT-cu_dan | ky vong 42501 | thuc te 42501 permission denied for table cu_dan | csdl17_report
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_security_ch6.sql:124: NOTICE:  [PASS] E3-report-goi-ham-dung | ky vong 42501 | thuc te 42501 permission denied for function fn_tim_cu_dan | csdl17_report
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_security_ch6.sql:142: NOTICE:  [PASS] E4-xoa-TK2-da-ghi-su-kien | ky vong 23503 | thuc te 23503 update or delete on table "tai_khoan" violates foreign key constraint "bien_dong_cu_tru_ma_tai_khoan_fkey" on table "bien_dong_cu_tru" | csdl17_admin
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_security_ch6.sql:144: NOTICE:  [PASS] E4-xoa-TK5-chua-ghi | ky vong OK(1 | thuc te OK(1 dong) | csdl17_admin
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_security_ch6.sql:146: NOTICE:  [PASS] E4-sua-ten_hien_thi-TK2 | ky vong OK(1 | thuc te OK(1 dong) | csdl17_admin
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_security_ch6.sql:148: NOTICE:  [PASS] E4-sua-vai_tro-TK4 | ky vong OK(1 | thuc te OK(1 dong) | csdl17_admin
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_security_ch6.sql:150: NOTICE:  [PASS] E4-khoa-TK3 | ky vong OK(1 | thuc te OK(1 dong) | csdl17_admin
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_security_ch6.sql:153: NOTICE:  [PASS] E4-sua-ghi_chu-bien_dong-1 | ky vong OK(1 | thuc te OK(1 dong) | csdl17_admin
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_security_ch6.sql:155: NOTICE:  [PASS] E4-doi-nguoi-ghi-bien_dong-1-sang-TK1 | ky vong OK(1 | thuc te OK(1 dong) | csdl17_admin
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_security_ch6.sql:157: NOTICE:  [PASS] E4-doi-ngay-bien_dong-1 | ky vong 23514 | thuc te 23514 B09: đợt mới 5 phải bắt đầu đúng ngày chuyển 2025-11-02 | csdl17_admin
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_security_ch6.sql:159: NOTICE:  [PASS] E4-sua-ngay_ket_thuc-dot-16-da-gan-su-kien | ky vong 23514 | thuc te 23514 B09: đợt cũ 16 phải kết thúc trước ngày chuyển 2026-10-15 đúng 1 ngày | csdl17_admin
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_security_ch6.sql:161: NOTICE:  [PASS] E4-dong-dot-1-chua-gan-su-kien | ky vong OK(1 | thuc te OK(1 dong) | csdl17_admin
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_security_ch6.sql:169: NOTICE:  [PASS] E4-TK3-dang-KHOA-ghi | ky vong 23514 | thuc te 23514 B14: tài khoản 3 không ở trạng thái HOAT_DONG | csdl17_admin
+psql:/Users/thao/Documents/CSDL_DE_TAI_17/tests/report_security_ch6.sql:172: NOTICE:  [PASS] E4-TK3-mo-khoa-roi-ghi | ky vong OK(1 | thuc te OK(1 dong) | csdl17_admin
+[PASS] All seven seed table digests unchanged after report checks and ROLLBACK fixtures.
+[SNAPSHOT] SQL1: 23 rows
+[SNAPSHOT] SQL2: 8 rows
+[SNAPSHOT] SQL3: 40 rows
+[SNAPSHOT] SQL4: 17 rows
+[SNAPSHOT] SQL5: 3 rows
+[SNAPSHOT] SQL6: 21 rows
+[SNAPSHOT] SQL7: 27 rows
+[SNAPSHOT] SQL8: 1 rows
+[SNAPSHOT] SQL9: 31 rows
+[SNAPSHOT] SQL10: 131 rows

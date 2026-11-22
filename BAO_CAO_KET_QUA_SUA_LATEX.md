@@ -1,5 +1,16 @@
 # Biên bản sửa và kiểm chứng báo cáo LaTeX — Nhóm 38
 
+## Bản hiện hành — truy vấn theo ngày hệ thống
+
+- PDF: `Báo_cáo_CSDL_nhóm_38/main.pdf`, **45 trang**, SHA-256 `f7b641472a903d29a513bc89dc017c79121f918e0b17d45f239b3b2713e2c7d4`.
+- Theo yêu cầu chủ repo: bỏ ngày truy cập trong tài liệu tham khảo, bỏ lịch từng lần chạy trong nội dung và bỏ ngày cố định/biến ngày trong các câu hỏi hiện tại. Ngày nghiệp vụ và ngày ban hành/hiệu lực văn bản vẫn giữ đúng ý nghĩa.
+- Các câu hỏi hiện tại dùng `CURRENT_DATE`; đại số dùng `Q_ht`/`Q_bd` chuẩn bị từ SQL với năm cột NOT NULL. Số liệu trong bảng là kết quả minh họa, có thể đổi theo ngày chạy. Không đổi điều kiện thành chỉ kiểm tra ngày kết thúc NULL.
+- Kiểm chứng bằng PostgreSQL 17.12 trên cụm tạm biệt lập: validation đạt, 10 SQL đạt, tám assertion RA đạt (hai câu ghi nhận), bảy ca biên và ví dụ bảo mật đạt. Hash dữ liệu của bảy bảng trước/sau không đổi. Log hiện hành: `tests/report_current_date_log.txt`; log cũ bên dưới là hồ sơ lịch sử.
+- Thêm `tests/report_current_date.sql` với đợt bắt đầu/kết thúc hôm nay, tương lai, quá khứ, đủ tuổi hôm nay/ngày mai, đếm người hai loại và tổ trống; test kết thúc bằng ROLLBACK. CI chạy bốn script báo cáo và dừng nếu kiểm tra sai.
+- Đã kiểm tra không còn cụm ngày truy cập/ngày tham chiếu trong PDF, không có tham chiếu chưa xác định hoặc lỗi tràn dòng. Giữ nguyên byte mọi ảnh ERD và lệnh chèn ảnh; xếp loại/chữ ký vẫn do nhóm xác nhận.
+
+## Lịch sử phiên sửa trước
+
 ## Cập nhật sau review ngày 22/11/2026
 
 - Bản PDF hiện hành: `Báo_cáo_CSDL_nhóm_38/main.pdf`, **45 trang**, SHA-256 `81930f5d65a6cfed330755703ece8b277e6df5b425643eb5fe03b89aade2ab00`. Nền tích hợp: `main` tại `a6b3d87`.

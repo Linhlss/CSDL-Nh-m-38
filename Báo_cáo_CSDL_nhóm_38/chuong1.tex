@@ -19,7 +19,7 @@ Nhóm đánh mã các quy tắc từ B01 đến B18 trong đặc tả nghiệp v
     \item \textbf{B01:} mỗi tổ có nhiều địa chỉ, mỗi địa chỉ thuộc đúng một tổ; mỗi địa chỉ có nhiều hộ, mỗi hộ thuộc đúng một địa chỉ.
     \item \textbf{B02:} mỗi đợt cư trú thuộc đúng một cư dân và một hộ. Quan hệ nhiều -- nhiều giữa cư dân và hộ được giải qua các đợt cư trú.
     \item \textbf{B03:} tên tổ, tên đăng nhập và cặp (tổ, địa chỉ chuẩn) không được trùng; tên cư dân thì có thể trùng.
-    \item \textbf{B04, B05:} ngày bắt đầu đợt là bắt buộc, ngày kết thúc có thể để trống và nếu có thì không sớm hơn ngày bắt đầu. Một đợt được coi là đang hiệu lực tại ngày $d$ khi ngày bắt đầu $\leq d$ và ngày kết thúc để trống hoặc $\geq d$.
+    \item \textbf{B04, B05:} ngày bắt đầu đợt là bắt buộc, ngày kết thúc có thể để trống và nếu có thì không sớm hơn ngày bắt đầu. Một đợt đang có hiệu lực khi ngày bắt đầu không sau ngày hiện tại và ngày kết thúc để trống hoặc không trước ngày hiện tại.
     \item \textbf{B06:} cùng một cư dân, cùng một loại cư trú thì các khoảng ngày không được chồng lên nhau. Hai loại khác nhau (một đợt thường trú và một đợt tạm trú) được phép diễn ra đồng thời.
     \item \textbf{B07:} có ba loại biến động. Chuyển đến chỉ có đợt mới, chuyển đi chỉ có đợt cũ, còn chuyển nội bộ (sang hộ khác trong phường) có cả đợt cũ và đợt mới, hai đợt này khác nhau.
     \item \textbf{B08, B09:} hai đợt của một lần chuyển nội bộ phải cùng cư dân và khác hộ. Với ngày chuyển $t$, đợt mới bắt đầu đúng ngày $t$ và đợt cũ kết thúc đúng ngày $t - 1$.
@@ -27,7 +27,7 @@ Nhóm đánh mã các quy tắc từ B01 đến B18 trong đặc tả nghiệp v
     \item \textbf{B14:} biến động mới phải do một tài khoản đang ở trạng thái hoạt động ghi nhận. Cột vai trò của tài khoản chỉ mô tả người ghi, không dùng làm cơ chế phân quyền.
 \end{enumerate}
 
-Các câu hỏi có chữ ``đang'' trong báo cáo đều lấy ngày tham chiếu cố định $d$ = 20/11/2026, để kết quả kiểm thử lặp lại được ở bất kỳ thời điểm nào.
+Các câu hỏi về cư trú hiện tại được xác định theo ngày hệ thống tại thời điểm thực thi truy vấn, thông qua \texttt{CURRENT\_DATE} của PostgreSQL. Điều kiện này xét cả ngày bắt đầu và ngày kết thúc của đợt.
 
 \subsection{Các chức năng của hệ thống}
 \label{subsec:chucnang}

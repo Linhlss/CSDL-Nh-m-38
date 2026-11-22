@@ -26,7 +26,15 @@ Lệnh tạo `main.pdf` và tự chạy đủ số lượt để cập nhật m�
 
 Các con số kết quả trong Chương 3–6 được tái lập bằng các script `tests/report_*.sql` của repository (xem `BAO_CAO_KET_QUA_SUA_LATEX.md` ở thư mục gốc dự án). Bộ câu hỏi trong PDF khác bộ QRA/QSQL trong hồ sơ kỹ thuật; dùng đúng các script `report_*` để đối chiếu.
 
-## Cập nhật sau review ngày 22/11/2026
+## Quy ước của bản báo cáo hiện hành
+
+- Không ghi ngày truy cập trong tài liệu tham khảo và không kể lịch sử từng lần chạy trong phần nội dung.
+- Các truy vấn “đang cư trú” và VIEW minh họa dùng `CURRENT_DATE` của phiên PostgreSQL; không dùng ngày cố định hoặc biến ngày do người đọc phải nhập.
+- Đại số quan hệ dùng đầu vào `Q_ht` (đợt hiện tại) và `Q_bd` (đợt đã bắt đầu), chỉ giữ năm cột NOT NULL sau bước chuẩn bị SQL.
+- Số dòng trong bảng kết quả là minh họa tại thời điểm thực nghiệm; truy vấn phụ thuộc ngày được kiểm chứng bằng oracle cùng ngày hệ thống. `tests/report_current_date.sql` kiểm tra bảy ca biên bằng đúng các truy vấn trong báo cáo, gồm đợt hôm nay/tương lai, tuổi và đếm người phân biệt; fixture được ROLLBACK.
+- Log của bản hiện hành: `tests/report_current_date_log.txt`. Các log có ngày trong tên tệp bên dưới là hồ sơ lịch sử, không dùng để khẳng định kết quả của bản truy vấn hiện tại.
+
+## Lịch sử sửa nội dung
 
 - Sửa các diễn đạt tuyệt đối về lịch sử, bảo mật, identity và chỉ mục; thống nhất cách xưng “nhóm” và nêu rõ phạm vi mô phỏng.
 - Thêm mục 3.4 về khóa ứng viên, phụ thuộc hàm, 1NF–3NF và dư thừa có kiểm soát ở `ngay_bien_dong`. Các mục ràng buộc và DDL lần lượt chuyển thành 3.5 và 3.6.
