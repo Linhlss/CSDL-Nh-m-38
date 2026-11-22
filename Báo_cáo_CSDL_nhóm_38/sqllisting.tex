@@ -1,0 +1,33 @@
+% sqllisting.tex -- kiểu listing cho mã SQL (PostgreSQL, PL/pgSQL) có chú thích và chuỗi tiếng Việt.
+% Kế thừa khung, nền, đánh số dòng từ \lstset của mẫu; chỉ đổi ngôn ngữ và bổ sung ánh xạ ký tự.
+\lstdefinestyle{sqlvn}{
+  language=SQL,
+  morekeywords={BIGINT, VARCHAR, TEXT, DATE, TIMESTAMPTZ, INT, GENERATED, IDENTITY, CONSTRAINT, REFERENCES,
+    UNIQUE, CHECK, DEFAULT, CURRENT_TIMESTAMP, INTERSECT, EXISTS, FILTER, INTERVAL, EXTRACT, MONTH,
+    EXCLUDE, USING, GIST, EXTENSION, IF, ROLE, LOGIN, NOSUPERUSER, NOCREATEDB, NOCREATEROLE, GRANT, REVOKE,
+    USAGE, SCHEMA, ALL, TABLES, SEQUENCES, PUBLIC, SET, RESET, ALTER, ADD, FUNCTION, RETURNS, RETURN,
+    QUERY, EXECUTE, LANGUAGE, STABLE, BEGIN, END, LIMIT, MAX, COUNT, LEFT, JOIN, ON, AS, IS, NULL, VIEW, WITH},
+  sensitive=false,
+  morecomment=[l]{--},
+  morestring=[b]',
+  extendedchars=true,
+  showstringspaces=false,
+  basicstyle=\ttfamily\footnotesize,
+  % In A4: footnotesize của lớp 12pt là 10pt. Dùng cột "fullflexible" + keepspaces để chữ
+  % đơn cách tự nhiên (không giãn ký tự), ít dòng bị gãy hơn mà vẫn giữ thẳng hàng.
+  columns=fullflexible,
+  keepspaces=true,
+  upquote=true,
+  numberstyle=\scriptsize\color{black},
+  breakindent=2em,
+  breakatwhitespace=true,
+  literate=
+    {Á}{{\'A}}1 {Ú}{{\'U}}1 {à}{{\`a}}1 {á}{{\'a}}1 {â}{{\^a}}1 {é}{{\'e}}1 {ê}{{\^e}}1 {ì}{{\`\i}}1
+    {ò}{{\`o}}1 {ó}{{\'o}}1 {ô}{{\^o}}1 {ù}{{\`u}}1 {ú}{{\'u}}1 {Đ}{{\DJ}}1 {đ}{{\dj}}1 {ư}{{\uhorn}}1
+    {ạ}{{\d a}}1 {ả}{{\h a}}1 {ậ}{{\d\acircumflex}}1 {Ế}{{\'\ECIRCUMFLEX}}1 {ề}{{\`\ecircumflex}}1 {ệ}{{\d\ecircumflex}}1 {ỉ}{{\h i}}1 {ị}{{\d i}}1
+    {ọ}{{\d o}}1 {ố}{{\'\ocircumflex}}1 {ỗ}{{\~\ocircumflex}}1 {ộ}{{\d\ocircumflex}}1 {ờ}{{\`\ohorn}}1 {ợ}{{\d\ohorn}}1 {ụ}{{\d u}}1 {ứ}{{\'\uhorn}}1
+    {ừ}{{\`\uhorn}}1 {ử}{{\h\uhorn}}1 {ữ}{{\~\uhorn}}1 {ự}{{\d\uhorn}}1
+}
+
+% Cho phép xuống dòng sau dấu gạch dưới trong tên bảng, tên cột dài (ví dụ qua_trinh_cu_tru)
+\DeclareRobustCommand{\_}{\textunderscore\penalty0\relax}

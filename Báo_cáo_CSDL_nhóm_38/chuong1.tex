@@ -1,0 +1,72 @@
+\section[BÀI TOÁN THỰC TIỄN VÀ CHỨC NĂNG]{BÀI TOÁN THỰC TIỄN VÀ CHỨC NĂNG HỆ THỐNG}
+\label{sec:chuong1}
+
+\subsection{Mô tả bài toán}
+\label{subsec:baitoan}
+
+Trong bài toán mô phỏng, một phường gồm nhiều tổ dân phố, mỗi tổ có cán bộ phụ trách theo dõi dân cư trên địa bàn. Cán bộ cần quản lý danh sách địa chỉ, các hộ tại mỗi địa chỉ, các thành viên và diện thường trú hoặc tạm trú theo thời gian. Những thông tin này phục vụ tra cứu, rà soát nhân khẩu và lập báo cáo thống kê. Đây là phạm vi giả định của đồ án, không phải kết quả khảo sát quy trình quản lý tại một phường cụ thể.
+
+Nhóm giả định dữ liệu ban đầu nằm trong sổ sách hoặc các tệp Excel rời rạc. Nếu cập nhật trực tiếp thông tin nơi ở mà không lưu các đợt cư trú, lịch sử có thể bị mất; nếu thiếu kiểm tra thời gian và quyền truy cập, dữ liệu có thể bị trùng lặp hoặc khó truy vết người sửa. Các hạn chế giả định này là cơ sở để xác định yêu cầu thiết kế.
+
+Để đáp ứng các yêu cầu đó, nhóm lưu mỗi đợt cư trú của một người tại một hộ thành một \textbf{quá trình cư trú} có ngày bắt đầu và ngày kết thúc. Mỗi \textbf{biến động cư trú} tham chiếu đợt cũ, đợt mới hoặc cả hai tùy loại sự kiện, đồng thời ghi tài khoản và thời điểm nhập. Bảng quá trình cư trú là nguồn dữ liệu tham chiếu theo thời gian, cho phép truy vấn các đợt đã lưu của một cư dân theo mã. Mô hình hỗ trợ lưu lịch sử nhưng chưa ngăn mọi cập nhật lên bản ghi cũ; giới hạn này được trình bày ở mục \ref{subsec:danhgia}. Nhóm cài đặt cơ sở dữ liệu trên PostgreSQL 17 và dùng bộ dữ liệu giả lập 636 bản ghi để kiểm thử.
+
+\subsection{Quy tắc nghiệp vụ}
+\label{subsec:quytac}
+
+Nhóm đánh mã các quy tắc từ B01 đến B18 trong đặc tả nghiệp vụ; dưới đây là những quy tắc chính chi phối thiết kế.
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{B01:} mỗi tổ có nhiều địa chỉ, mỗi địa chỉ thuộc đúng một tổ; mỗi địa chỉ có nhiều hộ, mỗi hộ thuộc đúng một địa chỉ.
+    \item \textbf{B02:} mỗi đợt cư trú thuộc đúng một cư dân và một hộ. Quan hệ nhiều -- nhiều giữa cư dân và hộ được giải qua các đợt cư trú.
+    \item \textbf{B03:} tên tổ, tên đăng nhập và cặp (tổ, địa chỉ chuẩn) không được trùng; tên cư dân thì có thể trùng.
+    \item \textbf{B04, B05:} ngày bắt đầu đợt là bắt buộc, ngày kết thúc có thể để trống và nếu có thì không sớm hơn ngày bắt đầu. Một đợt được coi là đang hiệu lực tại ngày $d$ khi ngày bắt đầu $\leq d$ và ngày kết thúc để trống hoặc $\geq d$.
+    \item \textbf{B06:} cùng một cư dân, cùng một loại cư trú thì các khoảng ngày không được chồng lên nhau. Hai loại khác nhau (một đợt thường trú và một đợt tạm trú) được phép diễn ra đồng thời.
+    \item \textbf{B07:} có ba loại biến động. Chuyển đến chỉ có đợt mới, chuyển đi chỉ có đợt cũ, còn chuyển nội bộ (sang hộ khác trong phường) có cả đợt cũ và đợt mới, hai đợt này khác nhau.
+    \item \textbf{B08, B09:} hai đợt của một lần chuyển nội bộ phải cùng cư dân và khác hộ. Với ngày chuyển $t$, đợt mới bắt đầu đúng ngày $t$ và đợt cũ kết thúc đúng ngày $t - 1$.
+    \item \textbf{B10 -- B12:} đóng đợt cũ, mở đợt mới và ghi biến động phải nằm trong một giao dịch; hộ giữ nguyên địa chỉ đã có lịch sử; không xóa vật lý lịch sử cư trú.
+    \item \textbf{B14:} biến động mới phải do một tài khoản đang ở trạng thái hoạt động ghi nhận. Cột vai trò của tài khoản chỉ mô tả người ghi, không dùng làm cơ chế phân quyền.
+\end{enumerate}
+
+Các câu hỏi có chữ ``đang'' trong báo cáo đều lấy ngày tham chiếu cố định $d$ = 20/11/2026, để kết quả kiểm thử lặp lại được ở bất kỳ thời điểm nào.
+
+\subsection{Các chức năng của hệ thống}
+\label{subsec:chucnang}
+
+Từ các quy tắc trên, nhóm chia hệ thống thành sáu nhóm chức năng với 14 chức năng cấp 2. Bảng \ref{tab:chucnang} liệt kê các chức năng con và dữ liệu chính mà mỗi nhóm làm việc.
+
+\begin{table}[H]
+\centering
+\fontsize{12pt}{16pt}\selectfont
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{|P{3.6cm}|Y|P{4.4cm}|}
+\hline
+\textbf{Nhóm chức năng} & \textbf{Chức năng con} & \textbf{Dữ liệu chính} \\
+\hline
+1. Quản lý địa bàn & 1.1 Tổ dân phố; 1.2 Địa chỉ & to\_dan\_pho, dia\_chi \\
+\hline
+2. Quản lý hộ và cư dân & 2.1 Nhóm hộ; 2.2 Hồ sơ cư dân & ho\_cu\_tru, cu\_dan \\
+\hline
+3. Quản lý quá trình cư trú & 3.1 Mở đợt; 3.2 Kết thúc đợt & qua\_trinh\_cu\_tru \\
+\hline
+4. Ghi nhận biến động & 4.1 Chuyển đến; 4.2 Chuyển đi; 4.3 Chuyển nội bộ & bien\_dong\_cu\_tru, qua\_trinh\_cu\_tru \\
+\hline
+5. Tra cứu và thống kê & 5.1 Hiện tại; 5.2 Lịch sử; 5.3 Thống kê theo tổ / loại cư trú & đọc từ nhiều bảng, view thống kê \\
+\hline
+6. Quản trị và bảo mật & 6.1 Vai trò; 6.2 Giới hạn truy cập dữ liệu & tai\_khoan, role và view của PostgreSQL \\
+\hline
+\end{tabularx}
+\caption{Các nhóm chức năng của hệ thống}
+\label{tab:chucnang}
+\end{table}
+
+\subsection{Sơ đồ phân rã chức năng}
+\label{subsec:bfd}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{image/phan_ra_chuc_nang.png}
+\caption{Sơ đồ phân rã chức năng của hệ thống quản lý cư dân và biến động cư trú}
+\label{fig:bfd}
+\end{figure}
+
+Sơ đồ ở Hình \ref{fig:bfd} được đọc từ trên xuống: khối gốc là toàn bộ hệ thống, tầng thứ hai là sáu nhóm chức năng, và các ô bên dưới mỗi nhóm là 14 chức năng cấp 2 mà người dùng thao tác trực tiếp.

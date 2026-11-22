@@ -1,0 +1,40 @@
+# Biên dịch báo cáo BTL Cơ sở dữ liệu — Nhóm 38
+
+Mở `main.tex` và biên dịch bằng **pdfLaTeX**. Dự án giữ nguyên lớp `article`, bộ font tiếng Việt, lề, header/footer và trang bìa của mẫu LaTeX cũ.
+
+Với MacTeX/TeX Live, chạy trong thư mục này:
+
+```bash
+latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+```
+
+Lệnh tạo `main.pdf` và tự chạy đủ số lượt để cập nhật mục lục, danh sách hình và trích dẫn. Trên Overleaf, tải cả thư mục, chọn `main.tex` làm Main document và Compiler là pdfLaTeX.
+
+## Cấu trúc
+
+| Tệp | Nội dung |
+|---|---|
+| `00_bia.tex` | Trang bìa: đề tài 17, mã lớp 174356, nhóm 38, GVHD, danh sách sinh viên |
+| `00_loicamon.tex`, `00_viettat.tex`, `loimodau.tex` | Lời cảm ơn, danh mục viết tắt, lời mở đầu |
+| `chuong1.tex` … `chuong6.tex` | Sáu chương theo yêu cầu bài tập lớn |
+| `ketluan.tex` | Kết luận (mục không đánh số, sau Chương 6, trước Tài liệu tham khảo) |
+| `tailieuthamkhao.tex` | Tài liệu tham khảo |
+| `phancong.tex` | Trang cuối: phân công công việc, xếp loại đóng góp, chữ ký |
+| `setuppackages.tex` | Cấu hình gói của mẫu (chỉ đổi chữ header thành Cơ sở dữ liệu / Nhóm 38) |
+| `sqllisting.tex` | Kiểu hiển thị mã SQL có tiếng Việt, được `setuppackages.tex` nạp vào |
+| `image/` | `hust.png` (logo bìa), `erd_trang_11_vector_crop.pdf` (ERD vector đang dùng, cắt lề trắng từ `erd_trang_11_vector.pdf` bằng `pdfcrop --margins 4`), `phan_ra_chuc_nang.png` (sơ đồ phân rã chức năng); `erd.png`, `erd_trang_11_vector.pdf/.svg` là bản gốc giữ lại |
+
+Các con số kết quả trong Chương 3–6 được tái lập bằng các script `tests/report_*.sql` của repository (xem `BAO_CAO_KET_QUA_SUA_LATEX.md` ở thư mục gốc dự án). Bộ câu hỏi trong PDF khác bộ QRA/QSQL trong hồ sơ kỹ thuật; dùng đúng các script `report_*` để đối chiếu.
+
+## Cập nhật sau review ngày 22/11/2026
+
+- Sửa các diễn đạt tuyệt đối về lịch sử, bảo mật, identity và chỉ mục; thống nhất cách xưng “nhóm” và nêu rõ phạm vi mô phỏng.
+- Thêm mục 3.4 về khóa ứng viên, phụ thuộc hàm, 1NF–3NF và dư thừa có kiểm soát ở `ngay_bien_dong`. Các mục ràng buộc và DDL lần lượt chuyển thành 3.5 và 3.6.
+- Đầu vào `Q_d` chỉ giữ năm cột NOT NULL; đã chạy lại trên seed636 dựng mới bằng PostgreSQL 17.12. Log `tests/report_ra_20261122_log.txt` có hash script và kết quả; lần này không chạy lại kiểm thử bảo mật.
+- Giữ nguyên toàn bộ tài sản ảnh ERD và lệnh chèn ảnh. Mục lục dùng cỡ 12 pt để nằm trọn một trang.
+- Trang phân công ghi rõ xếp loại/chữ ký đang chờ nhóm tự điền và xác nhận; không tự đánh giá đóng góp hoặc tạo chữ ký.
+
+## Lưu ý khi sửa
+
+- Mã SQL trong báo cáo có ký tự tiếng Việt. Nếu thêm khối mã có chữ tiếng Việt mới mà chưa có trong danh sách `literate` của `sqllisting.tex`, hãy bổ sung ký tự đó theo cùng cách (định nghĩa lấy từ `t5enc.dfu`).
+- Cột xếp loại và chữ ký ở trang cuối để trống cho nhóm điền tay sau khi in.

@@ -1,0 +1,72 @@
+% setup/packages.tex
+\usepackage[utf8]{vietnam}
+\usepackage[left=3.5cm,right=2.5cm,top=2cm,bottom=2cm]{geometry}
+\setlength{\parindent}{0pt}
+\usepackage{graphicx}
+\usepackage{changepage}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage[justification=centering]{caption}
+\usepackage{array}
+\usepackage{tabu}
+\usepackage{tabularx}
+\newcolumntype{P}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage[table]{xcolor}
+\usepackage{listings}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit}
+\usepackage{scrextend}
+\usepackage{fancybox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+% Cấu hình Listings
+\lstdefinelanguage{Verilog}{
+  keywords={module, endmodule, input, output, wire, reg, always, posedge, negedge, begin, end, if, else, case, endcase, default, assign, initial, parameter},
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]"
+}
+
+\lstset{
+    language=Verilog,
+    frame=single,
+    backgroundcolor=\color{lightgray},
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{red},
+    numberstyle=\tiny\color{black},
+    numbers=left,
+    numbersep=6pt,
+    tabsize=4,
+    breaklines=true,
+    captionpos=b
+}
+
+% Cập nhật Header
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Cơ sở dữ liệu}
+\rhead{Nhóm 38}
+\rfoot{Trang \thepage}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{1pt}
+
+
+% Giữ bố cục mẫu; đủ chiều cao cho header tiếng Việt.
+\setlength{\headheight}{15pt}
+\addtolength{\topmargin}{-3pt}
+\renewcommand{\refname}{Tài liệu tham khảo}
+
+% Bổ sung cho báo cáo CSDL: kiểu hiển thị mã SQL (giữ nguyên khung, nền, cỡ chữ của mẫu)
+\input{sqllisting}

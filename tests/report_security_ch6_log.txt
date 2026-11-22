@@ -1,0 +1,206 @@
+BEGIN
+SET
+CREATE FUNCTION
+SET
+ role_dang_chay | so_cu_dan
+----------------+-----------
+ csdl17_reader  |       200
+(1 row)
+
+psql:tests/report_security_ch6.sql:51: NOTICE:  [PASS] E1-reader-UPDATE | ky vong 42501 | thuc te 42501 permission denied for table cu_dan | csdl17_reader
+ thu
+-----
+
+(1 row)
+
+RESET
+SET
+psql:tests/report_security_ch6.sql:55: NOTICE:  [PASS] E1-admin-DELETE-bien_dong | ky vong 42501 | thuc te 42501 permission denied for table bien_dong_cu_tru | csdl17_admin
+ thu
+-----
+
+(1 row)
+
+psql:tests/report_security_ch6.sql:57: NOTICE:  [PASS] E1-admin-DELETE-qua_trinh | ky vong 42501 | thuc te 42501 permission denied for table qua_trinh_cu_tru | csdl17_admin
+ thu
+-----
+
+(1 row)
+
+RESET
+SET
+ role_dang_chay
+----------------
+ csdl17_report
+(1 row)
+
+ ma_to | ten_to | so_cu_dan
+-------+--------+-----------
+     1 | Tổ 01  |        34
+     2 | Tổ 02  |        29
+     3 | Tổ 03  |        21
+     4 | Tổ 04  |        33
+     5 | Tổ 05  |        41
+     6 | Tổ 06  |        30
+     7 | Tổ 07  |        11
+     8 | Tổ 08  |         0
+(8 rows)
+
+psql:tests/report_security_ch6.sql:67: NOTICE:  [PASS] E2-report-SELECT-cu_dan | ky vong 42501 | thuc te 42501 permission denied for table cu_dan | csdl17_report
+ thu
+-----
+
+(1 row)
+
+RESET
+CREATE FUNCTION
+CREATE FUNCTION
+REVOKE
+GRANT
+                               cau_lenh_dong_bi_ghep
+------------------------------------------------------------------------------------
+ SELECT ma_cu_dan, ho_ten, ngay_sinh FROM cu_dan WHERE ho_ten LIKE '%x' OR 1=1 --%'
+(1 row)
+
+       ca        | so_dong
+-----------------+---------
+ E3-sai-tan-cong |     200
+(1 row)
+
+        ca        | so_dong
+------------------+---------
+ E3-dung-tan-cong |       0
+(1 row)
+
+      ca      | so_dong
+--------------+---------
+ E3-dung-Hung |       8
+(1 row)
+
+        ca         | so_dong
+-------------------+---------
+ E3-doi-chung-Hung |       8
+(1 row)
+
+SET
+           ca           | so_dong
+------------------------+---------
+ E3-reader-goi-ham-dung |       8
+(1 row)
+
+RESET
+SET
+psql:tests/report_security_ch6.sql:108: NOTICE:  [PASS] E3-report-goi-ham-dung | ky vong 42501 | thuc te 42501 permission denied for function fn_tim_cu_dan | csdl17_report
+ thu
+-----
+
+(1 row)
+
+RESET
+  quyen   | tai_khoan | qua_trinh_cu_tru | bien_dong_cu_tru
+----------+-----------+------------------+------------------
+ SELECT   | t         | t                | t
+ INSERT   | t         | t                | t
+ UPDATE   | t         | t                | t
+ DELETE   | t         | f                | f
+ TRUNCATE | f         | f                | f
+(5 rows)
+
+ ma_tai_khoan | so_bien_dong_da_ghi
+--------------+---------------------
+            1 |                  11
+            2 |                  21
+            3 |                  18
+            4 |                  13
+(4 rows)
+
+SET
+psql:tests/report_security_ch6.sql:126: NOTICE:  [PASS] E4-xoa-TK2-da-ghi-su-kien | ky vong 23503 | thuc te 23503 update or delete on table "tai_khoan" violates foreign key constraint "bien_dong_cu_tru_ma_tai_khoan_fkey" on table "bien_dong_cu_tru" | csdl17_admin
+ thu
+-----
+
+(1 row)
+
+psql:tests/report_security_ch6.sql:128: NOTICE:  [PASS] E4-xoa-TK5-chua-ghi | ky vong OK(1 | thuc te OK(1 dong) | csdl17_admin
+ thu
+-----
+
+(1 row)
+
+psql:tests/report_security_ch6.sql:130: NOTICE:  [PASS] E4-sua-ten_hien_thi-TK2 | ky vong OK(1 | thuc te OK(1 dong) | csdl17_admin
+ thu
+-----
+
+(1 row)
+
+psql:tests/report_security_ch6.sql:132: NOTICE:  [PASS] E4-sua-vai_tro-TK4 | ky vong OK(1 | thuc te OK(1 dong) | csdl17_admin
+ thu
+-----
+
+(1 row)
+
+psql:tests/report_security_ch6.sql:134: NOTICE:  [PASS] E4-khoa-TK3 | ky vong OK(1 | thuc te OK(1 dong) | csdl17_admin
+ thu
+-----
+
+(1 row)
+
+psql:tests/report_security_ch6.sql:137: NOTICE:  [PASS] E4-sua-ghi_chu-bien_dong-1 | ky vong OK(1 | thuc te OK(1 dong) | csdl17_admin
+ thu
+-----
+
+(1 row)
+
+psql:tests/report_security_ch6.sql:139: NOTICE:  [PASS] E4-doi-nguoi-ghi-bien_dong-1-sang-TK1 | ky vong OK(1 | thuc te OK(1 dong) | csdl17_admin
+ thu
+-----
+
+(1 row)
+
+psql:tests/report_security_ch6.sql:141: NOTICE:  [PASS] E4-doi-ngay-bien_dong-1 | ky vong 23514 | thuc te 23514 B09: đợt mới 5 phải bắt đầu đúng ngày chuyển 2025-11-02 | csdl17_admin
+ thu
+-----
+
+(1 row)
+
+psql:tests/report_security_ch6.sql:143: NOTICE:  [PASS] E4-sua-ngay_ket_thuc-dot-16-da-gan-su-kien | ky vong 23514 | thuc te 23514 B09: đợt cũ 16 phải kết thúc trước ngày chuyển 2026-10-15 đúng 1 ngày | csdl17_admin
+ thu
+-----
+
+(1 row)
+
+psql:tests/report_security_ch6.sql:145: NOTICE:  [PASS] E4-dong-dot-1-chua-gan-su-kien | ky vong OK(1 | thuc te OK(1 dong) | csdl17_admin
+ thu
+-----
+
+(1 row)
+
+RESET
+SET
+UPDATE 1
+psql:tests/report_security_ch6.sql:153: NOTICE:  [PASS] E4-TK3-dang-KHOA-ghi | ky vong 23514 | thuc te 23514 B14: tài khoản 3 không ở trạng thái HOAT_DONG | csdl17_admin
+ thu
+-----
+
+(1 row)
+
+UPDATE 1
+psql:tests/report_security_ch6.sql:156: NOTICE:  [PASS] E4-TK3-mo-khoa-roi-ghi | ky vong OK(1 | thuc te OK(1 dong) | csdl17_admin
+ thu
+-----
+
+(1 row)
+
+RESET
+ vai_tro  | so_bien_dong
+----------+--------------
+ CAN_BO   |           39
+ QUAN_TRI |           11
+ THONG_KE |           13
+(3 rows)
+
+ROLLBACK
+ ham_dung_da_huy | ham_sai_da_huy |     ten_tk2      | so_tai_khoan | nguoi_ghi_bd1
+-----------------+----------------+------------------+--------------+---------------
+ t               | t              | Cán bộ Cư trú 01 |            5 |             2
+(1 row)

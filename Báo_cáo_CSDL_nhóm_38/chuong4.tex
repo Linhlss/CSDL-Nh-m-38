@@ -1,0 +1,142 @@
+\section{TRUY VẤN BẰNG ĐẠI SỐ QUAN HỆ}
+\label{sec:chuong4}
+
+Để biểu thức gọn hơn, nhóm viết tắt tên các quan hệ như sau: TDP = to\_dan\_pho, DC = dia\_chi, HO = ho\_cu\_tru, CD = cu\_dan, QT = qua\_trinh\_cu\_tru, TK = tai\_khoan và BD = bien\_dong\_cu\_tru. Nhiều bảng cùng có cột ghi\_chu, nên nếu dùng phép kết nối tự nhiên (natural join) thì cột này cũng bị đem ra so sánh và cho kết quả sai. Vì vậy, ở các câu có kết nối, nhóm hoặc chiếu bớt cột trước khi kết nối, hoặc dùng phép kết nối theo điều kiện ($\theta$-join) ghi rõ cột cần so khớp.
+
+\phantomsection
+\label{subsec:qd}
+Các câu hỏi về người ``đang'' cư trú dùng chung một khái niệm hiệu lực theo quy tắc B05, với ngày tham chiếu $d$ = '2026-11-20'. Một đợt cư trú hiệu lực tại $d$ khi ngày bắt đầu $\le d$ và ngày kết thúc để trống hoặc $\ge d$. Đại số quan hệ cổ điển giả thiết mọi giá trị đều xác định nên không có phép kiểm tra giá trị trống (NULL). Vì vậy, nhóm chuẩn bị bằng SQL tập đợt còn hiệu lực, rồi chỉ giữ các cột bắt buộc cần dùng. Quan hệ đầu vào $Q_d$ có lược đồ:
+\begin{equation*}
+\begin{aligned}
+Q_d(&\text{ma\_qua\_trinh},\ \text{ma\_cu\_dan},\ \text{ma\_ho},\\
+    &\text{loai\_cu\_tru},\ \text{ngay\_bat\_dau})
+\end{aligned}
+\end{equation*}
+Năm cột trên đều NOT NULL; cột \texttt{ngay\_ket\_thuc} được dùng để lọc nhưng không đưa vào $Q_d$. Bước chuẩn bị lọc \texttt{ngay\_bat\_dau <= d} và \texttt{(ngay\_ket\_thuc IS NULL OR ngay\_ket\_thuc >= d)}, sau đó SELECT DISTINCT năm cột trên. Việc xử lý NULL nằm ngoài đại số quan hệ cổ điển; các biểu thức tiếp theo chỉ dùng đầu vào đã chuẩn bị. Cách này giữ nguyên các đợt được xét và không thay đổi ý nghĩa truy vấn ở Chương \ref{sec:chuong5}.
+
+\textbf{Câu 1.} Cho biết họ tên và ngày sinh của các cư dân nữ, phục vụ việc lập danh sách hoạt động của chi hội phụ nữ.
+\begin{equation*}
+\pi_{\text{ho\_ten},\ \text{ngay\_sinh}}\left(\sigma_{\text{gioi\_tinh} = \text{'Nu'}}(CD)\right)
+\end{equation*}
+Phép chọn $\sigma$ lọc ra các bộ có giới tính là Nu, sau đó phép chiếu $\pi$ chỉ giữ lại hai cột cần in. Nhóm đặt phép chọn ở trong và phép chiếu ở ngoài, vì nếu chiếu trước thì cột gioi\_tinh đã bị bỏ đi và không còn để lọc nữa.
+
+\textbf{Câu 2.} Liệt kê mã và địa chỉ chuẩn của tất cả địa chỉ thuộc ``Tổ 01''.
+\begin{equation*}
+\begin{aligned}
+R &\leftarrow \sigma_{\text{ten\_to} = \text{'Tổ 01'}}(TDP)\\
+KQ &\leftarrow \pi_{\text{ma\_dia\_chi},\ \text{dia\_chi\_chuan}}\left(R \bowtie_{R.\text{ma\_to} = DC.\text{ma\_to}} DC\right)
+\end{aligned}
+\end{equation*}
+Nhóm chọn tổ trước rồi mới kết nối để giảm số bộ ở đầu vào của phép kết nối theo biến đổi đại số. Đây là cách tổ chức biểu thức, không phải kết luận đo hiệu năng thực thi.
+
+\textbf{Câu 3.} Cho biết mã và họ tên các cư dân đang thường trú tại tổ có mã 1 vào ngày $d$. Biểu thức khá dài nên nhóm viết thành từng bước với các quan hệ trung gian.
+\begin{equation*}
+\begin{aligned}
+R_1 &\leftarrow \sigma_{\text{loai\_cu\_tru} = \text{'THUONG\_TRU'}}(Q_d)\\
+R_2 &\leftarrow \pi_{\text{ma\_ho}}\left(HO \bowtie_{HO.\text{ma\_dia\_chi} = DC.\text{ma\_dia\_chi}} \sigma_{\text{ma\_to} = 1}(DC)\right)\\
+R_3 &\leftarrow R_1 \bowtie_{R_1.\text{ma\_ho} = R_2.\text{ma\_ho}} R_2\\
+KQ &\leftarrow \pi_{CD.\text{ma\_cu\_dan},\ \text{ho\_ten}}\left(R_3 \bowtie_{R_3.\text{ma\_cu\_dan} = CD.\text{ma\_cu\_dan}} CD\right)
+\end{aligned}
+\end{equation*}
+$R_1$ là các đợt thường trú còn hiệu lực tại $d$, $R_2$ là các hộ nằm trong tổ 1; $R_3$ ghép hai kết quả này lại, và kết nối $R_3$ với CD là lấy được họ tên.
+
+\textbf{Câu 4.} Tìm các cư dân đã từng cư trú trong phường nhưng tại ngày $d$ không còn đợt nào hiệu lực, để cán bộ rà soát lại hồ sơ.
+\begin{equation*}
+\begin{aligned}
+R &\leftarrow \pi_{\text{ma\_cu\_dan}}\left(\sigma_{\text{ngay\_bat\_dau} \le d}(QT)\right) - \pi_{\text{ma\_cu\_dan}}(Q_d)\\
+KQ &\leftarrow \pi_{\text{ma\_cu\_dan},\ \text{ho\_ten}}(R \bowtie CD)
+\end{aligned}
+\end{equation*}
+Phép hiệu lấy những người đã có đợt bắt đầu từ ngày $d$ trở về trước, trừ đi những người còn ít nhất một đợt hiệu lực trong $Q_d$. Vế trái chỉ so sánh cột ngay\_bat\_dau, vốn luôn có giá trị (NOT NULL), nên là phép chọn cổ điển. Ở bước sau, $R$ chỉ có cột ma\_cu\_dan nên dùng kết nối tự nhiên với CD là an toàn.
+
+\textbf{Câu 5.} Cho biết mã các cư dân đã từng tạm trú và cũng đã từng thường trú trong phường.
+\begin{equation*}
+\begin{aligned}
+A &\leftarrow \pi_{\text{ma\_cu\_dan}}\left(\sigma_{\text{loai\_cu\_tru} = \text{'TAM\_TRU'}}(QT)\right)\\
+B &\leftarrow \pi_{\text{ma\_cu\_dan}}\left(\sigma_{\text{loai\_cu\_tru} = \text{'THUONG\_TRU'}}(QT)\right)\\
+KQ &\leftarrow A \cap B
+\end{aligned}
+\end{equation*}
+Không thể viết câu này bằng một phép chọn với điều kiện AND, vì mỗi bộ của QT chỉ có một loại cư trú; hai điều kiện phải đúng ở hai bộ khác nhau nên cần dùng phép giao.
+
+\textbf{Câu 6.} Liệt kê mã tất cả các biến động có liên quan đến cư dân mã 92, dù cư dân này nằm ở đợt cũ hay đợt mới của biến động.
+\begin{equation*}
+\begin{aligned}
+Q &\leftarrow \pi_{\text{ma\_qua\_trinh}}\left(\sigma_{\text{ma\_cu\_dan} = 92}(QT)\right)\\
+KQ &\leftarrow \pi_{\text{ma\_bien\_dong}}\left(BD \bowtie_{\text{ma\_qua\_trinh\_cu} = \text{ma\_qua\_trinh}} Q\right)\\
+&\phantom{\leftarrow}\ \cup\ \pi_{\text{ma\_bien\_dong}}\left(BD \bowtie_{\text{ma\_qua\_trinh\_moi} = \text{ma\_qua\_trinh}} Q\right)
+\end{aligned}
+\end{equation*}
+Vế trái của phép hợp lấy các biến động mà cư dân 92 rời đi, vế phải lấy các biến động mà cư dân 92 đến; một lần chuyển nội bộ sẽ xuất hiện ở cả hai vế nhưng phép hợp tự loại bỏ bộ trùng.
+
+\textbf{Câu 7.} Với mỗi biến động chuyển nội bộ, cho biết họ tên cư dân, mã hộ cũ và mã hộ mới.
+\begin{equation*}
+\begin{aligned}
+QC &\leftarrow \rho_{QC(\text{mq\_cu},\ \text{ho\_cu})}\left(\pi_{\text{ma\_qua\_trinh},\ \text{ma\_ho}}(QT)\right)\\
+P &\leftarrow \pi_{\text{ma\_qua\_trinh},\ \text{ma\_ho},\ \text{ma\_cu\_dan}}(QT)\\
+QM &\leftarrow \rho_{QM(\text{mq\_moi},\ \text{ho\_moi},\ \text{ma\_cu\_dan})}(P)\\
+R_0 &\leftarrow \sigma_{\text{loai\_bien\_dong} = \text{'CHUYEN\_NOI\_BO'}}(BD)\\
+R_1 &\leftarrow R_0 \bowtie_{\text{ma\_qua\_trinh\_cu} = \text{mq\_cu}} QC\\
+R &\leftarrow R_1 \bowtie_{\text{ma\_qua\_trinh\_moi} = \text{mq\_moi}} QM\\
+KQ &\leftarrow \pi_{\text{ma\_bien\_dong},\ \text{ho\_ten},\ \text{ho\_cu},\ \text{ho\_moi}}\left(R \bowtie \pi_{\text{ma\_cu\_dan},\ \text{ho\_ten}}(CD)\right)
+\end{aligned}
+\end{equation*}
+Vì một biến động tham chiếu tới QT hai lần với hai vai trò khác nhau, nhóm dùng phép đổi tên $\rho$ để tạo ra hai bản sao QC (đợt cũ) và QM (đợt mới) có tên cột khác nhau, nhờ đó kết nối được cả hai lần mà không bị trùng tên thuộc tính.
+
+\textbf{Câu 8.} Cho biết tên hiển thị của những cán bộ đã ghi nhận biến động chuyển đi xảy ra trong tháng 10/2026.
+\begin{equation*}
+\begin{aligned}
+R &\leftarrow \sigma_{\substack{\text{loai\_bien\_dong} = \text{'CHUYEN\_DI'}\\ \wedge\ \text{ngay\_bien\_dong} \ge \text{'2026-10-01'}\\ \wedge\ \text{ngay\_bien\_dong} \le \text{'2026-10-31'}}}(BD)\\
+KQ &\leftarrow \pi_{\text{ten\_hien\_thi}}\left(R \bowtie_{R.\text{ma\_tai\_khoan} = TK.\text{ma\_tai\_khoan}} TK\right)
+\end{aligned}
+\end{equation*}
+Phép chọn trên BD gộp ba điều kiện bằng phép hội $\wedge$ để lấy đúng loại biến động trong khoảng thời gian cần xét, rồi mới kết nối với TK để lấy tên cán bộ. Vì phép chiếu tự loại các bộ trùng nhau, một cán bộ ghi nhiều lần chuyển đi trong tháng cũng chỉ xuất hiện một lần trong kết quả.
+
+\textbf{Câu 9.} Tìm những tài khoản đã ghi nhận đủ các loại biến động xuất hiện trong dữ liệu.
+\begin{equation*}
+\pi_{\text{ma\_tai\_khoan},\ \text{loai\_bien\_dong}}(BD) \div \pi_{\text{loai\_bien\_dong}}(BD)
+\end{equation*}
+Quan hệ bị chia $\pi_{\text{ma\_tai\_khoan},\ \text{loai\_bien\_dong}}(BD)$ gồm các cặp (tài khoản, loại biến động) đã từng được ghi; quan hệ chia $\pi_{\text{loai\_bien\_dong}}(BD)$ là tập các loại biến động có trong hệ thống. Kết quả có lược đồ là phần còn lại $\{\text{ma\_tai\_khoan}\}$, gồm những tài khoản mà khi ghép với \emph{mọi} bộ của quan hệ chia đều có mặt trong quan hệ bị chia. Đây là dạng câu hỏi có chữ ``tất cả'' mà các phép chọn, chiếu, kết nối thông thường không diễn đạt trực tiếp được. Quan hệ chia ở đây lấy từ dữ liệu đã ghi; nếu muốn hiểu ``tất cả loại'' theo miền giá trị của CHECK thì thay bằng quan hệ hằng gồm ba bộ CHUYEN\_DEN, CHUYEN\_DI, CHUYEN\_NOI\_BO. Trên bộ dữ liệu mẫu cả ba loại đều đã xuất hiện nên hai cách hiểu cho cùng kết quả. Nhóm kiểm chứng bằng hai câu SQL độc lập, một câu dùng hai lớp NOT EXISTS và một câu đếm số loại phân biệt của mỗi tài khoản: cả hai đều trả về bốn tài khoản 1, 2, 3, 4; tài khoản 5 chưa ghi biến động nào nên không có bộ nào trong quan hệ bị chia và không thể xuất hiện trong kết quả.
+
+\textbf{Câu 10.} Đếm số nhân khẩu đang cư trú tại ngày $d$ của từng hộ.
+\begin{equation*}
+{}_{\text{ma\_ho}}\,\gamma_{\,\text{COUNT(ma\_cu\_dan)} \rightarrow \text{so\_nhan\_khau}}\left(\pi_{\text{ma\_ho},\ \text{ma\_cu\_dan}}(Q_d)\right)
+\end{equation*}
+Phép gom nhóm $\gamma$ (một số giáo trình ký hiệu là $\Im$) không thuộc các phép toán của đại số quan hệ cổ điển mà thuộc \textbf{đại số quan hệ mở rộng}, vốn bổ sung phép gom nhóm và hàm tổng hợp như COUNT \cite{elmasri,silberschatz}. Phép này chia các cặp (hộ, cư dân) theo ma\_ho rồi đếm số cư dân trong mỗi nhóm. Nhóm chiếu về cặp (ma\_ho, ma\_cu\_dan) trước khi gom nhóm để một người có cả đợt thường trú và đợt tạm trú trong cùng hộ chỉ được đếm một lần, đúng với quy tắc B17 là số người phải tính theo mã cư dân phân biệt. Trên bộ dữ liệu mẫu hiện tại chưa có hộ nào rơi vào trường hợp này, nhưng phép chiếu vẫn cần để biểu thức đúng với mọi dữ liệu hợp lệ. Kết quả có 56 hộ đang có người tại $d$, trong đó 40 hộ có từ 3 nhân khẩu trở lên, khớp với câu 3 ở Chương \ref{sec:chuong5}.
+
+\subsection*{Đối chiếu biểu thức đại số quan hệ với SQL}
+
+Mỗi biểu thức trên được dịch sang SQL theo đúng từng phép toán (phép chọn thành WHERE, phép chiếu thành SELECT DISTINCT vì đại số quan hệ làm việc trên tập hợp, phép hợp, giao, hiệu thành UNION, INTERSECT, EXCEPT, phép chia thành hai lớp NOT EXISTS, phép gom nhóm thành GROUP BY) rồi chạy trên cơ sở dữ liệu dựng mới từ bộ dữ liệu mẫu. Với các câu có câu SQL cùng ý nghĩa ở Chương \ref{sec:chuong5}, nhóm so sánh hai tập kết quả theo cả hai chiều (phép hiệu hai phía). Bảng \ref{tab:doichieura} tóm tắt kết quả. Lần chạy lại ngày 22/11/2026 trên PostgreSQL 17.12 xác nhận đầu vào $Q_d$ chỉ có năm cột NOT NULL và các kết quả không đổi; tám câu có assertion đều đạt, câu 1 và câu 8 được ghi nhận để đối chiếu thủ công. Log lưu tại \texttt{tests/report\_ra\_20261122\_log.txt}.
+
+\begin{table}[H]
+\centering
+\fontsize{11pt}{14pt}\selectfont
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{|P{1.3cm}|P{2.4cm}|Y|}
+\hline
+\textbf{Câu} & \textbf{Số bộ kết quả} & \textbf{Đối chiếu} \\
+\hline
+1 & 98 & Bằng số cư dân nữ (không có hai người nữ trùng cả họ tên và ngày sinh) \\
+\hline
+2 & 8 & Bằng số địa chỉ thuộc Tổ 01 \\
+\hline
+3 & 23 & Trùng khớp từng bộ với câu 1 Chương \ref{sec:chuong5} \\
+\hline
+4 & 17 & Trùng khớp từng bộ với câu 4 Chương \ref{sec:chuong5} \\
+\hline
+5 & 31 & Bằng số dòng của câu 9 Chương \ref{sec:chuong5}, vốn dùng cùng phép INTERSECT \\
+\hline
+6 & 1 (biến động 32) & Lần chuyển nội bộ ngày 02/7/2026 từ hộ 56 sang hộ 20; trùng với cách viết một phép chọn dùng điều kiện ``hoặc'' \\
+\hline
+7 & 27 & Trùng khớp từng bộ (4 cột) với câu 7 Chương \ref{sec:chuong5} \\
+\hline
+8 & 2 & Cán bộ Cư trú 01 và Cán bộ Cư trú 02, từ 2 biến động chuyển đi trong tháng 10/2026 \\
+\hline
+9 & 4 (tài khoản 1--4) & Cách viết NOT EXISTS và cách đếm cho cùng kết quả \\
+\hline
+10 & 56 hộ & 40 hộ có từ 3 nhân khẩu, khớp câu 3 Chương \ref{sec:chuong5} \\
+\hline
+\end{tabularx}
+\caption{Kết quả đối chiếu 10 câu đại số quan hệ trên bộ dữ liệu mẫu}
+\label{tab:doichieura}
+\end{table}

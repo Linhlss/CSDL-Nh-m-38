@@ -1,0 +1,216 @@
+### sql/05_security.sql
+BEGIN
+SET
+DO
+DO
+CREATE VIEW
+COMMENT
+DO
+REVOKE
+REVOKE
+GRANT
+GRANT
+GRANT
+REVOKE
+REVOKE
+REVOKE
+GRANT
+REVOKE
+GRANT
+     role      |       bang_hoac_view       |             quyen
+---------------+----------------------------+--------------------------------
+ csdl17_admin  | bien_dong_cu_tru           | INSERT, SELECT, UPDATE
+ csdl17_admin  | cu_dan                     | DELETE, INSERT, SELECT, UPDATE
+ csdl17_admin  | dia_chi                    | DELETE, INSERT, SELECT, UPDATE
+ csdl17_admin  | ho_cu_tru                  | DELETE, INSERT, SELECT, UPDATE
+ csdl17_admin  | qua_trinh_cu_tru           | INSERT, SELECT, UPDATE
+ csdl17_admin  | tai_khoan                  | DELETE, INSERT, SELECT, UPDATE
+ csdl17_admin  | to_dan_pho                 | DELETE, INSERT, SELECT, UPDATE
+ csdl17_admin  | vw_thong_ke_cu_dan_theo_to | SELECT
+ csdl17_reader | bien_dong_cu_tru           | SELECT
+ csdl17_reader | cu_dan                     | SELECT
+ csdl17_reader | dia_chi                    | SELECT
+ csdl17_reader | ho_cu_tru                  | SELECT
+ csdl17_reader | qua_trinh_cu_tru           | SELECT
+ csdl17_reader | to_dan_pho                 | SELECT
+ csdl17_report | vw_thong_ke_cu_dan_theo_to | SELECT
+(15 rows)
+
+COMMIT
+ reader_select | reader_update | reader_insert | reader_delete
+---------------+---------------+---------------+---------------
+ t             | f             | f             | f
+(1 row)
+
+ ma_cu_dan |     ho_ten      |                  ghi_chu
+-----------+-----------------+--------------------------------------------
+         1 | Nguyễn Hữu Khoa | Đúng ngày cắt 60 tuổi tại 2026-11-20 (S03)
+(1 row)
+
+SET
+ dang_chay_voi_role
+--------------------
+ csdl17_reader
+(1 row)
+
+ ma_cu_dan |     ho_ten      | ngay_sinh  | gioi_tinh
+-----------+-----------------+------------+-----------
+         1 | Nguyễn Hữu Khoa | 1966-11-20 | Nam
+         2 | Hoàng Minh Thảo | 1960-05-10 | Nu
+         3 | Hoàng Hữu Hùng  | 1966-11-21 | Nam
+         4 | Nguyễn Văn An   | 1969-03-28 | Nam
+         5 | Nguyễn Văn An   | 2002-01-31 | Nam
+(5 rows)
+
+psql:sql/05_security.sql:211: ERROR:  permission denied for table cu_dan
+psql:sql/05_security.sql:212: ERROR:  permission denied for table to_dan_pho
+psql:sql/05_security.sql:213: ERROR:  permission denied for table qua_trinh_cu_tru
+psql:sql/05_security.sql:216: ERROR:  permission denied for table tai_khoan
+RESET
+ da_tro_ve_role
+----------------
+ postgres
+(1 row)
+
+ ma_cu_dan |     ho_ten      |                  ghi_chu
+-----------+-----------------+--------------------------------------------
+         1 | Nguyễn Hữu Khoa | Đúng ngày cắt 60 tuổi tại 2026-11-20 (S03)
+(1 row)
+
+SET
+BEGIN
+UPDATE 1
+ROLLBACK
+RESET
+                                                                            dinh_nghia_view
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  SELECT t.ma_to,                                                                                                                                                      +
+     t.ten_to,                                                                                                                                                         +
+     count(DISTINCT q.ma_cu_dan) AS so_cu_dan                                                                                                                          +
+    FROM to_dan_pho t                                                                                                                                                  +
+      LEFT JOIN dia_chi d ON d.ma_to = t.ma_to                                                                                                                         +
+      LEFT JOIN ho_cu_tru h ON h.ma_dia_chi = d.ma_dia_chi                                                                                                             +
+      LEFT JOIN qua_trinh_cu_tru q ON q.ma_ho = h.ma_ho AND q.ngay_bat_dau <= '2026-11-20'::date AND (q.ngay_ket_thuc IS NULL OR q.ngay_ket_thuc >= '2026-11-20'::date)+
+   GROUP BY t.ma_to, t.ten_to;
+(1 row)
+
+ report_xem_view | report_xem_cu_dan | report_xem_qua_trinh
+-----------------+-------------------+----------------------
+ t               | f                 | f
+(1 row)
+
+SET
+ dang_chay_voi_role
+--------------------
+ csdl17_report
+(1 row)
+
+ ma_to | ten_to | so_cu_dan
+-------+--------+-----------
+     1 | Tổ 01  |        34
+     2 | Tổ 02  |        29
+     3 | Tổ 03  |        21
+     4 | Tổ 04  |        33
+     5 | Tổ 05  |        41
+     6 | Tổ 06  |        30
+     7 | Tổ 07  |        11
+     8 | Tổ 08  |         0
+(8 rows)
+
+psql:sql/05_security.sql:257: ERROR:  permission denied for table cu_dan
+psql:sql/05_security.sql:258: ERROR:  permission denied for table qua_trinh_cu_tru
+RESET
+exit=0
+### tests/security_catalog_tv3.sql
+ ma  |                                            mo_ta                                            | ket_qua |                                                                              chi_tiet
+-----+---------------------------------------------------------------------------------------------+---------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ C01 | Đủ 3 role demo, đều LOGIN                                                                   | PASS    | csdl17_admin, csdl17_reader, csdl17_report
+ C02 | Role demo không SUPERUSER/CREATEDB/CREATEROLE/REPLICATION/BYPASSRLS                         | PASS    | 0 role vi phạm
+ C03 | Role demo không là thành viên role nào (không SET ROLE leo quyền được)                      | PASS    | 0 membership
+ C04 | Không role demo nào sở hữu database, schema public hay quan hệ/hàm trong public             | PASS    | owner bảng/view: postgres
+ C05 | PUBLIC không có CONNECT/TEMP/CREATE trên database demo                                      | PASS    | {postgres=CTc/postgres,csdl17_admin=c/postgres,csdl17_reader=c/postgres,csdl17_report=c/postgres}
+ C06 | PUBLIC không có CREATE trên schema public                                                   | PASS    | {pg_database_owner=UC/pg_database_owner,=U/pg_database_owner,csdl17_admin=U/pg_database_owner,csdl17_reader=U/pg_database_owner,csdl17_report=U/pg_database_owner}
+ C07 | 3 role demo có USAGE trên schema public                                                     | PASS    | csdl17_admin=true, csdl17_reader=true, csdl17_report=true
+ C08 | Không bảng/view/sequence nào trong public cấp quyền cho PUBLIC                              | PASS    | 0 quyền PUBLIC
+ C09 | Không có quyền mặc định (ALTER DEFAULT PRIVILEGES) tự cấp cho đối tượng mới                 | PASS    | 0 dòng pg_default_acl
+ C10 | Không có quyền cấp theo cột (cột lẻ) cho role demo                                          | PASS    | chỉ có quyền mức bảng
+ C11 | reader: SELECT đúng 6 bảng nghiệp vụ, không ghi, không đọc tai_khoan/VIEW                   | PASS    | bien_dong_cu_tru, cu_dan, dia_chi, ho_cu_tru, qua_trinh_cu_tru, to_dan_pho
+ C12 | report: chỉ SELECT VIEW thống kê (không ghi VIEW), không quyền nào trên 7 bảng gốc          | PASS    | vw_thong_ke_cu_dan_theo_to
+ C13 | VIEW B2 không có cột nhận diện (ho_ten, ngay_sinh, ma_cu_dan)                               | PASS    | ma_to, ten_to, so_cu_dan
+ C14 | Hàm fn_* của 02_constraints đều SECURITY INVOKER (EXECUTE của PUBLIC không vượt quyền bảng) | PASS    | 9 hàm, 9 hàm PUBLIC được EXECUTE
+ C15 | admin: INSERT/UPDATE được nhưng KHÔNG DELETE đợt cư trú và nhật ký biến động (B12)          | PASS    | DELETE qua_trinh=false, DELETE bien_dong=false
+
+exit=0
+### tests/security_b12_tv1.sql
+[ PASS ] K01 ma trận quyền 3 role x 8 đối tượng x 5 quyền: 120 ô, 34 quyền được cấp; không lệch
+BEGIN
+SET
+psql:tests/security_b12_tv1.sql:132: NOTICE:  [PASS] K02 | kỳ vọng 42501 | thực tế 42501 | DELETE FROM qua_trinh_cu_tru WHERE ma_qua_trinh = (SELECT min(ma_qua_trinh) FROM qua_trinh_cu_tru)
+psql:tests/security_b12_tv1.sql:132: NOTICE:  [PASS] K03 | kỳ vọng 42501 | thực tế 42501 | DELETE FROM bien_dong_cu_tru WHERE ma_bien_dong = (SELECT min(ma_bien_dong) FROM bien_dong_cu_tru)
+psql:tests/security_b12_tv1.sql:132: NOTICE:  [PASS] K04 | kỳ vọng 42501 | thực tế 42501 | TRUNCATE qua_trinh_cu_tru, bien_dong_cu_tru
+psql:tests/security_b12_tv1.sql:132: NOTICE:  K05 thử 1: đợt 1 -> hộ 2 thành công (đợt mới 253, sự kiện 66)
+psql:tests/security_b12_tv1.sql:132: NOTICE:  [PASS] K05 | admin gọi fn_chuyen_noi_bo sau REVOKE DELETE | 1 lần thử, thành công=t, lỗi quyền=0
+psql:tests/security_b12_tv1.sql:132: NOTICE:  TONG K02-K05 csdl17_admin: 4/4 PASS
+DO
+ROLLBACK
+TONG security_b12_tv1: K01-K05 PASS
+exit=0
+### login csdl17_reader (psql -h localhost -U csdl17_reader; cụm thử dùng xác thực trust)
+ dang_nhap_bang | quyen_dang_dung | la_superuser | ket_noi_tcp |      csdl
+----------------+-----------------+--------------+-------------+----------------
+ csdl17_reader  | csdl17_reader   | off          | t           | csdl17_seed636
+
+== Demo B1, đăng nhập bằng csdl17_reader ==
+psql:tests/security_login_tv3.sql:74: NOTICE:  [PASS] R01 | kỳ vọng OK | thực tế OK | SELECT count(*) FROM cu_dan
+psql:tests/security_login_tv3.sql:74: NOTICE:  [PASS] R02 | kỳ vọng OK | thực tế OK | SELECT count(*) FROM qua_trinh_cu_tru WHERE ngay_ket_thuc IS NULL
+psql:tests/security_login_tv3.sql:74: NOTICE:  [PASS] R03 | kỳ vọng 42501 | thực tế 42501 | UPDATE cu_dan SET ghi_chu = 'reader thu sua' WHERE ma_cu_dan = 1
+psql:tests/security_login_tv3.sql:74: NOTICE:  [PASS] R04 | kỳ vọng 42501 | thực tế 42501 | INSERT INTO to_dan_pho (ten_to) VALUES ('Tổ thử quyền')
+psql:tests/security_login_tv3.sql:74: NOTICE:  [PASS] R05 | kỳ vọng 42501 | thực tế 42501 | DELETE FROM qua_trinh_cu_tru WHERE ma_qua_trinh = 1
+psql:tests/security_login_tv3.sql:74: NOTICE:  [PASS] R06 | kỳ vọng 42501 | thực tế 42501 | TRUNCATE bien_dong_cu_tru
+psql:tests/security_login_tv3.sql:74: NOTICE:  [PASS] R07 | kỳ vọng 42501 | thực tế 42501 | SELECT count(*) FROM tai_khoan
+psql:tests/security_login_tv3.sql:74: NOTICE:  [PASS] R08 | kỳ vọng 42501 | thực tế 42501 | SELECT count(*) FROM vw_thong_ke_cu_dan_theo_to
+psql:tests/security_login_tv3.sql:74: NOTICE:  [PASS] R09 | kỳ vọng 42501 | thực tế 42501 | SELECT count(*) FROM fn_chuyen_noi_bo(1, 2, 'THUONG_TRU', DATE '2026-11-20', 2)
+psql:tests/security_login_tv3.sql:74: NOTICE:  [PASS] R10 | kỳ vọng 42501 | thực tế 42501 | CREATE TABLE public.reader_thu_tao (x int)
+psql:tests/security_login_tv3.sql:74: NOTICE:  [PASS] R11 | kỳ vọng 42501 | thực tế 42501 | CREATE TEMP TABLE reader_tam (x int)
+psql:tests/security_login_tv3.sql:74: NOTICE:  [PASS] R12 | kỳ vọng 42501 | thực tế 42501 | SET ROLE csdl17_admin
+psql:tests/security_login_tv3.sql:74: NOTICE:  TONG csdl17_reader: 12/12 PASS
+DO
+ ma_cu_dan |     ho_ten      | ngay_sinh
+-----------+-----------------+------------
+         1 | Nguyễn Hữu Khoa | 1966-11-20
+         2 | Hoàng Minh Thảo | 1960-05-10
+         3 | Hoàng Hữu Hùng  | 1966-11-21
+
+psql:tests/security_login_tv3.sql:79: ERROR:  permission denied for table cu_dan
+exit=0
+### login csdl17_report
+ dang_nhap_bang | quyen_dang_dung | la_superuser | ket_noi_tcp |      csdl
+----------------+-----------------+--------------+-------------+----------------
+ csdl17_report  | csdl17_report   | off          | t           | csdl17_seed636
+
+== Demo B2, đăng nhập bằng csdl17_report ==
+psql:tests/security_login_tv3.sql:123: NOTICE:  [PASS] P01 | kỳ vọng OK | thực tế OK | SELECT count(*) FROM vw_thong_ke_cu_dan_theo_to
+psql:tests/security_login_tv3.sql:123: NOTICE:  [PASS] P02 | kỳ vọng 42501 | thực tế 42501 | SELECT count(*) FROM cu_dan
+psql:tests/security_login_tv3.sql:123: NOTICE:  [PASS] P03 | kỳ vọng 42501 | thực tế 42501 | SELECT count(*) FROM qua_trinh_cu_tru
+psql:tests/security_login_tv3.sql:123: NOTICE:  [PASS] P04 | kỳ vọng 42501 | thực tế 42501 | SELECT count(*) FROM ho_cu_tru
+psql:tests/security_login_tv3.sql:123: NOTICE:  [PASS] P05 | kỳ vọng 42501 | thực tế 42501 | SELECT count(*) FROM tai_khoan
+psql:tests/security_login_tv3.sql:123: NOTICE:  [PASS] P06 | kỳ vọng 55000 | thực tế 55000 | UPDATE vw_thong_ke_cu_dan_theo_to SET so_cu_dan = 0
+psql:tests/security_login_tv3.sql:123: NOTICE:  [PASS] P07 | kỳ vọng 42501 | thực tế 42501 | SELECT count(*) FROM fn_chuyen_noi_bo(1, 2, 'THUONG_TRU', DATE '2026-11-20', 2)
+psql:tests/security_login_tv3.sql:123: NOTICE:  [PASS] P08 | kỳ vọng 42501 | thực tế 42501 | CREATE TABLE public.report_thu_tao (x int)
+psql:tests/security_login_tv3.sql:123: NOTICE:  [PASS] P09 | kỳ vọng 42501 | thực tế 42501 | CREATE TEMP TABLE report_tam (x int)
+psql:tests/security_login_tv3.sql:123: NOTICE:  [PASS] P10 | kỳ vọng 42501 | thực tế 42501 | SET ROLE csdl17_reader
+psql:tests/security_login_tv3.sql:123: NOTICE:  TONG csdl17_report: 10/10 PASS
+DO
+ ma_to | ten_to | so_cu_dan
+-------+--------+-----------
+     1 | Tổ 01  |        34
+     2 | Tổ 02  |        29
+     3 | Tổ 03  |        21
+     4 | Tổ 04  |        33
+     5 | Tổ 05  |        41
+     6 | Tổ 06  |        30
+     7 | Tổ 07  |        11
+     8 | Tổ 08  |         0
+
+psql:tests/security_login_tv3.sql:128: ERROR:  permission denied for table cu_dan
+exit=0

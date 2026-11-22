@@ -12,6 +12,12 @@ Xây dựng CSDL quản lý cư dân và biến động cư trú tại một ph�
 
 > **Đính chính số thứ tự thành viên (19/11/2026):** TV1 = Trần Bùi Tùng Linh (20227057), TV2 = Trần Tuấn Ngọc (20227064), TV3 = Dương Ngọc Ninh (20237469). Đính chính này không sửa tác giả commit/PR hoặc tự gán lại đóng góp lịch sử; bảng phân công trang cuối phải phản ánh công việc thực tế.
 
+## Báo cáo chính
+
+- [Bản PDF để rà soát và in](Báo_cáo_CSDL_nhóm_38/main.pdf), [nguồn LaTeX](Báo_cáo_CSDL_nhóm_38/main.tex) và [cách biên dịch](Báo_cáo_CSDL_nhóm_38/README_COMPILE.md).
+- Bản cập nhật 22/11/2026 đã sửa diễn đạt, bổ sung khóa/phụ thuộc hàm/1NF–3NF và giới hạn dư thừa ngày biến động, làm rõ đầu vào `Q_d`; giữ nguyên ảnh ERD. Nhóm tự đánh giá và ký xác nhận trang cuối trước khi nộp; cập nhật này không tự đóng Gate 3/4.
+- Mười câu RA và mười câu SQL trong PDF là bộ câu hỏi của báo cáo, khác bộ QRA/QSQL trong hồ sơ kỹ thuật. Tái lập bằng [script RA](tests/report_ra_01_10.sql), [script SQL](tests/report_sql_01_10.sql), [thử ràng buộc](tests/report_bang_thu_rang_buoc.sql) và [ví dụ bảo mật](tests/report_security_ch6.sql). [Log chạy lại RA ngày 22/11](tests/report_ra_20261122_log.txt) ghi hash đầu vào và phạm vi kiểm chứng; các log ngày 21/11 giữ nguyên thời điểm lịch sử.
+
 ## Hiện trạng và việc tiếp theo
 
 **Kỹ thuật tuần 1 đã hoàn thiện.** Repo có schema 7 bảng/35 cột, fixture29, seed636, 10 SQL, 10 RA và B1/B2; nháp Chương 4/6 đã merge. Log tuần 1 đạt 96/96 (95 kiểm tra chức năng + 1 tái hiện B15 cũ). **Gate 1 PASS, thiết kế v1** theo xác nhận chủ repo tiếp nhận 16/11/2026: cả ba đã đồng ý thiết kế và đã đối chiếu yêu cầu/thời hạn/quy cách in. **52/53 mục tuần 1 hoàn thành, 1 mục môi trường cá nhân TV2 hoãn sang W2-T2-01**; TV2 dùng Windows, phiên bản PostgreSQL/công cụ/kết quả kết nối chưa có. [Nguồn xác nhận và phần hoãn](meetings/decision_log.md#gate1).
@@ -61,7 +67,8 @@ Xem **[Hướng dẫn dựng CSDL thống nhất](docs/08_huong_dan_dung_csdl.md
 | Dữ liệu, nạp/reset, 10 SQL và test | [Hồ sơ dữ liệu/SQL](docs/05_ke_hoach_du_lieu_va_sql.md), [cách nạp](data/README.md) |
 | 10 RA, SQL kiểm chứng và B1/B2 | [Đại số quan hệ](docs/06a_dai_so_quan_he.md), [bảo mật](docs/06b_bao_mat.md) |
 | Kết quả, quyết định và xác nhận | [Nhật ký chung](meetings/decision_log.md), [ma trận câu hỏi](docs/07_ma_tran_truy_van_va_review.md) |
-| Báo cáo đang biên tập | [Bản nháp tích hợp](docs/02_bao_cao_suon.md) |
+| Báo cáo chính để in | [PDF](Báo_cáo_CSDL_nhóm_38/main.pdf), [nguồn và cách biên dịch](Báo_cáo_CSDL_nhóm_38/README_COMPILE.md) |
+| Khung và hồ sơ biên tập báo cáo | [Bản Markdown tích hợp](docs/02_bao_cao_suon.md) |
 
 Nhận bản mới trên nhánh main từ [repo GitHub](https://github.com/Linhlss/CSDL-Nh-m-38), rồi kiểm tra tệp:
 

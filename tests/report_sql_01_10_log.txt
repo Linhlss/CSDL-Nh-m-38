@@ -1,0 +1,366 @@
+SET
+=== Câu 1. Cư dân đang thường trú tại tổ 1 tại d (báo cáo: 23 dòng)
+ ma_cu_dan |      ho_ten       | ma_ho |                              dia_chi_chuan
+-----------+-------------------+-------+--------------------------------------------------------------------------
+         3 | Hoàng Hữu Hùng    |     1 | Số 11 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+         2 | Hoàng Minh Thảo   |     1 | Số 11 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        99 | Lê Thành Hùng     |    47 | Số 11 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+         1 | Nguyễn Hữu Khoa   |     1 | Số 11 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+         4 | Nguyễn Văn An     |     1 | Số 11 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        41 | Ngô Tuấn Hải      |    47 | Số 11 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        74 | Phạm Khánh Nga    |    47 | Số 11 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+         6 | Dương Khánh Hương |     8 | Số 18 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       100 | Hoàng Bảo Thảo    |    54 | Số 18 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       195 | Hồ Hữu Nam        |    54 | Số 18 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       109 | Lê Minh Nam       |     8 | Số 18 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       180 | Nguyễn Thanh Nga  |    54 | Số 18 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       158 | Phan Hồng Nhung   |     8 | Số 18 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       136 | Đặng Thị Nga      |    54 | Số 18 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       107 | Đỗ Hữu An         |     8 | Số 18 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       193 | Hồ Công Sơn       |    15 | Số 25 Phố Đại La, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       122 | Dương Hồng Quỳnh  |    22 | Số 32 Ngõ 128 Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        68 | Phạm Bảo Anh      |    22 | Số 32 Ngõ 128 Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       168 | Bùi Bảo Trang     |    29 | Số 39 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        73 | Bùi Tuấn Bình     |    29 | Số 39 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       129 | Hồ Văn Đạt        |    29 | Số 39 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       102 | Phan Thu Ngân     |    29 | Số 39 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        76 | Lê Phương Nga     |    43 | Số 53 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+(23 rows)
+
+=== Câu 2. Thống kê thường trú / tạm trú / tổng theo tổ (báo cáo: Tổ 05 = 41, Tổ 08 = 0/0/0)
+ ma_to | ten_to | so_thuong_tru | so_tam_tru | tong_so_nguoi
+-------+--------+---------------+------------+---------------
+     5 | Tổ 05  |            28 |         14 |            41
+     1 | Tổ 01  |            23 |         13 |            34
+     4 | Tổ 04  |            19 |         14 |            33
+     6 | Tổ 06  |            22 |          8 |            30
+     2 | Tổ 02  |            19 |         10 |            29
+     3 | Tổ 03  |            10 |         11 |            21
+     7 | Tổ 07  |            10 |          1 |            11
+     8 | Tổ 08  |             0 |          0 |             0
+(8 rows)
+
+=== Câu 3. Hộ có từ 3 nhân khẩu trở lên tại d (báo cáo: 40 hộ, lớn nhất 7)
+ ma_ho |                              dia_chi_chuan                               | so_nhan_khau
+-------+--------------------------------------------------------------------------+--------------
+    12 | Số 22 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội          |            7
+    15 | Số 25 Phố Đại La, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội            |            7
+    19 | Số 29 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội    |            7
+    20 | Số 30 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội          |            7
+    25 | Số 35 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội      |            7
+    40 | Số 50 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội      |            7
+    13 | Số 23 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội   |            6
+    29 | Số 39 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội   |            6
+    51 | Số 15 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội   |            6
+    54 | Số 18 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội      |            6
+     1 | Số 11 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội      |            5
+    16 | Số 26 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội      |            5
+    27 | Số 37 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội    |            5
+    33 | Số 43 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội      |            5
+    39 | Số 49 Phố Đại La, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội            |            5
+    41 | Số 51 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội      |            5
+    48 | Số 12 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội     |            5
+    50 | Số 14 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội          |            5
+     2 | Số 12 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội     |            4
+     8 | Số 18 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội      |            4
+    18 | Số 28 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội     |            4
+    26 | Số 36 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội     |            4
+    44 | Số 54 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội          |            4
+    47 | Số 11 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội      |            4
+     3 | Số 13 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội    |            3
+     5 | Số 15 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội   |            3
+     9 | Số 19 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội      |            3
+    10 | Số 20 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội     |            3
+    11 | Số 21 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội    |            3
+    22 | Số 32 Ngõ 128 Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội |            3
+    23 | Số 33 Phố Đại La, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội            |            3
+    30 | Số 40 Ngõ 128 Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội |            3
+    32 | Số 42 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội      |            3
+    34 | Số 44 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội     |            3
+    38 | Số 48 Ngõ 128 Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội |            3
+    42 | Số 52 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội     |            3
+    46 | Số 56 Ngõ 128 Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội |            3
+    49 | Số 13 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội    |            3
+    56 | Số 20 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội     |            3
+    58 | Số 22 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội          |            3
+(40 rows)
+
+=== Câu 4. Đã từng cư trú nhưng không còn đợt hiệu lực tại d (báo cáo: 17 dòng)
+ ma_cu_dan |      ho_ten
+-----------+-------------------
+        19 | Lê Tuấn Hùng
+        20 | Phạm Minh Hương
+        21 | Lê Công Tú
+        22 | Vũ Thanh Phương
+        46 | Nguyễn Minh Hương
+        53 | Hoàng Đức Đạt
+        57 | Huỳnh Công Khang
+        59 | Nguyễn Văn Đạt
+        61 | Hồ Quốc Tú
+        86 | Hoàng Thanh Mai
+        91 | Đỗ Văn Tú
+       117 | Nguyễn Quốc Bình
+       119 | Huỳnh Quốc Tú
+       121 | Nguyễn Gia Khang
+       141 | Phan Văn Trung
+       161 | Lý Minh Nam
+       174 | Võ Minh Nhung
+(17 rows)
+
+=== Câu 5. Lịch sử cư trú của cư dân 92 (báo cáo: 3 đợt — hộ 56, 15, 20)
+ ma_qua_trinh | loai_cu_tru | ngay_bat_dau | ngay_ket_thuc | ma_ho |                            dia_chi_chuan
+--------------+-------------+--------------+---------------+-------+----------------------------------------------------------------------
+          113 | THUONG_TRU  | 2022-08-01   | 2026-07-01    |    56 | Số 20 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+          248 | TAM_TRU     | 2025-08-11   |               |    15 | Số 25 Phố Đại La, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+          114 | THUONG_TRU  | 2026-07-02   |               |    20 | Số 30 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+(3 rows)
+
+=== Câu 6. Số biến động theo tháng và loại trong năm 2026 (báo cáo chưa in số)
+ thang | loai_bien_dong | so_bien_dong
+-------+----------------+--------------
+     1 | CHUYEN_DEN     |            1
+     1 | CHUYEN_NOI_BO  |            1
+     3 | CHUYEN_DEN     |            1
+     4 | CHUYEN_DEN     |            2
+     4 | CHUYEN_DI      |            1
+     5 | CHUYEN_DI      |            1
+     5 | CHUYEN_NOI_BO  |            1
+     6 | CHUYEN_DEN     |            1
+     6 | CHUYEN_NOI_BO  |            2
+     7 | CHUYEN_NOI_BO  |            2
+     8 | CHUYEN_DI      |            1
+     9 | CHUYEN_DEN     |            1
+     9 | CHUYEN_DI      |            1
+     9 | CHUYEN_NOI_BO  |            1
+    10 | CHUYEN_DEN     |            1
+    10 | CHUYEN_DI      |            2
+    10 | CHUYEN_NOI_BO  |            2
+    11 | CHUYEN_DEN     |            2
+    11 | CHUYEN_DI      |            1
+    11 | CHUYEN_NOI_BO  |            3
+    12 | CHUYEN_DEN     |            1
+(21 rows)
+
+=== Câu 7. Các lần chuyển nội bộ (báo cáo: 27 dòng, sớm nhất 18/01/2025, hộ 13 -> 25)
+ ma_bien_dong | ngay_bien_dong |      ho_ten       | ho_cu | ho_moi |     nguoi_ghi_nhan
+--------------+----------------+-------------------+-------+--------+------------------------
+           46 | 2025-01-18     | Dương Hữu Cường   |    13 |     25 | Quản trị viên Hệ thống
+           56 | 2025-02-06     | Võ Gia Đạt        |     8 |     48 | Cán bộ Cư trú 02
+           62 | 2025-02-08     | Đỗ Thanh Trang    |    26 |     44 | Cán bộ Tổng hợp 01
+           48 | 2025-02-09     | Võ Thu Hạnh       |    49 |     31 | Cán bộ Cư trú 01
+           39 | 2025-02-10     | Nguyễn Bảo Hà     |    26 |     33 | Cán bộ Cư trú 02
+           42 | 2025-02-11     | Hồ Phương Lan     |    55 |     49 | Quản trị viên Hệ thống
+           47 | 2025-02-20     | Huỳnh Tuấn Khoa   |    17 |     48 | Cán bộ Cư trú 01
+           63 | 2025-04-08     | Hồ Hữu Nam        |    25 |     54 | Cán bộ Tổng hợp 01
+           59 | 2025-06-04     | Bùi Phương Thảo   |    19 |     44 | Cán bộ Tổng hợp 01
+           58 | 2025-06-11     | Đỗ Phương Nhung   |     8 |     40 | Cán bộ Cư trú 01
+           54 | 2025-06-17     | Dương Tuấn Hùng   |    18 |     57 | Cán bộ Cư trú 01
+           22 | 2025-07-11     | Nguyễn Minh An    |    49 |     58 | Cán bộ Cư trú 01
+           41 | 2025-07-25     | Dương Hồng Quỳnh  |    26 |     22 | Cán bộ Cư trú 02
+           51 | 2025-11-16     | Phan Hồng Nhung   |     6 |      8 | Cán bộ Tổng hợp 01
+           61 | 2025-12-17     | Nguyễn Hồng Nhung |    46 |     13 | Cán bộ Cư trú 02
+           24 | 2026-01-27     | Đỗ Quốc Nam       |    13 |     51 | Quản trị viên Hệ thống
+           43 | 2026-05-11     | Hồ Khánh My       |    50 |     29 | Cán bộ Tổng hợp 01
+           27 | 2026-06-18     | Đỗ Hữu Vinh       |    33 |     48 | Cán bộ Cư trú 02
+           53 | 2026-06-24     | Vũ Phương Chi     |    23 |     44 | Cán bộ Cư trú 01
+           32 | 2026-07-02     | Trần Phương Thảo  |    56 |     20 | Cán bộ Cư trú 01
+           45 | 2026-07-23     | Huỳnh Bảo Phương  |    30 |     12 | Cán bộ Cư trú 01
+           16 | 2026-09-21     | Trần Công An      |    45 |     33 | Cán bộ Tổng hợp 01
+           33 | 2026-10-10     | Ngô Gia Cường     |    30 |     27 | Cán bộ Tổng hợp 01
+            2 | 2026-10-15     | Vũ Gia Quân       |    22 |      9 | Cán bộ Cư trú 01
+            3 | 2026-11-05     | Lê Bảo Dung       |     9 |     16 | Cán bộ Cư trú 02
+           10 | 2026-11-10     | Lê Minh Vy        |    29 |     17 | Quản trị viên Hệ thống
+           11 | 2026-11-15     | Lý Minh Khoa      |    23 |     18 | Cán bộ Tổng hợp 01
+(27 rows)
+
+=== Câu 8. Cán bộ ghi nhiều biến động nhất (báo cáo: tài khoản 2, 21 biến động)
+ ma_tai_khoan |   ten_hien_thi   | so_bien_dong
+--------------+------------------+--------------
+            2 | Cán bộ Cư trú 01 |           21
+(1 row)
+
+=== Câu 9. Từng tạm trú và từng thường trú (báo cáo: 31 dòng)
+ ma_cu_dan |      ho_ten
+-----------+-------------------
+         6 | Dương Khánh Hương
+        17 | Phạm Công Quân
+        18 | Vũ Minh Nga
+        41 | Ngô Tuấn Hải
+        42 | Vũ Hồng Lan
+        51 | Phan Gia Tú
+        52 | Phạm Khánh Hương
+        54 | Huỳnh Phương Chi
+        55 | Phan Công Vinh
+        60 | Hoàng Khánh Hạnh
+        62 | Hoàng Thu Nga
+        75 | Ngô Đức Hải
+        76 | Lê Phương Nga
+        81 | Lê Đức Nam
+        82 | Lê Khánh Thảo
+        83 | Vũ Đức Khoa
+        88 | Hồ Khánh My
+        89 | Nguyễn Hữu Hùng
+        92 | Trần Phương Thảo
+        99 | Lê Thành Hùng
+       107 | Đỗ Hữu An
+       118 | Hồ Khánh My
+       126 | Phan Bảo Ngân
+       140 | Hồ Khánh My
+       145 | Phạm Minh Khang
+       146 | Huỳnh Khánh Hà
+       160 | Vũ Thị Hạnh
+       163 | Vũ Minh Quân
+       177 | Đỗ Tuấn Long
+       192 | Bùi Thu Hương
+       193 | Hồ Công Sơn
+(31 rows)
+
+=== Câu 10. Cư dân từ 18 tuổi đang thường trú tại d (báo cáo: 131 dòng, có cư dân 1)
+ ma_cu_dan |      ho_ten       | ngay_sinh  |                              dia_chi_chuan
+-----------+-------------------+------------+--------------------------------------------------------------------------
+         3 | Hoàng Hữu Hùng    | 1966-11-21 | Số 11 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+         2 | Hoàng Minh Thảo   | 1960-05-10 | Số 11 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        99 | Lê Thành Hùng     | 1990-09-23 | Số 11 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+         1 | Nguyễn Hữu Khoa   | 1966-11-20 | Số 11 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+         4 | Nguyễn Văn An     | 1969-03-28 | Số 11 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        41 | Ngô Tuấn Hải      | 1973-07-19 | Số 11 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        74 | Phạm Khánh Nga    | 1984-09-16 | Số 11 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        60 | Hoàng Khánh Hạnh  | 1992-07-12 | Số 12 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       151 | Huỳnh Tuấn Khoa   | 1980-07-18 | Số 12 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        95 | Nguyễn Tuấn Trung | 2005-02-19 | Số 12 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+         9 | Ngô Đức Vinh      | 1996-09-27 | Số 12 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       169 | Võ Gia Đạt        | 1976-09-28 | Số 12 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        79 | Đỗ Hữu Vinh       | 2005-04-09 | Số 12 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        10 | Đỗ Thị Chi        | 1968-06-17 | Số 12 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        11 | Dương Văn Đạt     | 1971-11-01 | Số 13 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       113 | Lê Quốc Tú        | 2002-07-09 | Số 13 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        12 | Ngô Ngọc Anh      | 1978-07-28 | Số 13 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        62 | Hoàng Thu Nga     | 1986-08-03 | Số 14 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       103 | Huỳnh Gia Vinh    | 1976-10-28 | Số 14 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        14 | Lý Hồng Linh      | 1976-02-19 | Số 14 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       175 | Võ Đức Quân       | 1970-08-02 | Số 14 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        31 | Hoàng Công Long   | 1983-07-06 | Số 15 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       184 | Huỳnh Bảo Thảo    | 1983-04-04 | Số 15 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       146 | Huỳnh Khánh Hà    | 2001-08-01 | Số 15 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        66 | Lê Bảo Hương      | 1999-10-31 | Số 15 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       116 | Lý Phương Anh     | 2001-08-10 | Số 15 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       127 | Phạm Tuấn Hùng    | 1979-09-01 | Số 15 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       189 | Đặng Minh Tú      | 2000-01-31 | Số 15 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        69 | Đỗ Quốc Nam       | 1990-11-08 | Số 15 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        63 | Dương Quốc Khang  | 1999-03-13 | Số 16 Ngõ 128 Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        54 | Huỳnh Phương Chi  | 1972-03-28 | Số 16 Ngõ 128 Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        88 | Hồ Khánh My       | 1989-06-05 | Số 16 Ngõ 128 Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       177 | Đỗ Tuấn Long      | 1977-03-17 | Số 16 Ngõ 128 Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       115 | Lý Minh Bình      | 1978-01-15 | Số 17 Phố Đại La, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       147 | Phan Hữu Dũng     | 1994-11-18 | Số 17 Phố Đại La, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        34 | Đặng Hồng Quỳnh   | 1996-08-03 | Số 17 Phố Đại La, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+         6 | Dương Khánh Hương | 2003-07-20 | Số 18 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       100 | Hoàng Bảo Thảo    | 1985-02-17 | Số 18 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       195 | Hồ Hữu Nam        | 1988-03-04 | Số 18 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       109 | Lê Minh Nam       | 1981-05-16 | Số 18 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       180 | Nguyễn Thanh Nga  | 1983-11-21 | Số 18 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       158 | Phan Hồng Nhung   | 1969-05-30 | Số 18 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       136 | Đặng Thị Nga      | 1998-01-11 | Số 18 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       107 | Đỗ Hữu An         | 1998-11-05 | Số 18 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        67 | Hoàng Hữu Hải     | 1986-04-14 | Số 19 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        15 | Vũ Gia Quân       | 2004-08-22 | Số 19 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       159 | Ngô Gia Hùng      | 1968-06-30 | Số 21 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        52 | Phạm Khánh Hương  | 1986-06-30 | Số 21 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        18 | Vũ Minh Nga       | 1972-07-06 | Số 21 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       164 | Vũ Thu Vy         | 1973-02-24 | Số 21 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       144 | Huỳnh Bảo Phương  | 1979-02-21 | Số 22 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        89 | Nguyễn Hữu Hùng   | 1987-08-25 | Số 22 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        65 | Nguyễn Minh An    | 1994-03-12 | Số 22 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        78 | Phan Thanh Dung   | 1981-12-29 | Số 22 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       145 | Phạm Minh Khang   | 1970-04-16 | Số 22 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        30 | Trần Thu Trang    | 2002-02-20 | Số 22 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       139 | Võ Gia Khang      | 1997-02-11 | Số 22 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       148 | Dương Bảo Quỳnh   | 2003-10-20 | Số 23 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       132 | Hoàng Bảo Hương   | 1995-06-11 | Số 23 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       188 | Nguyễn Hồng Nhung | 1997-10-29 | Số 23 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       160 | Vũ Thị Hạnh       | 1968-02-13 | Số 23 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        33 | Dương Thành Dũng  | 1985-08-14 | Số 24 Ngõ 128 Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       193 | Hồ Công Sơn       | 1992-03-27 | Số 25 Phố Đại La, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       112 | Huỳnh Minh Hạnh   | 1996-02-14 | Số 26 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       140 | Hồ Khánh My       | 1991-11-05 | Số 26 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        16 | Lê Bảo Dung       | 1969-06-16 | Số 26 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        35 | Lê Văn An         | 1990-01-05 | Số 26 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        44 | Đặng Ngọc Chi     | 1989-10-30 | Số 26 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        28 | Lê Minh Vy        | 1999-12-20 | Số 27 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       137 | Phạm Hữu Khoa     | 1980-06-12 | Số 28 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       150 | Đỗ Khánh Hạnh     | 1981-11-02 | Số 28 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       104 | Dương Thanh Hương | 2003-01-12 | Số 29 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       153 | Hồ Gia Bình       | 2005-08-06 | Số 29 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       179 | Lý Văn Long       | 1971-05-27 | Số 29 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        55 | Phan Công Vinh    | 1987-05-11 | Số 29 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       157 | Vũ Công Sơn       | 1987-12-23 | Số 29 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       135 | Vũ Hữu Trung      | 1973-08-13 | Số 29 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        45 | Ngô Quốc Khang    | 2005-11-11 | Số 30 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        92 | Trần Phương Thảo  | 1971-01-06 | Số 30 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       194 | Võ Minh Hà        | 1976-12-11 | Số 30 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       110 | Vũ Phương My      | 1976-07-09 | Số 30 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       108 | Đỗ Thị Dung       | 1982-11-07 | Số 30 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        40 | Phạm Thu Hạnh     | 2004-12-15 | Số 31 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       122 | Dương Hồng Quỳnh  | 1979-11-14 | Số 32 Ngõ 128 Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        68 | Phạm Bảo Anh      | 1973-11-11 | Số 32 Ngõ 128 Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        81 | Lê Đức Nam        | 2001-11-20 | Số 33 Phố Đại La, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        82 | Lê Khánh Thảo     | 1983-07-17 | Số 34 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       149 | Dương Hữu Cường   | 2003-01-25 | Số 35 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        98 | Dương Thanh Trang | 1973-08-10 | Số 35 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        51 | Phan Gia Tú       | 1996-09-24 | Số 35 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        42 | Vũ Hồng Lan       | 1985-05-03 | Số 35 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        71 | Huỳnh Hữu An      | 1996-04-17 | Số 36 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        36 | Hồ Minh Ngân      | 2000-11-10 | Số 36 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        87 | Phan Gia Cường    | 1978-07-16 | Số 36 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        93 | Ngô Gia Cường     | 1977-02-22 | Số 37 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       142 | Vũ Ngọc My        | 1985-04-18 | Số 37 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        39 | Phan Tuấn Hải     | 1992-03-16 | Số 38 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       168 | Bùi Bảo Trang     | 1974-01-21 | Số 39 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        73 | Bùi Tuấn Bình     | 1990-04-19 | Số 39 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       129 | Hồ Văn Đạt        | 1995-12-02 | Số 39 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       102 | Phan Thu Ngân     | 1990-11-05 | Số 39 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       181 | Ngô Thành Nam     | 1996-04-07 | Số 40 Ngõ 128 Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       170 | Phan Thanh Dung   | 1984-03-01 | Số 40 Ngõ 128 Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       154 | Vũ Thị My         | 1987-06-19 | Số 40 Ngõ 128 Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       152 | Võ Thu Hạnh       | 1994-10-22 | Số 41 Phố Đại La, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       163 | Vũ Minh Quân      | 1981-07-17 | Số 41 Phố Đại La, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       118 | Hồ Khánh My       | 1972-07-17 | Số 42 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        80 | Huỳnh Ngọc Dung   | 1970-11-03 | Số 43 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       120 | Nguyễn Bảo Hà     | 1998-03-29 | Số 43 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        47 | Trần Công An      | 1972-01-07 | Số 43 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       105 | Lý Hữu Vinh       | 1999-08-22 | Số 44 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       191 | Võ Tuấn Khang     | 1995-09-19 | Số 44 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        64 | Hồ Khánh My       | 1989-11-21 | Số 45 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        58 | Đặng Phương Thảo  | 1990-11-05 | Số 45 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        97 | Lê Công Tú        | 1982-09-25 | Số 48 Ngõ 128 Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       138 | Phan Ngọc Phương  | 1993-08-11 | Số 48 Ngõ 128 Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       173 | Phan Đức Long     | 1986-12-16 | Số 49 Phố Đại La, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       156 | Phạm Phương Hạnh  | 1999-06-08 | Số 49 Phố Đại La, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        43 | Hồ Tuấn Khoa      | 1973-05-27 | Số 50 Đường Giải Phóng, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       192 | Bùi Thu Hương     | 1985-05-11 | Số 51 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        84 | Dương Ngọc Chi    | 2003-12-18 | Số 51 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        83 | Vũ Đức Khoa       | 1978-04-27 | Số 51 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        48 | Đỗ Bảo Linh       | 1969-05-05 | Số 51 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       111 | Đỗ Quốc Khoa      | 1981-07-30 | Số 51 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       126 | Phan Bảo Ngân     | 1975-10-15 | Số 52 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       123 | Phạm Thành Khoa   | 1981-02-17 | Số 52 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        76 | Lê Phương Nga     | 1982-12-30 | Số 53 Phố Trần Đại Nghĩa, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+       133 | Đặng Công Hùng    | 1982-08-11 | Số 54 Phố Bạch Mai, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        96 | Dương Ngọc Thảo   | 1969-10-05 | Số 55 Ngõ 40 Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        94 | Huỳnh Thanh Dung  | 2006-04-28 | Số 56 Ngõ 128 Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+        75 | Ngô Đức Hải       | 1994-09-10 | Số 56 Ngõ 128 Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội
+(131 rows)
+
+=== Đối chiếu con số đang in trong báo cáo
+psql:tests/report_sql_01_10.sql:276: NOTICE:  [PASS] SQL-C1: so_dong = 23 (bao cao: 23)
+psql:tests/report_sql_01_10.sql:276: NOTICE:  [PASS] SQL-C2: Tổ 05:28/14/41; Tổ 01:23/13/34; Tổ 04:19/14/33; Tổ 06:22/8/30; Tổ 02:19/10/29; Tổ 03:10/11/21; Tổ 07:10/1/11; Tổ 08:0/0/0 (bao cao: To 05 = 41 dung dau, To 08 = 0/0/0)
+psql:tests/report_sql_01_10.sql:276: NOTICE:  [PASS] SQL-C3: so_ho = 40, max_nhan_khau = 7 (bao cao: 40, 7)
+psql:tests/report_sql_01_10.sql:276: NOTICE:  [PASS] SQL-C4: so_dong = 17 (bao cao: 17)
+psql:tests/report_sql_01_10.sql:276: NOTICE:  [PASS] SQL-C5: THUONG_TRU@ho56[2022-08-01..2026-07-01] ; TAM_TRU@ho15[2025-08-11..NULL] ; THUONG_TRU@ho20[2026-07-02..NULL]
+psql:tests/report_sql_01_10.sql:276: NOTICE:  [INFO] SQL-C6: so_nhom (thang, loai) = 21, tong_bien_dong_2026 = 29
+psql:tests/report_sql_01_10.sql:276: NOTICE:  [PASS] SQL-C7: so_dong = 27, dong_dau = 2025-01-18|Dương Hữu Cường|13->25 (bao cao: 27; 2025-01-18 Duong Huu Cuong 13->25)
+psql:tests/report_sql_01_10.sql:276: NOTICE:  [PASS] SQL-C8: so_dong = 1, ket_qua = 2|Cán bộ Cư trú 01|21 (bao cao: 2 | Can bo Cu tru 01 | 21)
+psql:tests/report_sql_01_10.sql:276: NOTICE:  [PASS] SQL-C9: so_dong = 31 (bao cao: 31)
+psql:tests/report_sql_01_10.sql:276: NOTICE:  [PASS] SQL-C10: so_dong = 131, co_cu_dan_1_sinh_1966_11_20 = true (bao cao: 131, co)
+psql:tests/report_sql_01_10.sql:276: NOTICE:  TONG KET: 0 kiem tra co so lieu bao cao bi FAIL (C6 chi ghi nhan)
+DO

@@ -1,0 +1,14 @@
+SET
+psql:tests/report_ra_01_10.sql:200: NOTICE:  [INFO] RA1: so_bo = 98 (so cu dan nu = 98; chenh lech = so cap (ho_ten, ngay_sinh) trung)
+psql:tests/report_ra_01_10.sql:200: NOTICE:  [PASS] RA2: so_bo = 8 ; doi chung COUNT dia_chi cua To 01 = 8
+psql:tests/report_ra_01_10.sql:200: NOTICE:  [PASS] RA3: so_bo = 23, lech voi SQL cau 1 = 0 bo (ky vong 23, 0)
+psql:tests/report_ra_01_10.sql:200: NOTICE:  [PASS] RA4: so_bo = 17, lech voi SQL cau 4 = 0 bo (ky vong 17, 0)
+psql:tests/report_ra_01_10.sql:200: NOTICE:  [PASS] RA5: so_bo = 31 (ky vong 31 = SQL cau 9)
+psql:tests/report_ra_01_10.sql:200: NOTICE:  [PASS] RA6: so_bo = 1, ma_bien_dong = {32}, lech voi cach viet OR = 0
+psql:tests/report_ra_01_10.sql:200: NOTICE:  [PASS] RA7: so_bo = 27, lech voi SQL cau 7 (cung 4 cot) = 0 (ky vong 27, 0)
+psql:tests/report_ra_01_10.sql:200: NOTICE:  [INFO] RA8: so_bo = 2 {Cán bộ Cư trú 01, Cán bộ Cư trú 02} (tu 2 bien dong CHUYEN_DI thang 10/2026)
+psql:tests/report_ra_01_10.sql:200: NOTICE:  [PASS] RA9: NOT EXISTS = {1,2,3,4}, dem = {1,2,3,4}, so loai trong so chia = 3, bien dong cua TK5 = 0 (bao cao: 1,2,3,4; TK5 chua ghi)
+psql:tests/report_ra_01_10.sql:200: NOTICE:  [PASS] RA10: so_ho_co_nguoi = 56, tong = 202, so_ho_>=3 = 40 (ky vong 40 = SQL cau 3)
+psql:tests/report_ra_01_10.sql:200: NOTICE:  [INFO] RA10: so ho se bi dem sai neu bo phep chieu truoc gamma = 0
+psql:tests/report_ra_01_10.sql:200: NOTICE:  TONG KET RA: 0 kiem tra FAIL (RA1, RA8 chi ghi nhan)
+DO

@@ -1,0 +1,185 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1320" height="1140" viewBox="0 0 1320 1140">
+<title>Mô hình thực thể liên kết quản lý cư trú tổ dân phố</title>
+<desc>Sơ đồ ERD ký hiệu Chen, dựng lại dưới dạng vector dựa trên trang 11 của báo cáo Cơ sở dữ liệu Nhóm 38.</desc>
+<style>
+  .entity,.attr,.rel { fill:#fff; stroke:#323232; stroke-width:1.55; stroke-linejoin:round; }
+  .link { fill:none; stroke:#b3b3b3; stroke-width:1.5; stroke-linecap:round; }
+  .txt { font-family: "DejaVu Sans", Arial, sans-serif; font-size:15px; fill:#202020; text-anchor:middle; dominant-baseline:middle; }
+  .card { font-family: "DejaVu Sans", Arial, sans-serif; font-size:18px; fill:#111; text-anchor:middle; dominant-baseline:middle; }
+</style>
+<rect width="1320" height="1140" fill="white"/>
+
+<line class="link" x1="185" y1="88" x2="177" y2="198"/>
+<line class="link" x1="89" y1="161" x2="147" y2="198"/>
+<line class="link" x1="285" y1="161" x2="204" y2="198"/>
+<line class="link" x1="576" y1="88" x2="566" y2="198"/>
+<line class="link" x1="477" y1="161" x2="541" y2="198"/>
+<line class="link" x1="676" y1="161" x2="593" y2="198"/>
+<line class="link" x1="966" y1="88" x2="951" y2="198"/>
+<line class="link" x1="865" y1="161" x2="925" y2="198"/>
+<line class="link" x1="1065" y1="161" x2="978" y2="198"/>
+<line class="link" x1="231" y1="225" x2="330" y2="225"/>
+<line class="link" x1="437" y1="225" x2="509" y2="225"/>
+<line class="link" x1="620" y1="225" x2="718" y2="225"/>
+<line class="link" x1="825" y1="225" x2="895" y2="225"/>
+<line class="link" x1="951" y1="252" x2="951" y2="296"/>
+<line class="link" x1="955" y1="345" x2="965" y2="386"/>
+<line class="link" x1="965" y1="440" x2="954" y2="478"/>
+<line class="link" x1="954" y1="528" x2="951" y2="569"/>
+<line class="link" x1="576" y1="505" x2="566" y2="569"/>
+<line class="link" x1="433" y1="532" x2="509" y2="575"/>
+<line class="link" x1="424" y1="599" x2="509" y2="599"/>
+<line class="link" x1="433" y1="674" x2="509" y2="614"/>
+<line class="link" x1="576" y1="700" x2="566" y2="625"/>
+<line class="link" x1="620" y1="597" x2="718" y2="597"/>
+<line class="link" x1="826" y1="597" x2="895" y2="597"/>
+<line class="link" x1="1005" y1="572" x2="1116" y2="467"/>
+<line class="link" x1="1007" y1="588" x2="1177" y2="551"/>
+<line class="link" x1="1007" y1="605" x2="1183" y2="645"/>
+<line class="link" x1="1000" y1="620" x2="1160" y2="729"/>
+<line class="link" x1="938" y1="625" x2="938" y2="656"/>
+<line class="link" x1="938" y1="656" x2="893" y2="752"/>
+<line class="link" x1="930" y1="779" x2="909" y2="826"/>
+<line class="link" x1="909" y1="826" x2="936" y2="893"/>
+<line class="link" x1="936" y1="893" x2="936" y2="929"/>
+<line class="link" x1="969" y1="625" x2="969" y2="656"/>
+<line class="link" x1="969" y1="656" x2="1037" y2="752"/>
+<line class="link" x1="1037" y1="806" x2="969" y2="892"/>
+<line class="link" x1="969" y1="892" x2="969" y2="929"/>
+<line class="link" x1="428" y1="886" x2="509" y2="934"/>
+<line class="link" x1="407" y1="959" x2="509" y2="959"/>
+<line class="link" x1="431" y1="1040" x2="526" y2="983"/>
+<line class="link" x1="509" y1="1064" x2="547" y2="983"/>
+<line class="link" x1="646" y1="1064" x2="588" y2="984"/>
+<line class="link" x1="620" y1="958" x2="718" y2="958"/>
+<line class="link" x1="825" y1="958" x2="895" y2="958"/>
+<line class="link" x1="1007" y1="944" x2="1134" y2="923"/>
+<line class="link" x1="1007" y1="966" x2="1134" y2="1010"/>
+<line class="link" x1="986" y1="982" x2="1078" y2="1065"/>
+<line class="link" x1="954" y1="985" x2="966" y2="1062"/>
+<line class="link" x1="913" y1="983" x2="851" y2="1062"/>
+<ellipse class="attr" cx="188" cy="62" rx="56" ry="27"/>
+<text class="txt" x="188" y="62" text-decoration="underline">ma_to</text>
+<line x1="164.828125" y1="72" x2="211.171875" y2="72" stroke="#202020" stroke-width="1"/>
+<ellipse class="attr" cx="89" cy="134" rx="56" ry="27"/>
+<text class="txt" x="89" y="134" text-decoration="underline">ten_to</text>
+<line x1="65.421875" y1="144" x2="112.578125" y2="144" stroke="#202020" stroke-width="1"/>
+<ellipse class="attr" cx="286" cy="134" rx="56" ry="27"/>
+<text class="txt" x="286" y="134">ghi_chu (O)</text>
+<ellipse class="attr" cx="577" cy="62" rx="56" ry="27"/>
+<text class="txt" x="577" y="62" text-decoration="underline">ma_dia_chi</text>
+<line x1="535.203125" y1="72" x2="618.796875" y2="72" stroke="#202020" stroke-width="1"/>
+<ellipse class="attr" cx="478" cy="134" rx="62.8671875" ry="27"/>
+<text class="txt" x="478" y="134">dia_chi_chuan</text>
+<ellipse class="attr" cx="677" cy="134" rx="56" ry="27"/>
+<text class="txt" x="677" y="134">ghi_chu (O)</text>
+<ellipse class="attr" cx="966" cy="62" rx="56" ry="27"/>
+<text class="txt" x="966" y="62">ngay_lap</text>
+<ellipse class="attr" cx="865" cy="134" rx="56" ry="27"/>
+<text class="txt" x="865" y="134" text-decoration="underline">ma_ho</text>
+<line x1="840.015625" y1="144" x2="889.984375" y2="144" stroke="#202020" stroke-width="1"/>
+<ellipse class="attr" cx="1064" cy="134" rx="56" ry="27"/>
+<text class="txt" x="1064" y="134">ghi_chu (O)</text>
+<rect class="entity" x="119" y="198" width="112" height="54" rx="0"/>
+<text class="txt" x="175" y="225">Tổ dân phố</text>
+<path class="rel" d="M 383 198 L 437 225 L 383 252 L 329 225 Z"/>
+<text class="txt" x="383" y="225">Quản lý</text>
+<rect class="entity" x="509" y="198" width="112" height="54" rx="0"/>
+<text class="txt" x="565" y="225">Địa chỉ</text>
+<path class="rel" d="M 772 198 L 826 225 L 772 252 L 718 225 Z"/>
+<text class="txt" x="772" y="225">Chứa</text>
+<rect class="entity" x="895" y="198" width="112" height="54" rx="0"/>
+<text class="txt" x="951" y="225">Hộ cư trú</text>
+<path class="rel" d="M 965 385 L 1019 412 L 965 439 L 911 412 Z"/>
+<text class="txt" x="965" y="412">Gồm</text>
+<ellipse class="attr" cx="577" cy="477" rx="56" ry="27"/>
+<text class="txt" x="577" y="477" text-decoration="underline">ma_cu_dan</text>
+<line x1="534.625" y1="487" x2="619.375" y2="487" stroke="#202020" stroke-width="1"/>
+<ellipse class="attr" cx="408" cy="518" rx="56" ry="27"/>
+<text class="txt" x="408" y="518">ho_ten</text>
+<ellipse class="attr" cx="369" cy="599" rx="56" ry="27"/>
+<text class="txt" x="369" y="599">ngay_sinh</text>
+<ellipse class="attr" cx="408" cy="686" rx="56" ry="27"/>
+<text class="txt" x="408" y="686">gioi_tinh</text>
+<ellipse class="attr" cx="577" cy="726" rx="56" ry="27"/>
+<text class="txt" x="577" y="726">ghi_chu (O)</text>
+<ellipse class="attr" cx="1150" cy="449" rx="61.109375" ry="27"/>
+<text class="txt" x="1150" y="449" text-decoration="underline">ma_qua_trinh</text>
+<line x1="1098.890625" y1="459" x2="1201.109375" y2="459" stroke="#202020" stroke-width="1"/>
+<ellipse class="attr" cx="1230" cy="543" rx="56" ry="27"/>
+<text class="txt" x="1230" y="543">loai_cu_tru</text>
+<ellipse class="attr" cx="1235" cy="646" rx="62.4296875" ry="27"/>
+<text class="txt" x="1235" y="646">ngay_bat_dau</text>
+<ellipse class="attr" cx="1205" cy="741" rx="64.234375" ry="27"/>
+<text class="txt" x="1205" y="732.5">ngay_ket_thuc</text>
+<text class="txt" x="1205" y="749.5">(O)</text>
+<rect class="entity" x="509" y="570" width="112" height="54" rx="0"/>
+<text class="txt" x="565" y="597">Cư dân</text>
+<path class="rel" d="M 772 570 L 826 597 L 772 624 L 718 597 Z"/>
+<text class="txt" x="772" y="597">Có đợt</text>
+<rect class="entity" x="895" y="570" width="112" height="54" rx="0"/>
+<text class="txt" x="951" y="588.5">Quá trình cư</text>
+<text class="txt" x="951" y="605.5">trú</text>
+<path class="rel" d="M 876 752 L 930 779 L 876 806 L 822 779 Z"/>
+<text class="txt" x="876" y="779">Đợt cũ</text>
+<path class="rel" d="M 1055 752 L 1109 779 L 1055 806 L 1001 779 Z"/>
+<text class="txt" x="1055" y="779">Đợt mới</text>
+<ellipse class="attr" cx="403" cy="877" rx="67.515625" ry="27"/>
+<text class="txt" x="403" y="877" text-decoration="underline">ten_dang_nhap</text>
+<line x1="345.484375" y1="887" x2="460.515625" y2="887" stroke="#202020" stroke-width="1"/>
+<ellipse class="attr" cx="351" cy="961" rx="56" ry="27"/>
+<text class="txt" x="351" y="961">ten_hien_thi</text>
+<ellipse class="attr" cx="375" cy="1040" rx="56" ry="27"/>
+<text class="txt" x="375" y="1040">vai_tro</text>
+<ellipse class="attr" cx="509" cy="1091" rx="62.0390625" ry="27"/>
+<text class="txt" x="509" y="1091" text-decoration="underline">ma_tai_khoan</text>
+<line x1="456.9609375" y1="1101" x2="561.0390625" y2="1101" stroke="#202020" stroke-width="1"/>
+<ellipse class="attr" cx="667" cy="1091" rx="56" ry="27"/>
+<text class="txt" x="667" y="1091">trang_thai</text>
+<ellipse class="attr" cx="1190" cy="922" rx="65.9140625" ry="27"/>
+<text class="txt" x="1190" y="922">loai_bien_dong</text>
+<ellipse class="attr" cx="1190" cy="1010" rx="71.1015625" ry="27"/>
+<text class="txt" x="1190" y="1010">ngay_bien_dong</text>
+<ellipse class="attr" cx="1105" cy="1090" rx="56" ry="27"/>
+<text class="txt" x="1105" y="1090">ghi_chu (O)</text>
+<ellipse class="attr" cx="966" cy="1090" rx="64.4609375" ry="27"/>
+<text class="txt" x="966" y="1090" text-decoration="underline">ma_bien_dong</text>
+<line x1="911.5390625" y1="1100" x2="1020.4609375" y2="1100" stroke="#202020" stroke-width="1"/>
+<ellipse class="attr" cx="824" cy="1090" rx="62.21875" ry="27"/>
+<text class="txt" x="824" y="1090">thoi_diem_ghi</text>
+<rect class="entity" x="509" y="931" width="112" height="54" rx="0"/>
+<text class="txt" x="565" y="958">Tài khoản</text>
+<path class="rel" d="M 772 931 L 826 958 L 772 985 L 718 958 Z"/>
+<text class="txt" x="772" y="958">Ghi nhận</text>
+<rect class="entity" x="895" y="931" width="112" height="54" rx="0"/>
+<text class="txt" x="951" y="949.5">Biến động cư</text>
+<text class="txt" x="951" y="966.5">trú</text>
+<rect x="268" y="212" width="26" height="26" fill="white"/>
+<text class="card" x="281" y="225">1</text>
+<rect x="459" y="212" width="26" height="26" fill="white"/>
+<text class="card" x="472" y="225">N</text>
+<rect x="654" y="212" width="26" height="26" fill="white"/>
+<text class="card" x="667" y="225">1</text>
+<rect x="847" y="212" width="26" height="26" fill="white"/>
+<text class="card" x="860" y="225">N</text>
+<rect x="946" y="308" width="26" height="26" fill="white"/>
+<text class="card" x="959" y="321">1</text>
+<rect x="946" y="493" width="26" height="26" fill="white"/>
+<text class="card" x="959" y="506">N</text>
+<rect x="655" y="584" width="26" height="26" fill="white"/>
+<text class="card" x="668" y="597">1</text>
+<rect x="848" y="584" width="26" height="26" fill="white"/>
+<text class="card" x="861" y="597">N</text>
+<rect x="899" y="678" width="26" height="26" fill="white"/>
+<text class="card" x="912" y="691">1</text>
+<rect x="994" y="678" width="26" height="26" fill="white"/>
+<text class="card" x="1007" y="691">1</text>
+<rect x="901" y="852" width="26" height="26" fill="white"/>
+<text class="card" x="914" y="865">N</text>
+<rect x="994" y="852" width="26" height="26" fill="white"/>
+<text class="card" x="1007" y="865">N</text>
+<rect x="655" y="945" width="26" height="26" fill="white"/>
+<text class="card" x="668" y="958">1</text>
+<rect x="848" y="945" width="26" height="26" fill="white"/>
+<text class="card" x="861" y="958">N</text>
+</svg>

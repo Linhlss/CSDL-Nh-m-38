@@ -1,0 +1,65 @@
+% main.tex
+\documentclass[12pt, a4paper]{article}
+\usepackage{svg}
+% Gọi file cài đặt
+\input{setuppackages}
+
+% Đường dẫn đến thư mục ảnh (tùy chọn, giúp code gọn hơn)
+\graphicspath{{./image/}{./images/}}
+
+\begin{document}
+
+% 1. Trang bìa
+\hypersetup{pageanchor=false}
+\input{00_bia}
+
+% 2. Các phần mở đầu
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\clearpage
+\setcounter{page}{3}
+\hypersetup{pageanchor=true}
+\vspace{25pt}
+
+\input{00_loicamon}
+
+\newpage
+{\fontsize{12pt}{16pt}\selectfont
+\tableofcontents
+}
+\newpage
+
+% 2. In ra Danh sách bảng
+% \listoftables
+% \newpage % Ngắt trang
+
+% 3. In ra Danh sách hình
+\listoffigures
+\newpage % Ngắt trang
+\input{00_viettat}
+\newpage
+\input{loimodau}
+\newpage
+% 3. Nội dung chính
+\input{chuong1}
+\newpage
+
+\input{chuong2}
+\newpage
+\input{chuong3}
+\newpage
+\input{chuong4}
+\newpage
+\input{chuong5}
+\newpage
+\input{chuong6}
+\newpage
+\input{ketluan}
+\newpage
+\input{tailieuthamkhao}
+\newpage
+% Trang cuối: phân công công việc và đánh giá đóng góp
+\input{phancong}
+
+\end{document}

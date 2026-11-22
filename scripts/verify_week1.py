@@ -265,6 +265,16 @@ def files_for_manifest():
     for directory in ("docs","diagrams","sql","scripts","tests","meetings","data","report","evidence"):
         files.extend(p for p in (ROOT/directory).rglob("*") if p.is_file()
                      and p.name != ".DS_Store" and "__pycache__" not in p.parts and p != MANIFEST)
+    # The printable report is versioned with its sources and images; TeX build
+    # intermediates stay local and must not make the manifest machine-dependent.
+    latex = ROOT / "Báo_cáo_CSDL_nhóm_38"
+    if latex.is_dir():
+        files.extend(p for p in latex.rglob("*") if p.is_file()
+                     and (p.suffix in {".tex", ".md"} or p.name in {".gitignore", "main.pdf"}
+                          or (p.parent == latex / "image" and p.suffix in {".png", ".pdf", ".svg"})))
+    review = ROOT / "BAO_CAO_KET_QUA_SUA_LATEX.md"
+    if review.is_file():
+        files.append(review)
     return sorted(set(files))
 
 
