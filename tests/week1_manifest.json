@@ -245,8 +245,8 @@
     },
     {
       "path": "docs/02_bao_cao_suon.md",
-      "bytes": 108686,
-      "sha256": "71878136b558b6596234a5e3e598bd034e723ac1b96b07546fc2e3b131ba07ee"
+      "bytes": 108792,
+      "sha256": "1d183268efb469c85034ad80e380f73bcbd91109266bdc76f95a662aefca9b96"
     },
     {
       "path": "docs/03_CHECKLIST_DU_AN.md",
@@ -307,6 +307,56 @@
       "path": "evidence/sql/.gitkeep",
       "bytes": 0,
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/sql/QSQL01_result.png",
+      "bytes": 300873,
+      "sha256": "31d503832043c8ff8611bd7ad4fb8068d54b69c45199efea549b968f28d1aeb1"
+    },
+    {
+      "path": "evidence/sql/QSQL02_result.png",
+      "bytes": 112867,
+      "sha256": "e1b3cd431b44124714ffafc3d6014546b6f10bc269f61d33ec2721853b0c6ed9"
+    },
+    {
+      "path": "evidence/sql/QSQL03_result.png",
+      "bytes": 121202,
+      "sha256": "f88b2effc1778fbe8dc8905f9ea58a93e176a986668a764d9805728a8cd0603d"
+    },
+    {
+      "path": "evidence/sql/QSQL04_result.png",
+      "bytes": 108075,
+      "sha256": "699034e8b9fc4957c2ed13bcc3381948963e27bf3d17b97b458636c5875ffb7b"
+    },
+    {
+      "path": "evidence/sql/QSQL05_result.png",
+      "bytes": 124842,
+      "sha256": "2fe3efd16b0cb0c6aa7a2a3e1ebe51f0dc5aac8dfa88ce15ced99b06121b34ce"
+    },
+    {
+      "path": "evidence/sql/QSQL06_result.png",
+      "bytes": 122230,
+      "sha256": "138c1adf5f4e7b5671ed28e642d4a5bc63b6d5e0ede3d2a369d43ebfef889c29"
+    },
+    {
+      "path": "evidence/sql/QSQL07_result.png",
+      "bytes": 266136,
+      "sha256": "e60910bd319c6f4a50807e7f31329c95ff69ef92f1f385fa37ced7987b054deb"
+    },
+    {
+      "path": "evidence/sql/QSQL08_result.png",
+      "bytes": 130894,
+      "sha256": "371e2d360f8ee78a4883fc2b49ab4949bfac50b1b264fe7bcdbdaf850f5ac973"
+    },
+    {
+      "path": "evidence/sql/QSQL09_result.png",
+      "bytes": 312254,
+      "sha256": "310263fa0a09251684027881bdc712b71a99fe63c0c79284c4fdebd984211db0"
+    },
+    {
+      "path": "evidence/sql/QSQL10_result.png",
+      "bytes": 111878,
+      "sha256": "a1ffdcf934323cd1032295a55dbb85e369a897d5120c099048550701e117d477"
     },
     {
       "path": "meetings/decision_log.md",
@@ -400,8 +450,8 @@
     },
     {
       "path": "tests/final_test_log.md",
-      "bytes": 6016,
-      "sha256": "8aa5520020985810b45c42ebdc4ddcefcfba33e9a03be49754f1156e43fd4147"
+      "bytes": 5959,
+      "sha256": "52047c9b738049cb364bcdf5fc7342d883a587d0e29e403ec839c0ce21ca8a9f"
     },
     {
       "path": "tests/ra_fixture.sql",

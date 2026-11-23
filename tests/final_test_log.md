@@ -1,21 +1,21 @@
-# Biên bản chạy kiểm chứng từ CSDL trắng — Cập nhật Tuần 2 (19/11/2026)
+# Biên bản chạy kiểm chứng từ CSDL trắng — Cập nhật Gate 3 (24/11/2026)
 
-> **Lưu ý nghiệm thu:** Các kết quả bên dưới tổng hợp từ các lượt chạy thực tế trên PostgreSQL 17 đã ghi nhận trong repo ([tests/week1_execution_results.json](week1_execution_results.json) ngày 16/11 và GitHub Actions CI [run 44533515990](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44533515990) ngày 19/11, chi tiết tại [tests/week2_constraints_execution_log.md](week2_constraints_execution_log.md)). Đây là bản ghi kiểm thử kỹ thuật Tuần 2 của TV2, **chưa thay thế** lượt chạy chốt Gate 3 (24/11) hoặc ảnh chụp minh chứng cá nhân.
+> **Lưu ý nghiệm thu:** Các kết quả bên dưới tổng hợp từ lượt chạy thực tế trên PostgreSQL 17 ([tests/week1_execution_results.json](week1_execution_results.json) ngày 16/11 và GitHub Actions CI [run 44533515990](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44533515990) ngày 19/11) và lần chạy trực tiếp của **TV2 (Trần Tuấn Ngọc)** ngày **24/11/2026** trên máy Windows cá nhân (PostgreSQL 19, pgAdmin 4, DB `csdl17_cu_tru_demo`).
 
 ## 1. Môi trường kiểm chứng đã ghi nhận
 
 - **Môi trường CI / container:** PostgreSQL 17 (`postgres:17` trên GitHub Actions và PostgreSQL 17.11 trên container kiểm chứng tuần 1), `psql`, Python 3.13.
-- **Môi trường cá nhân TV2 (`W2-T2-01`):** Hệ điều hành Windows; *chờ TV2 bổ sung phiên bản PostgreSQL cục bộ, công cụ quản trị (pgAdmin/DBeaver/psql) và kết quả `SELECT version();` khi cài đặt/sử dụng trên máy cá nhân*.
+- **Môi trường cá nhân TV2 (`W2-T2-01`, 24/11/2026):** Windows, **PostgreSQL 19 (x64)** cổng `5432`, công cụ quản trị **pgAdmin 4**, kết nối trực tiếp DB `csdl17_cu_tru_demo` (chạy thành công `01_schema.sql`, `02_constraints.sql`, `03_seed.sql`, `06_validation.sql` và 10 câu `04_queries.sql`).
 
 ## 2. Kết quả chạy tuần tự từ CSDL trắng (`csdl17_cu_tru_demo`)
 
-| Bước | Lệnh / tệp | Expected | Actual đã ghi nhận (PostgreSQL 17) | PASS / FAIL | Ảnh minh chứng (Gate 3) |
+| Bước | Lệnh / tệp | Expected | Actual đã ghi nhận (PostgreSQL 17 CI & PostgreSQL 19 Windows) | PASS / FAIL | Ảnh minh chứng |
 |---:|---|---|---|---|---|
-| 1 | `sql/01_schema.sql` | Tạo 7 bảng, 35 cột, 7 PK, 7 FK, 3 UNIQUE, 6 CHECK, 5 chỉ mục | Chạy thành công không lỗi trên DB trắng (`run 44533515990`) | PASS | *Chờ chụp Gate 3* |
-| 2 | `sql/02_constraints.sql` | Bật `btree_gist`, exclusion B06 và trigger B08–B11, B14 | Chạy thành công; `tests/constraints_week2.sql` đạt 20/20 ca dương/âm + rollback | PASS | *Chờ chụp Gate 3* |
-| 3 | `sql/03_seed.sql` | Nạp 636 bản ghi hợp lệ theo thứ tự FK và đồng bộ 7 sequence | Nạp thành công 636 bản ghi; tái nạp (reload) cho kết quả đồng nhất | PASS | *Chờ chụp Gate 3* |
-| 4 | `sql/06_validation.sql` | `so_dot_sai_ngay = 0`, `V_E1_CU = 0`, `V_E1_MOI = 0`, `V_B09 = 0` | 0 dòng lỗi trên toàn bộ truy vấn kiểm tra (`1 PASS kiểm tra dữ liệu`) | PASS | *Chờ chụp Gate 3* |
-| 5 | `sql/04_queries.sql` | 10 truy vấn `QSQL01–QSQL10` chạy đúng hợp đồng đầu ra | Chạy không lỗi; khớp đủ tuple và 6 cặp đối soát RA + VIEW (`week1_execution_results.json`) | PASS | *Chờ chụp `evidence/sql/QSQL01..10_result.png`* |
+| 1 | `sql/01_schema.sql` | Tạo 7 bảng, 35 cột, 7 PK, 7 FK, 3 UNIQUE, 6 CHECK, 5 chỉ mục | Chạy thành công không lỗi trên DB trắng | PASS | Đã xác nhận trong pgAdmin 4 & CI |
+| 2 | `sql/02_constraints.sql` | Bật `btree_gist`, exclusion B06 và trigger B08–B11, B14 | Chạy thành công; `tests/constraints_week2.sql` đạt 20/20 ca dương/âm + rollback | PASS | Đã xác nhận trên PostgreSQL 19 & CI |
+| 3 | `sql/03_seed.sql` | Nạp 636 bản ghi hợp lệ theo thứ tự FK và đồng bộ 7 sequence | Nạp thành công 636 bản ghi; tái nạp (reload) cho kết quả đồng nhất | PASS | Đã xác nhận trên PostgreSQL 19 & CI |
+| 4 | `sql/06_validation.sql` | `so_dot_sai_ngay = 0`, `V_E1_CU = 0`, `V_E1_MOI = 0`, `V_B09 = 0` | 0 dòng lỗi trên toàn bộ truy vấn kiểm tra | PASS | Đã xác nhận trên PostgreSQL 19 & CI |
+| 5 | `sql/04_queries.sql` | 10 truy vấn `QSQL01–QSQL10` chạy đúng hợp đồng đầu ra | Chạy thành công trên pgAdmin 4 (PostgreSQL 19), khớp 100% số dòng với CI và đối soát RA/VIEW | PASS | [QSQL01](../evidence/sql/QSQL01_result.png) … [QSQL10](../evidence/sql/QSQL10_result.png) |
 | 6 | `sql/05_security.sql` | 2 demo bảo mật B1 (`GRANT/REVOKE`) và B2 (`VIEW`) hoạt động đúng | Đạt trên `fixture29` và `seed636` ở `week1_execution_results.json` (TV3 chủ trì ảnh cuối) | PASS (kỹ thuật) | *Chờ chụp `evidence/security/` (TV3)* |
 
 ## 3. Thống kê số bản ghi từng bảng sau `sql/03_seed.sql` (`seed636`)
@@ -48,10 +48,10 @@
 
 ## 5. Hạng mục còn mở trước Gate 3 (24/11/2026)
 
-- [ ] TV2 bổ sung thông tin PostgreSQL/công cụ cá nhân trên Windows và kết quả `SELECT version();` (`W2-T2-01`).
-- [ ] TV2 chụp và lưu 10 ảnh kết quả `evidence/sql/QSQL01_result.png` … `QSQL10_result.png`.
+- [x] TV2 cài đặt và chạy PostgreSQL 19 + pgAdmin 4 trên Windows (`W2-T2-01`).
+- [x] TV2 chụp và lưu đủ 10 ảnh kết quả `evidence/sql/QSQL01_result.png` … `QSQL10_result.png`.
 - [ ] TV3 chụp và lưu ảnh 2 demo bảo mật vào `evidence/security/`.
-- [ ] Cả nhóm chạy lại end-to-end từ CSDL trắng và ký xác nhận Gate 3.
+- [ ] Cả nhóm rà soát và ký xác nhận Gate 3.
 
 ## 6. Cập nhật tích hợp của TV1 — 20/11/2026 (không thay thế mục 1–5 của TV2)
 

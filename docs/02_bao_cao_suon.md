@@ -539,7 +539,7 @@ Khi đối soát, cần xử lý các khác biệt sau:
 
 ## CHƯƠNG 5 — SQL (10 CÂU)
 
-> Người viết: TV2 (Trần Tuấn Ngọc). Reviewer được phân công: TV1 và TV3. Nháp tuần 2 ngày 19/11/2026. Toàn bộ mã SQL lấy nguyên vẹn từ [sql/04_queries.sql](../sql/04_queries.sql); số liệu kết quả trên `fixture29` và `seed636` trích từ log chạy PostgreSQL 17.11 tại [tests/week1_execution_results.json](../tests/week1_execution_results.json) và lượt CI PostgreSQL 17 ([run 44533515990](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44533515990)). Ảnh chụp kết quả chạy từng câu trong `evidence/sql/` và log môi trường Windows cá nhân (`W2-T2-01`) sẽ được bổ sung trước Gate 3 (24/11).
+> Người viết: TV2 (Trần Tuấn Ngọc). Reviewer được phân công: TV1 và TV3. Cập nhật ngày 24/11/2026. Toàn bộ mã SQL lấy nguyên vẹn từ [sql/04_queries.sql](../sql/04_queries.sql); kết quả trên `fixture29` và `seed636` đã đối chiếu khớp giữa log PostgreSQL 17.11 ([tests/week1_execution_results.json](../tests/week1_execution_results.json)), lượt CI PostgreSQL 17 ([run 44533515990](https://github.com/Linhlss/CSDL-Nh-m-38/actions/runs/44533515990)) và lần chạy trực tiếp trên máy Windows cá nhân của TV2 (PostgreSQL 19 + pgAdmin 4, 10 ảnh minh chứng tại `evidence/sql/QSQL01_result.png` … `QSQL10_result.png`).
 
 > **Ghi chú tích hợp của TV1 (20/11/2026, đã được TV1 báo nhóm chấp thuận Gate 2; chưa có comment review cá nhân):** Nội dung Chương 5 lấy nguyên từ PR #6 của TV2 (commit `19c4a440`, `6c479e19`, tác giả Ngocdeezet). TV1 đã chạy lại 10 câu trên `seed636` và `fixture29` bằng PostgreSQL 17.12. Mọi số dòng và mọi bảng trích kết quả bên dưới đều **khớp với kết quả thực tế**. Các khẳng định về từng mã cư dân cũng khớp: 16 (chuyển nội bộ cùng tổ), 17 (hai đợt cùng hộ), 23–24 (chỉ có đợt tương lai), 25–27 (chưa có đợt), và S03 (ngày sinh 1966-11-20 và 1966-11-21). TV1 chỉ sửa hai lỗi:
 > 1. Tên VIEW đúng là `vw_thong_ke_cu_dan_theo_to`.
@@ -597,7 +597,7 @@ ORDER BY c.ma_cu_dan, q.loai_cu_tru;
 | 6 | Dương Khánh Hương | `TAM_TRU` | Có đồng thời 2 loại tại Tổ 01 |
 | 6 | Dương Khánh Hương | `THUONG_TRU` | Xuất hiện 2 dòng vì khác `loai_cu_tru` |
 
-- **Ảnh minh chứng:** `[Chờ bổ sung: evidence/sql/QSQL01_result.png]`
+- **Ảnh minh chứng:** ![Kết quả chạy QSQL01](../evidence/sql/QSQL01_result.png)
 
 ---
 
@@ -632,7 +632,7 @@ ORDER BY so_cu_dan DESC, h.ma_ho;
 | 25 | 7 |
 | 40 | 7 |
 
-- **Ảnh minh chứng:** `[Chờ bổ sung: evidence/sql/QSQL02_result.png]`
+- **Ảnh minh chứng:** ![Kết quả chạy QSQL02](../evidence/sql/QSQL02_result.png)
 
 ---
 
@@ -671,7 +671,7 @@ ORDER BY t.ma_to;
 | 7 | Tổ 07 | 11 |
 | 8 | Tổ 08 | 0 |
 
-- **Ảnh minh chứng:** `[Chờ bổ sung: evidence/sql/QSQL03_result.png]`
+- **Ảnh minh chứng:** ![Kết quả chạy QSQL03](../evidence/sql/QSQL03_result.png)
 
 ---
 
@@ -704,7 +704,7 @@ ORDER BY d.ma_dia_chi;
 | 49 | Số 59 Phố Tạ Quang Bửu, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội |
 | 50 | Số 60 Phố Lê Thanh Nghị, Phường Bách Khoa, Quận Hai Bà Trưng, Hà Nội |
 
-- **Ảnh minh chứng:** `[Chờ bổ sung: evidence/sql/QSQL04_result.png]`
+- **Ảnh minh chứng:** ![Kết quả chạy QSQL04](../evidence/sql/QSQL04_result.png)
 
 ---
 
@@ -737,7 +737,7 @@ ORDER BY so_ho DESC, c.ma_cu_dan;
 | 15 | Vũ Gia Quân | 2 |
 | 16 | Lê Bảo Dung | 2 |
 
-- **Ảnh minh chứng:** `[Chờ bổ sung: evidence/sql/QSQL05_result.png]`
+- **Ảnh minh chứng:** ![Kết quả chạy QSQL05](../evidence/sql/QSQL05_result.png)
 
 ---
 
@@ -778,7 +778,7 @@ ORDER BY c.ma_cu_dan;
 | 41 | Ngô Tuấn Hải |
 | 42 | Vũ Hồng Lan |
 
-- **Ảnh minh chứng:** `[Chờ bổ sung: evidence/sql/QSQL06_result.png]`
+- **Ảnh minh chứng:** ![Kết quả chạy QSQL06](../evidence/sql/QSQL06_result.png)
 
 ---
 
@@ -820,7 +820,7 @@ ORDER BY c.ma_cu_dan;
 | 22 | Vũ Thanh Phương |
 | 46 | Nguyễn Minh Hương |
 
-- **Ảnh minh chứng:** `[Chờ bổ sung: evidence/sql/QSQL07_result.png]`
+- **Ảnh minh chứng:** ![Kết quả chạy QSQL07](../evidence/sql/QSQL07_result.png)
 
 ---
 
@@ -852,7 +852,7 @@ ORDER BY thang, b.loai_bien_dong;
 | 2025-02 | `CHUYEN_DI` | 1 |
 | 2025-02 | `CHUYEN_NOI_BO` | 6 |
 
-- **Ảnh minh chứng:** `[Chờ bổ sung: evidence/sql/QSQL08_result.png]`
+- **Ảnh minh chứng:** ![Kết quả chạy QSQL08](../evidence/sql/QSQL08_result.png)
 
 ---
 
@@ -893,7 +893,7 @@ ORDER BY b.ma_bien_dong;
 | 16 | 47 | 3 | 5 | 2026-09-21 |
 | 22 | 65 | 3 | 5 | 2025-07-11 |
 
-- **Ảnh minh chứng:** `[Chờ bổ sung: evidence/sql/QSQL09_result.png]`
+- **Ảnh minh chứng:** ![Kết quả chạy QSQL09](../evidence/sql/QSQL09_result.png)
 
 ---
 
@@ -925,7 +925,7 @@ ORDER BY a.ma_tai_khoan;
 | 4 | Cán bộ Tổng hợp 01 | 13 |
 | 5 | Cán bộ Dự phòng (0 sự kiện) | 0 |
 
-- **Ảnh minh chứng:** `[Chờ bổ sung: evidence/sql/QSQL10_result.png]`
+- **Ảnh minh chứng:** ![Kết quả chạy QSQL10](../evidence/sql/QSQL10_result.png)
 
 ---
 
@@ -946,9 +946,9 @@ Bảng tổng hợp dưới đây đối chiếu 10 câu SQL trên cả hai tậ
 | QSQL09 | S13 | 1 | 22 | Khớp `QRA10 = 22` cư dân; loại ca chuyển nội bộ cùng tổ (`ma_cu_dan = 16`) | PASS |
 | QSQL10 | S15 + TK trống | 2 | 5 | Tổng `63` sự kiện; giữ đúng `ma_tai_khoan = 5` với `so_su_kien = 0` | PASS |
 
-**Nhận xét và việc còn lại cho Gate 3:**
-- Cả 10 truy vấn SQL đều chạy không lỗi trên PostgreSQL 17 sau khi tích hợp bộ ràng buộc nâng cao `sql/02_constraints.sql`, tái nạp `sql/03_seed.sql` cho kết quả hoàn toàn nhất quán (`seed/reload/QSQL01..10 PASS`).
-- Các điểm cần hoàn thiện trước ngày 24/11 (Gate 3): bổ sung log môi trường PostgreSQL cá nhân trên Windows của TV2 (`W2-T2-01`) và chụp đủ 10 ảnh kết quả thực thi `evidence/sql/QSQL01_result.png` … `QSQL10_result.png` để chèn vào bản báo cáo cuối.
+**Nhận xét và trạng thái Gate 3 (24/11/2026):**
+- Cả 10 truy vấn SQL đều chạy không lỗi trên PostgreSQL 17 (CI) và PostgreSQL 19 (pgAdmin 4 trên Windows của TV2) sau khi tích hợp bộ ràng buộc nâng cao `sql/02_constraints.sql`; số dòng và kết quả hoàn toàn trùng khớp giữa các môi trường (`seed/reload/QSQL01..10 PASS`).
+- Đã bổ sung đủ 10 ảnh minh chứng thực thi tại `evidence/sql/QSQL01_result.png` … `QSQL10_result.png` và cập nhật biên bản [tests/final_test_log.md](../tests/final_test_log.md).
 
 ## CHƯƠNG 6 — BẢO MẬT CSDL
 
