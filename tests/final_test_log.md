@@ -68,3 +68,38 @@ Mục 1–5 ở trên là bản TV2 ngày 19/11 (PR #6), được giữ nguyên.
 | Giữ dữ liệu gốc | md5 seed636 không đổi | Không đổi | PASS |
 
 **Vẫn mở:** các mục ở phần 5 (Windows của TV2, ảnh SQL, ảnh bảo mật, chạy lại và ký Gate 3).
+
+<a id="qsql-report-evidence"></a>
+
+## 7. Đối chiếu bộ QSQL dùng trong báo cáo và slide ngày 24/11/2026
+
+Ảnh gốc của TV2 ghi lại lần chạy bằng pgAdmin. Lượt đối chiếu riêng dùng PostgreSQL 17.12 (Homebrew, macOS), một cụm tạm qua Unix socket và seed636 dựng từ `01_schema.sql` → `02_constraints.sql` → `03_seed.sql` → `06_validation.sql`. Cụm đã dừng sau khi kiểm tra.
+
+Ba kiểm tra tổng hợp B06/B08/B09, E1 và B15 đều đạt. Đã chạy từng câu của `sql/04_queries.sql`, so toàn bộ bộ giá trị với tập kỳ vọng và so thứ tự với đầu ra đã lưu ở các mục `w1_seed/QSQLnn/full-tuples` trong [log kỹ thuật](week1_execution_results.json).
+
+| Mã | Số dòng trong ảnh | Số dòng tái lập | Đối chiếu | Ảnh gốc |
+|---|---:|---:|---|---|
+| QSQL01 | 36 | 36 | PASS | [Ảnh QSQL01](../Báo_cáo_CSDL_nhóm_38/image/qsql/QSQL01_result.png) |
+| QSQL02 | 24 | 24 | PASS | [Ảnh QSQL02](../Báo_cáo_CSDL_nhóm_38/image/qsql/QSQL02_result.png) |
+| QSQL03 | 8 | 8 | PASS | [Ảnh QSQL03](../Báo_cáo_CSDL_nhóm_38/image/qsql/QSQL03_result.png) |
+| QSQL04 | 4 | 4 | PASS | [Ảnh QSQL04](../Báo_cáo_CSDL_nhóm_38/image/qsql/QSQL04_result.png) |
+| QSQL05 | 54 | 54 | PASS | [Ảnh QSQL05](../Báo_cáo_CSDL_nhóm_38/image/qsql/QSQL05_result.png) |
+| QSQL06 | 31 | 31 | PASS | [Ảnh QSQL06](../Báo_cáo_CSDL_nhóm_38/image/qsql/QSQL06_result.png) |
+| QSQL07 | 17 | 17 | PASS | [Ảnh QSQL07](../Báo_cáo_CSDL_nhóm_38/image/qsql/QSQL07_result.png) |
+| QSQL08 | 45 | 45 | PASS | [Ảnh QSQL08](../Báo_cáo_CSDL_nhóm_38/image/qsql/QSQL08_result.png) |
+| QSQL09 | 22 | 22 | PASS | [Ảnh QSQL09](../Báo_cáo_CSDL_nhóm_38/image/qsql/QSQL09_result.png) |
+| QSQL10 | 5 | 5 | PASS | [Ảnh QSQL10](../Báo_cáo_CSDL_nhóm_38/image/qsql/QSQL10_result.png) |
+
+Đối chiếu riêng cho thấy QSQL02 trả các hộ có từ 4 cư dân, QSQL03 giữ Tổ 08 với số 0, QSQL09 chỉ trả lần chuyển khác tổ và QSQL10 giữ tài khoản 5 với số 0. Cả QSQL08 và QSQL10 cộng ra 63 biến động. QSQL06 khớp đủ 31 mã cư dân với phép giao ở Câu 5 Chương 4.
+
+Dấu vết đầu vào của lượt chạy:
+
+```text
+01_schema.sql SHA-256 e3a220c0ea8fbe7ad4475c0ede3201d25573a1007c5b4e0b26f698df2607f6f5
+02_constraints.sql SHA-256 c35d338210c3dc113a09c654685c6bf66d7f9827656c385ce64b8f43be37dd2a
+03_seed.sql SHA-256 71f33714b57745bce1069cc4212f69f2382829817334d6fe252c0ba77e7fa0f2
+06_validation.sql SHA-256 d7d748c100cc81aa258cac92cbfa8fe9dcea85c02e2eaa2b1cf8d82ca9e66440
+04_queries.sql SHA-256 043d1a771719f1304a9b03134269862b33811343a1d5422fd56ef72e26b8487b
+```
+
+Lượt đối chiếu này xác nhận bộ QSQL và bổ sung liên kết ảnh của TV2. Phiên bản máy TV2 và xác nhận Gate 3 vẫn cần biên bản riêng.

@@ -262,7 +262,7 @@ def python_syntax():
 
 def files_for_manifest():
     files = [ROOT/"README.md",ROOT/".gitignore",ROOT/".gitattributes"]
-    for directory in ("docs","diagrams","sql","scripts","tests","meetings","data","report","evidence"):
+    for directory in ("docs","diagrams","sql","scripts","tests","meetings","data","report","evidence","presentation"):
         files.extend(p for p in (ROOT/directory).rglob("*") if p.is_file()
                      and p.name != ".DS_Store" and "__pycache__" not in p.parts and p != MANIFEST)
     # The printable report is versioned with its sources and images; TeX build
@@ -271,7 +271,9 @@ def files_for_manifest():
     if latex.is_dir():
         files.extend(p for p in latex.rglob("*") if p.is_file()
                      and (p.suffix in {".tex", ".md"} or p.name in {".gitignore", "main.pdf"}
-                          or (p.parent == latex / "image" and p.suffix in {".png", ".pdf", ".svg"})))
+                          or (latex / "image" in p.parents and p.suffix in {".png", ".pdf", ".svg"})))
+    files.extend(p for p in (ROOT / "erd.png", ROOT / "Slide/HUST_PPT_template_2022_Blue_16x9.pptx")
+                 if p.is_file())
     review = ROOT / "BAO_CAO_KET_QUA_SUA_LATEX.md"
     if review.is_file():
         files.append(review)

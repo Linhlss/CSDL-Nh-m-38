@@ -1,7 +1,7 @@
 \section{MÔ HÌNH THỰC THỂ LIÊN KẾT}
 \label{sec:chuong2}
 
-Nhóm vẽ mô hình theo ký hiệu Chen trên công cụ ERDPlus: hình chữ nhật là thực thể, hình elip là thuộc tính (attribute), hình thoi là mối liên kết, thuộc tính gạch chân là thuộc tính khóa, còn thuộc tính có đánh dấu (O) là thuộc tính tùy chọn, có thể để trống. Chữ 1 và N trên đường nối cho biết bản số của mỗi phía trong liên kết.
+Nhóm vẽ mô hình theo ký hiệu Chen trên công cụ ERDPlus: hình chữ nhật là thực thể, hình elip là thuộc tính (attribute), hình thoi là mối liên kết, thuộc tính gạch chân là thuộc tính khóa, còn thuộc tính có dấu (O) là thuộc tính không bắt buộc, có thể để trống. Chữ 1 và N trên đường nối cho biết mỗi phía của liên kết có một hay nhiều phần tử tham gia (bản số). Mức tham gia của mỗi thực thể được trình bày riêng ở mục \ref{subsec:thamgia}.
 
 \begin{figure}[H]
 \centering
@@ -40,7 +40,7 @@ Tài khoản & Tài khoản của cán bộ sử dụng hệ thống & ma\_tai\_
 \label{tab:thucthe}
 \end{table}
 
-Thực thể Quá trình cư trú là trung tâm của mô hình, vì nó cho biết một cư dân ở trong hộ nào, theo diện thường trú hay tạm trú và trong khoảng thời gian nào. Khi chuyển nội bộ, hệ thống đóng đợt cũ và mở đợt mới trong phường; khi chuyển ra ngoài phường, hệ thống chỉ đóng đợt cũ. Các đợt được lưu riêng để tra cứu lịch sử đã ghi nhận; việc bảo vệ chúng còn phụ thuộc quyền cập nhật và các trigger.
+Thực thể quá trình cư trú cho biết một cư dân ở hộ nào, thường trú hay tạm trú, và ở trong khoảng thời gian nào. Khi chuyển sang hộ khác trong phường, hệ thống kết thúc đợt cũ và mở đợt mới; khi chuyển ra khỏi phường, hệ thống chỉ kết thúc đợt cũ. Mỗi đợt được lưu thành một bản ghi riêng nên có thể xem lại lịch sử, còn việc bảo vệ các bản ghi này phụ thuộc vào phân quyền và trigger.
 
 \subsection{Các mối liên kết}
 \label{subsec:lienket}
@@ -72,4 +72,53 @@ Ghi nhận & Tài khoản & Biến động cư trú & Biến động được gh
 \label{tab:lienket}
 \end{table}
 
-Giữa Quá trình cư trú và Biến động cư trú có hai liên kết song song là Đợt cũ và Đợt mới, vì một lần biến động có thể đóng một đợt cư trú và mở một đợt khác cùng lúc. Trường hợp điển hình là chuyển nội bộ: cư dân rời hộ A (đợt cũ kết thúc ngày $t-1$) và vào hộ B (đợt mới bắt đầu ngày $t$), cả hai đều gắn với cùng một bản ghi biến động.
+Giữa quá trình cư trú và biến động cư trú có hai liên kết song song là ``đợt cũ'' và ``đợt mới'', vì một lần biến động có thể vừa kết thúc một đợt cư trú vừa mở một đợt khác. Ví dụ rõ nhất là chuyển nội bộ: cư dân rời hộ A (đợt cũ kết thúc ngày $t-1$) và vào hộ B (đợt mới bắt đầu ngày $t$); cả hai đợt cùng gắn với một bản ghi biến động.
+
+\clearpage
+\subsection{Ràng buộc tham gia}
+\label{subsec:thamgia}
+
+Bảng \ref{tab:thamgia} cho biết ở mỗi liên kết, thực thể nào tham gia toàn phần và thực thể nào chỉ tham gia một phần. Cột cuối nêu căn cứ của từng ràng buộc trong bài toán và cách nó được giữ khi cài đặt.
+
+\begin{table}[H]
+\centering
+\fontsize{12pt}{16pt}\selectfont
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{|P{2.0cm}|P{2.7cm}|P{2.7cm}|Y|}
+\hline
+\textbf{Liên kết} & \textbf{Tham gia toàn phần} & \textbf{Tham gia một phần} & \textbf{Căn cứ} \\
+\hline
+Quản lý & Địa chỉ & Tổ dân phố & Địa chỉ nào cũng thuộc một tổ (ma\_to NOT NULL); tổ mới lập có thể chưa có địa chỉ \\
+\hline
+Chứa & Hộ cư trú & Địa chỉ & Hộ nào cũng ở một địa chỉ (ma\_dia\_chi NOT NULL); có địa chỉ chưa có hộ \\
+\hline
+Gồm & Quá trình cư trú & Hộ cư trú & Đợt cư trú nào cũng thuộc một hộ (ma\_ho NOT NULL); hộ có thể chưa phát sinh đợt cư trú \\
+\hline
+Có đợt & Quá trình cư trú & Cư dân & Đợt cư trú nào cũng của một cư dân (ma\_cu\_dan NOT NULL); cư dân có thể chưa phát sinh đợt cư trú \\
+\hline
+Ghi nhận & Biến động cư trú & Tài khoản & Biến động nào cũng do một tài khoản ghi (ma\_tai\_khoan NOT NULL); có tài khoản chưa ghi biến động nào \\
+\hline
+Đợt cũ & -- & Quá trình cư trú, biến động cư trú & Biến động chuyển đến không có đợt cũ; đợt còn hiệu lực chưa bị biến động nào kết thúc \\
+\hline
+Đợt mới & -- & Quá trình cư trú, biến động cư trú & Biến động chuyển đi không có đợt mới; đợt nhập từ dữ liệu có sẵn không cần gắn với biến động mở đợt \\
+\hline
+\end{tabularx}
+\caption{Ràng buộc tham gia của các liên kết}
+\label{tab:thamgia}
+\end{table}
+
+Có thể thấy ở năm liên kết 1 -- N đầu tiên, phía N luôn tham gia toàn phần, còn phía 1 chỉ tham gia một phần. Vì vậy khi ánh xạ ở Chương \ref{sec:chuong3}, các khóa ngoại tương ứng đều được khai báo NOT NULL. Hai liên kết ``đợt cũ'' và ``đợt mới'' thì tham gia một phần ở cả hai phía, nên hai cột ma\_qua\_trinh\_cu và ma\_qua\_trinh\_moi được phép để trống; việc loại biến động nào bắt buộc có đợt nào do ràng buộc CHECK ck\_bd\_hinh\_dang kiểm soát.
+
+\subsection{Vì sao quá trình cư trú là thực thể kết hợp}
+\label{subsec:thuckethop}
+
+Thực thể kết hợp (associative entity) là thực thể được tạo ra từ một mối liên kết giữa các thực thể khác, khi bản thân liên kết đó cần được lưu như một đối tượng riêng \cite{elmasri}. Quá trình cư trú là trường hợp như vậy, vì bốn lý do sau.
+
+\begin{itemize}
+    \item \textbf{Nó nối hai thực thể có quan hệ nhiều -- nhiều.} Theo thời gian, một cư dân có thể ở nhiều hộ, và một hộ có nhiều cư dân. Nếu chỉ vẽ một hình thoi ``cư trú tại'' giữa cư dân và hộ thì đó là liên kết N -- N. Nhóm thay hình thoi này bằng thực thể quá trình cư trú, nối với cư dân qua liên kết ``có đợt'' và với hộ qua liên kết ``gồm'', cả hai đều là 1 -- N.
+    \item \textbf{Nó có thuộc tính riêng.} Loại cư trú, ngày bắt đầu và ngày kết thúc không thuộc về riêng cư dân, cũng không thuộc về riêng hộ, mà thuộc về việc một người ở tại một hộ trong một khoảng thời gian.
+    \item \textbf{Cùng một cặp cư dân và hộ có thể xuất hiện nhiều lần.} Một người có thể chuyển đi rồi quay về đúng hộ cũ, hoặc có hai đợt khác loại trong cùng hộ. Cặp (ma\_cu\_dan, ma\_ho) vì thế không đủ để phân biệt các đợt, nên nhóm cấp cho mỗi đợt một mã riêng là ma\_qua\_trinh.
+    \item \textbf{Nó cần tham gia vào liên kết khác.} Biến động cư trú phải trỏ tới đúng đợt bị kết thúc và đúng đợt được mở qua hai liên kết ``đợt cũ'' và ``đợt mới''. Trong ký hiệu Chen, một mối liên kết không được nối trực tiếp với một mối liên kết khác, nên đợt cư trú phải là một thực thể thì mới có thể tham gia hai liên kết này.
+\end{itemize}
+
+Ràng buộc tham gia ở mục \ref{subsec:thamgia} cũng cho thấy tính chất này: quá trình cư trú tham gia toàn phần ở cả hai liên kết ``gồm'' và ``có đợt'', tức là một đợt cư trú không thể tồn tại nếu thiếu cư dân hoặc thiếu hộ. Khi ánh xạ sang bảng, qua\_trinh\_cu\_tru giữ hai khóa ngoại ma\_cu\_dan và ma\_ho, giống như bảng trung gian của một liên kết nhiều -- nhiều, nhưng có thêm khóa chính riêng và các cột thời gian.

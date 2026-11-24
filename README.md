@@ -1,6 +1,6 @@
 # BTL Cơ sở dữ liệu — Đề tài 17
 
-Xây dựng CSDL quản lý cư dân và biến động cư trú tại một phường mô phỏng.
+Xây dựng CSDL quản lý cư dân và biến động cư trú tại một phường.
 
 **Nhóm 38 — lớp 174356 — ThS. Nguyễn Thị Thanh Huyền.** Hạn nộp theo kế hoạch nhóm: 27/11/2026, tiết 3.
 
@@ -12,11 +12,13 @@ Xây dựng CSDL quản lý cư dân và biến động cư trú tại một ph�
 
 > **Đính chính số thứ tự thành viên (19/11/2026):** TV1 = Trần Bùi Tùng Linh (20227057), TV2 = Trần Tuấn Ngọc (20227064), TV3 = Dương Ngọc Ninh (20237469). Đính chính này không sửa tác giả commit/PR hoặc tự gán lại đóng góp lịch sử; bảng phân công trang cuối phải phản ánh công việc thực tế.
 
-## Báo cáo chính
+## Báo cáo và slide hiện hành
 
 - [Bản PDF để rà soát và in](Báo_cáo_CSDL_nhóm_38/main.pdf), [nguồn LaTeX](Báo_cáo_CSDL_nhóm_38/main.tex) và [cách biên dịch](Báo_cáo_CSDL_nhóm_38/README_COMPILE.md).
-- Bản cập nhật 22/11/2026 đã sửa diễn đạt, bổ sung khóa/phụ thuộc hàm/1NF–3NF và giới hạn dư thừa ngày biến động, dùng `CURRENT_DATE` cho truy vấn hiện tại, bỏ ngày truy cập và mốc ngày cố định trong PDF; giữ nguyên ảnh ERD. Nhóm tự đánh giá và ký xác nhận trang cuối trước khi nộp; cập nhật này không tự đóng Gate 3/4.
-- Mười câu RA và mười câu SQL trong PDF là bộ câu hỏi của báo cáo, khác bộ QRA/QSQL trong hồ sơ kỹ thuật. Tái lập bằng [script RA](tests/report_ra_01_10.sql), [script SQL](tests/report_sql_01_10.sql), [thử ràng buộc](tests/report_bang_thu_rang_buoc.sql) và [ví dụ bảo mật](tests/report_security_ch6.sql). [Kiểm chứng hiện hành](tests/report_current_date_log.txt) ghi hash, 10 SQL, đối chiếu RA, bảy ca biên và ví dụ bảo mật. Các log cũ được giữ làm hồ sơ lịch sử. Số liệu trong PDF là kết quả minh họa; kết quả hiện tại thay đổi theo ngày hệ thống.
+- [PowerPoint thuyết trình](presentation/CSDL_Nhom38_HUST_ThuyetTrinh.pptx), [PDF dự phòng](presentation/CSDL_Nhom38_HUST_ThuyetTrinh.pdf) và [kịch bản 20 phút](presentation/SPEAKER_NOTES.md).
+- Chương 5 và phần SQL trên slide dùng [QSQL01–QSQL10](sql/04_queries.sql), cùng các câu TV2 thực thi trong pgAdmin. Mười ảnh nằm trong phụ lục báo cáo. Xem [kết quả đối chiếu lại](tests/final_test_log.md#qsql-report-evidence) trên CSDL dựng mới.
+- Chương 4 giữ bộ đại số quan hệ trong báo cáo. Tái lập bằng [script RA](tests/report_ra_01_10.sql), [thử ràng buộc](tests/report_bang_thu_rang_buoc.sql) và [ví dụ bảo mật](tests/report_security_ch6.sql). [Log ngày 22/11](tests/report_current_date_log.txt) vẫn là nguồn cho đại số quan hệ, các ca theo ngày hệ thống và bảo mật trong phạm vi đã ghi. Kết quả SQL trong log đó thuộc bản báo cáo trước khi chuyển sang QSQL.
+- Chương 2–3 có bảng ràng buộc tham gia, giải thích chỉ mục và [ba ví dụ DML đã chạy lại](tests/report_dml_minh_hoa_log.txt). Phụ lục A trích mã nguồn trigger và hàm. E1 phát hiện lặp ở bước validation theo [quyết định đã chốt, mục 9](meetings/decision_log.md).
 
 ## Hiện trạng và việc tiếp theo
 
@@ -28,7 +30,7 @@ Xây dựng CSDL quản lý cư dân và biến động cư trú tại một ph�
 - **TV2:** kiểm thử dữ liệu/10 SQL cùng ràng buộc mới, ghi expected/actual; viết Chương 3.5 và Chương 5.
 - **TV3:** đã có QRA07 bằng phép chia, kết quả seed636 của QRA02/03/06/08, kiểm thử đăng nhập thật và sửa X02. Nội dung PR #5 đã vào nhánh tích hợp; PR #5 đã đóng, không merge. PR #8 đã được gộp (fast-forward) vào nhánh TV1. Việc còn lại: review bản tích hợp, chốt Chương 4/6, chụp B1/B2 ngày 24/11.
 
-[Checklist và lịch phối hợp](docs/03_CHECKLIST_DU_AN.md#tuan-2-hien-hanh) giữ đầy đủ 142 mã việc và reviewer. **Gate 2 PASS (chốt theo xác nhận nhóm do TV1 báo lại ngày 20/11)**; các nội dung còn mở thuộc Gate 3/4 gồm minh chứng, báo cáo PDF, chữ ký và nộp. [Biên bản chốt Gate 2](meetings/decision_log.md#gate2).
+[Checklist và lịch phối hợp](docs/03_CHECKLIST_DU_AN.md#tuan-2-hien-hanh) giữ đầy đủ 142 mã việc và reviewer. **Gate 2 PASS** theo xác nhận nhóm do TV1 báo lại ngày 20/11. Báo cáo và slide hiện hành đã đưa vào bằng chứng SQL và bảo mật. Nhóm còn xác nhận xếp loại, ký trang phân công và nộp. [Biên bản chốt Gate 2](meetings/decision_log.md#gate2).
 
 ## Kiểm thử ràng buộc nâng cao (TV1 — tuần 2)
 

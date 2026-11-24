@@ -4,11 +4,11 @@
 \subsection{Mô tả bài toán}
 \label{subsec:baitoan}
 
-Trong bài toán mô phỏng, một phường gồm nhiều tổ dân phố, mỗi tổ có cán bộ phụ trách theo dõi dân cư trên địa bàn. Cán bộ cần quản lý danh sách địa chỉ, các hộ tại mỗi địa chỉ, các thành viên và diện thường trú hoặc tạm trú theo thời gian. Những thông tin này phục vụ tra cứu, rà soát nhân khẩu và lập báo cáo thống kê. Đây là phạm vi giả định của đồ án, không phải kết quả khảo sát quy trình quản lý tại một phường cụ thể.
+Bài toán xét công tác quản lý cư trú tại một phường gồm nhiều tổ dân phố. Mỗi tổ có cán bộ phụ trách theo dõi dân cư trên địa bàn. Cán bộ cần quản lý danh sách địa chỉ, các hộ tại mỗi địa chỉ, các thành viên và diện thường trú hoặc tạm trú theo thời gian. Những thông tin này phục vụ tra cứu, rà soát nhân khẩu và lập báo cáo thống kê.
 
 Nhóm giả định dữ liệu ban đầu nằm trong sổ sách hoặc các tệp Excel rời rạc. Nếu cập nhật trực tiếp thông tin nơi ở mà không lưu các đợt cư trú, lịch sử có thể bị mất; nếu thiếu kiểm tra thời gian và quyền truy cập, dữ liệu có thể bị trùng lặp hoặc khó truy vết người sửa. Các hạn chế giả định này là cơ sở để xác định yêu cầu thiết kế.
 
-Để đáp ứng các yêu cầu đó, nhóm lưu mỗi đợt cư trú của một người tại một hộ thành một \textbf{quá trình cư trú} có ngày bắt đầu và ngày kết thúc. Mỗi \textbf{biến động cư trú} tham chiếu đợt cũ, đợt mới hoặc cả hai tùy loại sự kiện, đồng thời ghi tài khoản và thời điểm nhập. Bảng quá trình cư trú là nguồn dữ liệu tham chiếu theo thời gian, cho phép truy vấn các đợt đã lưu của một cư dân theo mã. Mô hình hỗ trợ lưu lịch sử nhưng chưa ngăn mọi cập nhật lên bản ghi cũ; giới hạn này được trình bày ở mục \ref{subsec:danhgia}. Nhóm cài đặt cơ sở dữ liệu trên PostgreSQL 17 và dùng bộ dữ liệu giả lập 636 bản ghi để kiểm thử.
+Để đáp ứng các yêu cầu đó, nhóm lưu mỗi đợt cư trú của một người tại một hộ thành một \textbf{quá trình cư trú} có ngày bắt đầu và ngày kết thúc. Mỗi \textbf{biến động cư trú} tham chiếu đợt cũ, đợt mới hoặc cả hai tùy loại sự kiện, đồng thời ghi tài khoản và thời điểm nhập. Bảng quá trình cư trú là nguồn dữ liệu tham chiếu theo thời gian, cho phép truy vấn các đợt đã lưu của một cư dân theo mã. Mô hình hỗ trợ lưu lịch sử nhưng chưa ngăn mọi cập nhật lên bản ghi cũ; giới hạn này được trình bày ở mục \ref{subsec:danhgia}. Nhóm cài đặt cơ sở dữ liệu trên PostgreSQL 17 và kiểm thử với bộ dữ liệu gồm 636 bản ghi.
 
 \subsection{Quy tắc nghiệp vụ}
 \label{subsec:quytac}

@@ -214,7 +214,7 @@ Thêm cư dân có họ tên chỉ gồm khoảng trắng & Từ chối (23514):
 \subsection{Script tạo cơ sở dữ liệu}
 \label{subsec:script}
 
-Listing \ref{lst:schema} là phần tạo bảng trong \texttt{sql/01\_schema.sql}, kèm ràng buộc B06 lấy từ \texttt{sql/02\_constraints.sql}. Các trigger và hàm của lớp ràng buộc thứ hai khá dài nên nhóm không chép lại toàn bộ ở đây. Phần tạo bảng được chép nguyên văn từ tệp PostgreSQL của dự án, chỉ lược bỏ mệnh đề \texttt{IF NOT EXISTS} và năm câu lệnh tạo chỉ mục; ràng buộc B06 trong tệp gốc được bọc trong một khối \texttt{DO} kiểm tra tên ràng buộc để có thể chạy lại script nhiều lần.
+Đoạn mã \ref{lst:schema} là phần tạo bảng trong \texttt{sql/01\_schema.sql}, kèm ràng buộc B06 lấy từ \texttt{sql/02\_constraints.sql}. Phụ lục~\hyperref[sec:phuluc]{A} trình bày mã nguồn các trigger và hàm tiêu biểu. Phần tạo bảng được chép nguyên văn từ tệp PostgreSQL của dự án, chỉ lược bỏ mệnh đề \texttt{IF NOT EXISTS} và năm câu lệnh tạo chỉ mục; ràng buộc B06 trong tệp gốc được bọc trong một khối \texttt{DO} kiểm tra tên ràng buộc để có thể chạy lại script nhiều lần.
 
 \begin{lstlisting}[style=sqlvn, caption={Script tạo bảng và ràng buộc B06 trên PostgreSQL}, label={lst:schema}]
 CREATE TABLE to_dan_pho (
@@ -298,3 +298,66 @@ ALTER TABLE qua_trinh_cu_tru
     daterange(ngay_bat_dau, ngay_ket_thuc, '[]') WITH &&
   );
 \end{lstlisting}
+
+\subsection{Chỉ mục}
+\label{subsec:chimuc}
+
+PostgreSQL tự tạo chỉ mục B-tree cho khóa chính và ràng buộc UNIQUE. Nhóm bổ sung năm chỉ mục sau cho các cột thường dùng khi kết nối, lọc hoặc kiểm tra ràng buộc \cite{postgres}.
+
+\begin{lstlisting}[style=sqlvn, caption={Năm chỉ mục bổ sung}, label={lst:chimuc}]
+CREATE INDEX IF NOT EXISTS idx_dia_chi_to ON dia_chi(ma_to);
+CREATE INDEX IF NOT EXISTS idx_ho_dia_chi ON ho_cu_tru(ma_dia_chi);
+CREATE INDEX IF NOT EXISTS idx_qt_cu_dan_ngay ON qua_trinh_cu_tru(ma_cu_dan, ngay_bat_dau);
+CREATE INDEX IF NOT EXISTS idx_qt_ho_ngay ON qua_trinh_cu_tru(ma_ho, ngay_bat_dau);
+CREATE INDEX IF NOT EXISTS idx_bd_loai_ngay ON bien_dong_cu_tru(loai_bien_dong, ngay_bien_dong);
+\end{lstlisting}
+
+\begin{itemize}[leftmargin=*]
+    \item \texttt{idx\_dia\_chi\_to} và \texttt{idx\_ho\_dia\_chi} hỗ trợ đường nối từ tổ đến địa chỉ và hộ, chẳng hạn khi thống kê theo tổ (QSQL03) hoặc tìm địa chỉ chưa có hộ (QSQL04).
+    \item \texttt{idx\_qt\_cu\_dan\_ngay} hỗ trợ tra cứu đợt theo cư dân và khoảng ngày, chẳng hạn khi kiểm tra đợt còn hiệu lực ở QSQL07 hoặc khi trigger B15 kiểm tra ngày sinh.
+    \item \texttt{idx\_qt\_ho\_ngay} hỗ trợ tìm các đợt của một hộ, chẳng hạn khi đếm người ở QSQL02 hoặc khi kiểm tra lịch sử của hộ theo B11.
+    \item \texttt{idx\_bd\_loai\_ngay} phục vụ truy vấn lọc theo loại biến động và, khi cần, theo khoảng ngày. QSQL09 lọc chuyển nội bộ và sắp theo mã biến động. QSQL08 tổng hợp toàn bộ các loại theo tháng, nên chỉ mục này không bảo đảm truy vấn tránh quét bảng.
+\end{itemize}
+
+Với chỉ mục B-tree nhiều cột, đặt cột so sánh bằng ở đầu hỗ trợ tìm nhanh phần cần đọc, sau đó có thể giới hạn trên cột ngày. Lọc theo khoảng ngày tạo điều kiện dùng chỉ mục trên cột ngày. PostgreSQL cũng hỗ trợ chỉ mục trên biểu thức \cite{pgexpressionindex}. Trên bộ 636 bản ghi, lựa chọn kế hoạch phụ thuộc số dòng cần đọc và chi phí ước tính. Nhóm chưa đo mức cải thiện thời gian chạy.
+
+\subsection{Câu lệnh DML minh họa}
+\label{subsec:dml}
+
+Ba ví dụ minh họa cách các ràng buộc ở mục \ref{subsec:rangbuoc} kiểm tra thao tác thêm và sửa dữ liệu. Nhóm chạy trên PostgreSQL 17.12 với cơ sở dữ liệu dựng mới từ schema, ràng buộc và bộ 636 bản ghi. Hai ví dụ đầu lấy ngày hệ thống làm ngày chuyển. Mỗi giao dịch được hoàn tác để giữ nguyên các bản ghi mẫu. Script và kết quả được lưu lần lượt tại \texttt{tests/report\_dml\_minh\_hoa.sql} và \texttt{tests/report\_dml\_minh\_hoa\_log.txt}.
+
+\textbf{Ví dụ 1: chuyển nội bộ bằng hàm.} Cư dân 40 (Phạm Thu Hạnh) đang thường trú tại hộ 21 theo đợt 44. Cán bộ dùng tài khoản 2 ghi nhận người này chuyển thường trú sang hộ 2 từ hôm nay.
+
+\begin{lstlisting}[style=sqlvn]
+BEGIN;
+SELECT * FROM fn_chuyen_noi_bo(44, 2, 'THUONG_TRU', CURRENT_DATE, 2);
+ROLLBACK;
+\end{lstlisting}
+
+Hàm khóa đợt 44 bằng \texttt{FOR UPDATE}, đặt ngày kết thúc của đợt này là hôm qua, thêm đợt thường trú mới tại hộ 2 bắt đầu từ hôm nay, rồi ghi một biến động CHUYEN\_NOI\_BO trỏ tới cả hai đợt. Kết quả trả về là mã đợt mới và mã biến động vừa được cấp; trên cơ sở dữ liệu dựng mới, đó là đợt 251 và biến động 64. Khi biến động được ghi, trigger \texttt{trg\_bien\_dong\_hop\_le} vẫn kiểm tra lại B08, B09 và B14; nếu một bước lỗi thì cả ba thay đổi bị hủy (B10). Người dùng chỉ cần một lệnh, không phải tự viết ba câu UPDATE và INSERT theo đúng thứ tự.
+
+\textbf{Ví dụ 2: ghi chuyển đi.} Cư dân 44 (Đặng Ngọc Chi) đang thường trú tại hộ 16 theo đợt 50 và chuyển ra khỏi phường từ hôm nay. Nhóm không viết hàm riêng cho trường hợp này, nên hai lệnh được đặt trong cùng một giao dịch.
+
+\begin{lstlisting}[style=sqlvn]
+BEGIN;
+UPDATE qua_trinh_cu_tru
+SET ngay_ket_thuc = CURRENT_DATE - 1
+WHERE ma_qua_trinh = 50;
+
+INSERT INTO bien_dong_cu_tru (loai_bien_dong, ma_qua_trinh_cu, ma_qua_trinh_moi,
+                              ngay_bien_dong, ma_tai_khoan)
+VALUES ('CHUYEN_DI', 50, NULL, CURRENT_DATE, 2);
+ROLLBACK;
+\end{lstlisting}
+
+Thứ tự hai lệnh là bắt buộc. Nếu INSERT chạy trước khi đợt 50 được đóng, trigger B09 từ chối với lỗi 23514 ``B09: đợt cũ 50 phải kết thúc trước ngày chuyển \ldots{} đúng 1 ngày'', trong đó ngày chuyển là ngày chạy lệnh. Biến động CHUYEN\_DI chỉ có đợt cũ, đúng hình dạng mà CHECK \texttt{ck\_bd\_hinh\_dang} yêu cầu (B07).
+
+\textbf{Ví dụ 3: UPDATE bị trigger chặn.} Đợt 17 là đợt mới của biến động 2, lần chuyển nội bộ ngày 15/10/2026 của cư dân 15. Câu lệnh sau thử dời ngày bắt đầu của đợt này sang 20/10/2026.
+
+\begin{lstlisting}[style=sqlvn]
+UPDATE qua_trinh_cu_tru
+SET ngay_bat_dau = DATE '2026-10-20'
+WHERE ma_qua_trinh = 17;
+\end{lstlisting}
+
+Trigger \texttt{trg\_dot\_khong\_pha\_su\_kien} kiểm tra lại các biến động đang trỏ tới đợt 17 và báo lỗi 23514: ``B09: đợt mới 17 phải bắt đầu đúng ngày chuyển 2026-10-15''. Dòng dữ liệu giữ nguyên, nên biến động 2 vẫn khớp với hai đợt mà nó trỏ tới.

@@ -1,204 +1,277 @@
 \section{TRUY VẤN BẰNG SQL}
 \label{sec:chuong5}
 
-Chương này trình bày 10 tình huống SQL minh họa kết nối nhiều bảng, gom nhóm, truy vấn con, phép toán tập hợp và xử lý ngày. Các câu hỏi về cư trú hiện tại dùng \texttt{CURRENT\_DATE} của phiên PostgreSQL. Truy vấn được kiểm chứng trên cơ sở dữ liệu dựng mới từ schema, ràng buộc và bộ dữ liệu mẫu. Các số liệu sau mỗi câu minh họa kết quả tại thời điểm thực nghiệm; số người đang cư trú hoặc đủ tuổi có thể thay đổi khi chạy vào ngày khác. Bộ câu hỏi này được lưu trong \texttt{tests/report\_sql\_01\_10.sql} và khác bộ QSQL01--QSQL10 trong hồ sơ kỹ thuật.
+Chương này trình bày mười truy vấn QSQL01--QSQL10 trên cơ sở dữ liệu gồm 636 bản ghi. Mỗi câu gồm yêu cầu nghiệp vụ, câu SQL và nhận xét về đầu ra. Mã SQL được lấy từ \texttt{sql/04\_queries.sql} và giữ đúng điều kiện lọc của lần kiểm thử trên pgAdmin. Các ảnh thực thi được dẫn trong từng câu và tập hợp tại \hyperref[sec:anhqsql]{phụ lục ảnh SQL}.\par\medskip
 
-\textbf{Câu 1.} Lập danh sách cư dân đang thường trú tại tổ 1, kèm mã hộ và địa chỉ, sắp xếp theo địa chỉ để cán bộ tiện đi kiểm tra thực tế.
+\noindent\begin{minipage}{\linewidth}
+\subsection*{QSQL01 --- Cư dân đang cư trú tại Tổ 01}
+
+Liệt kê mã, họ tên và loại cư trú của những người có đợt cư trú còn hiệu lực tại Tổ 01.
 
 \begin{lstlisting}[style=sqlvn]
-SELECT cd.ma_cu_dan, cd.ho_ten, h.ma_ho, dc.dia_chi_chuan
-FROM cu_dan cd
-JOIN qua_trinh_cu_tru qt ON qt.ma_cu_dan = cd.ma_cu_dan
-JOIN ho_cu_tru h         ON h.ma_ho = qt.ma_ho
-JOIN dia_chi dc          ON dc.ma_dia_chi = h.ma_dia_chi
-WHERE dc.ma_to = 1
-  AND qt.loai_cu_tru = 'THUONG_TRU'
-  AND qt.ngay_bat_dau <= CURRENT_DATE
-  AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= CURRENT_DATE)
-ORDER BY dc.dia_chi_chuan, cd.ho_ten;
+SELECT DISTINCT
+    c.ma_cu_dan,
+    c.ho_ten,
+    q.loai_cu_tru
+FROM cu_dan AS c
+JOIN qua_trinh_cu_tru AS q ON q.ma_cu_dan = c.ma_cu_dan
+JOIN ho_cu_tru AS h        ON h.ma_ho = q.ma_ho
+JOIN dia_chi AS d          ON d.ma_dia_chi = h.ma_dia_chi
+JOIN to_dan_pho AS t       ON t.ma_to = d.ma_to
+WHERE t.ten_to = 'Tổ 01'
+  AND q.ngay_bat_dau <= DATE '2026-11-20'
+  AND (q.ngay_ket_thuc IS NULL OR q.ngay_ket_thuc >= DATE '2026-11-20')
+ORDER BY c.ma_cu_dan, q.loai_cu_tru;
 \end{lstlisting}
 
-Câu lệnh nối bốn bảng theo đúng chuỗi khóa ngoại cư dân $\rightarrow$ quá trình $\rightarrow$ hộ $\rightarrow$ địa chỉ, sau đó lọc theo tổ và theo điều kiện hiệu lực hiện tại. Nhờ ràng buộc B06, mỗi người có nhiều nhất một đợt thường trú hiệu lực tại một ngày, nên không cần DISTINCT. Trên dữ liệu mẫu, kết quả có 23 cư dân.
+Kết quả có 36 dòng thuộc 34 cư dân. \texttt{DISTINCT} loại dòng trùng theo mã cư dân, họ tên và loại cư trú. Một cư dân có cả thường trú và tạm trú còn hiệu lực tại tổ sẽ xuất hiện ở hai dòng với hai loại khác nhau. Xem Hình~\ref{fig:qsql01}.
+\end{minipage}\par\medskip
 
-\textbf{Câu 2.} Thống kê số người thường trú, tạm trú và tổng số người đang cư trú của từng tổ, kể cả những tổ chưa có người cư trú.
+\noindent\begin{minipage}{\linewidth}
+\subsection*{QSQL02 --- Hộ có ít nhất 4 cư dân}
+
+Tìm mã các hộ có từ bốn cư dân phân biệt đang cư trú và đếm số cư dân của từng hộ.
 
 \begin{lstlisting}[style=sqlvn]
-SELECT t.ma_to, t.ten_to,
-       COUNT(DISTINCT qt.ma_cu_dan) FILTER (WHERE qt.loai_cu_tru = 'THUONG_TRU') AS so_thuong_tru,
-       COUNT(DISTINCT qt.ma_cu_dan) FILTER (WHERE qt.loai_cu_tru = 'TAM_TRU')    AS so_tam_tru,
-       COUNT(DISTINCT qt.ma_cu_dan) AS tong_so_nguoi
-FROM to_dan_pho t
-LEFT JOIN dia_chi dc          ON dc.ma_to = t.ma_to
-LEFT JOIN ho_cu_tru h         ON h.ma_dia_chi = dc.ma_dia_chi
-LEFT JOIN qua_trinh_cu_tru qt ON qt.ma_ho = h.ma_ho
-                             AND qt.ngay_bat_dau <= CURRENT_DATE
-                             AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= CURRENT_DATE)
+SELECT
+    h.ma_ho,
+    COUNT(DISTINCT q.ma_cu_dan) AS so_cu_dan
+FROM ho_cu_tru AS h
+JOIN qua_trinh_cu_tru AS q ON q.ma_ho = h.ma_ho
+WHERE q.ngay_bat_dau <= DATE '2026-11-20'
+  AND (q.ngay_ket_thuc IS NULL OR q.ngay_ket_thuc >= DATE '2026-11-20')
+GROUP BY h.ma_ho
+HAVING COUNT(DISTINCT q.ma_cu_dan) >= 4
+ORDER BY so_cu_dan DESC, h.ma_ho;
+\end{lstlisting}
+
+Có 24 hộ thỏa điều kiện, nhiều nhất là 7 cư dân. \texttt{WHERE} lọc đợt còn hiệu lực trước khi gom nhóm, còn \texttt{HAVING} giữ các nhóm đạt ngưỡng 4 người. \texttt{COUNT(DISTINCT ...)} đếm một người một lần trong mỗi hộ. Xem Hình~\ref{fig:qsql02}.
+\end{minipage}\par\medskip
+
+\noindent\begin{minipage}{\linewidth}
+\subsection*{QSQL03 --- Thống kê cư dân theo tổ dân phố}
+
+Đếm số cư dân đang cư trú của từng tổ, kể cả tổ chưa có người.
+
+\begin{lstlisting}[style=sqlvn]
+SELECT
+    t.ma_to,
+    t.ten_to,
+    COUNT(DISTINCT q.ma_cu_dan) AS so_cu_dan
+FROM to_dan_pho AS t
+LEFT JOIN dia_chi AS d          ON d.ma_to = t.ma_to
+LEFT JOIN ho_cu_tru AS h        ON h.ma_dia_chi = d.ma_dia_chi
+LEFT JOIN qua_trinh_cu_tru AS q ON q.ma_ho = h.ma_ho
+                               AND q.ngay_bat_dau <= DATE '2026-11-20'
+                               AND (q.ngay_ket_thuc IS NULL OR q.ngay_ket_thuc >= DATE '2026-11-20')
 GROUP BY t.ma_to, t.ten_to
-ORDER BY tong_so_nguoi DESC, t.ma_to;
+ORDER BY t.ma_to;
 \end{lstlisting}
 
-Nhóm dùng LEFT JOIN để tổ không có người cư trú vẫn hiện ra với số 0, thay vì bị mất khỏi báo cáo như khi dùng JOIN thường. Điều kiện thời gian được đặt trong mệnh đề ON chứ không đặt ở WHERE, vì nếu đặt ở WHERE thì các dòng NULL do LEFT JOIN sinh ra sẽ bị loại và tổ trống lại biến mất. Mệnh đề FILTER của PostgreSQL giúp đếm riêng từng loại cư trú ngay trong một lần gom nhóm, còn COUNT(DISTINCT \ldots) đảm bảo mỗi người chỉ được đếm một lần (B17). Trên dữ liệu mẫu, Tổ 05 đông nhất với 41 người (28 thường trú, 14 tạm trú), còn Tổ 08 hiện ra với cả ba số liệu bằng 0. Ở Tổ 05, tổng 41 nhỏ hơn 28 + 14 vì có một người vừa thường trú vừa tạm trú trong tổ; nhờ COUNT(DISTINCT \ldots) người này chỉ được tính một lần ở cột tổng.
+Kết quả có 8 dòng, mỗi tổ một dòng. Tổ 05 có 41 cư dân và Tổ 08 có 0 cư dân. Truy vấn bắt đầu từ bảng tổ và đặt điều kiện hiệu lực trong \texttt{ON} của phép nối trái để giữ tổ trống. Số đếm dùng mã cư dân phân biệt trên cả hai loại cư trú. Xem Hình~\ref{fig:qsql03}.
+\end{minipage}\par\medskip
 
-\textbf{Câu 3.} Tìm các hộ đang có từ 3 nhân khẩu trở lên hiện tại.
+\noindent\begin{minipage}{\linewidth}
+\subsection*{QSQL04 --- Địa chỉ chưa có hộ cư trú}
 
-\begin{lstlisting}[style=sqlvn]
-SELECT h.ma_ho, dc.dia_chi_chuan, COUNT(DISTINCT qt.ma_cu_dan) AS so_nhan_khau
-FROM ho_cu_tru h
-JOIN dia_chi dc          ON dc.ma_dia_chi = h.ma_dia_chi
-JOIN qua_trinh_cu_tru qt ON qt.ma_ho = h.ma_ho
-WHERE qt.ngay_bat_dau <= CURRENT_DATE
-  AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= CURRENT_DATE)
-GROUP BY h.ma_ho, dc.dia_chi_chuan
-HAVING COUNT(DISTINCT qt.ma_cu_dan) >= 3
-ORDER BY so_nhan_khau DESC, h.ma_ho;
-\end{lstlisting}
-
-Ở câu này cần phân biệt rõ WHERE và HAVING: WHERE lọc từng dòng trước khi gom nhóm nên nhóm dùng để bỏ các đợt không còn hiệu lực, còn HAVING lọc trên kết quả sau khi gom nhóm, vì vậy điều kiện về số lượng bắt buộc phải đặt ở HAVING. Trên dữ liệu mẫu có 40 hộ thỏa mãn, nhiều nhất là 7 nhân khẩu.
-
-\textbf{Câu 4.} Liệt kê những cư dân đã từng cư trú trong phường nhưng hiện tại không còn đợt nào hiệu lực, tức là đã chuyển đi hoặc hết hạn tạm trú.
+Liệt kê mã và địa chỉ chuẩn của những địa chỉ chưa gắn với hộ nào.
 
 \begin{lstlisting}[style=sqlvn]
-SELECT cd.ma_cu_dan, cd.ho_ten
-FROM cu_dan cd
-WHERE EXISTS (
-        SELECT 1 FROM qua_trinh_cu_tru qt
-        WHERE qt.ma_cu_dan = cd.ma_cu_dan
-          AND qt.ngay_bat_dau <= CURRENT_DATE)
-  AND NOT EXISTS (
-        SELECT 1 FROM qua_trinh_cu_tru qt
-        WHERE qt.ma_cu_dan = cd.ma_cu_dan
-          AND qt.ngay_bat_dau <= CURRENT_DATE
-          AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= CURRENT_DATE))
-ORDER BY cd.ma_cu_dan;
-\end{lstlisting}
-
-Đây là cách viết bằng SQL của phép hiệu ở câu 4 Chương \ref{sec:chuong4}. Hai truy vấn con tương quan (correlated subquery) được xét lại cho từng cư dân: EXISTS giữ những người đã từng cư trú, còn NOT EXISTS loại những người vẫn còn đợt hiệu lực. Trên dữ liệu mẫu, kết quả có 17 cư dân.
-
-\textbf{Câu 5.} Xem các đợt cư trú đã lưu của cư dân mã 92 theo thứ tự thời gian.
-
-\begin{lstlisting}[style=sqlvn]
-SELECT qt.ma_qua_trinh, qt.loai_cu_tru, qt.ngay_bat_dau, qt.ngay_ket_thuc,
-       h.ma_ho, dc.dia_chi_chuan
-FROM qua_trinh_cu_tru qt
-JOIN ho_cu_tru h ON h.ma_ho = qt.ma_ho
-JOIN dia_chi dc  ON dc.ma_dia_chi = h.ma_dia_chi
-WHERE qt.ma_cu_dan = 92
-ORDER BY qt.ngay_bat_dau;
-\end{lstlisting}
-
-Trên dữ liệu mẫu, câu lệnh trả về ba đợt: thường trú tại hộ 56 từ 01/8/2022 đến 01/7/2026, tạm trú tại hộ 15 từ 11/8/2025 và thường trú tại hộ 20 từ 02/7/2026. Kết quả cho thấy hai điều: đợt thường trú mới bắt đầu đúng một ngày sau khi đợt cũ kết thúc (B09), và một người có thể vừa thường trú vừa tạm trú cùng lúc vì hai đợt khác loại (B06). Việc tách thực thể Quá trình cư trú giúp tra cứu cả đợt đã kết thúc lẫn đợt còn hiệu lực trong dữ liệu đã lưu.
-
-\textbf{Câu 6.} Thống kê số biến động của từng loại theo từng tháng trong năm 2026.
-
-\begin{lstlisting}[style=sqlvn]
-SELECT EXTRACT(MONTH FROM ngay_bien_dong)::INT AS thang, loai_bien_dong,
-       COUNT(*) AS so_bien_dong
-FROM bien_dong_cu_tru
-WHERE ngay_bien_dong >= DATE '2026-01-01' AND ngay_bien_dong < DATE '2027-01-01'
-GROUP BY thang, loai_bien_dong
-ORDER BY thang, loai_bien_dong;
-\end{lstlisting}
-
-Nhóm lọc năm bằng khoảng ngày thay vì viết \texttt{EXTRACT(YEAR FROM ngay\_bien\_dong) = 2026} để tạo điều kiện sử dụng chỉ mục thông thường trên cột ngày. PostgreSQL còn hỗ trợ chỉ mục trên biểu thức; kế hoạch thực thi phụ thuộc chỉ mục và dữ liệu, nên cách viết này không tự bảo đảm truy vấn nhanh hơn \cite{pgexpressionindex}. PostgreSQL cũng cho phép GROUP BY theo bí danh cột (thang) nên câu lệnh gọn hơn. Trên dữ liệu mẫu, kết quả có 21 dòng (tháng, loại) với tổng cộng 29 biến động trong năm 2026; 11 tháng có biến động, nhiều nhất là tháng 11 với 6 biến động. Tháng 2 không có biến động nào nên không xuất hiện trong kết quả: GROUP BY chỉ tạo nhóm từ những dòng có thật, muốn hiện cả tháng có số 0 thì phải kết nối ngoài với một bảng danh sách tháng. Kết quả gồm cả hai biến động chuyển đến có ngày hiệu lực trong tương lai (25/11 và 01/12/2026), vì đặc tả cho phép đăng ký trước ngày chuyển.
-
-\textbf{Câu 7.} Với mỗi lần chuyển nội bộ, cho biết họ tên cư dân, hộ cũ, hộ mới và cán bộ đã ghi nhận.
-
-\begin{lstlisting}[style=sqlvn]
-SELECT bd.ma_bien_dong, bd.ngay_bien_dong, cd.ho_ten,
-       qc.ma_ho AS ho_cu, qm.ma_ho AS ho_moi, tk.ten_hien_thi AS nguoi_ghi_nhan
-FROM bien_dong_cu_tru bd
-JOIN qua_trinh_cu_tru qc ON qc.ma_qua_trinh = bd.ma_qua_trinh_cu
-JOIN qua_trinh_cu_tru qm ON qm.ma_qua_trinh = bd.ma_qua_trinh_moi
-JOIN cu_dan cd           ON cd.ma_cu_dan = qm.ma_cu_dan
-JOIN tai_khoan tk        ON tk.ma_tai_khoan = bd.ma_tai_khoan
-WHERE bd.loai_bien_dong = 'CHUYEN_NOI_BO'
-ORDER BY bd.ngay_bien_dong, bd.ma_bien_dong;
-\end{lstlisting}
-
-Vì mỗi biến động tham chiếu tới hai đợt cư trú khác nhau, nhóm phải nối bảng qua\_trinh\_cu\_tru hai lần với hai bí danh (alias) là qc cho đợt cũ và qm cho đợt mới; cách làm này tương ứng với phép đổi tên $\rho$ ở câu 7 Chương \ref{sec:chuong4}. Trên dữ liệu mẫu có 27 lần chuyển nội bộ, sớm nhất là ngày 18/01/2025 (cư dân Dương Hữu Cường chuyển từ hộ 13 sang hộ 25).
-
-\textbf{Câu 8.} Tìm cán bộ đã ghi nhận nhiều biến động nhất (nếu nhiều người bằng nhau thì lấy tất cả), để đánh giá khối lượng công việc.
-
-\begin{lstlisting}[style=sqlvn]
-SELECT tk.ma_tai_khoan, tk.ten_hien_thi, COUNT(*) AS so_bien_dong
-FROM tai_khoan tk
-JOIN bien_dong_cu_tru bd ON bd.ma_tai_khoan = tk.ma_tai_khoan
-GROUP BY tk.ma_tai_khoan, tk.ten_hien_thi
-HAVING COUNT(*) = (
-    SELECT MAX(so_luong)
-    FROM (SELECT COUNT(*) AS so_luong
-          FROM bien_dong_cu_tru
-          GROUP BY ma_tai_khoan) AS thong_ke
-);
-\end{lstlisting}
-
-Nhóm không dùng \texttt{ORDER BY \ldots{} LIMIT 1} vì nếu có hai cán bộ cùng số biến động cao nhất thì LIMIT 1 sẽ bỏ sót một người. Thay vào đó, truy vấn con trong FROM tính số biến động của từng tài khoản, lấy giá trị lớn nhất rồi so sánh lại ở HAVING. Trên dữ liệu mẫu, kết quả là tài khoản 2 (Cán bộ Cư trú 01) với 21 biến động.
-
-\textbf{Câu 9.} Tìm những cư dân đã từng tạm trú và cũng đã từng thường trú trong phường.
-
-\begin{lstlisting}[style=sqlvn]
-SELECT cd.ma_cu_dan, cd.ho_ten
-FROM cu_dan cd
-WHERE cd.ma_cu_dan IN (
-    SELECT ma_cu_dan FROM qua_trinh_cu_tru WHERE loai_cu_tru = 'TAM_TRU'
-    INTERSECT
-    SELECT ma_cu_dan FROM qua_trinh_cu_tru WHERE loai_cu_tru = 'THUONG_TRU'
+SELECT
+    d.ma_dia_chi,
+    d.dia_chi_chuan
+FROM dia_chi AS d
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM ho_cu_tru AS h
+    WHERE h.ma_dia_chi = d.ma_dia_chi
 )
-ORDER BY cd.ma_cu_dan;
+ORDER BY d.ma_dia_chi;
 \end{lstlisting}
 
-Toán tử INTERSECT trong SQL chính là phép giao trong đại số quan hệ và tương ứng với câu 5 của Chương \ref{sec:chuong4}. Truy vấn con lấy ra mã những người thỏa cả hai điều kiện, còn truy vấn ngoài chỉ làm thêm việc lấy họ tên từ bảng cu\_dan để hiển thị. Trên dữ liệu mẫu có 31 cư dân như vậy.
+Có 4 địa chỉ thỏa mãn, với các mã 47 đến 50. \texttt{NOT EXISTS} kiểm tra trực tiếp rằng địa chỉ đang xét không có dòng hộ nào tham chiếu tới nó. Xem Hình~\ref{fig:qsql04}.
+\end{minipage}\par\medskip
 
-\textbf{Câu 10.} Lập danh sách cư dân đủ 18 tuổi trở lên đang thường trú hiện tại, dùng làm căn cứ lập danh sách cử tri.
+\noindent\begin{minipage}{\linewidth}
+\subsection*{QSQL05 --- Cư dân từng ở ít nhất hai hộ}
+
+Tìm những người có các đợt cư trú đã ghi nhận tại ít nhất hai hộ khác nhau và đếm số hộ theo từng người.
 
 \begin{lstlisting}[style=sqlvn]
-SELECT cd.ma_cu_dan, cd.ho_ten, cd.ngay_sinh, dc.dia_chi_chuan
-FROM cu_dan cd
-JOIN qua_trinh_cu_tru qt ON qt.ma_cu_dan = cd.ma_cu_dan
-JOIN ho_cu_tru h         ON h.ma_ho = qt.ma_ho
-JOIN dia_chi dc          ON dc.ma_dia_chi = h.ma_dia_chi
-WHERE qt.loai_cu_tru = 'THUONG_TRU'
-  AND qt.ngay_bat_dau <= CURRENT_DATE
-  AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= CURRENT_DATE)
-  AND cd.ngay_sinh <= CURRENT_DATE - INTERVAL '18 years'
-ORDER BY dc.dia_chi_chuan, cd.ho_ten;
+SELECT
+    c.ma_cu_dan,
+    c.ho_ten,
+    COUNT(DISTINCT q.ma_ho) AS so_ho
+FROM cu_dan AS c
+JOIN qua_trinh_cu_tru AS q ON q.ma_cu_dan = c.ma_cu_dan
+GROUP BY c.ma_cu_dan, c.ho_ten
+HAVING COUNT(DISTINCT q.ma_ho) >= 2
+ORDER BY so_ho DESC, c.ma_cu_dan;
 \end{lstlisting}
 
-Điều kiện tuổi dùng \texttt{CURRENT\_DATE - INTERVAL '18 years'} để so sánh ngày sinh với mốc đủ mười tám tuổi. Cách này xét cả tháng và ngày, tránh tính nhầm người chưa đến sinh nhật khi chỉ lấy hiệu số năm. Người vừa đủ tuổi trong ngày được đưa vào kết quả, người còn thiếu một ngày thì chưa được tính. Kết quả minh họa có 131 cư dân.
+Có 54 cư dân có đợt cư trú được ghi nhận ở từ hai hộ. \texttt{COUNT(DISTINCT q.ma\_ho)} đếm mỗi hộ một lần dù người đó từng có nhiều đợt tại cùng hộ. Chẳng hạn, cư dân mã 92 có ba hộ trong kết quả. Xem Hình~\ref{fig:qsql05}.
+\end{minipage}\par\medskip
 
-\subsection*{Tóm tắt kết quả chạy 10 câu SQL}
+\noindent\begin{minipage}{\linewidth}
+\subsection*{QSQL06 --- Cư dân có cả thường trú và tạm trú}
 
-Bảng \ref{tab:ketquasql} tóm tắt kết quả minh họa. Các truy vấn về hiện tại được đối chiếu với cách tính độc lập cùng dùng ngày hệ thống; các câu hỏi lịch sử được kiểm tra trên dữ liệu mẫu. Bộ kiểm chứng còn có các ca đợt bắt đầu hôm nay, kết thúc hôm nay, chưa bắt đầu, đã kết thúc và người vừa đủ hoặc chưa đủ 18 tuổi. Số dòng minh họa không được dùng làm hằng số để quyết định tính đúng của truy vấn phụ thuộc ngày.
+Tìm những cư dân có ít nhất một đợt thường trú và một đợt tạm trú trong lịch sử đã ghi nhận.
 
-\begin{table}[H]
+\begin{lstlisting}[style=sqlvn]
+SELECT
+    c.ma_cu_dan,
+    c.ho_ten
+FROM cu_dan AS c
+WHERE EXISTS (
+    SELECT 1
+    FROM qua_trinh_cu_tru AS q1
+    WHERE q1.ma_cu_dan = c.ma_cu_dan
+      AND q1.loai_cu_tru = 'THUONG_TRU'
+)
+  AND EXISTS (
+    SELECT 1
+    FROM qua_trinh_cu_tru AS q2
+    WHERE q2.ma_cu_dan = c.ma_cu_dan
+      AND q2.loai_cu_tru = 'TAM_TRU'
+)
+ORDER BY c.ma_cu_dan;
+\end{lstlisting}
+
+Có 31 cư dân thỏa đồng thời hai điều kiện \texttt{EXISTS}. Hai điều kiện xét độc lập từng loại đợt trong lịch sử, vì vậy hai đợt có thể diễn ra ở những thời điểm khác nhau. Kiểm chứng theo mã cư dân khớp với phép giao ở Câu 5 của Chương \ref{sec:chuong4}. Xem Hình~\ref{fig:qsql06}.
+\end{minipage}\par\medskip
+
+\noindent\begin{minipage}{\linewidth}
+\subsection*{QSQL07 --- Cư dân từng ở nhưng đã hết hiệu lực}
+
+Tìm những người có đợt cư trú đã bắt đầu nhưng không còn đợt nào hiệu lực theo điều kiện trong truy vấn.
+
+\begin{lstlisting}[style=sqlvn]
+SELECT
+    c.ma_cu_dan,
+    c.ho_ten
+FROM cu_dan AS c
+WHERE EXISTS (
+    SELECT 1
+    FROM qua_trinh_cu_tru AS q_past
+    WHERE q_past.ma_cu_dan = c.ma_cu_dan
+      AND q_past.ngay_bat_dau <= DATE '2026-11-20'
+)
+  AND NOT EXISTS (
+    SELECT 1
+    FROM qua_trinh_cu_tru AS q_cur
+    WHERE q_cur.ma_cu_dan = c.ma_cu_dan
+      AND q_cur.ngay_bat_dau <= DATE '2026-11-20'
+      AND (q_cur.ngay_ket_thuc IS NULL OR q_cur.ngay_ket_thuc >= DATE '2026-11-20')
+)
+ORDER BY c.ma_cu_dan;
+\end{lstlisting}
+
+Có 17 cư dân từng có đợt đã bắt đầu nhưng không còn đợt hiệu lực. \texttt{EXISTS} yêu cầu ít nhất một đợt đã bắt đầu và \texttt{NOT EXISTS} loại cư dân còn đợt hiệu lực. Điều kiện thứ nhất loại cả người chỉ có đợt bắt đầu trong tương lai. Xem Hình~\ref{fig:qsql07}.
+\end{minipage}\par\medskip
+
+\noindent\begin{minipage}{\linewidth}
+\subsection*{QSQL08 --- Thống kê biến động theo tháng và loại}
+
+Đếm số biến động theo từng cặp tháng và loại biến động trong toàn bộ dữ liệu đã ghi.
+
+\begin{lstlisting}[style=sqlvn]
+SELECT
+    TO_CHAR(DATE_TRUNC('month', b.ngay_bien_dong), 'YYYY-MM') AS thang,
+    b.loai_bien_dong,
+    COUNT(*) AS so_su_kien
+FROM bien_dong_cu_tru AS b
+GROUP BY DATE_TRUNC('month', b.ngay_bien_dong), b.loai_bien_dong
+ORDER BY thang, b.loai_bien_dong;
+\end{lstlisting}
+
+Kết quả có 45 nhóm tháng và loại, với tổng cộng 63 biến động. Truy vấn gom theo tháng lịch rồi hiển thị theo định dạng \texttt{YYYY-MM}. Bảng dưới trích ba dòng đầu và hiển thị đầy đủ giá trị tháng. Xem Hình~\ref{fig:qsql08}.
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+\textbf{Tháng} & \textbf{Loại biến động} & \textbf{Số sự kiện} \\
+\hline
+2025-01 & \texttt{CHUYEN\_DEN} & 1 \\
+2025-01 & \texttt{CHUYEN\_DI} & 2 \\
+2025-01 & \texttt{CHUYEN\_NOI\_BO} & 1 \\
+\hline
+\end{tabular}
+\end{center}
+\end{minipage}\par\medskip
+
+\noindent\begin{minipage}{\linewidth}
+\subsection*{QSQL09 --- Chuyển nội bộ giữa hai tổ}
+
+Liệt kê mã biến động, mã cư dân, tổ cũ, tổ mới và ngày của mỗi lần chuyển nội bộ giữa hai tổ khác nhau.
+
+\begin{lstlisting}[style=sqlvn]
+SELECT
+    b.ma_bien_dong,
+    q_cu.ma_cu_dan,
+    d_cu.ma_to AS ma_to_cu,
+    d_moi.ma_to AS ma_to_moi,
+    b.ngay_bien_dong
+FROM bien_dong_cu_tru AS b
+JOIN qua_trinh_cu_tru AS q_cu  ON q_cu.ma_qua_trinh = b.ma_qua_trinh_cu
+JOIN ho_cu_tru AS h_cu         ON h_cu.ma_ho = q_cu.ma_ho
+JOIN dia_chi AS d_cu           ON d_cu.ma_dia_chi = h_cu.ma_dia_chi
+JOIN qua_trinh_cu_tru AS q_moi ON q_moi.ma_qua_trinh = b.ma_qua_trinh_moi
+JOIN ho_cu_tru AS h_moi        ON h_moi.ma_ho = q_moi.ma_ho
+JOIN dia_chi AS d_moi          ON d_moi.ma_dia_chi = h_moi.ma_dia_chi
+WHERE b.loai_bien_dong = 'CHUYEN_NOI_BO'
+  AND q_cu.ma_cu_dan = q_moi.ma_cu_dan
+  AND d_cu.ma_to <> d_moi.ma_to
+ORDER BY b.ma_bien_dong;
+\end{lstlisting}
+
+Kết quả gồm 22 lần chuyển giữa hai tổ. Hai nhánh nối đi từ đợt cũ và đợt mới qua hộ đến địa chỉ để lấy mã tổ. Điều kiện kiểm tra cùng cư dân và tổ cũ khác tổ mới. Chẳng hạn, biến động 2 của cư dân mã 15 là lần chuyển từ Tổ 01 sang Tổ 02 ngày 15/10/2026. Xem Hình~\ref{fig:qsql09}.
+\end{minipage}\par\medskip
+
+\noindent\begin{minipage}{\linewidth}
+\subsection*{QSQL10 --- Số biến động theo tài khoản}
+
+Đếm số biến động do từng tài khoản ghi nhận, kể cả tài khoản chưa ghi lần nào.
+
+\begin{lstlisting}[style=sqlvn]
+SELECT
+    a.ma_tai_khoan,
+    a.ten_hien_thi,
+    COUNT(b.ma_bien_dong) AS so_su_kien
+FROM tai_khoan AS a
+LEFT JOIN bien_dong_cu_tru AS b ON b.ma_tai_khoan = a.ma_tai_khoan
+GROUP BY a.ma_tai_khoan, a.ten_hien_thi
+ORDER BY a.ma_tai_khoan;
+\end{lstlisting}
+
+Kết quả có 5 tài khoản và tổng 63 biến động. Tài khoản mã 2 ghi 21 biến động, còn tài khoản mã 5 có 0. \texttt{LEFT JOIN} giữ tài khoản chưa ghi và \texttt{COUNT(b.ma\_bien\_dong)} bỏ qua mã biến động \texttt{NULL} ở dòng nối. Xem Hình~\ref{fig:qsql10}.
+\end{minipage}\par\medskip
+
+\noindent\begin{minipage}{\linewidth}
+\subsection*{Tổng hợp kết quả}
+
+Nhóm chạy lại cả mười truy vấn trên cơ sở dữ liệu dựng mới và kiểm tra đầy đủ các giá trị đầu ra với dữ liệu đối chiếu đã lưu.
+
+\par\medskip
+{
 \centering
 \fontsize{11pt}{14pt}\selectfont
 \renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\textwidth}{|P{1.1cm}|P{1.7cm}|Y|P{1.6cm}|}
+\begin{tabularx}{\textwidth}{|P{1.7cm}|Y|P{1.8cm}|}
 \hline
-\textbf{Câu} & \textbf{Số dòng} & \textbf{Kết quả tiêu biểu} & \textbf{Đối chiếu} \\
+\textbf{Mã câu} & \textbf{Kết quả truy vấn} & \textbf{Số dòng} \\
 \hline
-1 & 23 & Cư dân đang thường trú tại tổ 1 & PASS \\
-\hline
-2 & 8 & Tổ 05: 28 / 14 / 41 (đông nhất); Tổ 08: 0 / 0 / 0 & PASS \\
-\hline
-3 & 40 & Nhiều nhất 7 nhân khẩu (hộ 12, 15, 19, 20, 25, \ldots) & PASS \\
-\hline
-4 & 17 & Không còn đợt hiệu lực hiện tại & PASS \\
-\hline
-5 & 3 & Hộ 56 (01/8/2022--01/7/2026), hộ 15 (từ 11/8/2025), hộ 20 (từ 02/7/2026) & PASS \\
-\hline
-6 & 21 & 29 biến động năm 2026, tháng 11 nhiều nhất (6) & PASS \\
-\hline
-7 & 27 & Sớm nhất 18/01/2025: Dương Hữu Cường, hộ 13 $\rightarrow$ hộ 25 & PASS \\
-\hline
-8 & 1 & Tài khoản 2 (Cán bộ Cư trú 01), 21 biến động & PASS \\
-\hline
-9 & 31 & Từng tạm trú và từng thường trú & PASS \\
-\hline
-10 & 131 & Danh sách thường trú đáp ứng điều kiện đủ 18 tuổi & PASS \\
-\hline
+QSQL01 & Cư dân đang cư trú tại Tổ 01 & 36 \\ \hline
+QSQL02 & Hộ có ít nhất 4 cư dân & 24 \\ \hline
+QSQL03 & Thống kê cư dân theo tổ dân phố & 8 \\ \hline
+QSQL04 & Địa chỉ chưa có hộ cư trú & 4 \\ \hline
+QSQL05 & Cư dân từng ở ít nhất hai hộ & 54 \\ \hline
+QSQL06 & Cư dân có cả thường trú và tạm trú & 31 \\ \hline
+QSQL07 & Cư dân từng ở nhưng đã hết hiệu lực & 17 \\ \hline
+QSQL08 & Thống kê biến động theo tháng và loại & 45 \\ \hline
+QSQL09 & Chuyển nội bộ giữa hai tổ & 22 \\ \hline
+QSQL10 & Số biến động theo tài khoản & 5 \\ \hline
 \end{tabularx}
-\caption{Kết quả minh họa 10 câu SQL trên bộ dữ liệu mẫu}
+\captionof{table}{Kết quả kiểm thử QSQL01--QSQL10 trên bộ 636 bản ghi}
 \label{tab:ketquasql}
-\end{table}
+}
+\end{minipage}\par\medskip

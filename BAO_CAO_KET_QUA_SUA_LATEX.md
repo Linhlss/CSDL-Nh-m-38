@@ -1,6 +1,13 @@
 # Biên bản sửa và kiểm chứng báo cáo LaTeX — Nhóm 38
 
-## Bản hiện hành — truy vấn theo ngày hệ thống
+## Bộ bàn giao hiện hành
+
+- Báo cáo in: [PDF 71 trang](Báo_cáo_CSDL_nhóm_38/main.pdf). Slide: [PowerPoint 36 trang](presentation/CSDL_Nhom38_HUST_ThuyetTrinh.pptx) và [PDF dự phòng](presentation/CSDL_Nhom38_HUST_ThuyetTrinh.pdf).
+- Tiếp nhận từ [PR #13](https://github.com/Linhlss/CSDL-Nh-m-38/pull/13) phần ràng buộc tham gia, thực thể kết hợp, chỉ mục, ba ví dụ DML và phụ lục mã nguồn. Bổ sung A11 về B09 cho phần hỏi đáp.
+- Quyết định E1 giữ theo nhật ký, mục 9. Bảng biến động vẫn nêu rõ phần dư thừa có điều kiện. Phần SQL dùng đúng QSQL01–QSQL10; báo cáo chứa mười ảnh của TV2 và bảy ảnh bảo mật của TV3.
+- [Kiểm chứng DML](tests/report_dml_minh_hoa_log.txt) trên PostgreSQL 17.12 ghi hai lỗi B09 đúng SQLSTATE 23514 và 636 bản ghi giống hệt trước và sau hoàn tác. Trang xếp loại và chữ ký để nhóm tự điền.
+
+## Bản lịch sử — truy vấn theo ngày hệ thống
 
 - PDF: `Báo_cáo_CSDL_nhóm_38/main.pdf`, **45 trang**, SHA-256 `f7b641472a903d29a513bc89dc017c79121f918e0b17d45f239b3b2713e2c7d4`.
 - Theo yêu cầu chủ repo: bỏ ngày truy cập trong tài liệu tham khảo, bỏ lịch từng lần chạy trong nội dung và bỏ ngày cố định/biến ngày trong các câu hỏi hiện tại. Ngày nghiệp vụ và ngày ban hành/hiệu lực văn bản vẫn giữ đúng ý nghĩa.
@@ -26,7 +33,7 @@
 Các thông tin dưới đây mô tả bản và phạm vi kiểm thử ở ngày 21/11, không phải trạng thái PDF hiện hành.
 
 **Ngày:** 21/11/2026 · **Thư mục báo cáo:** `Báo_cáo_CSDL_nhóm_38/` · **PDF tại thời điểm 21/11:** `Báo_cáo_CSDL_nhóm_38/main.pdf` (44 trang, SHA-256 `1b4416ed…ec09f74`)
-**Sao lưu trước khi sửa:** `outputs/backup/Bao_cao_LaTeX_truoc_sua_20261121.tar.gz` (toàn bộ thư mục LaTeX + `main.pdf` 37 trang cũ).
+**Bản trước lần sửa này:** PDF 37 trang, được ghi nhận trong lịch sử chỉnh sửa.
 
 Nguồn đối chiếu: nhánh làm việc `fix/tv1-integration-gate2` @ `4bf6e73`. Thư mục `sql/` và `tests/` của nhánh này **trùng byte với `origin/main`** (`git diff HEAD origin/main` chỉ khác ở `docs/`, `meetings/`, `README.md`, manifest). PR #10 (`fix/bao-cao-review-1-5`) **đang OPEN, chưa merge**, CI FAIL; chỉ trích phần có chứng cứ chạy lại được (giới hạn quyền admin trên `tai_khoan`), không merge, không sửa `docs/02_bao_cao_suon.md` nên **không đụng `tests/week1_manifest.json`**.
 
