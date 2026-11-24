@@ -1,0 +1,71 @@
+DML minh hoa report verification; fresh database seed636 (01 -> 02 -> 03), Windows, TCP localhost.
+RUN psql -X -v ON_ERROR_STOP=1 -f sql/01_schema.sql
+OK sql/01_schema.sql
+RUN psql -X -v ON_ERROR_STOP=1 -f sql/02_constraints.sql
+OK sql/02_constraints.sql
+RUN psql -X -v ON_ERROR_STOP=1 -f sql/03_seed.sql
+OK sql/03_seed.sql
+PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35229, 64-bit
+2026-11-24
+Asia/Bangkok
+636
+RUN psql -X -f tests/report_dml_minh_hoa.sql
+SHA256 tests/report_dml_minh_hoa.sql: 233881fb004a50d7dfe05b510a36f6bd78cebd59143421d44f12f6208d607aee
+=== DML 1: fn_chuyen_noi_bo, đợt 44 (cư dân 40, hộ 21) sang hộ 2 ===
+BEGIN
+ ma_dot_moi | ma_su_kien 
+------------+------------
+        251 |         64
+(1 row)
+
+ ma_qua_trinh | ma_cu_dan | ma_ho | loai_cu_tru | ngay_bat_dau | ngay_ket_thuc 
+--------------+-----------+-------+-------------+--------------+---------------
+           44 |        40 |    21 | THUONG_TRU  | 2022-10-25   | 2026-11-23
+          251 |        40 |     2 | THUONG_TRU  | 2026-11-24   | 
+(2 rows)
+
+ ma_bien_dong | loai_bien_dong | ma_qua_trinh_cu | ma_qua_trinh_moi | ngay_bien_dong 
+--------------+----------------+-----------------+------------------+----------------
+           64 | CHUYEN_NOI_BO  |              44 |              251 | 2026-11-24
+(1 row)
+
+ROLLBACK
+=== DML 2: ghi chuyển đi cho đợt 50 (cư dân 44, hộ 16) ===
+BEGIN
+UPDATE 1
+ ma_bien_dong | loai_bien_dong | ma_qua_trinh_cu | ngay_bien_dong 
+--------------+----------------+-----------------+----------------
+           65 | CHUYEN_DI      |              50 | 2026-11-24
+(1 row)
+
+INSERT 0 1
+ROLLBACK
+=== DML 2b (đối chứng): ghi CHUYEN_DI khi đợt 50 chưa kết thúc, mong đợi B09 chặn ===
+BEGIN
+psql:tests/report_dml_minh_hoa.sql:31: ERROR:  B09: đợt cũ 50 phải kết thúc trước ngày chuyển 2026-11-24 đúng 1 ngày
+CONTEXT:  Hàm PL/pgSQL fn_kiem_tra_su_kien(character varying,bigint,bigint,date) dòng 20 tại RAISE
+SQL statement "SELECT fn_kiem_tra_su_kien(
+        NEW.loai_bien_dong, NEW.ma_qua_trinh_cu,
+        NEW.ma_qua_trinh_moi, NEW.ngay_bien_dong
+    )"
+Hàm PL/pgSQL fn_truoc_ghi_bien_dong() dòng 21 tại PERFORM
+ROLLBACK
+=== DML 3: dời ngày bắt đầu đợt 17 (đợt mới của biến động 2), mong đợi B09 chặn ===
+BEGIN
+psql:tests/report_dml_minh_hoa.sql:39: ERROR:  23514: B09: đợt mới 17 phải bắt đầu đúng ngày chuyển 2026-10-15
+CONTEXT:  Hàm PL/pgSQL fn_kiem_tra_su_kien(character varying,bigint,bigint,date) dòng 33 tại RAISE
+SQL statement "SELECT fn_kiem_tra_su_kien(
+                v_su_kien.loai_bien_dong,
+                v_su_kien.ma_qua_trinh_cu,
+                v_su_kien.ma_qua_trinh_moi,
+                v_su_kien.ngay_bien_dong
+            )"
+Hàm PL/pgSQL fn_sau_sua_dot_cu_tru() dòng 13 tại PERFORM
+LOCATION:  exec_stmt_raise, pl_exec.c:3911
+ROLLBACK
+AFTER: kiem tra du lieu mau khong doi sau ROLLBACK
+dot 44|
+dot 50|
+dot 17|2026-10-15
+so dot|250
+so bien dong|63

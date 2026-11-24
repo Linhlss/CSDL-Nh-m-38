@@ -4,9 +4,9 @@
 \subsection{Vì sao cần bảo mật}
 \label{subsec:visao}
 
-Bảo mật cơ sở dữ liệu là bảo vệ dữ liệu khỏi việc bị xem, sửa hoặc xóa bởi người không có quyền, đồng thời đảm bảo người có quyền vẫn dùng được dữ liệu khi cần. Các tài liệu về an toàn thông tin thường nêu ba mục tiêu là tính bí mật (confidentiality), tính toàn vẹn (integrity) và tính sẵn sàng (availability) \cite{elmasri}.
+Bảo mật cơ sở dữ liệu là giữ cho dữ liệu không bị người không có quyền xem, sửa hoặc xóa, đồng thời bảo đảm người có quyền vẫn dùng được dữ liệu khi cần. Tài liệu về an toàn thông tin thường nêu ba mục tiêu: tính bí mật (confidentiality), tức chỉ người được phép mới xem được; tính toàn vẹn (integrity), tức dữ liệu không bị sửa sai; và tính sẵn sàng (availability), tức dữ liệu luôn dùng được khi cần \cite{elmasri}.
 
-Với bài toán của nhóm, vấn đề này đặc biệt quan trọng vì cơ sở dữ liệu chứa thông tin cá nhân như họ tên, ngày sinh, giới tính và nơi ở của người dân. Đây là loại dữ liệu thuộc phạm vi điều chỉnh của Luật Bảo vệ dữ liệu cá nhân số 91/2025/QH15, có hiệu lực từ ngày 01/01/2026 \cite{luat91}, và Nghị định 356/2025/NĐ-CP quy định chi tiết luật này, có hiệu lực cùng ngày; Nghị định 13/2023/NĐ-CP trước đây đã hết hiệu lực kể từ ngày Nghị định 356/2025/NĐ-CP có hiệu lực \cite{nd356}. Báo cáo chỉ nêu các văn bản này làm căn cứ cho việc phải bảo vệ dữ liệu, không phân tích nghĩa vụ pháp lý cụ thể của từng chủ thể. Bên cạnh đó, bảng bien\_dong\_cu\_tru đóng vai trò như một cuốn sổ ghi chép chính thức, nếu ai đó sửa hoặc xóa được thì lịch sử cư trú sẽ không còn đáng tin. Dù toàn bộ dữ liệu trong đề tài là giả lập, nhóm vẫn thiết kế phần bảo mật như với dữ liệu thật.
+Bài toán của nhóm cần bảo mật vì cơ sở dữ liệu chứa thông tin cá nhân như họ tên, ngày sinh, giới tính và nơi ở của người dân. Loại dữ liệu này thuộc phạm vi của Luật Bảo vệ dữ liệu cá nhân số 91/2025/QH15, có hiệu lực từ ngày 01/01/2026 \cite{luat91}, và Nghị định 356/2025/NĐ-CP quy định chi tiết luật này, có hiệu lực cùng ngày; Nghị định 13/2023/NĐ-CP trước đây đã hết hiệu lực kể từ ngày Nghị định 356/2025/NĐ-CP có hiệu lực \cite{nd356}. Báo cáo chỉ nêu các văn bản này để cho thấy dữ liệu cần được bảo vệ, không phân tích trách nhiệm pháp lý cụ thể của từng bên. Bảng bien\_dong\_cu\_tru giống một cuốn sổ ghi chép chính thức: nếu ai đó sửa hoặc xóa được thì lịch sử cư trú không còn đáng tin. Dù toàn bộ dữ liệu trong đề tài là giả lập, nhóm vẫn thiết kế phần bảo mật như với dữ liệu thật.
 
 \subsection{Các cơ chế bảo mật thường dùng}
 \label{subsec:coche}
@@ -36,14 +36,14 @@ Kiểm toán và sao lưu & Ghi lại ai đã làm gì; khôi phục khi mất d
 \label{tab:coche}
 \end{table}
 
-Trong thiết kế của nhóm, bảng tai\_khoan không có cột mật khẩu (quy tắc B18). Việc xác thực do chính PostgreSQL đảm nhận qua các role có quyền đăng nhập, và mật khẩu của role được PostgreSQL lưu dưới dạng băm SCRAM-SHA-256, không bao giờ nằm trong bảng dữ liệu hay trong mã nguồn. Cột vai\_tro của tai\_khoan chỉ mô tả người ghi nhận biến động, còn quyền thật sự được cấp qua role của PostgreSQL.
+Trong thiết kế của nhóm, bảng tai\_khoan không có cột mật khẩu (quy tắc B18). PostgreSQL tự kiểm tra đăng nhập thông qua các role có quyền đăng nhập. Mật khẩu của role được PostgreSQL lưu ở dạng đã băm (SCRAM-SHA-256), không nằm trong bảng dữ liệu hay trong mã nguồn. Cột vai\_tro của tai\_khoan chỉ mô tả người ghi nhận biến động, còn quyền thật sự được cấp qua role của PostgreSQL.
 
 \subsection{Ví dụ minh họa trên cơ sở dữ liệu cư trú}
 \label{subsec:vidu}
 
-Ví dụ 1 và Ví dụ 2 là phần cốt lõi của hai demo B1, B2 trong tệp \texttt{sql/05\_security.sql} của nhóm (tệp đầy đủ còn có bước kiểm tra các role có sẵn và đóng quyền mặc định của PUBLIC trên database). Để đoạn mã ngắn gọn, hai ví dụ này đổi vai bằng lệnh \texttt{SET ROLE} từ tài khoản quản trị \texttt{postgres}; đây là cách minh họa rút gọn, chưa phải đăng nhập độc lập. Kiểm thử bằng phiên đăng nhập thật của từng role được trình bày ở mục \ref{subsec:danhgia}. Ví dụ 3 là phần nhóm bổ sung cho chức năng tra cứu. Cả ba ví dụ được chạy trên PostgreSQL 17.12 với cơ sở dữ liệu dựng mới từ bộ dữ liệu mẫu, và kết quả ghi ngay sau mỗi đoạn mã là kết quả thực tế \cite{postgres}.
+Ví dụ 1 và Ví dụ 2 là phần chính của hai demo B1, B2 trong tệp \texttt{sql/05\_security.sql} của nhóm (tệp đầy đủ còn có bước kiểm tra các role có sẵn và đóng quyền mặc định của PUBLIC trên database). Để đoạn mã ngắn gọn, hai ví dụ này đổi vai bằng lệnh \texttt{SET ROLE} từ tài khoản quản trị \texttt{postgres}; đây là cách làm rút gọn, chưa phải đăng nhập riêng bằng từng role. Kiểm thử bằng phiên đăng nhập thật của từng role được trình bày ở mục \ref{subsec:danhgia}. Ví dụ 3 là phần nhóm bổ sung cho chức năng tra cứu. Cả ba ví dụ được chạy trên PostgreSQL 17.12 với cơ sở dữ liệu dựng mới từ bộ dữ liệu mẫu, và kết quả ghi sau mỗi đoạn mã là kết quả chạy thật \cite{postgres}.
 
-\textbf{Ví dụ 1: Phân quyền theo nguyên tắc quyền tối thiểu và bảo vệ lịch sử (Demo B1).} Nhóm tạo hai role đăng nhập độc lập, không phải superuser và không sở hữu bảng nào. Role \texttt{csdl17\_admin} được đọc và ghi dữ liệu nghiệp vụ nhưng bị thu hồi quyền DELETE trên hai bảng lịch sử (B12). Role \texttt{csdl17\_reader} là cán bộ tra cứu, chỉ được đọc sáu bảng nghiệp vụ và không được đọc bảng tài khoản.
+\textbf{Ví dụ 1: Phân quyền theo nguyên tắc quyền tối thiểu và bảo vệ lịch sử (demo B1).} Nguyên tắc quyền tối thiểu nghĩa là mỗi người chỉ được cấp đúng những quyền cần cho công việc của mình. Nhóm tạo hai role có thể đăng nhập riêng, không phải superuser và không sở hữu bảng nào. Role \texttt{csdl17\_admin} được đọc và ghi dữ liệu nghiệp vụ nhưng bị thu hồi quyền DELETE trên hai bảng lịch sử (B12). Role \texttt{csdl17\_reader} là cán bộ tra cứu, chỉ được đọc sáu bảng nghiệp vụ và không được đọc bảng tài khoản.
 
 \begin{lstlisting}[style=sqlvn]
 CREATE ROLE csdl17_admin  LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE;
@@ -72,9 +72,9 @@ DELETE FROM bien_dong_cu_tru WHERE ma_bien_dong = 1;        -- bị từ chối
 RESET ROLE;
 \end{lstlisting}
 
-Khi chạy, lệnh SELECT của csdl17\_reader trả về 200 cư dân, còn lệnh UPDATE bị PostgreSQL từ chối với thông báo \textit{permission denied for table cu\_dan} (SQLSTATE 42501). Tương tự, csdl17\_admin tuy được sửa dữ liệu nhưng lệnh DELETE trên sổ biến động bị từ chối với thông báo \textit{permission denied for table bien\_dong\_cu\_tru}. Cần lưu ý rằng việc thu hồi quyền DELETE chỉ ngăn \emph{xóa vật lý} lịch sử: csdl17\_admin vẫn giữ quyền UPDATE trên hai bảng lịch sử, và các lệnh sửa này chỉ bị giới hạn bởi trigger kiểm tra B08, B09, B14 chứ không bị cấm hoàn toàn (mục \ref{subsec:danhgia}). Vì vậy, đính chính một biến động ghi sai bằng cách ghi thêm bản ghi mới là quy trình nhóm khuyến nghị để giữ dấu vết, chưa phải điều cơ sở dữ liệu bắt buộc. Nhóm không cho role demo làm chủ sở hữu bảng, vì chủ sở hữu luôn có toàn quyền trên bảng của mình và phép thử quyền khi đó sẽ không còn ý nghĩa.
+Khi chạy, lệnh SELECT của csdl17\_reader trả về 200 cư dân, còn lệnh UPDATE bị PostgreSQL từ chối với thông báo \textit{permission denied for table cu\_dan} (SQLSTATE 42501). Tương tự, csdl17\_admin tuy được sửa dữ liệu nhưng lệnh DELETE trên sổ biến động bị từ chối với thông báo \textit{permission denied for table bien\_dong\_cu\_tru}. Việc thu hồi quyền DELETE chỉ ngăn \emph{xóa vật lý} lịch sử: csdl17\_admin vẫn giữ quyền UPDATE trên hai bảng lịch sử, và các lệnh sửa này chỉ bị giới hạn bởi trigger kiểm tra B08, B09, B14 chứ không bị cấm hoàn toàn (mục \ref{subsec:danhgia}). Vì vậy, khi một biến động bị ghi sai, nhóm khuyên nên ghi thêm một bản ghi mới để đính chính thay vì sửa trực tiếp, để còn giữ dấu vết; cơ sở dữ liệu chưa bắt buộc làm như vậy. Nhóm không cho role demo làm chủ sở hữu bảng, vì chủ sở hữu luôn có toàn quyền trên bảng của mình và phép thử quyền khi đó sẽ không còn ý nghĩa.
 
-\textbf{Ví dụ 2: Dùng khung nhìn để chỉ công bố số liệu tổng hợp (Demo B2).} Cán bộ tổng hợp của phường cần biết mỗi tổ đang có bao nhiêu người cư trú, nhưng không cần biết họ tên hay ngày sinh của từng người. Nhóm tạo một view chỉ trả về mã tổ, tên tổ và số người, rồi chỉ cấp quyền trên view này cho role \texttt{csdl17\_report}, không cấp quyền trên bảng gốc.
+\textbf{Ví dụ 2: Dùng khung nhìn để chỉ công bố số liệu tổng hợp (demo B2).} Cán bộ tổng hợp của phường cần biết mỗi tổ đang có bao nhiêu người cư trú, nhưng không cần biết họ tên hay ngày sinh của từng người. Nhóm tạo một view chỉ trả về mã tổ, tên tổ và số người, rồi chỉ cấp quyền trên view này cho role \texttt{csdl17\_report}, không cấp quyền trên bảng gốc.
 
 \begin{lstlisting}[style=sqlvn]
 CREATE ROLE csdl17_report LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE;
@@ -102,7 +102,7 @@ SELECT ho_ten, ngay_sinh FROM cu_dan LIMIT 1;               -- bị từ chối
 RESET ROLE;
 \end{lstlisting}
 
-Role csdl17\_report đọc view và nhận được 8 dòng, từ Tổ 01 với 34 người tới Tổ 08 với 0 người, nhưng khi đọc thẳng bảng cu\_dan thì bị từ chối với thông báo \textit{permission denied for table cu\_dan}. Điều này làm được nhờ tùy chọn \texttt{security\_invoker = false}: view đọc các bảng nền bằng quyền của chủ sở hữu view, nên người dùng chỉ cần quyền trên view mà không cần quyền trên từng bảng bên dưới. View không trực tiếp hiển thị họ tên, ngày sinh hoặc mã cư dân; số liệu nhóm nhỏ vẫn có nguy cơ suy luận thông tin cá nhân, như giới hạn nêu ở mục \ref{subsec:danhgia}.
+Role csdl17\_report đọc view và nhận được 8 dòng, từ Tổ 01 với 34 người tới Tổ 08 với 0 người, nhưng khi đọc thẳng bảng cu\_dan thì bị từ chối với thông báo \textit{permission denied for table cu\_dan}. Điều này làm được nhờ tùy chọn \texttt{security\_invoker = false}: view đọc các bảng nền bằng quyền của chủ sở hữu view, nên người dùng chỉ cần quyền trên view mà không cần quyền trên từng bảng bên dưới. View không hiển thị họ tên, ngày sinh hay mã cư dân. Tuy vậy, với tổ có rất ít người, số liệu tổng hợp vẫn có thể giúp đoán ra thông tin cá nhân, như đã nêu ở mục \ref{subsec:danhgia}.
 
 \textbf{Ví dụ 3: Chống tấn công SQL Injection ở chức năng tra cứu cư dân.} Chức năng tra cứu cho phép cán bộ gõ một phần họ tên để tìm cư dân. Nếu lập trình viên ghép thẳng chuỗi người dùng nhập vào một câu lệnh động như dưới đây thì kẻ xấu có thể chèn thêm mã SQL của họ.
 
@@ -124,7 +124,7 @@ SELECT COUNT(*) FROM fn_tim_cu_dan_sai('x'' OR 1=1 --');
 -- điều kiện 1=1 luôn đúng nên trả về toàn bộ 200 cư dân
 \end{lstlisting}
 
-Cách khắc phục là để giá trị người dùng nhập vào chỉ đóng vai trò tham số. Khi viết hàm bằng SQL thuần, PostgreSQL luôn coi \texttt{p\_ten} là dữ liệu cần so khớp, không bao giờ coi nó là một phần của câu lệnh. Nếu bắt buộc phải dùng câu lệnh động, cần truyền giá trị qua \texttt{EXECUTE \ldots{} USING} hoặc định dạng bằng \texttt{format('\%L', \ldots)} chứ không ghép chuỗi.
+Cách khắc phục là chỉ dùng giá trị người dùng nhập như một tham số. Khi viết hàm bằng SQL thuần, PostgreSQL luôn coi \texttt{p\_ten} là dữ liệu cần so khớp, không bao giờ coi nó là một phần của câu lệnh. Nếu buộc phải dùng câu lệnh động thì truyền giá trị qua \texttt{EXECUTE \ldots{} USING} hoặc đưa vào bằng \texttt{format('\%L', \ldots)}, không ghép chuỗi.
 
 \begin{lstlisting}[style=sqlvn]
 -- CÁCH VIẾT ĐÚNG: giá trị nhập vào chỉ được dùng như một tham số
@@ -150,7 +150,7 @@ Hai hàm của Ví dụ 3 không nằm trong các script cài đặt của nhóm
 \subsection{Đánh giá kết quả và giới hạn bảo mật}
 \label{subsec:danhgia}
 
-\textbf{Kết quả kiểm thử.} Nhóm kiểm tra cấu hình quyền, thao tác được phép và thao tác bị từ chối; mỗi phép thử đối chiếu kết quả kỳ vọng với kết quả thực tế. Bảng \ref{tab:ketquabaomat} tóm tắt kết quả. Các kiểm thử đã được thực hiện trên PostgreSQL 17.11 với Windows 11 và PostgreSQL 17.12 với CSDL thử nghiệm dựng mới. Phiên đăng nhập độc lập qua TCP được kiểm tra với SCRAM-SHA-256; phép thử cục bộ không dùng mật khẩu chỉ áp dụng trong cụm tạm biệt lập. Script và log chi tiết được lưu trong hồ sơ kiểm thử của dự án.
+\textbf{Kết quả kiểm thử.} Nhóm kiểm tra cấu hình quyền, các thao tác được phép và các thao tác phải bị từ chối; mỗi phép thử so kết quả mong đợi với kết quả chạy thật. Bảng \ref{tab:ketquabaomat} tóm tắt kết quả. Các phép thử được chạy trên PostgreSQL 17.11 (Windows 11) và trên PostgreSQL 17.12 với cơ sở dữ liệu thử nghiệm tạo mới. Phiên đăng nhập riêng qua TCP được kiểm tra với cách xác thực SCRAM-SHA-256; phép thử cục bộ không dùng mật khẩu chỉ chạy trong một cụm PostgreSQL tạm, tách riêng. Script và log chi tiết được lưu trong hồ sơ kiểm thử của dự án.
 
 \begin{table}[H]
 \centering
@@ -175,13 +175,13 @@ Ví dụ của chương và quyền admin (\texttt{report\_security\_ch6.sql}) &
 \label{tab:ketquabaomat}
 \end{table}
 
-Khác với \texttt{SET ROLE} ở Ví dụ 1 và 2, các phép thử đăng nhập thật mở phiên mới bằng \texttt{psql -h localhost -U csdl17\_reader} (tương tự với csdl17\_report). Dòng đầu mỗi log xác nhận \texttt{session\_user} và \texttt{current\_user} đều là role demo và phiên không phải superuser, nên kết quả phản ánh đúng quyền của role khi được dùng độc lập. Mật khẩu tạm chỉ đặt cho phiên thử và được xóa ngay sau đó, không ghi vào mã nguồn. Sau các phiên thử, giá trị băm md5 của các bảng dữ liệu không đổi.
+Khác với \texttt{SET ROLE} ở Ví dụ 1 và 2, các phép thử đăng nhập thật mở phiên mới bằng \texttt{psql -h localhost -U csdl17\_reader} (tương tự với csdl17\_report). Dòng đầu mỗi log xác nhận \texttt{session\_user} và \texttt{current\_user} đều là role demo và phiên không phải superuser, nên kết quả đúng là quyền của role khi được dùng riêng. Mật khẩu tạm chỉ đặt cho phiên thử và được xóa ngay sau đó, không ghi vào mã nguồn. Sau các phiên thử, mã băm md5 của các bảng dữ liệu không đổi, tức dữ liệu không bị thay đổi.
 
-\textbf{Giới hạn của quyền csdl17\_admin.} Kiểm thử trên bộ dữ liệu mẫu, trong giao dịch có ROLLBACK, cho thấy các giới hạn sau mà thiết kế hiện tại \emph{chưa khắc phục}:
+\textbf{Hạn chế về quyền của csdl17\_admin.} Chạy thử trên bộ dữ liệu mẫu, trong giao dịch có ROLLBACK, cho thấy các hạn chế sau mà thiết kế hiện tại chưa khắc phục:
 \begin{itemize}[leftmargin=*]
     \item \textbf{Vẫn sửa được lịch sử trong phạm vi trigger cho phép.} csdl17\_admin sửa được ghi chú của một biến động, đổi tài khoản ghi nhận của biến động cũ sang một tài khoản đang hoạt động khác, và đóng một đợt cư trú chưa gắn với biến động nào. Các lệnh làm sai quan hệ ngày giữa biến động và đợt cư trú, như đổi ngày biến động hay sửa ngày kết thúc của đợt đã gắn biến động, bị trigger B09 chặn với SQLSTATE 23514.
     \item \textbf{Toàn quyền trên bảng tai\_khoan.} csdl17\_admin có SELECT, INSERT, UPDATE và DELETE trên tai\_khoan. Xóa tài khoản đã ghi biến động bị khóa ngoại chặn (23503), nhưng tài khoản chưa ghi biến động nào (tài khoản 5) thì xóa được. Admin cũng sửa được ten\_hien\_thi, vai\_tro và trang\_thai. Do nhật ký biến động chỉ lưu ma\_tai\_khoan, đổi tên hiển thị sẽ đổi cách đọc ``ai đã ghi'' của các biến động cũ; còn mở khóa một tài khoản đang KHOA thì tài khoản đó ghi lại được ngay, vì B14 chỉ kiểm tra trạng thái tại thời điểm ghi.
-    \item \textbf{Vai trò nghiệp vụ chỉ là nhãn mô tả (X01, phương án b).} Cột tai\_khoan.vai\_tro chỉ là nhãn mô tả người ghi; quyền thực tế do role PostgreSQL quyết định, và trigger B14 chỉ kiểm tra tài khoản đang HOAT\_DONG chứ không kiểm tra vai trò. Bộ dữ liệu mẫu được giữ nguyên: 13/63 biến động do tài khoản có vai trò THONG\_KE ghi và 11/63 do tài khoản QUAN\_TRI ghi. Báo cáo không khẳng định cơ sở dữ liệu ngăn tài khoản THONG\_KE ghi biến động.
+    \item \textbf{Vai trò nghiệp vụ chỉ là nhãn mô tả (B14).} Cột tai\_khoan.vai\_tro chỉ là nhãn mô tả người ghi; quyền thực tế do role PostgreSQL quyết định, và trigger B14 chỉ kiểm tra tài khoản đang HOAT\_DONG chứ không kiểm tra vai trò. Bộ dữ liệu mẫu được giữ nguyên: 13/63 biến động do tài khoản có vai trò THONG\_KE ghi và 11/63 do tài khoản QUAN\_TRI ghi. Báo cáo không khẳng định cơ sở dữ liệu ngăn tài khoản THONG\_KE ghi biến động.
 \end{itemize}
 
-\textbf{Các giới hạn khác.} VIEW tổng hợp vẫn có nguy cơ suy luận ở nhóm nhỏ. Thống kê hiện tại dùng ngày hệ thống nên kết quả thay đổi theo thời gian. Đồ án chưa triển khai bảo mật mức dòng, kiểm toán đầy đủ, mã hóa kết nối TLS hay chính sách \texttt{pg\_hba.conf} cho vận hành. Các hàm \texttt{fn\_*} vẫn cho PUBLIC quyền EXECUTE nhưng chạy với quyền người gọi (SECURITY INVOKER); nếu đổi sang SECURITY DEFINER, phải rà soát và thu hồi quyền PUBLIC phù hợp.
+\textbf{Các hạn chế khác.} Với tổ có rất ít người, số liệu của view tổng hợp vẫn có thể giúp đoán ra thông tin cá nhân. Thống kê hiện tại dùng ngày hệ thống nên kết quả thay đổi theo thời gian. Đồ án chưa triển khai bảo mật mức dòng, kiểm toán đầy đủ, mã hóa kết nối TLS hay chính sách \texttt{pg\_hba.conf} cho vận hành. Các hàm \texttt{fn\_*} vẫn cho PUBLIC quyền EXECUTE nhưng chạy với quyền của người gọi (SECURITY INVOKER). Nếu đổi sang SECURITY DEFINER (chạy với quyền của người tạo hàm) thì phải rà soát lại và thu hồi quyền của PUBLIC cho phù hợp.

@@ -2,7 +2,7 @@
 -- BTL CSDL Đề tài 17 — Nhóm 38
 -- tests/report_bang_thu_rang_buoc.sql
 --
--- Tái lập 6 thao tác vi phạm ràng buộc ở bảng "Kết quả thử các câu lệnh vi
+-- Tái lập 7 thao tác vi phạm ràng buộc ở bảng "Kết quả thử các câu lệnh vi
 -- phạm ràng buộc" (Chương 3, chuong3.tex, label tab:thurangbuoc) và ghi lại
 -- SQLSTATE, tên ràng buộc, thông báo THỰC TẾ của PostgreSQL.
 --
@@ -69,6 +69,12 @@ SELECT pg_temp.thu('5', 'Xóa cư dân 1 đang có đợt cư trú',
 -- 6. Họ tên chỉ gồm khoảng trắng
 SELECT pg_temp.thu('6', 'Thêm cư dân có họ tên chỉ gồm khoảng trắng',
   $$INSERT INTO cu_dan (ho_ten, ngay_sinh, gioi_tinh) VALUES ('   ', DATE '2000-01-01', 'Nam')$$);
+
+-- 7. E1 (sửa X07, 24/11): dùng lại đợt 16, đã là đợt cũ của biến động 2.
+-- Ngày 2026-10-15 khớp B09 nên trigger cho qua; UNIQUE uq_bd_qua_trinh_cu chặn.
+SELECT pg_temp.thu('7', 'CHUYEN_DI dùng lại đợt cũ 16 đã có biến động 2, ngày 2026-10-15',
+  $$INSERT INTO bien_dong_cu_tru (loai_bien_dong, ma_qua_trinh_cu, ma_qua_trinh_moi, ngay_bien_dong, ma_tai_khoan)
+    VALUES ('CHUYEN_DI', 16, NULL, DATE '2026-10-15', 2)$$);
 
 \pset footer on
 SELECT stt, thao_tac, sqlstate, rang_buoc, thong_bao FROM kq_thu ORDER BY stt;

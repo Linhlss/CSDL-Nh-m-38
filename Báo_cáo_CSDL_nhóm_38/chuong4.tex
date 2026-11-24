@@ -5,14 +5,15 @@
 
 \phantomsection
 \label{subsec:qd}
-Các câu hỏi về người đang cư trú xét hiệu lực theo quy tắc B05 tại ngày hiện tại của phiên PostgreSQL. Đại số quan hệ cổ điển không có NULL, nên nhóm chuẩn bị đầu vào bằng SQL trước khi áp dụng các phép toán. Quan hệ $Q_{\mathrm{ht}}$ gồm các đợt còn hiệu lực và chỉ giữ các cột bắt buộc:
+Với các câu hỏi về người đang cư trú, một đợt còn hiệu lực hay không được xét theo quy tắc B05, với ngày hiện tại là CURRENT\_DATE của phiên PostgreSQL. Cột ngay\_ket\_thuc của QT để trống khi đợt chưa kết thúc, nên nhóm dùng phép chọn có điều kiện IS NULL để xét trường hợp này. Gọi $L$ là danh sách năm cột ma\_qua\_trinh, ma\_cu\_dan, ma\_ho, loai\_cu\_tru, ngay\_bat\_dau. Hai quan hệ $Q_{\mathrm{bd}}$ (các đợt đã bắt đầu) và $Q_{\mathrm{ht}}$ (các đợt còn hiệu lực) dùng ở các câu sau được định nghĩa như sau:
 \begin{equation*}
 \begin{aligned}
-Q_{\mathrm{ht}}(&\text{ma\_qua\_trinh},\ \text{ma\_cu\_dan},\ \text{ma\_ho},\\
-    &\text{loai\_cu\_tru},\ \text{ngay\_bat\_dau})
+QB &\leftarrow \sigma_{\text{ngay\_bat\_dau} \le \text{CURRENT\_DATE}}(QT)\\
+Q_{\mathrm{bd}} &\leftarrow \pi_{L}(QB)\\
+Q_{\mathrm{ht}} &\leftarrow \pi_{L}\left(\sigma_{\text{ngay\_ket\_thuc IS NULL} \ \lor\ \text{ngay\_ket\_thuc} \ge \text{CURRENT\_DATE}}(QB)\right)
 \end{aligned}
 \end{equation*}
-Năm cột trên đều NOT NULL. Quan hệ $Q_{\mathrm{bd}}$ có cùng lược đồ nhưng gồm tất cả đợt đã bắt đầu. Bước chuẩn bị $Q_{\mathrm{bd}}$ lọc \texttt{ngay\_bat\_dau <= CURRENT\_DATE}; $Q_{\mathrm{ht}}$ còn yêu cầu ngày kết thúc để trống hoặc không trước \texttt{CURRENT\_DATE}. Cả hai dùng SELECT DISTINCT năm cột trên, không đưa cột ngày kết thúc vào đầu vào đại số. Cách xử lý này loại đợt chưa bắt đầu và giữ NULL ở ngoài các phép toán cổ điển.
+Phép chọn thứ hai giữ các đợt chưa có ngày kết thúc và các đợt kết thúc từ hôm nay trở đi. Khi ngay\_ket\_thuc để trống, phép so sánh ngay\_ket\_thuc $\ge$ CURRENT\_DATE không cho giá trị đúng, nên nếu bỏ vế IS NULL thì mọi đợt đang mở đều bị loại. Năm cột trong $L$ đều NOT NULL và không gồm ngay\_ket\_thuc, nên từ $Q_{\mathrm{bd}}$ và $Q_{\mathrm{ht}}$ trở đi các phép toán không còn gặp giá trị trống.
 
 \textbf{Câu 1.} Cho biết họ tên và ngày sinh của các cư dân nữ, phục vụ việc lập danh sách hoạt động của chi hội phụ nữ.
 \begin{equation*}
@@ -27,7 +28,7 @@ R &\leftarrow \sigma_{\text{ten\_to} = \text{'Tổ 01'}}(TDP)\\
 KQ &\leftarrow \pi_{\text{ma\_dia\_chi},\ \text{dia\_chi\_chuan}}\left(R \bowtie_{R.\text{ma\_to} = DC.\text{ma\_to}} DC\right)
 \end{aligned}
 \end{equation*}
-Nhóm chọn tổ trước rồi mới kết nối để giảm số bộ ở đầu vào của phép kết nối theo biến đổi đại số. Đây là cách tổ chức biểu thức, không phải kết luận đo hiệu năng thực thi.
+Nhóm lọc tổ trước rồi mới kết nối để phép kết nối nhận ít bộ hơn. Nhóm không đo thời gian chạy để kiểm chứng nhận xét này.
 
 \textbf{Câu 3.} Cho biết mã và họ tên các cư dân đang thường trú tại tổ có mã 1. Biểu thức khá dài nên nhóm viết thành từng bước với các quan hệ trung gian.
 \begin{equation*}
@@ -47,7 +48,7 @@ R &\leftarrow \pi_{\text{ma\_cu\_dan}}\left(Q_{\mathrm{bd}}\right) - \pi_{\text{
 KQ &\leftarrow \pi_{\text{ma\_cu\_dan},\ \text{ho\_ten}}(R \bowtie CD)
 \end{aligned}
 \end{equation*}
-Phép hiệu lấy những người có đợt đã bắt đầu trong $Q_{\mathrm{bd}}$, trừ đi những người còn đợt hiệu lực trong $Q_{\mathrm{ht}}$. Cả hai vế đều chiếu về mã cư dân, nên tương thích với phép hiệu. Ở bước sau, $R$ chỉ có cột ma\_cu\_dan nên dùng kết nối tự nhiên với CD là an toàn.
+Phép hiệu lấy những người có đợt đã bắt đầu trong $Q_{\mathrm{bd}}$, trừ đi những người còn đợt hiệu lực trong $Q_{\mathrm{ht}}$. Cả hai vế đều chỉ còn cột mã cư dân nên lấy hiệu được. Ở bước sau, $R$ chỉ có cột ma\_cu\_dan nên dùng kết nối tự nhiên với CD là an toàn.
 
 \textbf{Câu 5.} Cho biết mã các cư dân đã từng tạm trú và cũng đã từng thường trú trong phường.
 \begin{equation*}
@@ -90,23 +91,23 @@ R &\leftarrow \sigma_{\substack{\text{loai\_bien\_dong} = \text{'CHUYEN\_DI'}\\ 
 KQ &\leftarrow \pi_{\text{ten\_hien\_thi}}\left(R \bowtie_{R.\text{ma\_tai\_khoan} = TK.\text{ma\_tai\_khoan}} TK\right)
 \end{aligned}
 \end{equation*}
-Phép chọn trên BD gộp ba điều kiện bằng phép hội $\wedge$ để lấy đúng loại biến động trong khoảng thời gian cần xét, rồi mới kết nối với TK để lấy tên cán bộ. Vì phép chiếu tự loại các bộ trùng nhau, một cán bộ ghi nhiều lần chuyển đi trong tháng cũng chỉ xuất hiện một lần trong kết quả.
+Phép chọn trên BD nối ba điều kiện bằng phép ``và'' ($\wedge$) để lấy đúng loại biến động trong khoảng thời gian cần xét, rồi mới kết nối với TK để lấy tên cán bộ. Vì phép chiếu tự loại các bộ trùng nhau, một cán bộ ghi nhiều lần chuyển đi trong tháng cũng chỉ xuất hiện một lần trong kết quả.
 
 \textbf{Câu 9.} Tìm những tài khoản đã ghi nhận đủ các loại biến động xuất hiện trong dữ liệu.
 \begin{equation*}
 \pi_{\text{ma\_tai\_khoan},\ \text{loai\_bien\_dong}}(BD) \div \pi_{\text{loai\_bien\_dong}}(BD)
 \end{equation*}
-Quan hệ bị chia $\pi_{\text{ma\_tai\_khoan},\ \text{loai\_bien\_dong}}(BD)$ gồm các cặp (tài khoản, loại biến động) đã từng được ghi; quan hệ chia $\pi_{\text{loai\_bien\_dong}}(BD)$ là tập các loại biến động có trong hệ thống. Kết quả có lược đồ là phần còn lại $\{\text{ma\_tai\_khoan}\}$, gồm những tài khoản mà khi ghép với \emph{mọi} bộ của quan hệ chia đều có mặt trong quan hệ bị chia. Đây là dạng câu hỏi có chữ ``tất cả'' mà các phép chọn, chiếu, kết nối thông thường không diễn đạt trực tiếp được. Quan hệ chia ở đây lấy từ dữ liệu đã ghi; nếu muốn hiểu ``tất cả loại'' theo miền giá trị của CHECK thì thay bằng quan hệ hằng gồm ba bộ CHUYEN\_DEN, CHUYEN\_DI, CHUYEN\_NOI\_BO. Trên bộ dữ liệu mẫu cả ba loại đều đã xuất hiện nên hai cách hiểu cho cùng kết quả. Nhóm kiểm chứng bằng hai câu SQL độc lập, một câu dùng hai lớp NOT EXISTS và một câu đếm số loại phân biệt của mỗi tài khoản: cả hai đều trả về bốn tài khoản 1, 2, 3, 4; tài khoản 5 chưa ghi biến động nào nên không có bộ nào trong quan hệ bị chia và không thể xuất hiện trong kết quả.
+Quan hệ bị chia $\pi_{\text{ma\_tai\_khoan},\ \text{loai\_bien\_dong}}(BD)$ gồm các cặp (tài khoản, loại biến động) đã từng được ghi; quan hệ chia $\pi_{\text{loai\_bien\_dong}}(BD)$ là các loại biến động có trong dữ liệu. Kết quả chỉ còn cột ma\_tai\_khoan, gồm những tài khoản đã ghi đủ mọi loại có trong quan hệ chia. Phép chia dùng cho các câu hỏi có chữ ``tất cả'', loại câu hỏi mà phép chọn, chiếu và kết nối không viết trực tiếp được. Ở đây quan hệ chia lấy từ dữ liệu đã ghi. Nếu hiểu ``tất cả các loại'' là mọi giá trị mà CHECK cho phép thì thay bằng một quan hệ cố định gồm ba bộ CHUYEN\_DEN, CHUYEN\_DI, CHUYEN\_NOI\_BO. Trong bộ dữ liệu mẫu cả ba loại đều đã có nên hai cách hiểu cho cùng kết quả. Nhóm kiểm tra lại bằng hai câu SQL viết theo hai cách khác nhau, một câu dùng hai lớp NOT EXISTS và một câu đếm số loại khác nhau của mỗi tài khoản: cả hai đều trả về bốn tài khoản 1, 2, 3, 4. Tài khoản 5 chưa ghi biến động nào nên không có mặt trong quan hệ bị chia và không thể có trong kết quả.
 
 \textbf{Câu 10.} Đếm số nhân khẩu đang cư trú hiện tại của từng hộ.
 \begin{equation*}
 {}_{\text{ma\_ho}}\,\gamma_{\,\text{COUNT(ma\_cu\_dan)} \rightarrow \text{so\_nhan\_khau}}\left(\pi_{\text{ma\_ho},\ \text{ma\_cu\_dan}}(Q_{\mathrm{ht}})\right)
 \end{equation*}
-Phép gom nhóm $\gamma$ (một số giáo trình ký hiệu là $\Im$) không thuộc các phép toán của đại số quan hệ cổ điển mà thuộc \textbf{đại số quan hệ mở rộng}, vốn bổ sung phép gom nhóm và hàm tổng hợp như COUNT \cite{elmasri,silberschatz}. Phép này chia các cặp (hộ, cư dân) theo ma\_ho rồi đếm số cư dân trong mỗi nhóm. Nhóm chiếu về cặp (ma\_ho, ma\_cu\_dan) trước khi gom nhóm để một người có cả đợt thường trú và đợt tạm trú trong cùng hộ chỉ được đếm một lần, đúng với quy tắc B17 là số người phải tính theo mã cư dân phân biệt. Trên bộ dữ liệu mẫu hiện tại chưa có hộ nào rơi vào trường hợp này, nhưng phép chiếu vẫn cần để biểu thức đúng với mọi dữ liệu hợp lệ. Kết quả có 56 hộ đang có người hiện tại, trong đó 40 hộ có từ 3 nhân khẩu trở lên, khớp với câu 3 ở Chương \ref{sec:chuong5}.
+Phép gom nhóm $\gamma$ (một số giáo trình ký hiệu là $\Im$) không có trong đại số quan hệ cổ điển mà thuộc đại số quan hệ mở rộng, phần bổ sung thêm phép gom nhóm và các hàm tính tổng hợp như COUNT \cite{elmasri,silberschatz}. Phép này chia các cặp (hộ, cư dân) theo ma\_ho rồi đếm số cư dân trong từng nhóm. Nhóm chiếu về cặp (ma\_ho, ma\_cu\_dan) trước khi gom nhóm để một người vừa có đợt thường trú vừa có đợt tạm trú trong cùng hộ chỉ được đếm một lần, đúng quy tắc B17: số người được đếm theo mã cư dân, mỗi mã một lần. Bộ dữ liệu mẫu hiện chưa có hộ nào như vậy, nhưng vẫn cần phép chiếu để biểu thức đúng với mọi dữ liệu hợp lệ. Kết quả có 56 hộ đang có người ở, trong đó 40 hộ có từ 3 nhân khẩu trở lên, khớp với câu 3 ở Chương \ref{sec:chuong5}.
 
 \subsection*{Đối chiếu biểu thức đại số quan hệ với SQL}
 
-Mỗi biểu thức được dịch sang SQL theo ngữ nghĩa tập hợp: phép chiếu dùng SELECT DISTINCT; hợp, giao, hiệu lần lượt dùng UNION, INTERSECT, EXCEPT; phép chia dùng hai lớp NOT EXISTS; phép gom nhóm dùng GROUP BY. Các câu tương ứng ở Chương \ref{sec:chuong5} được so sánh tập kết quả theo cả hai chiều. Bảng \ref{tab:doichieura} trình bày số liệu minh họa trên bộ dữ liệu mẫu tại thời điểm thực nghiệm. Các kết quả về cư trú hiện tại có thể thay đổi theo ngày hệ thống; việc kiểm chứng đối chiếu truy vấn dùng cùng ngày hệ thống, không gắn kết quả với một ngày cố định.
+Mỗi biểu thức được dịch sang SQL sao cho kết quả là một tập hợp, không có dòng trùng: phép chiếu dùng SELECT DISTINCT; hợp, giao, hiệu lần lượt dùng UNION, INTERSECT, EXCEPT; phép chia dùng hai lớp NOT EXISTS; phép gom nhóm dùng GROUP BY. Kết quả của mỗi câu được so với câu tương ứng ở Chương \ref{sec:chuong5} theo cả hai chiều, tức là không có dòng nào chỉ xuất hiện ở một bên. Bảng \ref{tab:doichieura} là số liệu trên bộ dữ liệu mẫu tại thời điểm chạy thử. Các kết quả về người đang cư trú có thể thay đổi theo ngày hệ thống; khi đối chiếu, hai bên chạy với cùng một ngày hệ thống chứ không gắn với một ngày cố định.
 
 \begin{table}[H]
 \centering

@@ -1,7 +1,7 @@
 \section{TRUY VẤN BẰNG SQL}
 \label{sec:chuong5}
 
-Chương này trình bày 10 tình huống SQL minh họa kết nối nhiều bảng, gom nhóm, truy vấn con, phép toán tập hợp và xử lý ngày. Các câu hỏi về cư trú hiện tại dùng \texttt{CURRENT\_DATE} của phiên PostgreSQL. Truy vấn được kiểm chứng trên cơ sở dữ liệu dựng mới từ schema, ràng buộc và bộ dữ liệu mẫu. Các số liệu sau mỗi câu minh họa kết quả tại thời điểm thực nghiệm; số người đang cư trú hoặc đủ tuổi có thể thay đổi khi chạy vào ngày khác. Bộ câu hỏi này được lưu trong \texttt{tests/report\_sql\_01\_10.sql} và khác bộ QSQL01--QSQL10 trong hồ sơ kỹ thuật.
+Chương này trình bày 10 câu truy vấn SQL, dùng kết nối nhiều bảng, gom nhóm, truy vấn con, phép toán tập hợp và xử lý ngày tháng. Các câu hỏi về người đang cư trú dùng \texttt{CURRENT\_DATE} của phiên PostgreSQL. Mọi truy vấn được chạy thử trên cơ sở dữ liệu tạo mới từ schema, ràng buộc và bộ dữ liệu mẫu. Số liệu ghi sau mỗi câu là kết quả lúc chạy thử; số người đang cư trú hoặc đủ tuổi có thể khác nếu chạy vào ngày khác. Bộ câu hỏi này được lưu trong \texttt{tests/report\_sql\_01\_10.sql} và khác bộ QSQL01--QSQL10 trong hồ sơ kỹ thuật.
 
 \textbf{Câu 1.} Lập danh sách cư dân đang thường trú tại tổ 1, kèm mã hộ và địa chỉ, sắp xếp theo địa chỉ để cán bộ tiện đi kiểm tra thực tế.
 
@@ -18,7 +18,7 @@ WHERE dc.ma_to = 1
 ORDER BY dc.dia_chi_chuan, cd.ho_ten;
 \end{lstlisting}
 
-Câu lệnh nối bốn bảng theo đúng chuỗi khóa ngoại cư dân $\rightarrow$ quá trình $\rightarrow$ hộ $\rightarrow$ địa chỉ, sau đó lọc theo tổ và theo điều kiện hiệu lực hiện tại. Nhờ ràng buộc B06, mỗi người có nhiều nhất một đợt thường trú hiệu lực tại một ngày, nên không cần DISTINCT. Trên dữ liệu mẫu, kết quả có 23 cư dân.
+Câu lệnh nối bốn bảng theo đúng chuỗi khóa ngoại cư dân $\rightarrow$ quá trình $\rightarrow$ hộ $\rightarrow$ địa chỉ, rồi lọc theo tổ và theo điều kiện đợt còn hiệu lực. Nhờ ràng buộc B06, vào một ngày mỗi người có nhiều nhất một đợt thường trú còn hiệu lực, nên không cần DISTINCT. Trên dữ liệu mẫu, kết quả có 23 cư dân.
 
 \textbf{Câu 2.} Thống kê số người thường trú, tạm trú và tổng số người đang cư trú của từng tổ, kể cả những tổ chưa có người cư trú.
 
@@ -53,7 +53,7 @@ HAVING COUNT(DISTINCT qt.ma_cu_dan) >= 3
 ORDER BY so_nhan_khau DESC, h.ma_ho;
 \end{lstlisting}
 
-Ở câu này cần phân biệt rõ WHERE và HAVING: WHERE lọc từng dòng trước khi gom nhóm nên nhóm dùng để bỏ các đợt không còn hiệu lực, còn HAVING lọc trên kết quả sau khi gom nhóm, vì vậy điều kiện về số lượng bắt buộc phải đặt ở HAVING. Trên dữ liệu mẫu có 40 hộ thỏa mãn, nhiều nhất là 7 nhân khẩu.
+Câu này dùng cả WHERE và HAVING. WHERE lọc từng dòng trước khi gom nhóm, nên được dùng để bỏ các đợt không còn hiệu lực. HAVING lọc sau khi đã gom nhóm, nên điều kiện về số nhân khẩu phải đặt ở HAVING. Trên dữ liệu mẫu có 40 hộ thỏa mãn, hộ đông nhất có 7 nhân khẩu.
 
 \textbf{Câu 4.} Liệt kê những cư dân đã từng cư trú trong phường nhưng hiện tại không còn đợt nào hiệu lực, tức là đã chuyển đi hoặc hết hạn tạm trú.
 
@@ -72,7 +72,7 @@ WHERE EXISTS (
 ORDER BY cd.ma_cu_dan;
 \end{lstlisting}
 
-Đây là cách viết bằng SQL của phép hiệu ở câu 4 Chương \ref{sec:chuong4}. Hai truy vấn con tương quan (correlated subquery) được xét lại cho từng cư dân: EXISTS giữ những người đã từng cư trú, còn NOT EXISTS loại những người vẫn còn đợt hiệu lực. Trên dữ liệu mẫu, kết quả có 17 cư dân.
+Đây là cách viết bằng SQL của phép hiệu ở câu 4 Chương \ref{sec:chuong4}. Hai truy vấn con tương quan (correlated subquery) được chạy lại cho từng cư dân: EXISTS giữ những người đã từng cư trú, còn NOT EXISTS loại những người vẫn còn đợt hiệu lực. Trên dữ liệu mẫu, kết quả có 17 cư dân.
 
 \textbf{Câu 5.} Xem các đợt cư trú đã lưu của cư dân mã 92 theo thứ tự thời gian.
 
@@ -86,7 +86,7 @@ WHERE qt.ma_cu_dan = 92
 ORDER BY qt.ngay_bat_dau;
 \end{lstlisting}
 
-Trên dữ liệu mẫu, câu lệnh trả về ba đợt: thường trú tại hộ 56 từ 01/8/2022 đến 01/7/2026, tạm trú tại hộ 15 từ 11/8/2025 và thường trú tại hộ 20 từ 02/7/2026. Kết quả cho thấy hai điều: đợt thường trú mới bắt đầu đúng một ngày sau khi đợt cũ kết thúc (B09), và một người có thể vừa thường trú vừa tạm trú cùng lúc vì hai đợt khác loại (B06). Việc tách thực thể Quá trình cư trú giúp tra cứu cả đợt đã kết thúc lẫn đợt còn hiệu lực trong dữ liệu đã lưu.
+Trên dữ liệu mẫu, câu lệnh trả về ba đợt: thường trú tại hộ 56 từ 01/8/2022 đến 01/7/2026, tạm trú tại hộ 15 từ 11/8/2025 và thường trú tại hộ 20 từ 02/7/2026. Đợt thường trú mới bắt đầu đúng một ngày sau khi đợt cũ kết thúc (B09). Một người có thể vừa thường trú vừa tạm trú cùng lúc vì hai đợt khác loại (B06). Do quá trình cư trú được tách thành thực thể riêng, câu lệnh lấy được cả đợt đã kết thúc lẫn đợt còn hiệu lực.
 
 \textbf{Câu 6.} Thống kê số biến động của từng loại theo từng tháng trong năm 2026.
 
@@ -99,7 +99,7 @@ GROUP BY thang, loai_bien_dong
 ORDER BY thang, loai_bien_dong;
 \end{lstlisting}
 
-Nhóm lọc năm bằng khoảng ngày thay vì viết \texttt{EXTRACT(YEAR FROM ngay\_bien\_dong) = 2026} để tạo điều kiện sử dụng chỉ mục thông thường trên cột ngày. PostgreSQL còn hỗ trợ chỉ mục trên biểu thức; kế hoạch thực thi phụ thuộc chỉ mục và dữ liệu, nên cách viết này không tự bảo đảm truy vấn nhanh hơn \cite{pgexpressionindex}. PostgreSQL cũng cho phép GROUP BY theo bí danh cột (thang) nên câu lệnh gọn hơn. Trên dữ liệu mẫu, kết quả có 21 dòng (tháng, loại) với tổng cộng 29 biến động trong năm 2026; 11 tháng có biến động, nhiều nhất là tháng 11 với 6 biến động. Tháng 2 không có biến động nào nên không xuất hiện trong kết quả: GROUP BY chỉ tạo nhóm từ những dòng có thật, muốn hiện cả tháng có số 0 thì phải kết nối ngoài với một bảng danh sách tháng. Kết quả gồm cả hai biến động chuyển đến có ngày hiệu lực trong tương lai (25/11 và 01/12/2026), vì đặc tả cho phép đăng ký trước ngày chuyển.
+Nhóm lọc năm bằng khoảng ngày thay vì viết \texttt{EXTRACT(YEAR FROM ngay\_bien\_dong) = 2026} để PostgreSQL có thể dùng chỉ mục thông thường trên cột ngày. PostgreSQL cũng có chỉ mục trên biểu thức, và cách PostgreSQL chọn kế hoạch chạy còn phụ thuộc vào chỉ mục và dữ liệu, nên cách viết này không chắc chắn làm truy vấn nhanh hơn \cite{pgexpressionindex}. PostgreSQL cho phép GROUP BY theo tên cột đặt lại (thang) nên câu lệnh gọn hơn. Trên dữ liệu mẫu, kết quả có 21 dòng (tháng, loại) với tổng cộng 29 biến động trong năm 2026; 11 tháng có biến động, nhiều nhất là tháng 11 với 6 biến động. Tháng 2 không có biến động nào nên không có trong kết quả: GROUP BY chỉ tạo nhóm từ những dòng có thật; muốn hiện cả tháng có số 0 thì phải kết nối ngoài với một bảng danh sách tháng. Kết quả có cả hai biến động chuyển đến có ngày chuyển trong tương lai (25/11 và 01/12/2026), vì đặc tả cho phép đăng ký trước ngày chuyển.
 
 \textbf{Câu 7.} Với mỗi lần chuyển nội bộ, cho biết họ tên cư dân, hộ cũ, hộ mới và cán bộ đã ghi nhận.
 
@@ -147,7 +147,7 @@ WHERE cd.ma_cu_dan IN (
 ORDER BY cd.ma_cu_dan;
 \end{lstlisting}
 
-Toán tử INTERSECT trong SQL chính là phép giao trong đại số quan hệ và tương ứng với câu 5 của Chương \ref{sec:chuong4}. Truy vấn con lấy ra mã những người thỏa cả hai điều kiện, còn truy vấn ngoài chỉ làm thêm việc lấy họ tên từ bảng cu\_dan để hiển thị. Trên dữ liệu mẫu có 31 cư dân như vậy.
+Toán tử INTERSECT là phép giao của đại số quan hệ; câu này tương ứng với câu 5 ở Chương \ref{sec:chuong4}. Truy vấn con lấy mã những người thỏa cả hai điều kiện, truy vấn ngoài chỉ lấy thêm họ tên từ bảng cu\_dan để hiển thị. Trên dữ liệu mẫu có 31 cư dân như vậy.
 
 \textbf{Câu 10.} Lập danh sách cư dân đủ 18 tuổi trở lên đang thường trú hiện tại, dùng làm căn cứ lập danh sách cử tri.
 
@@ -164,11 +164,11 @@ WHERE qt.loai_cu_tru = 'THUONG_TRU'
 ORDER BY dc.dia_chi_chuan, cd.ho_ten;
 \end{lstlisting}
 
-Điều kiện tuổi dùng \texttt{CURRENT\_DATE - INTERVAL '18 years'} để so sánh ngày sinh với mốc đủ mười tám tuổi. Cách này xét cả tháng và ngày, tránh tính nhầm người chưa đến sinh nhật khi chỉ lấy hiệu số năm. Người vừa đủ tuổi trong ngày được đưa vào kết quả, người còn thiếu một ngày thì chưa được tính. Kết quả minh họa có 131 cư dân.
+Điều kiện tuổi dùng \texttt{CURRENT\_DATE - INTERVAL '18 years'} để so ngày sinh với ngày cách hôm nay đúng mười tám năm. Cách này xét cả tháng và ngày, nên không tính nhầm người chưa đến sinh nhật như khi chỉ lấy năm hiện tại trừ năm sinh. Người tròn 18 tuổi đúng hôm nay được tính, người còn thiếu một ngày thì chưa. Lúc chạy thử, kết quả có 131 cư dân.
 
 \subsection*{Tóm tắt kết quả chạy 10 câu SQL}
 
-Bảng \ref{tab:ketquasql} tóm tắt kết quả minh họa. Các truy vấn về hiện tại được đối chiếu với cách tính độc lập cùng dùng ngày hệ thống; các câu hỏi lịch sử được kiểm tra trên dữ liệu mẫu. Bộ kiểm chứng còn có các ca đợt bắt đầu hôm nay, kết thúc hôm nay, chưa bắt đầu, đã kết thúc và người vừa đủ hoặc chưa đủ 18 tuổi. Số dòng minh họa không được dùng làm hằng số để quyết định tính đúng của truy vấn phụ thuộc ngày.
+Bảng \ref{tab:ketquasql} tóm tắt kết quả. Các truy vấn về hiện tại được so với một cách tính khác, viết riêng và cùng dùng ngày hệ thống; các câu hỏi về lịch sử được kiểm tra trên dữ liệu mẫu. Bộ kiểm tra còn có các trường hợp đợt bắt đầu hôm nay, kết thúc hôm nay, chưa bắt đầu, đã kết thúc, và người vừa đủ hoặc chưa đủ 18 tuổi. Với các truy vấn phụ thuộc ngày, nhóm không dùng số dòng trong bảng làm căn cứ để kết luận truy vấn đúng hay sai.
 
 \begin{table}[H]
 \centering

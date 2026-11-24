@@ -170,66 +170,48 @@ BEGIN
 END $$;
 
 
--- E1: phải FAIL khi một đợt xuất hiện nhiều lần trong cùng vai trò.
--- Cả hai lệnh INSERT đều hợp lệ theo B08/B09; chỉ assertion E1 phát hiện.
--- X07 (TV1, 20/11): E1 là assertion validation, KHÔNG chặn INSERT tức thì.
--- Test tách hai bước: (1) INSERT trùng phải THÀNH CÔNG — nếu bị trigger/CHECK
--- khác chặn thì lỗi lan ra ngoài và script dừng, không được tính là PASS E1;
--- (2) fn_assert_e1 phải báo 23514. Sau đó hoàn tác INSERT thử bằng SQLSTATE riêng.
+-- E1: một đợt không được xuất hiện nhiều lần trong cùng vai trò.
+-- Cả hai lệnh INSERT đều hợp lệ theo B08/B09 (trigger cho qua); từ 24/11
+-- (sửa X07) UNIQUE uq_bd_qua_trinh_cu / uq_bd_qua_trinh_moi phải chặn ngay
+-- lúc INSERT với 23505. Nếu INSERT trùng lọt qua thì test FAIL.
 DO $e1_old$
-DECLARE v_id BIGINT; v_lan INT;
+DECLARE v_rang_buoc TEXT;
 BEGIN
     BEGIN
         INSERT INTO bien_dong_cu_tru(
            loai_bien_dong,ma_qua_trinh_cu,ma_qua_trinh_moi,ngay_bien_dong,ma_tai_khoan
-        ) VALUES ('CHUYEN_DI',99002,NULL,'2026-06-15',99001)
-        RETURNING ma_bien_dong INTO v_id;
-        SELECT count(*) INTO v_lan FROM bien_dong_cu_tru WHERE ma_qua_trinh_cu = 99002;
-        IF v_lan < 2 THEN
-            RAISE EXCEPTION 'E1 OLD: không dựng được dữ liệu trùng (% lần)', v_lan;
+        ) VALUES ('CHUYEN_DI',99002,NULL,'2026-06-15',99001);
+        RAISE EXCEPTION 'TEST FAIL E1_CU: INSERT trùng vai trò cũ không bị chặn';
+    EXCEPTION WHEN unique_violation THEN
+        GET STACKED DIAGNOSTICS v_rang_buoc = CONSTRAINT_NAME;
+        IF v_rang_buoc <> 'uq_bd_qua_trinh_cu' THEN
+            RAISE EXCEPTION 'TEST FAIL E1_CU: sai ràng buộc %', v_rang_buoc;
         END IF;
-        BEGIN
-            PERFORM fn_assert_e1();
-        EXCEPTION WHEN SQLSTATE '23514' THEN
-            RAISE NOTICE '[PASS] E1_CU: INSERT trùng vai trò cũ được ghi (sự kiện %, đợt 99002 là đợt cũ % lần); fn_assert_e1 báo 23514; đã rollback',
-                v_id, v_lan;
-            RAISE EXCEPTION 'hoàn tác INSERT thử E1_CU' USING ERRCODE = 'P0901';
-        END;
-        RAISE EXCEPTION 'E1 OLD: assertion không phát hiện dữ liệu trùng';
-    EXCEPTION WHEN SQLSTATE 'P0901' THEN
-        NULL;
+        RAISE NOTICE '[PASS] E1_CU: INSERT trùng vai trò cũ bị chặn ngay (23505, %)', v_rang_buoc;
     END;
     IF (SELECT count(*) FROM bien_dong_cu_tru WHERE ma_qua_trinh_cu = 99002) <> 1 THEN
-        RAISE EXCEPTION 'E1 OLD: INSERT thử chưa được hoàn tác';
+        RAISE EXCEPTION 'TEST FAIL E1_CU: dữ liệu trùng vẫn còn';
     END IF;
 END
 $e1_old$;
 
 DO $e1_new$
-DECLARE v_id BIGINT; v_lan INT;
+DECLARE v_rang_buoc TEXT;
 BEGIN
     BEGIN
         INSERT INTO bien_dong_cu_tru(
            loai_bien_dong,ma_qua_trinh_cu,ma_qua_trinh_moi,ngay_bien_dong,ma_tai_khoan
-        ) VALUES ('CHUYEN_DEN',NULL,99003,'2026-06-15',99001)
-        RETURNING ma_bien_dong INTO v_id;
-        SELECT count(*) INTO v_lan FROM bien_dong_cu_tru WHERE ma_qua_trinh_moi = 99003;
-        IF v_lan < 2 THEN
-            RAISE EXCEPTION 'E1 NEW: không dựng được dữ liệu trùng (% lần)', v_lan;
+        ) VALUES ('CHUYEN_DEN',NULL,99003,'2026-06-15',99001);
+        RAISE EXCEPTION 'TEST FAIL E1_MOI: INSERT trùng vai trò mới không bị chặn';
+    EXCEPTION WHEN unique_violation THEN
+        GET STACKED DIAGNOSTICS v_rang_buoc = CONSTRAINT_NAME;
+        IF v_rang_buoc <> 'uq_bd_qua_trinh_moi' THEN
+            RAISE EXCEPTION 'TEST FAIL E1_MOI: sai ràng buộc %', v_rang_buoc;
         END IF;
-        BEGIN
-            PERFORM fn_assert_e1();
-        EXCEPTION WHEN SQLSTATE '23514' THEN
-            RAISE NOTICE '[PASS] E1_MOI: INSERT trùng vai trò mới được ghi (sự kiện %, đợt 99003 là đợt mới % lần); fn_assert_e1 báo 23514; đã rollback',
-                v_id, v_lan;
-            RAISE EXCEPTION 'hoàn tác INSERT thử E1_MOI' USING ERRCODE = 'P0902';
-        END;
-        RAISE EXCEPTION 'E1 NEW: assertion không phát hiện dữ liệu trùng';
-    EXCEPTION WHEN SQLSTATE 'P0902' THEN
-        NULL;
+        RAISE NOTICE '[PASS] E1_MOI: INSERT trùng vai trò mới bị chặn ngay (23505, %)', v_rang_buoc;
     END;
     IF (SELECT count(*) FROM bien_dong_cu_tru WHERE ma_qua_trinh_moi = 99003) <> 1 THEN
-        RAISE EXCEPTION 'E1 NEW: INSERT thử chưa được hoàn tác';
+        RAISE EXCEPTION 'TEST FAIL E1_MOI: dữ liệu trùng vẫn còn';
     END IF;
 END
 $e1_new$;

@@ -1,7 +1,7 @@
-# BIÊN BẢN KIỂM TRA TỆP DỰ ÁN — 22/11/2026
+# BIÊN BẢN KIỂM TRA TỆP DỰ ÁN — 24/11/2026
 
 **Lệnh đã chạy:** `python3 scripts/verify_week1.py --record` từ thư mục gốc.
-**Python thực tế:** 3.13.5. **Hệ điều hành:** Darwin 27.2.0.
+**Python thực tế:** 3.13.14. **Hệ điều hành:** Windows 11.
 **Phạm vi:** kiểm tra tệp và đối chiếu cấu trúc/tài liệu, không kết nối PostgreSQL.
 **Trạng thái đọc từ nhật ký:** Gate 1 PASS; thiết kế v1. Ngày tiếp nhận: 16/11/2026; nguồn: Chủ repo xác nhận trong chat ngày 16/11/2026.
 

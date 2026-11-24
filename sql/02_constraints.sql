@@ -252,9 +252,10 @@ BEGIN
     RETURN QUERY SELECT v_moi, v_sk;
 END
 $fn$;
--- E1: assertion CHỈ dùng khi validation, không đặt UNIQUE lên lịch sử.
--- Một đợt có thể xuất hiện một lần mỗi vai trò (mới rồi cũ), nhưng không
--- được xuất hiện nhiều lần TRONG CÙNG MỘT VAI TRÒ ở bộ dữ liệu nghiệm thu.
+-- E1: một đợt có thể xuất hiện một lần mỗi vai trò (mới rồi cũ), nhưng không
+-- được xuất hiện nhiều lần TRONG CÙNG MỘT VAI TRÒ. Từ 24/11/2026 (sửa X07,
+-- TV3 đề xuất) E1 được chặn ngay lúc ghi bằng hai UNIQUE ở cuối mục này;
+-- assertion dưới đây vẫn giữ cho bước validation.
 CREATE OR REPLACE FUNCTION fn_assert_e1()
 RETURNS void LANGUAGE plpgsql AS $fn$
 BEGIN
@@ -276,6 +277,23 @@ BEGIN
     END IF;
 END
 $fn$;
+
+-- E1 (sửa X07): mỗi đợt chỉ được làm đợt cũ của một biến động và đợt mới
+-- của một biến động. UNIQUE bỏ qua NULL nên chuyển đến/chuyển đi vẫn hợp lệ.
+DO $ddl$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname='uq_bd_qua_trinh_cu'
+       AND conrelid='bien_dong_cu_tru'::regclass) THEN
+        ALTER TABLE bien_dong_cu_tru
+          ADD CONSTRAINT uq_bd_qua_trinh_cu UNIQUE (ma_qua_trinh_cu);
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname='uq_bd_qua_trinh_moi'
+       AND conrelid='bien_dong_cu_tru'::regclass) THEN
+        ALTER TABLE bien_dong_cu_tru
+          ADD CONSTRAINT uq_bd_qua_trinh_moi UNIQUE (ma_qua_trinh_moi);
+    END IF;
+END
+$ddl$;
 
 -- B15: tên không rỗng sau khi bỏ khoảng trắng.
 DO $ddl$

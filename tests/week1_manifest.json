@@ -1,6 +1,6 @@
 {
   "version": "v1",
-  "recorded_date": "2026-11-22",
+  "recorded_date": "2026-11-24",
   "scope": "static_handoff_and_recorded_runtime_evidence",
   "runtime_evidence_available": true,
   "week1_technical_complete": true,
@@ -35,8 +35,8 @@
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/00_bia.tex",
-      "bytes": 3029,
-      "sha256": "d0ae4c028d80284d5ba41568d1fa9d08b28fdea3d41323eb0313344ce9857f90"
+      "bytes": 3118,
+      "sha256": "79044120edbb024e6377e1a4f7e95f1fc586616527b1bc4dc7ae106bc25df852"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/00_loicamon.tex",
@@ -50,38 +50,38 @@
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/README_COMPILE.md",
-      "bytes": 4587,
-      "sha256": "a4729ee7d7434be2023e4846e5520f7669253bd870eec44edccce926a2b612a4"
+      "bytes": 5569,
+      "sha256": "4a3ebe5e4a0275cf3935595408a2b18ad1654eaadbe99472c84b8b3b3d0e1db7"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/chuong1.tex",
-      "bytes": 6650,
-      "sha256": "c4ec85cd3359842bdc63f5202012c182493ceba232c43481ccefae8b8f28864c"
+      "bytes": 8179,
+      "sha256": "d8da6aa8b2425753dfa7f174bb7ca4c0ecfea958f5caced82ffa379acfc2262c"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/chuong2.tex",
-      "bytes": 4826,
-      "sha256": "36d146ff1f1b186f3320a0a8c7c0e35e389171e96ac98e0abe52452da9d8c567"
+      "bytes": 10550,
+      "sha256": "4339cac1976bb126e004f32a9cfb3d7f5b94fac8b7a9658ebefca8615d1463a4"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/chuong3.tex",
-      "bytes": 23613,
-      "sha256": "f32cd72e9b1f7335aec14becd372103794e98cc438464d0990ded6572f4fe08f"
+      "bytes": 33224,
+      "sha256": "663e724db0a8e713e0667b7ff00775dc321ddb770df37ee0d07ea795e8a32827"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/chuong4.tex",
-      "bytes": 13523,
-      "sha256": "91687edc0bdcd4421676dfbe9f217e4bc7338a205a35642e5469f2ba6a1b2a1a"
+      "bytes": 13743,
+      "sha256": "ed453ab9c23071090ca952b6e7f82f85167a22df4646db1c815ca11ee6c2e05d"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/chuong5.tex",
-      "bytes": 14343,
-      "sha256": "99de0627ea990d0e656987cb238e56d3fbce582653347b7fd411272f3d2e1701"
+      "bytes": 14260,
+      "sha256": "126fef61e50531994bc2413525e5ce7dfc9d8ae57f4f07d853cdc65a47a92eba"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/chuong6.tex",
-      "bytes": 18556,
-      "sha256": "c4dd71199c07d0c15e2677a2728cabb2daa20993d05e7e1dbad13fbde3965d13"
+      "bytes": 18892,
+      "sha256": "826ca5f06b911b41e6fdc966ae47c68a8abd2115dafd8d354d9fec126e314eaf"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/image/erd.png",
@@ -90,18 +90,18 @@
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/image/erd_trang_11_vector.pdf",
-      "bytes": 84222,
-      "sha256": "e10442f69ae7ad52218e52841a13f9bc7e914180338dfe46df724cdb198f58ad"
+      "bytes": 68336,
+      "sha256": "6d2b13baa5ab68dace8be5bf357dda80f8c10f74c2e90be5dd6ad60e463f0ce7"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/image/erd_trang_11_vector.svg",
-      "bytes": 11268,
-      "sha256": "b64a3cdd7f8313b891c24572aedf4e2cc4d0ab4a7d75abe1e2fa827bbba209c7"
+      "bytes": 12281,
+      "sha256": "f9d1d62ce12ee779f57261db13dda8008adbea0c8416403aab0dc65b202ef1d5"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/image/erd_trang_11_vector_crop.pdf",
-      "bytes": 72291,
-      "sha256": "1349f1bc404bd0b7bfc72730737f6f6d03229593fb4c6598c4fa7665edb272aa"
+      "bytes": 68460,
+      "sha256": "6472c804d9dadbe0728d0691122afcfc60fadac28275f3ae5ae58547ef80ea5d"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/image/hust.png",
@@ -115,23 +115,23 @@
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/ketluan.tex",
-      "bytes": 5046,
-      "sha256": "e8fbcd226c347e6c1d413bf5a961ce6fe78a07a980178dec25f5c013a67a78c2"
+      "bytes": 4955,
+      "sha256": "34f7f5d249f11e3acc50beaa2defff06c743ae2ca8283ab4b893da20ab99d02f"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/loimodau.tex",
-      "bytes": 2581,
-      "sha256": "2c08b4c13d7922bd2e8b8abc55893d0937a26a439fc6aef70d17161c1b5e3272"
+      "bytes": 2509,
+      "sha256": "c668cf6e98ddb15c7b41caaac18a6cf2203768c9c06fac5a59e12b5bdbc2a86b"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/main.pdf",
-      "bytes": 602615,
-      "sha256": "f7b641472a903d29a513bc89dc017c79121f918e0b17d45f239b3b2713e2c7d4"
+      "bytes": 775784,
+      "sha256": "d5575d20f8d319cbce43c8db25632a4b40f459b48954f04fd3c712d28b49fc41"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/main.tex",
-      "bytes": 1076,
-      "sha256": "2f6a3e632964aff29cbd1aea33dd9305635d44d8b4ca060bc90fdc32e099450a"
+      "bytes": 1100,
+      "sha256": "3486e119719064656ccba464804cd81ac4243587dc4dfc0998896985cc71f2ba"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/phancong.tex",
@@ -139,14 +139,19 @@
       "sha256": "ad0d3786f64497cc74224cfb59bb08c9ebc5ba6cc7eadb6b2681d7ab49c8fa1c"
     },
     {
+      "path": "Báo_cáo_CSDL_nhóm_38/phuluc.tex",
+      "bytes": 14868,
+      "sha256": "3ac3a23f4bca605121c290716477967b51af9f1373b5d7601b507976ba94654d"
+    },
+    {
       "path": "Báo_cáo_CSDL_nhóm_38/setuppackages.tex",
-      "bytes": 1999,
-      "sha256": "3d62c4522959361317edbb8bc4d2a5b53dbf73da0b2486a628a3e1a1e9d380d7"
+      "bytes": 2166,
+      "sha256": "83b8ccedbffd39688164bb451eb516724962a3a2fd47b03a61ddb6ca00d9caed"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/sqllisting.tex",
-      "bytes": 2134,
-      "sha256": "db88c03e6e1f9dc0bfd22c69f8d09623c5291a556bc7d701b842b6c2c3da424d"
+      "bytes": 2463,
+      "sha256": "8a7ebdf169adf41064e5623e19bcb6574e48ff88a1c82df5a71b662ae9d8e590"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/tailieuthamkhao.tex",
@@ -310,8 +315,8 @@
     },
     {
       "path": "meetings/decision_log.md",
-      "bytes": 42662,
-      "sha256": "7bdb55e0c9836185fab759b45474484a500c30ee5828e403a8c43f5850fde68c"
+      "bytes": 44741,
+      "sha256": "f1adb9512aee61559c457f91b10635d3209d0f71eb41fb6cf09fdbee4483c0d7"
     },
     {
       "path": "report/.gitkeep",
@@ -365,8 +370,8 @@
     },
     {
       "path": "sql/02_constraints.sql",
-      "bytes": 14297,
-      "sha256": "c35d338210c3dc113a09c654685c6bf66d7f9827656c385ce64b8f43be37dd2a"
+      "bytes": 15122,
+      "sha256": "1d2a749751051b26906542f96e8b7b87dbc460b7bd54638e6594a9ce708feddf"
     },
     {
       "path": "sql/03_seed.sql",
@@ -395,8 +400,8 @@
     },
     {
       "path": "tests/constraints_week2.sql",
-      "bytes": 17101,
-      "sha256": "6e024fac9ce4a185a0038e58ca49549a71ccf201e9eeaf20c5f5e38942cb250e"
+      "bytes": 16161,
+      "sha256": "55e66007e8c84a30f33aea6247720285c21396e21f72b38ef37710fe30d79218"
     },
     {
       "path": "tests/final_test_log.md",
@@ -410,13 +415,13 @@
     },
     {
       "path": "tests/report_bang_thu_rang_buoc.sql",
-      "bytes": 3949,
-      "sha256": "8f238c1650b1db28ecf0460f789472fe692676fe04163913cd9491bf4e87d38a"
+      "bytes": 4416,
+      "sha256": "a7ef9f3f6f3915a449bf8455237672c78822f4983bcd6e771b0d270ed50a4319"
     },
     {
       "path": "tests/report_bang_thu_rang_buoc_log.txt",
-      "bytes": 2358,
-      "sha256": "eca4163d243ef9b4e969fad8b945ea20a7ae8ea7c8fb2acd75e6e8f595f032aa"
+      "bytes": 2600,
+      "sha256": "069dad1b4849a9a347df3d10c771650a32a8bb310ed7a0d11d7dd3587e2c39e3"
     },
     {
       "path": "tests/report_current_date.sql",
@@ -427,6 +432,16 @@
       "path": "tests/report_current_date_log.txt",
       "bytes": 10107,
       "sha256": "804f315fec36bcd0696243341db2fa4570236d5c2abc1c949d5f3572510be800"
+    },
+    {
+      "path": "tests/report_dml_minh_hoa.sql",
+      "bytes": 1910,
+      "sha256": "233881fb004a50d7dfe05b510a36f6bd78cebd59143421d44f12f6208d607aee"
+    },
+    {
+      "path": "tests/report_dml_minh_hoa_log.txt",
+      "bytes": 3003,
+      "sha256": "ecb557b47792df58090f0a5fe4216de67e6ad1769a7509b035c26ffdad615bd8"
     },
     {
       "path": "tests/report_ra_01_10.sql",
@@ -540,8 +555,8 @@
     },
     {
       "path": "tests/week1_verification_log.md",
-      "bytes": 4562,
-      "sha256": "6acc26f68be232c4115190ecac38caaab0e73bc3d8db62219da7289b0b0c8a00"
+      "bytes": 4560,
+      "sha256": "53194a67c98e80eae9ed928d7cac92476bcc07e0eaafdfc8d8fee0074d51133b"
     },
     {
       "path": "tests/week2_constraints_execution_log.md",

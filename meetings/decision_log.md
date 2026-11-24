@@ -295,3 +295,15 @@ E1: assertion chỉ dùng ở khâu nghiệm thu, chưa chống ghi trùng ngay 
 | Việc chưa nằm trong Gate 2 | 10 ảnh SQL, ảnh B1/B2, bản PDF chính thức, review hình thức, môi trường Windows TV2, nguồn giáo trình, xếp loại/chữ ký và nghiệm thu Gate 3/4. Người phụ trách và hạn nằm trong `docs/10_ban_giao_tv2_tv3.md`. |
 
 **Quy tắc lưu vết:** Đây là ghi nhận lời xác nhận của trưởng nhóm, **không mạo danh review của TV2/TV3**. Khi có xác nhận trực tiếp trên PR, có thể bổ sung liên kết. Các log tuần 1 và các trạng thái "chờ review" trong phần nhật ký lịch sử trước ngày chốt được giữ lại để truy vết. Sau khi merge PR #7 lên `main`, phải chạy CI lại trên commit `main` thực tế. Không đánh dấu Gate 3/4 hoặc nộp báo cáo hoàn thành.
+
+## 11. Sửa X07: E1 chuyển thành UNIQUE — TV3 đề xuất, 24/11/2026 (chờ TV1 xác nhận)
+
+| Trường | Nội dung |
+|---|---|
+| Thay đổi | Thêm `uq_bd_qua_trinh_cu UNIQUE (ma_qua_trinh_cu)` và `uq_bd_qua_trinh_moi UNIQUE (ma_qua_trinh_moi)` vào `sql/02_constraints.sql` (khối `DO`, chạy lại được). `01_schema.sql` không đổi nên hợp đồng DDL tuần 1 giữ nguyên. `fn_assert_e1` vẫn giữ cho bước validation. |
+| Thay cho | Quyết định X07 ở mục 9 (E1 chỉ là assertion, không chặn INSERT tức thì). |
+| Lý do | Chặn ngay lúc ghi việc một đợt bị dùng lại trong cùng vai trò, thay vì chỉ phát hiện ở validation. Mỗi mã đợt khác NULL chỉ có ở một dòng của `bien_dong_cu_tru`, nên phụ thuộc mã đợt → ngày biến động không còn gây lặp giữa các dòng; phần lặp còn lại là giữa hai bảng, do trigger B09 kiểm soát. |
+| Test | Hai test âm E1 trong `tests/constraints_week2.sql` đổi kỳ vọng: INSERT trùng phải bị từ chối `23505` với đúng tên ràng buộc. Thêm ca 7 vào `tests/report_bang_thu_rang_buoc.sql` (dùng lại đợt cũ 16 → `23505`, `uq_bd_qua_trinh_cu`). |
+| Kết quả chạy lại (TV3, PostgreSQL 17.11, Windows, hai DB tạo mới) | Seed636 nạp được; 06_validation PASS (B06/B08/B09, E1, B15); toàn bộ `[PASS]` của `constraints_week2.sql` gồm E1_CU, E1_MOI 23505; B1/B2 đúng 6 lệnh bị từ chối; S01–S16 18/18; `verify_gate2_integration.py` 71 PASS; catalog 15/15; B12 K01–K05; report SQL/RA 0 FAIL; CURRENT_DATE 7/7. Chưa chạy bước đăng nhập TCP bằng mật khẩu tạm ở máy local (không liên quan UNIQUE); CI trên PR sẽ chạy bước này. |
+| Báo cáo / slide | Chương 3 mục 3.4–3.5 (kết luận 3NF, ràng buộc E1, bỏ hạn chế X07, bảng thử vi phạm thêm ca 7, bảng cấu trúc và listing), Kết luận; slide 11. |
+| Trạng thái | **Chờ TV1 xác nhận trên PR.** Không sửa seed, expected hay hash dữ liệu. |
