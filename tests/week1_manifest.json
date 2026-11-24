@@ -304,6 +304,41 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
+      "path": "evidence/security/SEC_B1_denied.png",
+      "bytes": 45995,
+      "sha256": "62bb77241cd1857d1acb6b60b9ea2bcabb07a033118b38418c356896af67167f"
+    },
+    {
+      "path": "evidence/security/SEC_B1_grants.png",
+      "bytes": 124606,
+      "sha256": "46bd124b4cb2f524554c964047a4fe59e15c4860fac09dfde17e917d84745c07"
+    },
+    {
+      "path": "evidence/security/SEC_B1_select_ok.png",
+      "bytes": 44317,
+      "sha256": "1897a163a48b31340f0b465e0d3337b7a67748e17c872bffe9b5eaef60940142"
+    },
+    {
+      "path": "evidence/security/SEC_B1_unchanged.png",
+      "bytes": 72721,
+      "sha256": "87471e9521edf1dfd6dc78cf3a37d0731699066e95525450ab5a9dc11f55fa1b"
+    },
+    {
+      "path": "evidence/security/SEC_B2_denied.png",
+      "bytes": 29348,
+      "sha256": "1ae0a46c8952d15d83ac94a0108898bf4560e96f6708835556067ed23b967a28"
+    },
+    {
+      "path": "evidence/security/SEC_B2_view_ok.png",
+      "bytes": 35908,
+      "sha256": "ab618d5670a4e692b68d06d41c99a0259a6bd93d5068d952c63a714340e00c86"
+    },
+    {
+      "path": "evidence/security/SEC_B2_viewdef.png",
+      "bytes": 85431,
+      "sha256": "eb93ec728dc58c682204d091a9599d374ebc1ffcf6c312ae50fcfcefaf6f62f9"
+    },
+    {
       "path": "evidence/sql/.gitkeep",
       "bytes": 0,
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
