@@ -169,70 +169,69 @@ BEGIN
     RAISE NOTICE '[PASS] B10-positive: 3 bước ghi thành công nhất quán';
 END $$;
 
-
--- E1: phải FAIL khi một đợt xuất hiện nhiều lần trong cùng vai trò.
--- Cả hai lệnh INSERT đều hợp lệ theo B08/B09; chỉ assertion E1 phát hiện.
--- X07 (TV1, 20/11): E1 là assertion validation, KHÔNG chặn INSERT tức thì.
--- Test tách hai bước: (1) INSERT trùng phải THÀNH CÔNG — nếu bị trigger/CHECK
--- khác chặn thì lỗi lan ra ngoài và script dừng, không được tính là PASS E1;
--- (2) fn_assert_e1 phải báo 23514. Sau đó hoàn tác INSERT thử bằng SQLSTATE riêng.
-DO $e1_old$
-DECLARE v_id BIGINT; v_lan INT;
+-- B10 cho chuyển đi và chuyển đến (fn_chuyen_di, fn_chuyen_den, 26/11/2026).
+-- Chạy trong savepoint rồi hoàn tác để không ảnh hưởng các phép thử sau.
+SAVEPOINT b10_di_den;
+-- Lỗi B14 xuất hiện SAU khi đã đóng đợt: cả hàm phải bị hủy.
+SELECT pg_temp.expect_sqlstate('B10_chuyen_di_rollback',
+    $sql$SELECT fn_chuyen_di(99005, DATE '2026-07-01', 99002)$sql$,
+    '23514');
+-- Chuyển đến chồng lấn đợt thường trú đang mở của cư dân A: B06 chặn.
+SELECT pg_temp.expect_sqlstate('B10_chuyen_den_overlap',
+    $sql$SELECT * FROM fn_chuyen_den(99001, 99003, 'THUONG_TRU', DATE '2026-07-01', 99001)$sql$,
+    '23P01');
+DO $$
 BEGIN
-    BEGIN
-        INSERT INTO bien_dong_cu_tru(
-           loai_bien_dong,ma_qua_trinh_cu,ma_qua_trinh_moi,ngay_bien_dong,ma_tai_khoan
-        ) VALUES ('CHUYEN_DI',99002,NULL,'2026-06-15',99001)
-        RETURNING ma_bien_dong INTO v_id;
-        SELECT count(*) INTO v_lan FROM bien_dong_cu_tru WHERE ma_qua_trinh_cu = 99002;
-        IF v_lan < 2 THEN
-            RAISE EXCEPTION 'E1 OLD: không dựng được dữ liệu trùng (% lần)', v_lan;
-        END IF;
-        BEGIN
-            PERFORM fn_assert_e1();
-        EXCEPTION WHEN SQLSTATE '23514' THEN
-            RAISE NOTICE '[PASS] E1_CU: INSERT trùng vai trò cũ được ghi (sự kiện %, đợt 99002 là đợt cũ % lần); fn_assert_e1 báo 23514; đã rollback',
-                v_id, v_lan;
-            RAISE EXCEPTION 'hoàn tác INSERT thử E1_CU' USING ERRCODE = 'P0901';
-        END;
-        RAISE EXCEPTION 'E1 OLD: assertion không phát hiện dữ liệu trùng';
-    EXCEPTION WHEN SQLSTATE 'P0901' THEN
-        NULL;
-    END;
-    IF (SELECT count(*) FROM bien_dong_cu_tru WHERE ma_qua_trinh_cu = 99002) <> 1 THEN
-        RAISE EXCEPTION 'E1 OLD: INSERT thử chưa được hoàn tác';
-    END IF;
-END
-$e1_old$;
-
-DO $e1_new$
-DECLARE v_id BIGINT; v_lan INT;
+    IF (SELECT ngay_ket_thuc FROM qua_trinh_cu_tru WHERE ma_qua_trinh=99005) IS NOT NULL
+       OR EXISTS (SELECT 1 FROM bien_dong_cu_tru WHERE ma_qua_trinh_cu=99005)
+       OR EXISTS (SELECT 1 FROM qua_trinh_cu_tru WHERE ma_cu_dan=99001 AND ma_ho=99003)
+    THEN RAISE EXCEPTION 'TEST FAIL B10 đi/đến: còn dữ liệu dở dang'; END IF;
+    RAISE NOTICE '[PASS] B10-di-den: lỗi giữa hàm hủy toàn bộ thay đổi';
+END $$;
+SELECT fn_chuyen_di(99005, DATE '2026-07-01', 99001);
+SELECT * FROM fn_chuyen_den(99003, 99003, 'TAM_TRU', DATE '2026-07-01', 99001);
+DO $$
 BEGIN
-    BEGIN
-        INSERT INTO bien_dong_cu_tru(
+    IF (SELECT ngay_ket_thuc FROM qua_trinh_cu_tru WHERE ma_qua_trinh=99005)
+           IS DISTINCT FROM DATE '2026-06-30'
+       OR NOT EXISTS (SELECT 1 FROM bien_dong_cu_tru
+                      WHERE loai_bien_dong='CHUYEN_DI' AND ma_qua_trinh_cu=99005
+                        AND ma_qua_trinh_moi IS NULL AND ngay_bien_dong='2026-07-01')
+       OR NOT EXISTS (SELECT 1 FROM bien_dong_cu_tru b
+                      JOIN qua_trinh_cu_tru q ON q.ma_qua_trinh=b.ma_qua_trinh_moi
+                      WHERE b.loai_bien_dong='CHUYEN_DEN' AND b.ma_qua_trinh_cu IS NULL
+                        AND q.ma_cu_dan=99003 AND q.ma_ho=99003
+                        AND q.loai_cu_tru='TAM_TRU' AND q.ngay_bat_dau='2026-07-01'
+                        AND q.ngay_ket_thuc IS NULL AND b.ngay_bien_dong='2026-07-01')
+    THEN RAISE EXCEPTION 'TEST FAIL B10 đi/đến thành công'; END IF;
+    RAISE NOTICE '[PASS] B10-di-den-positive: mỗi hàm ghi đợt và biến động nhất quán';
+END $$;
+ROLLBACK TO SAVEPOINT b10_di_den;
+
+
+-- X07 (sửa 26/11/2026): UNIQUE uq_bd_dot_cu / uq_bd_dot_moi chặn ngay lúc
+-- INSERT việc một đợt xuất hiện nhiều lần trong cùng vai trò (23505).
+-- Hai lệnh dưới đều hợp lệ theo B07/B08/B09, chỉ UNIQUE từ chối.
+SELECT pg_temp.expect_sqlstate('X07_UNIQUE_dot_cu',
+    $sql$INSERT INTO bien_dong_cu_tru(
            loai_bien_dong,ma_qua_trinh_cu,ma_qua_trinh_moi,ngay_bien_dong,ma_tai_khoan
-        ) VALUES ('CHUYEN_DEN',NULL,99003,'2026-06-15',99001)
-        RETURNING ma_bien_dong INTO v_id;
-        SELECT count(*) INTO v_lan FROM bien_dong_cu_tru WHERE ma_qua_trinh_moi = 99003;
-        IF v_lan < 2 THEN
-            RAISE EXCEPTION 'E1 NEW: không dựng được dữ liệu trùng (% lần)', v_lan;
-        END IF;
-        BEGIN
-            PERFORM fn_assert_e1();
-        EXCEPTION WHEN SQLSTATE '23514' THEN
-            RAISE NOTICE '[PASS] E1_MOI: INSERT trùng vai trò mới được ghi (sự kiện %, đợt 99003 là đợt mới % lần); fn_assert_e1 báo 23514; đã rollback',
-                v_id, v_lan;
-            RAISE EXCEPTION 'hoàn tác INSERT thử E1_MOI' USING ERRCODE = 'P0902';
-        END;
-        RAISE EXCEPTION 'E1 NEW: assertion không phát hiện dữ liệu trùng';
-    EXCEPTION WHEN SQLSTATE 'P0902' THEN
-        NULL;
-    END;
-    IF (SELECT count(*) FROM bien_dong_cu_tru WHERE ma_qua_trinh_moi = 99003) <> 1 THEN
-        RAISE EXCEPTION 'E1 NEW: INSERT thử chưa được hoàn tác';
+         ) VALUES ('CHUYEN_DI',99002,NULL,'2026-06-15',99001)$sql$,
+    '23505');
+SELECT pg_temp.expect_sqlstate('X07_UNIQUE_dot_moi',
+    $sql$INSERT INTO bien_dong_cu_tru(
+           loai_bien_dong,ma_qua_trinh_cu,ma_qua_trinh_moi,ngay_bien_dong,ma_tai_khoan
+         ) VALUES ('CHUYEN_DEN',NULL,99003,'2026-06-15',99001)$sql$,
+    '23505');
+DO $x07$
+BEGIN
+    IF (SELECT count(*) FROM bien_dong_cu_tru WHERE ma_qua_trinh_cu = 99002) <> 1
+       OR (SELECT count(*) FROM bien_dong_cu_tru WHERE ma_qua_trinh_moi = 99003) <> 1 THEN
+        RAISE EXCEPTION 'TEST FAIL X07: bản ghi trùng vẫn còn';
     END IF;
+    PERFORM fn_assert_e1();
+    RAISE NOTICE '[PASS] E1: không có đợt trùng vai trò; fn_assert_e1 không báo lỗi';
 END
-$e1_new$;
+$x07$;
 
 -- Một đợt là "mới" của chuyển đến và "cũ" của chuyển đi được phép.
 INSERT INTO bien_dong_cu_tru(

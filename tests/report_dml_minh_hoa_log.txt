@@ -1,63 +1,70 @@
-Kiểm chứng phần DML trong báo cáo, 24/11/2026
-PostgreSQL 17.12 (Homebrew) trên macOS, cụm tạm riêng qua Unix socket.
-Dựng 636 bản ghi trên DB mới bằng 01_schema, 02_constraints và 03_seed.
+Kiểm chứng phần DML trong báo cáo, 26/11/2026
+PostgreSQL 17.11 on x86_64-windows trên Windows 11, cơ sở dữ liệu tạm dựng mới.
+Dựng 636 bản ghi trên DB mới bằng 01_schema, 02_constraints, 03_seed và 06_validation.
 Lệnh: psql -X -f tests/report_dml_minh_hoa.sql
 
 SHA-256 đầu vào:
-e3a220c0ea8fbe7ad4475c0ede3201d25573a1007c5b4e0b26f698df2607f6f5  sql/01_schema.sql
-c35d338210c3dc113a09c654685c6bf66d7f9827656c385ce64b8f43be37dd2a  sql/02_constraints.sql
-71f33714b57745bce1069cc4212f69f2382829817334d6fe252c0ba77e7fa0f2  sql/03_seed.sql
-93c8e79628522e76c6391eed57fbc81ce1726bc032b4ab0ca9634c9adffe389a  tests/report_dml_minh_hoa.sql
+9558037731327f99394509e9546579d8628d458c6b86eae746736d53389330f2 *sql/01_schema.sql
+6e07493d64c7b1c5d587969726e1c18c9c2601558216e46df55932ae272af2b6 *sql/02_constraints.sql
+71f33714b57745bce1069cc4212f69f2382829817334d6fe252c0ba77e7fa0f2 *sql/03_seed.sql
+0f94f2bf9ba61cc96a5ab5712b54a4894cc78f59ba152a9ccf1cd859a7fea426 *tests/report_dml_minh_hoa.sql
 
-Kết quả thực thi:
 === DML 1: fn_chuyen_noi_bo, đợt 44 (cư dân 40, hộ 21) sang hộ 2 ===
 BEGIN
- ma_dot_moi | ma_su_kien
+ ma_dot_moi | ma_su_kien 
 ------------+------------
         251 |         64
 (1 row)
 
- ma_qua_trinh | ma_cu_dan | ma_ho | loai_cu_tru | ngay_bat_dau | ngay_ket_thuc
+ ma_qua_trinh | ma_cu_dan | ma_ho | loai_cu_tru | ngay_bat_dau | ngay_ket_thuc 
 --------------+-----------+-------+-------------+--------------+---------------
-           44 |        40 |    21 | THUONG_TRU  | 2022-10-25   | 2026-11-23
-          251 |        40 |     2 | THUONG_TRU  | 2026-11-24   |
+           44 |        40 |    21 | THUONG_TRU  | 2022-10-25   | 2026-11-25
+          251 |        40 |     2 | THUONG_TRU  | 2026-11-26   | 
 (2 rows)
 
- ma_bien_dong | loai_bien_dong | ma_qua_trinh_cu | ma_qua_trinh_moi | ngay_bien_dong
+ ma_bien_dong | loai_bien_dong | ma_qua_trinh_cu | ma_qua_trinh_moi | ngay_bien_dong 
 --------------+----------------+-----------------+------------------+----------------
-           64 | CHUYEN_NOI_BO  |              44 |              251 | 2026-11-24
+           64 | CHUYEN_NOI_BO  |              44 |              251 | 2026-11-26
 (1 row)
 
 ROLLBACK
-=== DML 2: ghi chuyển đi cho đợt 50 (cư dân 44, hộ 16) ===
+=== DML 2: fn_chuyen_di, đợt 50 (cư dân 44, hộ 16) chuyển ra khỏi phường ===
 BEGIN
-UPDATE 1
- ma_bien_dong | loai_bien_dong | ma_qua_trinh_cu | ngay_bien_dong
---------------+----------------+-----------------+----------------
-           65 | CHUYEN_DI      |              50 | 2026-11-24
+ ma_su_kien 
+------------
+         65
 (1 row)
 
-INSERT 0 1
+ ma_qua_trinh | ma_cu_dan | ma_ho | ngay_bat_dau | ngay_ket_thuc 
+--------------+-----------+-------+--------------+---------------
+           50 |        44 |    16 | 2023-02-05   | 2026-11-25
+(1 row)
+
+ ma_bien_dong | loai_bien_dong | ma_qua_trinh_cu | ma_qua_trinh_moi | ngay_bien_dong 
+--------------+----------------+-----------------+------------------+----------------
+           65 | CHUYEN_DI      |              50 |                  | 2026-11-26
+(1 row)
+
 ROLLBACK
-=== DML 2b (đối chứng): ghi CHUYEN_DI khi đợt 50 chưa kết thúc, mong đợi B09 chặn ===
+=== DML 2b (đối chứng): tự INSERT CHUYEN_DI khi đợt 50 chưa kết thúc, mong đợi B09 chặn ===
 BEGIN
-psql:tests/report_dml_minh_hoa.sql:34: ERROR:  23514: B09: đợt cũ 50 phải kết thúc trước ngày chuyển 2026-11-24 đúng 1 ngày
+psql:tests/report_dml_minh_hoa.sql:32: ERROR:  23514: B09: đợt cũ 50 phải kết thúc trước ngày chuyển 2026-11-26 đúng 1 ngày
 CONTEXT:  PL/pgSQL function fn_kiem_tra_su_kien(character varying,bigint,bigint,date) line 20 at RAISE
 SQL statement "SELECT fn_kiem_tra_su_kien(
         NEW.loai_bien_dong, NEW.ma_qua_trinh_cu,
         NEW.ma_qua_trinh_moi, NEW.ngay_bien_dong
     )"
 PL/pgSQL function fn_truoc_ghi_bien_dong() line 21 at PERFORM
-LOCATION:  exec_stmt_raise, pl_exec.c:3927
+LOCATION:  exec_stmt_raise, pl_exec.c:3911
 ROLLBACK
- b09_kiem_tra_chieu_thuan
+ b09_kiem_tra_chieu_thuan 
 --------------------------
                         1
 (1 row)
 
 === DML 3: dời ngày bắt đầu đợt 17 (đợt mới của biến động 2), mong đợi B09 chặn ===
 BEGIN
-psql:tests/report_dml_minh_hoa.sql:45: ERROR:  23514: B09: đợt mới 17 phải bắt đầu đúng ngày chuyển 2026-10-15
+psql:tests/report_dml_minh_hoa.sql:43: ERROR:  23514: B09: đợt mới 17 phải bắt đầu đúng ngày chuyển 2026-10-15
 CONTEXT:  PL/pgSQL function fn_kiem_tra_su_kien(character varying,bigint,bigint,date) line 33 at RAISE
 SQL statement "SELECT fn_kiem_tra_su_kien(
                 v_su_kien.loai_bien_dong,
@@ -66,16 +73,10 @@ SQL statement "SELECT fn_kiem_tra_su_kien(
                 v_su_kien.ngay_bien_dong
             )"
 PL/pgSQL function fn_sau_sua_dot_cu_tru() line 13 at PERFORM
-LOCATION:  exec_stmt_raise, pl_exec.c:3927
+LOCATION:  exec_stmt_raise, pl_exec.c:3911
 ROLLBACK
- b09_kiem_tra_chieu_nguoc
+ b09_kiem_tra_chieu_nguoc 
 --------------------------
                         1
 (1 row)
 
-
-Kết quả sau ROLLBACK:
-- Hai lỗi B09 đúng SQLSTATE 23514.
-- 636 dòng INSERT từ pg_dump --data-only --inserts giống hệt trước và sau.
-- SHA-256 của các dòng INSERT: 67212d484f3ed38718c9d32fe1a0d799d425f033ea320ede1f024554349c2210. Sequence có thể tiến sau ROLLBACK.
-- Validation B06/B08/B09, E1 và B15 đều đạt.

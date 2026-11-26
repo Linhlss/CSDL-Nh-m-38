@@ -51,7 +51,7 @@ Thực thể quá trình cư trú ghi nhận hộ, loại cư trú và khoảng 
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{|P{2.0cm}|P{2.5cm}|P{2.5cm}|Y|}
 \hline
-\textbf{Liên kết} & \textbf{Thực thể phía 1} & \textbf{Thực thể phía N} & \textbf{Giải thích} \\
+\textbf{Liên kết} & \textbf{Thực thể thứ nhất} & \textbf{Thực thể thứ hai} & \textbf{Giải thích} \\
 \hline
 Quản lý & Tổ dân phố & Địa chỉ & Một tổ quản lý nhiều địa chỉ, mỗi địa chỉ thuộc đúng một tổ \\
 \hline
@@ -63,16 +63,16 @@ Có đợt & Cư dân & Quá trình cư trú & Một cư dân có thể có nhi�
 \hline
 Ghi nhận & Tài khoản & Biến động cư trú & Biến động được ghi bằng đúng một tài khoản ở trạng thái hoạt động tại thời điểm ghi nhận (B14) \\
 \hline
-Đợt cũ & Quá trình cư trú & Biến động cư trú & Biến động làm kết thúc một quá trình (có thể không có, ví dụ chuyển đến) \\
+Đợt cũ (1 -- 1) & Quá trình cư trú & Biến động cư trú & Biến động làm kết thúc một quá trình (có thể không có, ví dụ chuyển đến); mỗi quá trình bị kết thúc bởi tối đa một biến động \\
 \hline
-Đợt mới & Quá trình cư trú & Biến động cư trú & Biến động mở ra một quá trình mới (có thể không có, ví dụ chuyển đi) \\
+Đợt mới (1 -- 1) & Quá trình cư trú & Biến động cư trú & Biến động mở ra một quá trình mới (có thể không có, ví dụ chuyển đi); mỗi quá trình được mở bởi tối đa một biến động \\
 \hline
 \end{tabularx}
 \caption{Các mối liên kết trong mô hình}
 \label{tab:lienket}
 \end{table}
 
-Giữa quá trình cư trú và biến động cư trú có hai liên kết song song là ``đợt cũ'' và ``đợt mới'', vì một lần biến động có thể vừa kết thúc một đợt cư trú vừa mở một đợt khác. Ví dụ rõ nhất là chuyển nội bộ: cư dân rời hộ A (đợt cũ kết thúc ngày $t-1$) và vào hộ B (đợt mới bắt đầu ngày $t$); cả hai đợt cùng gắn với một bản ghi biến động.
+Giữa quá trình cư trú và biến động cư trú có hai liên kết song song là ``đợt cũ'' và ``đợt mới'', vì một lần biến động có thể vừa kết thúc một đợt cư trú vừa mở một đợt khác. Ví dụ rõ nhất là chuyển nội bộ: cư dân rời hộ A (đợt cũ kết thúc ngày $t-1$) và vào hộ B (đợt mới bắt đầu ngày $t$); cả hai đợt cùng gắn với một bản ghi biến động. Theo chiều ngược lại, một đợt chỉ kết thúc một lần và chỉ bắt đầu một lần, nên có tối đa một biến động kết thúc nó và tối đa một biến động mở nó. Vì vậy cả hai liên kết này là 1 -- 1. Năm liên kết còn lại đều là 1 -- N, với thực thể thứ nhất ở phía 1.
 
 \clearpage
 \subsection{Ràng buộc tham gia}
@@ -107,7 +107,7 @@ Ghi nhận & Biến động cư trú & Tài khoản & Biến động nào cũng 
 \label{tab:thamgia}
 \end{table}
 
-Có thể thấy ở năm liên kết 1 -- N đầu tiên, phía N luôn tham gia toàn phần, còn phía 1 chỉ tham gia một phần. Vì vậy khi ánh xạ ở Chương \ref{sec:chuong3}, các khóa ngoại tương ứng đều được khai báo NOT NULL. Hai liên kết ``đợt cũ'' và ``đợt mới'' thì tham gia một phần ở cả hai phía, nên hai cột ma\_qua\_trinh\_cu và ma\_qua\_trinh\_moi được phép để trống; việc loại biến động nào bắt buộc có đợt nào do ràng buộc CHECK ck\_bd\_hinh\_dang kiểm soát.
+Có thể thấy ở năm liên kết 1 -- N đầu tiên, phía N luôn tham gia toàn phần, còn phía 1 chỉ tham gia một phần. Vì vậy khi ánh xạ ở Chương \ref{sec:chuong3}, các khóa ngoại tương ứng đều được khai báo NOT NULL. Hai liên kết 1 -- 1 ``đợt cũ'' và ``đợt mới'' thì tham gia một phần ở cả hai phía, nên hai cột ma\_qua\_trinh\_cu và ma\_qua\_trinh\_moi được phép để trống; việc loại biến động nào bắt buộc có đợt nào do ràng buộc CHECK ck\_bd\_hinh\_dang kiểm soát, còn bản số 1 -- 1 được giữ bằng ràng buộc UNIQUE trên từng cột (mục \ref{subsec:rangbuoc}).
 
 \subsection{Vì sao quá trình cư trú là thực thể kết hợp}
 \label{subsec:thuckethop}

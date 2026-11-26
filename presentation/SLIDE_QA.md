@@ -39,7 +39,7 @@ Các bảng kết quả được chép từ log PostgreSQL. Nhãn thuộc tính 
 | 05 | Đủ bảy thực thể, làm rõ vai trò của quá trình cư trú. |
 | 06 | Ảnh ERD Chen từ `erd.png` với chú giải các liên kết chính. |
 | 07 | Ảnh lược đồ `diagrams/erd_v1.png`, có chú giải 7 bảng, 35 cột, 7 PK, 7 FK và hai FK đợt có thể NULL tùy loại biến động. |
-| 08 | Tách bảng theo FD và ghi mức 3NF có điều kiện. |
+| 08 | Tách bảng theo FD, kết luận cả bảy bảng đạt BCNF. |
 | 09 | B06, B09 và B10 có sơ đồ riêng trong cùng trang. |
 | Phần 2 | Chủ đề Dữ liệu, SQL và kiểm thử. |
 | 10 | Tổng từ bảy bảng bằng 636. |

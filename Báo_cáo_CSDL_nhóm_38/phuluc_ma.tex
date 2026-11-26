@@ -1,0 +1,71 @@
+\phantomsection
+\section*{PHỤ LỤC B. BẢNG TRA MÃ QUY TẮC VÀ KIỂM THỬ}
+\addcontentsline{toc}{section}{Phụ lục B. Bảng tra mã quy tắc và kiểm thử}
+\label{sec:phuluc-ma}
+
+Phụ lục liệt kê đủ các mã được nhắc tới trong báo cáo. Mã B là quy tắc nghiệp vụ trong đặc tả; E1 là điều kiện kiểm tra dữ liệu; mã X là giới hạn đã biết, được nhóm ghi nhận khi rà soát thiết kế; mã K là các ca kiểm thử quyền của role quản trị. Riêng ``Demo B1'' và ``Demo B2'' ở Chương 6 là tên hai ví dụ bảo mật, không phải quy tắc B01 hay B02. Cột cuối cho biết quy tắc được bảo đảm ở đâu hoặc được nhắc tới ở đâu.
+
+{\fontsize{11pt}{14pt}\selectfont
+\renewcommand{\arraystretch}{1.25}
+\begin{longtable}{@{}P{1.15cm}P{8.5cm}P{4.4cm}@{}}
+\caption{Quy tắc nghiệp vụ B01--B18}\label{tab:mab}\\
+\hline
+\rowcolor{black!7}
+\textbf{Mã} & \textbf{Nội dung} & \textbf{Cách bảo đảm} \\
+\hline
+\endfirsthead
+\hline
+\rowcolor{black!7}
+\textbf{Mã} & \textbf{Nội dung} & \textbf{Cách bảo đảm} \\
+\hline
+\endhead
+\hline
+\endfoot
+B01 & Tổ có nhiều địa chỉ, mỗi địa chỉ thuộc đúng một tổ; địa chỉ có nhiều hộ, mỗi hộ thuộc đúng một địa chỉ. & Khóa ngoại \\
+B02 & Mỗi đợt cư trú thuộc đúng một cư dân và một hộ; quan hệ nhiều -- nhiều giữa cư dân và hộ được giải qua các đợt. & Khóa ngoại NOT NULL \\
+B03 & Mã định danh là khóa; tên cư dân có thể trùng; tên tổ, tên đăng nhập và cặp (tổ, địa chỉ chuẩn) không được trùng. & Khóa chính, UNIQUE \\
+B04 & Ngày bắt đầu đợt và ngày biến động là bắt buộc; ngày kết thúc có thể trống, nếu có thì không sớm hơn ngày bắt đầu. Đợt chỉ một ngày là hợp lệ. & NOT NULL, CHECK \\
+B05 & Đợt có hiệu lực tại ngày $d$ khi \texttt{ngay\_bat\_dau <= d} và ngày kết thúc trống hoặc \texttt{>= d}; ngày cuối được tính. Báo cáo dùng $d$ = 20/11/2026. & Điều kiện trong truy vấn và VIEW \\
+B06 & Cùng cư dân, cùng loại cư trú thì các khoảng ngày không giao nhau; hai loại khác nhau được phép đồng thời. & Ràng buộc loại trừ GiST \\
+B07 & Chuyển đến chỉ có đợt mới, chuyển đi chỉ có đợt cũ, chuyển nội bộ có hai đợt khác nhau; không có loại thứ tư. & CHECK \texttt{ck\_bd\_hinh\_dang} \\
+B08 & Hai đợt của chuyển nội bộ cùng cư dân và khác hộ (khác hộ nhưng cùng địa chỉ hay cùng tổ vẫn hợp lệ). & Trigger, Phụ lục A.1 \\
+B09 & Với ngày chuyển $t$: đợt mới bắt đầu đúng ngày $t$, đợt cũ kết thúc đúng ngày $t-1$. & Trigger hai chiều, Phụ lục A.1--A.3 \\
+B10 & Đóng đợt cũ, mở đợt mới (nếu có) và ghi biến động là một giao dịch; một bước lỗi thì hủy mọi bước. & Hàm \texttt{fn\_chuyen\_noi\_bo}, \texttt{fn\_chuyen\_di}, \texttt{fn\_chuyen\_den}, Phụ lục A.6--A.7 \\
+B11 & Không đổi địa chỉ của hộ hay tổ của địa chỉ khi đã có lịch sử cư trú tham chiếu; cần thì tạo bản ghi mới. & Trigger \\
+B12 & Không xóa vật lý hồ sơ hoặc đợt đang được tham chiếu; không xóa lịch sử để biểu diễn chuyển đi. & Khóa ngoại không CASCADE, thu hồi DELETE \\
+B13 & Bảng quá trình cư trú là nguồn dữ liệu theo thời gian; biến động chỉ ghi loại, ngày, mã đợt và người ghi, không chép tên hay địa chỉ. Đợt nhập lịch sử hoặc tạm trú hết hạn có thể không có biến động đi kèm. & Thiết kế lược đồ \\
+B14 & Biến động mới phải do tài khoản đang HOAT\_DONG ghi; khóa tài khoản về sau không làm mất biến động cũ. Cột vai trò chỉ là nhãn mô tả. & Trigger \\
+B15 & Tên tổ, địa chỉ, họ tên, tên đăng nhập, tên hiển thị không rỗng; ngày sinh và ngày lập hộ không muộn hơn ngày bắt đầu đợt cư trú. & CHECK, trigger hai chiều, Phụ lục A.5 \\
+B16 & Câu hỏi ``đang cư trú'' dùng ngày $d$. Câu ``từng cư trú'' (QSQL07) chỉ xét đợt đã bắt đầu trước hoặc đúng ngày $d$; các câu thống kê lịch sử xét toàn bộ đợt đã lưu. & Điều kiện trong truy vấn \\
+B17 & Số người của một hộ hay một tổ là số mã cư dân phân biệt; một người có thể thuộc hai tổ theo hai loại cư trú, nên tổng theo tổ có thể lớn hơn số người toàn phường. & \texttt{COUNT(DISTINCT)}, phép chiếu trước $\gamma$ \\
+B18 & Mọi dữ liệu dân cư và địa chỉ là giả lập, không có số định danh hay số điện thoại thật; mật khẩu không lưu trong bảng tài khoản hay mã nguồn. & Bộ dữ liệu tự tạo, role PostgreSQL \\
+\end{longtable}
+}
+
+{\fontsize{11pt}{14pt}\selectfont
+\renewcommand{\arraystretch}{1.25}
+\begin{longtable}{@{}P{1.15cm}P{8.5cm}P{4.4cm}@{}}
+\caption{Điều kiện kiểm tra, giới hạn đã biết và ca kiểm thử quyền}\label{tab:makhac}\\
+\hline
+\rowcolor{black!7}
+\textbf{Mã} & \textbf{Nội dung} & \textbf{Nơi nhắc tới} \\
+\hline
+\endfirsthead
+\hline
+\rowcolor{black!7}
+\textbf{Mã} & \textbf{Nội dung} & \textbf{Nơi nhắc tới} \\
+\hline
+\endhead
+\hline
+\endfoot
+E1 & Một đợt cư trú không được nhiều biến động tham chiếu trong cùng một vai trò (cùng là đợt cũ hoặc cùng là đợt mới). Một đợt vừa là đợt mới của lần chuyển đến, vừa là đợt cũ của lần chuyển đi sau đó thì hợp lệ. Được chặn ngay lúc ghi bằng UNIQUE \texttt{uq\_bd\_dot\_cu} và \texttt{uq\_bd\_dot\_moi}; hàm \texttt{fn\_assert\_e1} trong \texttt{06\_validation.sql} vẫn kiểm tra lại. & Mục \ref{subsec:rangbuoc}, chuẩn hóa ở Chương 3 \\
+X01 & Cột \texttt{vai\_tro} của tài khoản chỉ là nhãn mô tả, không chặn tài khoản THONG\_KE ghi biến động; quyền thật do role PostgreSQL quyết định (phương án b). & Chương 3, mục \ref{subsec:danhgia}, Kết luận \\
+X06 & Cư dân hoặc hộ chưa có đợt cư trú nào vẫn nhập được ngày sinh hoặc ngày lập hộ ở tương lai, vì B15 chưa có mốc để so sánh. & Chương 3, Kết luận \\
+X07 & Giới hạn cũ: E1 chỉ được kiểm ở bước kiểm tra dữ liệu, không chặn lúc INSERT. \textbf{Đã khắc phục} bằng hai ràng buộc UNIQUE trên ma\_qua\_trinh\_cu và ma\_qua\_trinh\_moi (liên kết 1 -- 1); ghi trùng bị từ chối với SQLSTATE 23505. & Chương 2, mục \ref{subsec:rangbuoc} \\
+K01 & Ma trận quyền thực tế của 3 role trên 8 bảng và VIEW, với 5 loại quyền, khớp đúng thiết kế. & Bảng kiểm thử ở Chương 6 \\
+K02 & \texttt{csdl17\_admin} xóa một dòng của \texttt{qua\_trinh\_cu\_tru} bị từ chối (42501). & Chương 6 \\
+K03 & \texttt{csdl17\_admin} xóa một dòng của \texttt{bien\_dong\_cu\_tru} bị từ chối (42501). & Chương 6 \\
+K04 & \texttt{csdl17\_admin} chạy TRUNCATE hai bảng lịch sử bị từ chối (42501). & Chương 6 \\
+K05 & Sau khi bị thu hồi DELETE, \texttt{csdl17\_admin} vẫn gọi được \texttt{fn\_chuyen\_noi\_bo} (một UPDATE và hai INSERT). & Chương 6 \\
+\end{longtable}
+}

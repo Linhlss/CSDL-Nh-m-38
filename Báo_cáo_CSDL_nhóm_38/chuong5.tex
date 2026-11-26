@@ -1,7 +1,7 @@
 \section{TRUY VẤN BẰNG SQL}
 \label{sec:chuong5}
 
-Chương này trình bày mười truy vấn QSQL01--QSQL10 trên cơ sở dữ liệu gồm 636 bản ghi. Mỗi câu gồm yêu cầu nghiệp vụ, câu SQL và nhận xét về đầu ra. Mã SQL được lấy từ \texttt{sql/04\_queries.sql} và giữ đúng điều kiện lọc của lần kiểm thử trên pgAdmin. Các ảnh thực thi được dẫn trong từng câu và tập hợp tại \hyperref[sec:anhqsql]{phụ lục ảnh SQL}.\par\medskip
+Chương này trình bày mười truy vấn QSQL01--QSQL10 và ba truy vấn bổ sung QSQL11--QSQL13 trên cơ sở dữ liệu gồm 636 bản ghi. Mỗi câu gồm yêu cầu nghiệp vụ, câu SQL và nhận xét về đầu ra. Mã SQL được lấy từ \texttt{sql/04\_queries.sql} và giữ đúng điều kiện lọc của lần kiểm thử trên pgAdmin. Các câu xét hiệu lực (QSQL01--QSQL03, QSQL07) dùng ngày tham chiếu cố định \texttt{DATE '2026-11-20'}, cùng ngày với Chương \ref{sec:chuong4}; mọi kết quả trong chương được ghi nhận tại ngày này. Các ảnh thực thi được dẫn trong từng câu và tập hợp tại \hyperref[sec:anhqsql]{phụ lục ảnh SQL}.\par\medskip
 
 \noindent\begin{minipage}{\linewidth}
 \subsection*{QSQL01 --- Cư dân đang cư trú tại Tổ 01}
@@ -246,10 +246,97 @@ ORDER BY a.ma_tai_khoan;
 Kết quả có 5 tài khoản và tổng 63 biến động. Tài khoản mã 2 ghi 21 biến động, còn tài khoản mã 5 có 0. \texttt{LEFT JOIN} giữ tài khoản chưa ghi và \texttt{COUNT(b.ma\_bien\_dong)} bỏ qua mã biến động \texttt{NULL} ở dòng nối. Xem Hình~\ref{fig:qsql10}.
 \end{minipage}\par\medskip
 
+\subsection*{Các truy vấn bổ sung}
+
+Mười câu trên đã dùng kết nối nhiều bảng, kết nối ngoài, gom nhóm có HAVING và truy vấn con tương quan. Ba câu QSQL11--QSQL13 dưới đây trình bày thêm các kỹ thuật còn thiếu: biểu thức bảng chung (CTE, mệnh đề \texttt{WITH}), hàm cửa sổ (\texttt{RANK() OVER}), truy vấn con trong \texttt{FROM} và phép chia viết bằng hai lớp \texttt{NOT EXISTS}. Mã SQL nằm trong tệp riêng \texttt{sql/07\_queries\_bo\_sung.sql} để không đổi bộ QSQL01--QSQL10 đã kiểm thử, và dùng cùng ngày tham chiếu 20/11/2026. Kết quả được kiểm chứng bằng \texttt{tests/report\_sql\_bo\_sung.sql}, trong đó mỗi câu được so với một cách viết khác không dùng kỹ thuật đang minh họa.\par\medskip
+
+\noindent\begin{minipage}{\linewidth}
+\subsection*{QSQL11 --- Hộ đông người nhất trong mỗi tổ}
+
+Với mỗi tổ, tìm hộ có nhiều cư dân đang cư trú nhất; nếu nhiều hộ bằng nhau thì giữ cả.
+
+\begin{lstlisting}[style=sqlvn]
+WITH so_nguoi AS (
+    SELECT d.ma_to,
+           q.ma_ho,
+           COUNT(DISTINCT q.ma_cu_dan) AS so_cu_dan
+    FROM qua_trinh_cu_tru AS q
+    JOIN ho_cu_tru AS h ON h.ma_ho = q.ma_ho
+    JOIN dia_chi AS d   ON d.ma_dia_chi = h.ma_dia_chi
+    WHERE q.ngay_bat_dau <= DATE '2026-11-20'
+      AND (q.ngay_ket_thuc IS NULL OR q.ngay_ket_thuc >= DATE '2026-11-20')
+    GROUP BY d.ma_to, q.ma_ho
+),
+xep_hang AS (
+    SELECT s.*,
+           RANK() OVER (PARTITION BY s.ma_to ORDER BY s.so_cu_dan DESC) AS hang
+    FROM so_nguoi AS s
+)
+SELECT x.ma_to, t.ten_to, x.ma_ho, x.so_cu_dan
+FROM xep_hang AS x
+JOIN to_dan_pho AS t ON t.ma_to = x.ma_to
+WHERE x.hang = 1
+ORDER BY x.ma_to, x.ma_ho;
+\end{lstlisting}
+
+Kết quả có 14 dòng thuộc 7 tổ; Tổ 08 không có hộ nên không xuất hiện. CTE \texttt{so\_nguoi} đếm số người của từng hộ, CTE \texttt{xep\_hang} dùng \texttt{RANK()} để xếp hạng các hộ \emph{trong từng tổ} (\texttt{PARTITION BY ma\_to}). Hộ bằng điểm nhận cùng hạng, nên Tổ 03 có năm hộ cùng 3 người và Tổ 05 có ba hộ cùng 7 người. Nếu dùng \texttt{ROW\_NUMBER()} thay cho \texttt{RANK()}, mỗi tổ chỉ còn một hộ và các hộ đồng hạng bị bỏ sót.
+\end{minipage}\par\medskip
+
+\noindent\begin{minipage}{\linewidth}
+\subsection*{QSQL12 --- Tổ đông hơn mức trung bình}
+
+Tìm các tổ có số cư dân đang cư trú lớn hơn số cư dân trung bình của một tổ, tính cả tổ chưa có người.
+
+\begin{lstlisting}[style=sqlvn]
+SELECT s.ma_to, s.ten_to, s.so_cu_dan, ROUND(s.trung_binh, 2) AS trung_binh
+FROM (
+    SELECT t.ma_to,
+           t.ten_to,
+           COUNT(DISTINCT q.ma_cu_dan) AS so_cu_dan,
+           AVG(COUNT(DISTINCT q.ma_cu_dan)) OVER () AS trung_binh
+    FROM to_dan_pho AS t
+    LEFT JOIN dia_chi AS d          ON d.ma_to = t.ma_to
+    LEFT JOIN ho_cu_tru AS h        ON h.ma_dia_chi = d.ma_dia_chi
+    LEFT JOIN qua_trinh_cu_tru AS q ON q.ma_ho = h.ma_ho
+                                   AND q.ngay_bat_dau <= DATE '2026-11-20'
+                                   AND (q.ngay_ket_thuc IS NULL OR q.ngay_ket_thuc >= DATE '2026-11-20')
+    GROUP BY t.ma_to, t.ten_to
+) AS s
+WHERE s.so_cu_dan > s.trung_binh
+ORDER BY s.so_cu_dan DESC, s.ma_to;
+\end{lstlisting}
+
+Trung bình của tám tổ là 24,88 người, và 5 tổ vượt mức này: Tổ 05 (41), Tổ 01 (34), Tổ 04 (33), Tổ 06 (30) và Tổ 02 (29). Truy vấn con trong \texttt{FROM} tạo bảng dẫn xuất \texttt{s} gồm số người của mỗi tổ và mức trung bình tính bằng \texttt{AVG(...) OVER ()} trên toàn bộ các nhóm. Cần bảng dẫn xuất vì PostgreSQL tính hàm cửa sổ sau \texttt{WHERE} và \texttt{HAVING}, nên không thể lọc trực tiếp theo \texttt{trung\_binh} trong cùng một câu \texttt{SELECT}.
+\end{minipage}\par\medskip
+
+\noindent\begin{minipage}{\linewidth}
+\subsection*{QSQL13 --- Tài khoản ghi đủ mọi loại biến động (phép chia)}
+
+Tìm những tài khoản đã ghi nhận đủ mọi loại biến động có trong dữ liệu. Đây là cách viết SQL của phép chia ở Câu 9, Chương \ref{sec:chuong4}.
+
+\begin{lstlisting}[style=sqlvn]
+SELECT a.ma_tai_khoan, a.ten_hien_thi
+FROM tai_khoan AS a
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM (SELECT DISTINCT loai_bien_dong FROM bien_dong_cu_tru) AS l
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM bien_dong_cu_tru AS b
+        WHERE b.ma_tai_khoan = a.ma_tai_khoan
+          AND b.loai_bien_dong = l.loai_bien_dong
+    )
+)
+ORDER BY a.ma_tai_khoan;
+\end{lstlisting}
+
+Kết quả có 4 tài khoản, mã 1 đến 4, khớp với Câu 9. Hai lớp \texttt{NOT EXISTS} đọc là: giữ tài khoản \texttt{a} nếu \emph{không có} loại biến động \texttt{l} nào mà \texttt{a} \emph{chưa} ghi. Tài khoản 5 chưa ghi biến động nào nên mọi loại đều thiếu và bị loại. Cách đếm số loại phân biệt bằng \texttt{GROUP BY} và \texttt{HAVING} cho cùng kết quả.
+\end{minipage}\par\medskip
+
 \noindent\begin{minipage}{\linewidth}
 \subsection*{Tổng hợp kết quả}
 
-Nhóm chạy lại cả mười truy vấn trên cơ sở dữ liệu dựng mới và kiểm tra đầy đủ các giá trị đầu ra với dữ liệu đối chiếu đã lưu.
+Nhóm chạy lại cả mười ba truy vấn trên cơ sở dữ liệu dựng mới và kiểm tra đầy đủ các giá trị đầu ra với dữ liệu đối chiếu đã lưu.
 
 \par\medskip
 {
@@ -270,8 +357,11 @@ QSQL07 & Cư dân từng cư trú và không còn đợt hiệu lực & 17 \\ \h
 QSQL08 & Thống kê biến động theo tháng và loại & 45 \\ \hline
 QSQL09 & Chuyển nội bộ giữa hai tổ & 22 \\ \hline
 QSQL10 & Số biến động theo tài khoản & 5 \\ \hline
+QSQL11 & Hộ đông người nhất trong mỗi tổ (CTE, \texttt{RANK()}) & 14 \\ \hline
+QSQL12 & Tổ đông hơn mức trung bình (truy vấn con trong \texttt{FROM}) & 5 \\ \hline
+QSQL13 & Tài khoản ghi đủ mọi loại biến động (phép chia) & 4 \\ \hline
 \end{tabularx}
-\captionof{table}{Kết quả kiểm thử QSQL01--QSQL10 trên bộ 636 bản ghi}
+\captionof{table}{Kết quả kiểm thử QSQL01--QSQL13 trên bộ 636 bản ghi}
 \label{tab:ketquasql}
 }
 \end{minipage}\par\medskip

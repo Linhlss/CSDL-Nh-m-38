@@ -143,16 +143,16 @@ for(const s of program){
   picture('erd.png',[58,106,619,530],'Ảnh ERD Chen gốc của nhóm', {
    left:1900/6375, right:1900/6375, top:300/2805, bottom:300/2805
   });
-  txtLines([['Địa bàn','Tổ quản lý địa chỉ. Địa chỉ chứa hộ.'],['Đợt cư trú','Mỗi đợt gắn một cư dân và một hộ.'],['Biến động','Đợt cũ và đợt mới là hai liên kết riêng. Mỗi biến động có tài khoản ghi nhận.']],710,173,498,{step:126,size:20});
+  txtLines([['Địa bàn','Tổ quản lý địa chỉ. Địa chỉ chứa hộ.'],['Đợt cư trú','Mỗi đợt gắn một cư dân và một hộ.'],['Biến động','Đợt cũ và đợt mới là hai liên kết 1–1 riêng. Mỗi biến động có tài khoản ghi nhận.']],710,173,498,{step:126,size:20});
   break;
  case 7:
   picture('diagrams/erd_v1.png',[51,109,763,530],'Ảnh gốc lược đồ bảy bảng của nhóm', {
    left:40/2300, right:40/2300, top:25/1626, bottom:60/1626
   });
   text('7 bảng · 35 cột',855,135,369,53,25,{color:navy,bold:true});
-  text('7 khóa chính và 7 khóa ngoại',855,189,370,68,20,{color:muted});
+  text('7 khóa chính, 7 khóa ngoại, 5 UNIQUE',855,189,370,68,20,{color:muted});
   txtLines([['Khóa ngoại phía N','Địa chỉ giữ mã tổ. Hộ giữ mã địa chỉ.'],
-   ['Hai khóa ngoại về đợt','Đợt cũ và đợt mới có thể để trống tùy loại biến động.']],
+   ['Hai khóa ngoại về đợt','Có thể để trống tùy loại biến động; UNIQUE giữ liên kết 1–1.']],
    855,292,369,{step:139,size:18});
   break;
  case 8:
@@ -160,7 +160,7 @@ for(const s of program){
   text('Mỗi lần chuyển sẽ lặp họ tên, địa chỉ và thông tin người ghi.',63,216,349,184,24);
   ar(425,259,69);
   tbl([['Tách bảng','Phụ thuộc hàm'],['Cư dân','ma_cu_dan xác định hồ sơ'],['Hộ','ma_ho xác định địa chỉ và ngày lập'],['Đợt cư trú','ma_qua_trinh xác định người, hộ, loại, khoảng ngày'],['Biến động','ma_bien_dong xác định sự kiện và tài khoản']],528,155,[186,509],66,17);
-  text('Kết luận 3NF có điều kiện. B09 kiểm soát phần dư thừa của ngày biến động.',63,526,1150,84,23,{color:navy,bold:true});
+  text('Cả bảy bảng đạt BCNF. Ngày biến động lặp giữa hai bảng, B09 giữ cho khớp.',63,526,1150,84,23,{color:navy,bold:true});
   break;
  case 9:
   text('B06 · Khoảng ngày',56,144,380,45,21,{color:navy,bold:true});
@@ -255,7 +255,7 @@ for(const s of program){
   txtLines([['Quan hệ bị chia','Các cặp (mã tài khoản, loại biến động) phân biệt trong BD.'],['Quan hệ chia','Tập loại biến động xuất hiện trong BD. Mẫu có 3 loại.'],['Điều kiện và tập trả về','Với mọi loại trong số chia, cặp tài khoản và loại đều có trong số bị chia.\nKết quả {1, 2, 3, 4}.']],57,251,1150,{step:107,size:20});
   break;
  case 24:
-  txtLines([['RA 4 · Hiệu','π[mã cư dân](Qbd) − π[mã cư dân](Qht), rồi nối hồ sơ.\nHiện tại không còn đợt hiệu lực.'],['RA 5 · Giao','π[mã cư dân](đợt tạm trú) ∩ π[mã cư dân](đợt thường trú).\nCư dân có cả hai loại trong lịch sử.'],['RA 6 · Hợp','π[mã biến động](BD nối đợt cũ của cư dân 92)\n∪ π[mã biến động](BD nối đợt mới của cư dân 92).']],58,147,1160,{step:153,size:20});
+  txtLines([['RA 4 · Hiệu','π[mã cư dân](Qbd) − π[mã cư dân](Qht), rồi nối hồ sơ.\nHiện tại không còn đợt hiệu lực.'],['RA 5 · Giao','π[mã cư dân](đợt tạm trú) ∩ π[mã cư dân](đợt thường trú).\nCư dân có cả hai loại trong lịch sử.'],['RA 6 · Hợp','π[mã biến động](BD nối đợt cũ của cư dân 15)\n∪ π[mã biến động](BD nối đợt mới của cư dân 15).']],58,147,1160,{step:153,size:20});
   break;
  case 25:
   tbl([['Mã câu','Nội dung','Kỹ thuật chính','Số dòng'],...sql.map(([a,b],n)=>[qsqlId(n+1),a,b,qsqlRows[qsqlId(n+1)].length])],55,142,[145,582,325,113],41,15);

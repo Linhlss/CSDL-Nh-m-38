@@ -64,17 +64,17 @@ Nguồn `Báo_cáo_CSDL_nhóm_38/chuong2.tex`, `sql/01_schema.sql`.
 
 TV1 · 85 giây / 05:05
 
-Đây là ERD dùng ký hiệu Chen. Hình chữ nhật là thực thể, hình thoi là liên kết và hình elip là thuộc tính. Bắt đầu từ góc trên, một tổ quản lý nhiều địa chỉ và một địa chỉ có thể có nhiều hộ. Về phía cư dân, một người có thể có nhiều đợt. Mỗi đợt gắn đúng một người và một hộ. Vì thế quan hệ nhiều nhiều giữa cư dân với hộ theo thời gian được biểu diễn qua thực thể đợt. Ở góc dưới, biến động nối tới đợt với hai vai trò độc lập. Chuyển đến có đợt mới, chuyển đi có đợt cũ, còn chuyển nội bộ có cả hai và cùng cư dân. Mỗi biến động cũng tham chiếu tài khoản ghi nhận. Điều kiện tài khoản đang hoạt động được xét lúc ghi. Các số một và N trên hình cho biết bản số, còn hai vai trò đợt cũ và đợt mới sẽ thành hai khóa ngoại riêng trong lược đồ SQL.
+Đây là ERD dùng ký hiệu Chen. Hình chữ nhật là thực thể, hình thoi là liên kết và hình elip là thuộc tính. Bắt đầu từ góc trên, một tổ quản lý nhiều địa chỉ và một địa chỉ có thể có nhiều hộ. Về phía cư dân, một người có thể có nhiều đợt. Mỗi đợt gắn đúng một người và một hộ. Vì thế quan hệ nhiều nhiều giữa cư dân với hộ theo thời gian được biểu diễn qua thực thể đợt. Ở góc dưới, biến động nối tới đợt với hai vai trò độc lập. Chuyển đến có đợt mới, chuyển đi có đợt cũ, còn chuyển nội bộ có cả hai và cùng cư dân. Mỗi biến động cũng tham chiếu tài khoản ghi nhận. Điều kiện tài khoản đang hoạt động được xét lúc ghi. Các số một và N trên hình cho biết bản số. Riêng đợt cũ và đợt mới là liên kết một một, vì một đợt chỉ bị một biến động kết thúc và chỉ được một biến động mở. Hai vai trò này sẽ thành hai khóa ngoại riêng trong lược đồ SQL.
 
 Thao tác (25 giây) · Lần theo ba vùng của ERD. Dừng ở hai hình thoi Đợt cũ và Đợt mới.
 
 Nguồn `Báo_cáo_CSDL_nhóm_38/chuong2.tex`, `erd.png`, `docs/03_dac_ta_nghiep_vu.md`.
 
-## 07 · Từ liên kết 1–N đến khóa ngoại
+## 07 · Từ liên kết đến khóa ngoại
 
 TV1 · 55 giây / 06:00
 
-Khi ánh xạ một liên kết một nhiều, nhóm đặt khóa ngoại ở bảng phía nhiều. Ví dụ, địa chỉ mang mã tổ và hộ mang mã địa chỉ. Bảng quá trình có khóa riêng và tham chiếu cư dân cùng hộ. Bảng biến động có ba khóa ngoại. Một khóa chỉ người ghi, hai khóa còn lại cùng trỏ bảng quá trình nhưng tên cột khác nhau để chỉ đợt cũ và đợt mới. Hai cột này cho phép NULL tùy loại biến động. Những khóa ngoại khác là bắt buộc. Lược đồ có bảy bảng, ba mươi lăm cột, bảy khóa chính và bảy khóa ngoại. Cách đặt khóa giúp lần theo từ biến động đến những đợt đã lưu và nơi ở tương ứng.
+Khi ánh xạ một liên kết một nhiều, nhóm đặt khóa ngoại ở bảng phía nhiều. Ví dụ, địa chỉ mang mã tổ và hộ mang mã địa chỉ. Bảng quá trình có khóa riêng và tham chiếu cư dân cùng hộ. Bảng biến động có ba khóa ngoại. Một khóa chỉ người ghi, hai khóa còn lại cùng trỏ bảng quá trình nhưng tên cột khác nhau để chỉ đợt cũ và đợt mới. Hai cột này cho phép NULL tùy loại biến động, và mỗi cột có ràng buộc UNIQUE riêng để giữ liên kết một một. Những khóa ngoại khác là bắt buộc. Lược đồ có bảy bảng, ba mươi lăm cột, bảy khóa chính, bảy khóa ngoại và năm ràng buộc UNIQUE. Cách đặt khóa giúp lần theo từ biến động đến những đợt đã lưu và nơi ở tương ứng.
 
 Thao tác (11 giây) · Chỉ đường tổ, địa chỉ, hộ và hai FK về bảng đợt.
 
@@ -84,7 +84,7 @@ Nguồn `Báo_cáo_CSDL_nhóm_38/chuong3.tex`, `diagrams/erd_v1.png`, `sql/01_sc
 
 TV1 · 45 giây / 06:45
 
-Nếu gộp họ tên, nơi ở, ngày cư trú và người ghi vào một bảng, họ tên sẽ lặp theo mỗi lần chuyển. Trong lược đồ hiện tại, mã cư dân xác định hồ sơ và mã đợt xác định khoảng thời gian. Cặp mã tổ và địa chỉ chuẩn là khóa ứng viên của địa chỉ. Báo cáo phân tích chuẩn hóa theo các phụ thuộc hàm đã công bố. Ngày biến động có thể suy ra từ đợt liên quan theo B09, nhưng nhóm giữ giá trị này để biểu diễn ngày nghiệp vụ trực tiếp và dùng trigger kiểm tra nhất quán. Vì vậy kết luận về chuẩn ba có điều kiện.
+Nếu gộp họ tên, nơi ở, ngày cư trú và người ghi vào một bảng, họ tên sẽ lặp theo mỗi lần chuyển. Trong lược đồ hiện tại, mã cư dân xác định hồ sơ và mã đợt xác định khoảng thời gian. Cặp mã tổ và địa chỉ chuẩn là khóa ứng viên của địa chỉ. Báo cáo phân tích chuẩn hóa theo các phụ thuộc hàm đã công bố. Ở cả bảy bảng, vế trái của mọi phụ thuộc hàm đều là khóa, nên cả bảy bảng đạt BCNF. Ngày biến động trùng với ngày của đợt theo B09, nhưng đây là dữ liệu lặp giữa hai bảng, không phải phụ thuộc trong một bảng; trigger kiểm tra để hai bảng luôn khớp.
 
 Thao tác (4 giây) · Đối chiếu ví dụ bảng gộp với hai hàng hồ sơ và đợt.
 
@@ -94,7 +94,7 @@ Nguồn `Báo_cáo_CSDL_nhóm_38/chuong3.tex`, `docs/04_data_dictionary_va_chuan
 
 TV1 · 55 giây / 07:40
 
-B06 dùng ràng buộc loại trừ GiST để hai đợt của cùng người và cùng loại không chồng ngày. Một đợt thường trú và một đợt tạm trú có thể đồng thời tồn tại. B09 dùng trigger kiểm tra ở cả hai chiều. Khi chuyển vào ngày t, đợt cũ kết thúc vào t trừ một ngày và đợt mới bắt đầu vào ngày t. Nếu sửa lại mốc một đợt đã liên kết, trigger cũng kiểm tra sự nhất quán. B10 là tính nguyên tử của nghiệp vụ: hàm đóng đợt cũ, mở đợt mới và ghi biến động trong cùng giao dịch. Nếu một bước lỗi, cả chuỗi được hoàn tác. Các ca hợp lệ và vi phạm nằm trong bộ kiểm thử ràng buộc. Em mời Ngọc trình bày dữ liệu và truy vấn SQL.
+B06 dùng ràng buộc loại trừ GiST để hai đợt của cùng người và cùng loại không chồng ngày. Một đợt thường trú và một đợt tạm trú có thể đồng thời tồn tại. B09 dùng trigger kiểm tra ở cả hai chiều. Khi chuyển vào ngày t, đợt cũ kết thúc vào t trừ một ngày và đợt mới bắt đầu vào ngày t. Nếu sửa lại mốc một đợt đã liên kết, trigger cũng kiểm tra sự nhất quán. B10 là tính nguyên tử của nghiệp vụ: ba hàm chuyển nội bộ, chuyển đi và chuyển đến đóng hoặc mở đợt và ghi biến động trong cùng giao dịch. Nếu một bước lỗi, cả chuỗi được hoàn tác. Các ca hợp lệ và vi phạm nằm trong bộ kiểm thử ràng buộc. Em mời Ngọc trình bày dữ liệu và truy vấn SQL.
 
 Thao tác (10 giây) · Chỉ đường biên t và ba bước trong giao dịch. Mời Ngọc vào phần 2.
 
@@ -302,7 +302,7 @@ Nguồn `Báo_cáo_CSDL_nhóm_38/chuong6.tex`, `sql/05_security.sql`, `tests/rep
 
 TV1 / TV3 · Hỏi đáp
 
-E1 phát hiện đợt dùng lặp trong cùng vai trò ở bước kiểm tra dữ liệu. B3 thử hai cách tra cứu trên cụm cô lập và kết thúc bằng ROLLBACK. Theo log, cách sử dụng tham số trả 0 dòng với đầu vào thử và 8 dòng cho từ khóa thông thường. Những việc mở rộng là kiểm toán sửa lịch sử, phân quyền theo tổ và chính sách công bố nhóm nhỏ.
+Hai ràng buộc UNIQUE chặn ngay việc một đợt bị dùng lặp trong cùng vai trò; E1 kiểm tra lại ở bước kiểm tra dữ liệu. B3 thử hai cách tra cứu trên cụm cô lập và kết thúc bằng ROLLBACK. Theo log, cách sử dụng tham số trả 0 dòng với đầu vào thử và 8 dòng cho từ khóa thông thường. Những việc mở rộng là kiểm toán sửa lịch sử, phân quyền theo tổ và chính sách công bố nhóm nhỏ.
 
 Nguồn `Báo_cáo_CSDL_nhóm_38/chuong6.tex`, `Báo_cáo_CSDL_nhóm_38/ketluan.tex`, `sql/03_seed.sql`, `tests/final_test_log.md`, `tests/report_current_date_log.txt`, `tests/report_security_ch6_log.txt`.
 

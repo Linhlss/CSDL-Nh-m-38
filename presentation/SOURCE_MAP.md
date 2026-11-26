@@ -10,8 +10,8 @@ Hai trang nhận diện và ba trang phân phần dùng bố cục gốc của m
 | 03 | Giữ cả hai đợt theo thời gian và liên kết chúng bằng một biến động. | `Báo_cáo_CSDL_nhóm_38/chuong1.tex`, `Báo_cáo_CSDL_nhóm_38/loimodau.tex` | Đối chiếu báo cáo và nguồn thiết kế |
 | 04 | Sáu nhóm bao phủ 14 chức năng cấp 2. | `Báo_cáo_CSDL_nhóm_38/chuong1.tex`, `Báo_cáo_CSDL_nhóm_38/image/phan_ra_chuc_nang.png` | Đối chiếu báo cáo và nguồn thiết kế |
 | 05 | Quá trình cư trú nối cư dân với hộ theo khoảng thời gian. | `Báo_cáo_CSDL_nhóm_38/chuong2.tex`, `sql/01_schema.sql` | Đối chiếu báo cáo và nguồn thiết kế |
-| 06 | Bảy liên kết 1–N, trong đó đợt cũ và đợt mới là hai vai trò riêng. | `Báo_cáo_CSDL_nhóm_38/chuong2.tex`, `erd.png`, `docs/03_dac_ta_nghiep_vu.md` | Đối chiếu báo cáo và nguồn thiết kế |
-| 07 | Mỗi FK nằm ở bảng phía N, kể cả hai FK cùng trỏ tới đợt cư trú. | `Báo_cáo_CSDL_nhóm_38/chuong3.tex`, `diagrams/erd_v1.png`, `sql/01_schema.sql` | Đối chiếu báo cáo và nguồn thiết kế |
+| 06 | Năm liên kết 1–N và hai liên kết 1–1 đợt cũ, đợt mới. | `Báo_cáo_CSDL_nhóm_38/chuong2.tex`, `erd.png`, `docs/03_dac_ta_nghiep_vu.md` | Đối chiếu báo cáo và nguồn thiết kế |
+| 07 | FK nằm ở bảng phía N; hai FK về đợt có thêm UNIQUE cho liên kết 1–1. | `Báo_cáo_CSDL_nhóm_38/chuong3.tex`, `diagrams/erd_v1.png`, `sql/01_schema.sql` | Đối chiếu báo cáo và nguồn thiết kế |
 | 08 | Tách dữ liệu theo phụ thuộc hàm, giữ ngày biến động với ràng buộc B09. | `Báo_cáo_CSDL_nhóm_38/chuong3.tex`, `docs/04_data_dictionary_va_chuan_hoa.md` | Đối chiếu báo cáo và nguồn thiết kế |
 | 09 | PostgreSQL kiểm tra thời gian và giữ ba bước chuyển nội bộ trong một giao dịch. | `Báo_cáo_CSDL_nhóm_38/chuong3.tex`, `sql/02_constraints.sql`, `tests/constraints_week2.sql`, `tests/week2_tv1_integration_log.md` | Đối chiếu log PostgreSQL và báo cáo |
 | Phần 2 | Mở đầu phần trình bày của Trần Tuấn Ngọc. | `Slide/HUST_PPT_template_2022_Blue_16x9.pptx` | Bố cục gốc trong mẫu HUST |

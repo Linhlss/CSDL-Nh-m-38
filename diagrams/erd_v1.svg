@@ -20,10 +20,10 @@
   <text x="990" y="399.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">0..N</text>
   <polyline points="720,470 830,470" fill="none" stroke="#52657b" stroke-width="1.6" />
   <text x="723" y="488.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">0..1</text>
-  <text x="790" y="488.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">0..N</text>
+  <text x="790" y="488.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">0..1</text>
   <polyline points="720,550 830,550" fill="none" stroke="#52657b" stroke-width="1.6" />
   <text x="723" y="568.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">0..1</text>
-  <text x="790" y="568.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">0..N</text>
+  <text x="790" y="568.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">0..1</text>
   <text x="774.5" y="457.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="middle">đợt cũ</text>
   <text x="774.5" y="537.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="middle">đợt mới</text>
   <rect x="30" y="110" width="250" height="106" fill="#f3f7fc" stroke="#31577c" stroke-width="1" />
@@ -83,5 +83,5 @@
   <text x="838" y="604.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">    thoi_diem_ghi : timestamptz</text>
   <text x="838" y="628.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">    ghi_chu : text ?</text>
   <text x="35" y="749.5" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">Ký hiệu: PK khóa chính • FK khóa ngoại • UQ duy nhất • ? cho phép NULL • 1 bắt buộc • 0..1 tùy chọn • 0..N nhiều</text>
-  <text x="35" y="779.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">Mỗi sự kiện: đến chỉ đợt mới; đi chỉ đợt cũ; nội bộ có cả hai. UNIQUE ghép địa chỉ: (ma_to, dia_chi_chuan).</text>
+  <text x="35" y="779.0" fill="#183153" font-family="Arial, sans-serif" font-size="12" font-weight="400" text-anchor="start">Mỗi sự kiện: đến chỉ đợt mới; đi chỉ đợt cũ; nội bộ có cả hai. UNIQUE ghép địa chỉ: (ma_to, dia_chi_chuan). Đợt cũ/mới 1–1: UNIQUE riêng từng cột (X07).</text>
 </svg>

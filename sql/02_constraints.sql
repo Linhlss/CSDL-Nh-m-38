@@ -252,9 +252,100 @@ BEGIN
     RETURN QUERY SELECT v_moi, v_sk;
 END
 $fn$;
--- E1: assertion CHỈ dùng khi validation, không đặt UNIQUE lên lịch sử.
+
+-- B10 cho chuyển đi: đóng đợt cũ và ghi biến động CHUYEN_DI trong một lần gọi.
+CREATE OR REPLACE FUNCTION fn_chuyen_di(
+    p_ma_qua_trinh_cu BIGINT,
+    p_ngay_chuyen DATE,
+    p_ma_tai_khoan BIGINT
+) RETURNS BIGINT
+LANGUAGE plpgsql AS $fn$
+DECLARE
+    v_cu qua_trinh_cu_tru%ROWTYPE;
+    v_sk BIGINT;
+BEGIN
+    SELECT * INTO v_cu FROM qua_trinh_cu_tru
+    WHERE ma_qua_trinh = p_ma_qua_trinh_cu FOR UPDATE;
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'B10: đợt cũ % không tồn tại', p_ma_qua_trinh_cu
+            USING ERRCODE = '23503';
+    END IF;
+    IF v_cu.ngay_ket_thuc IS NOT NULL OR p_ngay_chuyen <= v_cu.ngay_bat_dau THEN
+        RAISE EXCEPTION 'B10: đợt cũ phải đang mở và bắt đầu trước ngày chuyển'
+            USING ERRCODE = '23514';
+    END IF;
+
+    UPDATE qua_trinh_cu_tru
+    SET ngay_ket_thuc = p_ngay_chuyen - 1
+    WHERE ma_qua_trinh = p_ma_qua_trinh_cu;
+
+    INSERT INTO bien_dong_cu_tru (
+        loai_bien_dong, ma_qua_trinh_cu, ma_qua_trinh_moi,
+        ngay_bien_dong, ma_tai_khoan
+    ) VALUES (
+        'CHUYEN_DI', p_ma_qua_trinh_cu, NULL,
+        p_ngay_chuyen, p_ma_tai_khoan
+    ) RETURNING ma_bien_dong INTO v_sk;
+
+    RETURN v_sk;
+END
+$fn$;
+
+-- B10 cho chuyển đến: mở đợt mới và ghi biến động CHUYEN_DEN trong một lần gọi.
+-- B06 (không chồng lấn) và B15 (ngày hợp lý) vẫn do ràng buộc/trigger kiểm tra.
+CREATE OR REPLACE FUNCTION fn_chuyen_den(
+    p_ma_cu_dan BIGINT,
+    p_ma_ho BIGINT,
+    p_loai VARCHAR(20),
+    p_ngay_chuyen DATE,
+    p_ma_tai_khoan BIGINT
+) RETURNS TABLE(ma_dot_moi BIGINT, ma_su_kien BIGINT)
+LANGUAGE plpgsql AS $fn$
+DECLARE
+    v_moi BIGINT;
+    v_sk BIGINT;
+BEGIN
+    INSERT INTO qua_trinh_cu_tru (
+        ma_cu_dan, ma_ho, loai_cu_tru, ngay_bat_dau, ngay_ket_thuc
+    ) VALUES (p_ma_cu_dan, p_ma_ho, p_loai, p_ngay_chuyen, NULL)
+    RETURNING ma_qua_trinh INTO v_moi;
+
+    INSERT INTO bien_dong_cu_tru (
+        loai_bien_dong, ma_qua_trinh_cu, ma_qua_trinh_moi,
+        ngay_bien_dong, ma_tai_khoan
+    ) VALUES (
+        'CHUYEN_DEN', NULL, v_moi,
+        p_ngay_chuyen, p_ma_tai_khoan
+    ) RETURNING ma_bien_dong INTO v_sk;
+
+    RETURN QUERY SELECT v_moi, v_sk;
+END
+$fn$;
+
+-- X07 (sửa 26/11/2026): một đợt chỉ bị kết thúc bởi tối đa một biến động và
+-- chỉ được mở bởi tối đa một biến động, nên hai liên kết đợt cũ/đợt mới là
+-- 1-1. UNIQUE trên từng cột chặn ghi trùng ngay lúc INSERT/UPDATE (23505).
+-- PostgreSQL cho nhiều NULL trong cột UNIQUE, nên CHUYEN_DEN/CHUYEN_DI vẫn
+-- để trống cột còn lại như CHECK ck_bd_hinh_dang yêu cầu.
+DO $ddl$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname='uq_bd_dot_cu'
+       AND conrelid='bien_dong_cu_tru'::regclass) THEN
+        ALTER TABLE bien_dong_cu_tru ADD CONSTRAINT uq_bd_dot_cu
+            UNIQUE (ma_qua_trinh_cu);
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname='uq_bd_dot_moi'
+       AND conrelid='bien_dong_cu_tru'::regclass) THEN
+        ALTER TABLE bien_dong_cu_tru ADD CONSTRAINT uq_bd_dot_moi
+            UNIQUE (ma_qua_trinh_moi);
+    END IF;
+END
+$ddl$;
+
+-- E1: assertion dùng khi validation. Từ khi có uq_bd_dot_cu/uq_bd_dot_moi,
+-- dữ liệu trùng không ghi được nữa; hàm được giữ để kiểm tra lại CSDL cũ.
 -- Một đợt có thể xuất hiện một lần mỗi vai trò (mới rồi cũ), nhưng không
--- được xuất hiện nhiều lần TRONG CÙNG MỘT VAI TRÒ ở bộ dữ liệu nghiệm thu.
+-- được xuất hiện nhiều lần TRONG CÙNG MỘT VAI TRÒ.
 CREATE OR REPLACE FUNCTION fn_assert_e1()
 RETURNS void LANGUAGE plpgsql AS $fn$
 BEGIN
@@ -378,5 +469,7 @@ COMMIT;
 -- Mẫu sử dụng (không tự chạy):
 -- BEGIN;
 -- SELECT * FROM fn_chuyen_noi_bo(1, 2, 'THUONG_TRU', DATE '2026-11-20', 1);
+-- SELECT fn_chuyen_di(50, DATE '2026-11-20', 2);
+-- SELECT * FROM fn_chuyen_den(5, 3, 'TAM_TRU', DATE '2026-11-20', 2);
 -- COMMIT;
 -- Nếu bất kỳ bước nào lỗi, ROLLBACK toàn bộ giao dịch.

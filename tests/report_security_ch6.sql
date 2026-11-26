@@ -101,7 +101,9 @@ RETURNS TABLE (ma_cu_dan BIGINT, ho_ten VARCHAR, ngay_sinh DATE)
 LANGUAGE sql STABLE AS $$
     SELECT c.ma_cu_dan, c.ho_ten, c.ngay_sinh
     FROM cu_dan c
-    WHERE c.ho_ten LIKE '%' || p_ten || '%';
+    -- Thoát \, % và _ để chúng chỉ là ký tự thường, không phải ký tự đại diện.
+    WHERE c.ho_ten LIKE '%' || replace(replace(replace(p_ten,
+              '\', '\\'), '%', '\%'), '_', '\_') || '%' ESCAPE '\';
 $$;
 
 REVOKE EXECUTE ON FUNCTION fn_tim_cu_dan(TEXT) FROM PUBLIC;
@@ -115,6 +117,9 @@ SELECT 'E3-sai-tan-cong'  AS ca, COUNT(*) AS so_dong FROM fn_tim_cu_dan_sai('x''
 SELECT 'E3-dung-tan-cong' AS ca, COUNT(*) AS so_dong FROM fn_tim_cu_dan('x'' OR 1=1 --');      -- báo cáo: 0
 SELECT 'E3-dung-Hung'     AS ca, COUNT(*) AS so_dong FROM fn_tim_cu_dan('Hùng');               -- báo cáo: 8
 SELECT 'E3-doi-chung-Hung' AS ca, COUNT(*) AS so_dong FROM cu_dan WHERE ho_ten LIKE '%Hùng%';
+SELECT 'E3-dung-phan-tram' AS ca, COUNT(*) AS so_dong FROM fn_tim_cu_dan('%');                  -- báo cáo: 0
+SELECT 'E3-dung-gach-duoi' AS ca, COUNT(*) AS so_dong FROM fn_tim_cu_dan('_');                  -- báo cáo: 0
+SELECT 'E3-khong-thoat-phan-tram' AS ca, COUNT(*) AS so_dong FROM cu_dan WHERE ho_ten LIKE '%' || '%' || '%'; -- 200 nếu không thoát
 
 -- Quyền gọi hàm tra cứu
 SET ROLE csdl17_reader;
