@@ -425,13 +425,13 @@
     },
     {
       "path": "presentation/CSDL_Nhom38_HUST_ThuyetTrinh.pdf",
-      "bytes": 2592923,
-      "sha256": "54f33ffe2ecef335b0e2c46880897a0c51b955d5693c9226fec507e3cb89a4df"
+      "bytes": 2642673,
+      "sha256": "a9f3470f5bf4df615e1cae51298978477dd9adac49a8ab7c7910579120fc6394"
     },
     {
       "path": "presentation/CSDL_Nhom38_HUST_ThuyetTrinh.pptx",
-      "bytes": 3923741,
-      "sha256": "ecfc98a4faba5c5ef9c89c609def9bd39bd14c41b186a9aaba890973d551b1b0"
+      "bytes": 3924879,
+      "sha256": "f2fee22ed0948013cfa43ef20405a3f7d98418d980c809bd667febf422a9a69f"
     },
     {
       "path": "presentation/README.md",
@@ -440,23 +440,23 @@
     },
     {
       "path": "presentation/SLIDE_QA.md",
-      "bytes": 7280,
-      "sha256": "d7321173e6e2309d00984bd149f6f1e06f256be6eee579b4f6a347975e2edf91"
+      "bytes": 7890,
+      "sha256": "d46a1b8a007796b6177e49ca1f6dfb189ac42a0b5cd33c05418a03985c39fe92"
     },
     {
       "path": "presentation/SOURCE_MAP.md",
-      "bytes": 8786,
-      "sha256": "466d456c91933ef956acbfec9ae1c8dd7223abc51c26e83f6c577eca0f4dd754"
+      "bytes": 9026,
+      "sha256": "77253680a699d4ecab16377d8856508e860a518ace047316282430a5bae62d85"
     },
     {
       "path": "presentation/SPEAKER_NOTES.md",
-      "bytes": 27586,
-      "sha256": "a103e07745ce425f041fb8b72f87632f3e7f2654d8260851ab879020dc753bba"
+      "bytes": 28396,
+      "sha256": "606cb29461d26e8f7ad3b6c79b7ffdd8108a27cbbc817a8a6d5316e67ba9d326"
     },
     {
       "path": "presentation/STORYBOARD.md",
-      "bytes": 9253,
-      "sha256": "48de824afdea6a29e9d22ed1e5298194fc43bfbe204579f8f1c19b6b9b341fc0"
+      "bytes": 9383,
+      "sha256": "05ecc9149f7495e42ba91aade2908d103e98cbc82cc5c76d3c08fa72e1ddc392"
     },
     {
       "path": "presentation/apply_template.py",
@@ -465,43 +465,43 @@
     },
     {
       "path": "presentation/build.mjs",
-      "bytes": 20902,
-      "sha256": "d724cfa6cf523d08b0903c93cb123b84464a750d275c5a574e9dd4387e2755a4"
+      "bytes": 21381,
+      "sha256": "0e0c66c91cdd1de5cde4d0e1379831a0b63b86740f74604ebafd1d889f98cbd8"
     },
     {
       "path": "presentation/check_deck.py",
-      "bytes": 9026,
-      "sha256": "e1ebcf1fa0d967e8c34fac1f3bf527c32fd66400d7756d73c41df839bd85b70a"
+      "bytes": 9736,
+      "sha256": "dc57cb2301c2e31bb58ae59c79feb074c9fc1449d3ea5f02c777502027ea779a"
     },
     {
       "path": "presentation/preview/01-06.jpg",
-      "bytes": 229410,
-      "sha256": "1ea859148148178033dfa159c1994fee235a92cad965a34a65457cb1d3eb910c"
+      "bytes": 234839,
+      "sha256": "04821b27f965646b5da47030347d61b498b564eb5d5b90e0ce982804991fb556"
     },
     {
       "path": "presentation/preview/07-12.jpg",
-      "bytes": 202085,
-      "sha256": "f63a9a5d368eda4e6bea3cb103ab41ca09ea3382124ae4a8d4a6531db3d40013"
+      "bytes": 209223,
+      "sha256": "ad30c929c80dfd44a6f5d968133d50f9dbf3a3d02c1e20a5269fe6a39a09c72b"
     },
     {
       "path": "presentation/preview/13-18.jpg",
-      "bytes": 198488,
-      "sha256": "970334249b893cb18ffb3f0e346089509405fd05e59259ac3229fe574b614961"
+      "bytes": 203369,
+      "sha256": "7e8eb8b0472e8ef226760f5e2484d8ade79ddc997c947f3e67f7498f095ffc4a"
     },
     {
       "path": "presentation/preview/19-24.jpg",
-      "bytes": 214891,
-      "sha256": "58f02959e19dc5f234a28d784ecf0cd51c57a13bc49def9e50fb4cd129e28445"
+      "bytes": 226084,
+      "sha256": "20ec1579a9944e58e98b2642b9b07b64ba69c0988db7a4f0c85c3cae3ce53454"
     },
     {
       "path": "presentation/preview/25-30.jpg",
-      "bytes": 220051,
-      "sha256": "094a41c449eea1a6fc1ede455958a44fb1810c796e2465b391def3254359523a"
+      "bytes": 227703,
+      "sha256": "95305c07ad479596204fd2d73c03840180e054c7418c1359c8f9f29b3827c17c"
     },
     {
       "path": "presentation/preview/31-36.jpg",
-      "bytes": 231408,
-      "sha256": "934c7c093fbe3aa88c84e477ae0740b05bbd836b26804a9c2639c9ffc1bba570"
+      "bytes": 239998,
+      "sha256": "5b23a77f7d5cfb388e935a03f274f21b4461aa41f4e1e45051026e993f381ddd"
     },
     {
       "path": "presentation/rebuild.sh",
@@ -510,13 +510,13 @@
     },
     {
       "path": "presentation/story.mjs",
-      "bytes": 32015,
-      "sha256": "429dd621447940c46108f7f5e8c6b3ff7d5024312a22be57aa6df5e813241eea"
+      "bytes": 33306,
+      "sha256": "23942d890139ac6320d7b5134ef077b7dd8b6d9dc9ea0fc974b67409e510c6d5"
     },
     {
       "path": "presentation/storyboard.mjs",
-      "bytes": 2186,
-      "sha256": "8a3b699ca5059876f1f2e18af7465122cbaea85d81b2dbf2b30fff9224dc2f00"
+      "bytes": 2248,
+      "sha256": "0933b75a8e09b733d1f3d9b7ca214eb4926d55e373c496dc4ec8b9f2970401ba"
     },
     {
       "path": "scripts/.gitkeep",
