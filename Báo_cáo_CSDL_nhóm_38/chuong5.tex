@@ -1,7 +1,7 @@
 \section{TRUY VẤN BẰNG SQL}
 \label{sec:chuong5}
 
-Chương này trình bày mười truy vấn QSQL01--QSQL10 trên cơ sở dữ liệu gồm 636 bản ghi. Mỗi câu gồm yêu cầu nghiệp vụ, câu SQL và nhận xét về đầu ra. Mã SQL được lấy từ \texttt{sql/04\_queries.sql} và giữ đúng điều kiện lọc của lần kiểm thử trên pgAdmin. Các ảnh thực thi được dẫn trong từng câu và tập hợp tại \hyperref[sec:anhqsql]{phụ lục ảnh SQL}.\par\medskip
+Chương này trình bày mười truy vấn QSQL01--QSQL10 và ba truy vấn bổ sung QSQL11--QSQL13 trên cơ sở dữ liệu gồm 636 bản ghi. Mỗi câu chính gồm yêu cầu nghiệp vụ, câu SQL và nhận xét về đầu ra. Mã SQL của mười câu chính được lấy từ \texttt{sql/04\_queries.sql} và giữ đúng điều kiện lọc của lần kiểm thử trên pgAdmin. Các câu xét hiệu lực (QSQL01--QSQL03, QSQL07) giữ điều kiện ngày \texttt{DATE '2026-11-20'}. Đây là điều kiện trong các ảnh pgAdmin của mười câu chính. Các ảnh thực thi được dẫn trong từng câu và tập hợp tại \hyperref[sec:anhqsql]{phụ lục ảnh SQL}.\par\medskip
 
 \noindent\begin{minipage}{\linewidth}
 \subsection*{QSQL01 --- Cư dân đang cư trú tại Tổ 01}
@@ -247,9 +247,15 @@ Kết quả có 5 tài khoản và tổng 63 biến động. Tài khoản mã 2 
 \end{minipage}\par\medskip
 
 \noindent\begin{minipage}{\linewidth}
+\subsection*{Các truy vấn bổ sung}
+
+Mười câu trên đã dùng kết nối nhiều bảng, kết nối ngoài, gom nhóm có HAVING và truy vấn con tương quan. Ba câu QSQL11--QSQL13 minh họa thêm biểu thức bảng chung (CTE, mệnh đề \texttt{WITH}), hàm cửa sổ (\texttt{RANK() OVER}), truy vấn con trong \texttt{FROM} và phép chia viết bằng hai lớp \texttt{NOT EXISTS}. Mã SQL được in ở \hyperref[sec:qsql-bo-sung]{Phụ lục A.8} và lưu trong tệp riêng \texttt{sql/07\_queries\_bo\_sung.sql}. QSQL11 và QSQL12 xét hiệu lực theo \texttt{CURRENT\_DATE}. Kết quả được kiểm chứng bằng \texttt{tests/report\_sql\_bo\_sung.sql}, trong đó mỗi câu được so với một cách viết khác không dùng kỹ thuật đang minh họa.
+\end{minipage}\par\medskip
+
+\noindent\begin{minipage}{\linewidth}
 \subsection*{Tổng hợp kết quả}
 
-Nhóm chạy lại cả mười truy vấn trên cơ sở dữ liệu dựng mới và kiểm tra đầy đủ các giá trị đầu ra với dữ liệu đối chiếu đã lưu.
+Nhóm chạy lại cả mười ba truy vấn trên cơ sở dữ liệu dựng mới và kiểm tra đầy đủ các giá trị đầu ra với dữ liệu đối chiếu đã lưu.
 
 \par\medskip
 {
@@ -270,8 +276,11 @@ QSQL07 & Cư dân từng cư trú và không còn đợt hiệu lực & 17 \\ \h
 QSQL08 & Thống kê biến động theo tháng và loại & 45 \\ \hline
 QSQL09 & Chuyển nội bộ giữa hai tổ & 22 \\ \hline
 QSQL10 & Số biến động theo tài khoản & 5 \\ \hline
+QSQL11 & Hộ đông người nhất trong mỗi tổ (CTE, \texttt{RANK()}) & 15 \\ \hline
+QSQL12 & Tổ đông hơn mức trung bình (truy vấn con trong \texttt{FROM}) & 5 \\ \hline
+QSQL13 & Tài khoản ghi đủ mọi loại biến động (phép chia) & 4 \\ \hline
 \end{tabularx}
-\captionof{table}{Kết quả kiểm thử QSQL01--QSQL10 trên bộ 636 bản ghi}
+\captionof{table}{Kết quả kiểm thử QSQL01--QSQL13 trên bộ 636 bản ghi}
 \label{tab:ketquasql}
 }
 \end{minipage}\par\medskip

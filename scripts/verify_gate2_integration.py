@@ -89,22 +89,55 @@ def check_data(database,ra,sql,seed):
         assert_pred(f"{database}/{rak}-vs-{sqk}",
                     projected_ra==projected_sql,
                     f"RA={len(projected_ra)}, SQL={len(projected_sql)}")
-    assert_equal(f"{database}/VIEW-vs-QSQL03",
-                 rows(database,"SELECT * FROM vw_thong_ke_cu_dan_theo_to",
-                      role="csdl17_report"),results["QSQL03"])
+    expected_view = rows(database, """
+        SELECT t.ma_to, t.ten_to, COALESCE(s.so_cu_dan, 0) AS so_cu_dan
+        FROM to_dan_pho t
+        LEFT JOIN (
+            SELECT d.ma_to, COUNT(DISTINCT q.ma_cu_dan) AS so_cu_dan
+            FROM qua_trinh_cu_tru q
+            JOIN ho_cu_tru h USING (ma_ho)
+            JOIN dia_chi d USING (ma_dia_chi)
+            WHERE daterange(q.ngay_bat_dau, q.ngay_ket_thuc, '[]') @> CURRENT_DATE
+            GROUP BY d.ma_to
+        ) s USING (ma_to)
+    """)
+    assert_equal(f"{database}/VIEW-current-date",
+                 rows(database, "SELECT * FROM vw_thong_ke_cu_dan_theo_to",
+                      role="csdl17_report"), expected_view)
     return result
 
 def fixture_data():
     text=(ROOT/"tests/ra_fixture.sql").read_text(encoding="utf-8")
     return text.split("-- ----- DỮ LIỆU THỬ -----",1)[1].split("-- ----- Q_d",1)[0]
 
-def get_qsql():
-    text=(ROOT/"sql/04_queries.sql").read_text(encoding="utf-8")
+def get_qsql(filename="04_queries.sql", first=1, last=10):
+    text=(ROOT / "sql" / filename).read_text(encoding="utf-8")
     parts=re.split(r"^-- (QSQL\d{2})\.[^\n]*\n",text,flags=re.M)
     named={parts[i]:parts[i+1].strip() for i in range(1,len(parts),2)}
-    if list(named)!=[f"QSQL{i:02}" for i in range(1,11)]:
+    if list(named)!=[f"QSQL{i:02}" for i in range(first,last+1)]:
         raise AssertionError(f"Unexpected SQL labels: {list(named)}")
     return named
+
+def check_division(database):
+    query = get_qsql("07_queries_bo_sung.sql", 11, 13)["QSQL13"]
+    assert_equal("report/QSQL13-seed636", rows(database, query), rows(database, """
+        SELECT a.ma_tai_khoan, a.ten_hien_thi
+        FROM tai_khoan a
+        JOIN bien_dong_cu_tru b USING (ma_tai_khoan)
+        GROUP BY a.ma_tai_khoan, a.ten_hien_thi
+        HAVING COUNT(DISTINCT b.loai_bien_dong) =
+               (SELECT COUNT(DISTINCT loai_bien_dong) FROM bien_dong_cu_tru)
+    """))
+    result = psql(database, f"""
+        BEGIN;
+        DELETE FROM bien_dong_cu_tru;
+        {query}
+        ROLLBACK;
+    """)
+    assert_pred("report/QSQL13-no-events-with-existing-accounts",
+                not result.stdout.strip(), result.stdout)
+    assert_equal("report/QSQL13-rollback-clean",
+                 rows(database, "SELECT COUNT(*) AS n FROM bien_dong_cu_tru"), [{"n": 63}])
 
 def expect_permission_denied(database,role,sql):
     p=psql(database,f"SET ROLE {role}; {sql}",ok=False)
@@ -154,6 +187,7 @@ def main():
       "qua_trinh_cu_tru":250,"bien_dong_cu_tru":63,"tai_khoan":5
     }])
     check_data(args.seed_db,ra,sql,True)
+    check_division(args.seed_db)
     security(args.seed_db)
 
     # RA fixture has already run and rolled back, so this is a clean DB.
@@ -185,7 +219,7 @@ def main():
                 any(row["n_dot"]>row["n_nguoi"] for row in duplicates))
     assert_equal("fixture/S14b-rollback-clean",
                  rows(args.fixture_db,"SELECT COUNT(*) AS n FROM qua_trinh_cu_tru"),before)
-    print(f"RESULT: {PASSED} checks PASS (2 DB, 10 QRA + division, 10 QSQL, roles, VIEW)")
+    print(f"RESULT: {PASSED} checks PASS (2 DB, 10 QRA + division, 10 QSQL + QSQL13, roles, VIEW)")
 
 if __name__=="__main__":
     main()

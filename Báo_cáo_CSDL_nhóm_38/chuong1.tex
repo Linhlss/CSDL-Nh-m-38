@@ -6,17 +6,17 @@
 
 Bài toán xét công tác quản lý cư trú tại một phường gồm nhiều tổ dân phố. Mỗi tổ có cán bộ phụ trách theo dõi dân cư trên địa bàn. Cán bộ cần quản lý danh sách địa chỉ, các hộ tại mỗi địa chỉ, các thành viên và diện thường trú hoặc tạm trú theo thời gian. Những thông tin này phục vụ tra cứu, rà soát nhân khẩu và lập báo cáo thống kê.
 
-Nhóm giả định dữ liệu ban đầu nằm trong sổ sách hoặc các tệp Excel rời rạc. Nếu cập nhật trực tiếp thông tin nơi ở mà không lưu các đợt cư trú, lịch sử có thể bị mất; nếu thiếu kiểm tra thời gian và quyền truy cập, dữ liệu có thể bị trùng lặp hoặc khó truy vết người sửa. Các hạn chế giả định này là cơ sở để xác định yêu cầu thiết kế.
+Nhóm giả định dữ liệu ban đầu nằm trong sổ sách hoặc các tệp Excel rời rạc. Nếu cập nhật trực tiếp thông tin nơi ở mà không lưu các đợt cư trú, lịch sử có thể bị mất; nếu thiếu kiểm tra thời gian và quyền truy cập, dữ liệu có thể bị trùng lặp hoặc khó truy vết người sửa.
 
-Để đáp ứng các yêu cầu đó, nhóm lưu mỗi đợt cư trú của một người tại một hộ thành một \textbf{quá trình cư trú} có ngày bắt đầu bắt buộc và ngày kết thúc có thể để trống. Mỗi \textbf{biến động cư trú} tham chiếu đợt cũ, đợt mới hoặc cả hai tùy loại sự kiện, đồng thời ghi tài khoản và thời điểm nhập. Bảng quá trình cư trú cho phép tra cứu lịch sử theo mã cư dân. Nhóm cài đặt cơ sở dữ liệu trên PostgreSQL 17 và kiểm thử với bộ dữ liệu gồm 636 bản ghi.
+Để đáp ứng các yêu cầu đó, nhóm lưu mỗi đợt cư trú của một người tại một hộ thành một \textbf{quá trình cư trú} có ngày bắt đầu bắt buộc và ngày kết thúc có thể để trống. Mỗi \textbf{biến động cư trú} tham chiếu đợt cũ, đợt mới hoặc cả hai tùy loại sự kiện, đồng thời ghi tài khoản và thời điểm nhập. Bảng quá trình cư trú là nguồn dữ liệu tham chiếu theo thời gian, cho phép truy vấn các đợt đã lưu của một cư dân theo mã. Mô hình hỗ trợ lưu lịch sử nhưng chưa ngăn mọi cập nhật lên bản ghi cũ; giới hạn này được trình bày ở mục \ref{subsec:danhgia}. Nhóm cài đặt cơ sở dữ liệu trên PostgreSQL 17 và kiểm thử với bộ dữ liệu gồm 636 bản ghi.
 
 \subsection{Quy tắc nghiệp vụ}
 \label{subsec:quytac}
 
-Nhóm đánh mã các quy tắc từ B01 đến B18 trong đặc tả nghiệp vụ; dưới đây là những quy tắc chính chi phối thiết kế.
+Nhóm đánh mã các quy tắc từ B01 đến B18 trong đặc tả nghiệp vụ; dưới đây là những quy tắc chính chi phối thiết kế. Bảng tra đầy đủ B01--B18 cùng các mã E1, X01, X06, X07 và K01--K05 được nhắc tới ở các chương sau nằm tại Phụ lục~\hyperref[sec:phuluc-ma]{B}.
 
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{B01:} mỗi tổ có thể quản lý nhiều địa chỉ và mỗi địa chỉ thuộc đúng một tổ. Mỗi địa chỉ có thể có nhiều hộ và mỗi hộ thuộc đúng một địa chỉ.
+    \item \textbf{B01:} mỗi tổ có nhiều địa chỉ, mỗi địa chỉ thuộc đúng một tổ; mỗi địa chỉ có nhiều hộ, mỗi hộ thuộc đúng một địa chỉ.
     \item \textbf{B02:} mỗi đợt cư trú thuộc đúng một cư dân và một hộ. Quan hệ nhiều -- nhiều giữa cư dân và hộ được giải qua các đợt cư trú.
     \item \textbf{B03:} tên tổ, tên đăng nhập và cặp (tổ, địa chỉ chuẩn) không được trùng; tên cư dân thì có thể trùng.
     \item \textbf{B04, B05:} ngày bắt đầu đợt là bắt buộc, ngày kết thúc có thể để trống và nếu có thì không sớm hơn ngày bắt đầu. Một đợt đang có hiệu lực khi ngày bắt đầu không sau ngày hiện tại và ngày kết thúc để trống hoặc không trước ngày hiện tại.
@@ -27,7 +27,7 @@ Nhóm đánh mã các quy tắc từ B01 đến B18 trong đặc tả nghiệp v
     \item \textbf{B14:} biến động mới phải do một tài khoản đang ở trạng thái hoạt động ghi nhận. Cột vai trò của tài khoản chỉ mô tả người ghi, không dùng làm cơ chế phân quyền.
 \end{enumerate}
 
-Các câu xét hiệu lực ở Chương \ref{sec:chuong4} dùng \texttt{CURRENT\_DATE} của PostgreSQL. Các câu xét hiệu lực ở Chương \ref{sec:chuong5} giữ điều kiện ngày của lần chạy trên pgAdmin để khớp với ảnh kết quả. Cả hai cách đều xét ngày bắt đầu và ngày kết thúc của đợt.
+\textbf{Hiệu lực cư trú.} Chương 4 và VIEW ở Chương 6 dùng ngày hiện tại của PostgreSQL để xét đợt còn hiệu lực theo B05. Chương 5 lưu điều kiện của lần chạy pgAdmin để người đọc đối chiếu với ảnh kết quả.
 
 \subsection{Các chức năng của hệ thống}
 \label{subsec:chucnang}

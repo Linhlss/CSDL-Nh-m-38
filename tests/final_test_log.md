@@ -105,3 +105,21 @@ Dấu vết đầu vào của lượt chạy:
 Lượt đối chiếu này xác nhận bộ QSQL và bổ sung liên kết ảnh của TV2.
 
 **Máy Windows của TV2.** Ngọc ghi nhận dùng PostgreSQL 19 (x64) và pgAdmin 4 trong [PR #11](https://github.com/Linhlss/CSDL-Nh-m-38/pull/11). Mười ảnh cho thấy kết nối và thực thi từng QSQL trong pgAdmin. Kết quả tái lập đủ 10 truy vấn bằng PostgreSQL 17.12 được ghi riêng ở trên. Xác nhận Gate 3 vẫn cần biên bản của nhóm.
+
+<a id="report-submission-audit"></a>
+## Kiểm chứng bản rà soát ngày 26/11/2026
+
+Chạy PostgreSQL 17.12 trên macOS, múi giờ Asia/Ho_Chi_Minh. Dựng mới hai CSDL riêng cho seed636 và fixture RA. Đăng nhập bằng đúng role qua socket cục bộ ở các ca B1/B2.
+
+| Hạng mục | Kỳ vọng | Kết quả |
+|---|---|---|
+| X07 / E1 | Trùng đợt trong từng vai trò bị chặn khi ghi với SQLSTATE 23505 | Cả vai trò cũ và mới đạt. Tổng 45 thông báo PASS về ràng buộc, kể cả xác nhận seed còn đủ 636 bản ghi. |
+| QSQL01–10 | Mã in khớp 04_queries.sql. Tập kết quả khớp bản đã lưu của 10 câu | Đủ 10 tập kết quả. Số dòng lần lượt 36, 24, 8, 4, 54, 31, 17, 45, 22, 5, khớp 10 ảnh pgAdmin. |
+| QSQL11–12 | Phương án đối chứng cho cùng kết quả | Khớp từng dòng và giá trị với truy vấn đối chứng. QSQL11 có 15 dòng. QSQL12 có 5 tổ, mã 1, 2, 4, 5, 6. |
+| RA9 / QSQL13 | Cùng tập mã 1–4 trên seed. Không còn biến động thì trả 0 dòng | Đạt cả hai ca. Rollback khôi phục đủ 63 biến động. |
+| RA10 | Đối chiếu đầy đủ cặp mã hộ và số cư dân | 56 hộ có người cư trú tại ngày chạy, 0 bộ sai lệch. |
+| VIEW | Đối chiếu độc lập theo ngày chạy, giữ tổ có số 0 | 8 tổ, số cư dân lần lượt 34, 29, 21, 33, 41, 31, 11, 0. Tổ 06 trong ảnh lần chạy trước có 30 người. |
+| B1/B2 | Kiểm tra phân quyền, truy cập qua VIEW và ranh giới hiệu lực | Reader 12/12, report 10/10, catalog 15/15, B12 K01–K05 và 7 ca ngày hệ thống đạt. |
+| Tích hợp | Đối chiếu cả DB seed và DB fixture | 74/74 kiểm tra đạt bằng scripts/verify_gate2_integration.py. |
+
+Log chi tiết của [Chương 4](report_ra_01_10_log.txt), [SQL bổ sung](report_sql_bo_sung_log.txt) và [thử ràng buộc](report_bang_thu_rang_buoc_log.txt). QSQL01–10 dùng nguyên điều kiện trong ảnh pgAdmin. Chương 4, QSQL11–12 và VIEW tính theo ngày chạy. Các kết quả động ở trên ghi nhận tại lần kiểm thử.

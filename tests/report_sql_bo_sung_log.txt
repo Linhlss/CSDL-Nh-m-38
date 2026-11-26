@@ -1,0 +1,7 @@
+BEGIN
+psql:tests/report_sql_bo_sung.sql:83: NOTICE:  [PASS] QSQL11: so_dong = 15, lech voi cach viet MAX = 0
+psql:tests/report_sql_bo_sung.sql:83: NOTICE:  [PASS] QSQL12: so_dong = 5, ma_to = {1,2,4,5,6}, so_bo_lech = 0
+psql:tests/report_sql_bo_sung.sql:83: NOTICE:  [PASS] QSQL13: tai khoan = {1,2,3,4} (ky vong 1,2,3,4; NOT EXISTS = cach dem)
+psql:tests/report_sql_bo_sung.sql:83: NOTICE:  TONG KET SQL BO SUNG: 3 kiem tra, 0 FAIL
+DO
+ROLLBACK

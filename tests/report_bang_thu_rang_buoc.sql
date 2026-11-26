@@ -70,6 +70,12 @@ SELECT pg_temp.thu('5', 'Xóa cư dân 1 đang có đợt cư trú',
 SELECT pg_temp.thu('6', 'Thêm cư dân có họ tên chỉ gồm khoảng trắng',
   $$INSERT INTO cu_dan (ho_ten, ngay_sinh, gioi_tinh) VALUES ('   ', DATE '2000-01-01', 'Nam')$$);
 
+-- 7. X07: ghi thêm CHUYEN_DI cho đợt 16, vốn đã là đợt cũ của biến động 2.
+--    Ngày khớp B09 và hình dạng đúng B07, chỉ UNIQUE uq_bd_dot_cu chặn.
+SELECT pg_temp.thu('7', 'Ghi thêm CHUYEN_DI cho đợt 16, đã là đợt cũ của biến động 2',
+  $$INSERT INTO bien_dong_cu_tru (loai_bien_dong, ma_qua_trinh_cu, ma_qua_trinh_moi, ngay_bien_dong, ma_tai_khoan)
+    VALUES ('CHUYEN_DI', 16, NULL, DATE '2026-10-15', 2)$$);
+
 \pset footer on
 SELECT stt, thao_tac, sqlstate, rang_buoc, thong_bao FROM kq_thu ORDER BY stt;
 

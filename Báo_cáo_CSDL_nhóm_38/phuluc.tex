@@ -311,3 +311,169 @@ BEGIN
 END
 $fn$;
 \end{lstlisting}
+
+\subsection*{A.7. Hàm chuyển đi và chuyển đến (B10)}
+
+Hai hàm \texttt{fn\_chuyen\_di} và \texttt{fn\_chuyen\_den} làm cho chuyển đi và chuyển đến giống chuyển nội bộ: mỗi lần gọi hàm vừa đóng hoặc mở đợt, vừa ghi biến động, và nếu một bước lỗi thì mọi bước đều bị hủy. Các kiểm tra B06, B09, B14 và B15 vẫn do ràng buộc và trigger ở các mục trên thực hiện.
+
+\begin{lstlisting}[style=sqlvn, basicstyle=\ttfamily\fontsize{10pt}{10.5pt}\selectfont, caption={Hàm chuyển đi và chuyển đến (B10)}, label={lst:pl_di_den}]
+-- B10 cho chuyển đi: đóng đợt cũ và ghi biến động CHUYEN_DI trong một lần gọi.
+CREATE OR REPLACE FUNCTION fn_chuyen_di(
+    p_ma_qua_trinh_cu BIGINT,
+    p_ngay_chuyen DATE,
+    p_ma_tai_khoan BIGINT
+) RETURNS BIGINT
+LANGUAGE plpgsql AS $fn$
+DECLARE
+    v_cu qua_trinh_cu_tru%ROWTYPE;
+    v_sk BIGINT;
+BEGIN
+    SELECT * INTO v_cu FROM qua_trinh_cu_tru
+    WHERE ma_qua_trinh = p_ma_qua_trinh_cu FOR UPDATE;
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'B10: đợt cũ % không tồn tại', p_ma_qua_trinh_cu
+            USING ERRCODE = '23503';
+    END IF;
+    IF v_cu.ngay_ket_thuc IS NOT NULL OR p_ngay_chuyen <= v_cu.ngay_bat_dau THEN
+        RAISE EXCEPTION 'B10: đợt cũ phải đang mở và bắt đầu trước ngày chuyển'
+            USING ERRCODE = '23514';
+    END IF;
+
+    UPDATE qua_trinh_cu_tru
+    SET ngay_ket_thuc = p_ngay_chuyen - 1
+    WHERE ma_qua_trinh = p_ma_qua_trinh_cu;
+
+    INSERT INTO bien_dong_cu_tru (
+        loai_bien_dong, ma_qua_trinh_cu, ma_qua_trinh_moi,
+        ngay_bien_dong, ma_tai_khoan
+    ) VALUES (
+        'CHUYEN_DI', p_ma_qua_trinh_cu, NULL,
+        p_ngay_chuyen, p_ma_tai_khoan
+    ) RETURNING ma_bien_dong INTO v_sk;
+
+    RETURN v_sk;
+END
+$fn$;
+
+-- B10 cho chuyển đến: mở đợt mới và ghi biến động CHUYEN_DEN trong một lần gọi.
+-- B06 (không chồng lấn) và B15 (ngày hợp lý) vẫn do ràng buộc/trigger kiểm tra.
+CREATE OR REPLACE FUNCTION fn_chuyen_den(
+    p_ma_cu_dan BIGINT,
+    p_ma_ho BIGINT,
+    p_loai VARCHAR(20),
+    p_ngay_chuyen DATE,
+    p_ma_tai_khoan BIGINT
+) RETURNS TABLE(ma_dot_moi BIGINT, ma_su_kien BIGINT)
+LANGUAGE plpgsql AS $fn$
+DECLARE
+    v_moi BIGINT;
+    v_sk BIGINT;
+BEGIN
+    INSERT INTO qua_trinh_cu_tru (
+        ma_cu_dan, ma_ho, loai_cu_tru, ngay_bat_dau, ngay_ket_thuc
+    ) VALUES (p_ma_cu_dan, p_ma_ho, p_loai, p_ngay_chuyen, NULL)
+    RETURNING ma_qua_trinh INTO v_moi;
+
+    INSERT INTO bien_dong_cu_tru (
+        loai_bien_dong, ma_qua_trinh_cu, ma_qua_trinh_moi,
+        ngay_bien_dong, ma_tai_khoan
+    ) VALUES (
+        'CHUYEN_DEN', NULL, v_moi,
+        p_ngay_chuyen, p_ma_tai_khoan
+    ) RETURNING ma_bien_dong INTO v_sk;
+
+    RETURN QUERY SELECT v_moi, v_sk;
+END
+$fn$;
+\end{lstlisting}
+
+\subsection*{A.8. Các truy vấn bổ sung}
+\phantomsection
+\label{sec:qsql-bo-sung}
+
+\noindent\begin{minipage}{\linewidth}
+\subsection*{QSQL11 --- Hộ đông người nhất trong mỗi tổ}
+
+Trong mỗi tổ có người cư trú, tìm hộ có nhiều cư dân đang cư trú nhất; nếu nhiều hộ bằng nhau thì giữ cả.
+
+\begin{lstlisting}[style=sqlvn, basicstyle=\ttfamily\fontsize{10pt}{10.5pt}\selectfont]
+WITH so_nguoi AS (
+    SELECT d.ma_to,
+           q.ma_ho,
+           COUNT(DISTINCT q.ma_cu_dan) AS so_cu_dan
+    FROM qua_trinh_cu_tru AS q
+    JOIN ho_cu_tru AS h ON h.ma_ho = q.ma_ho
+    JOIN dia_chi AS d   ON d.ma_dia_chi = h.ma_dia_chi
+    WHERE q.ngay_bat_dau <= CURRENT_DATE
+      AND (q.ngay_ket_thuc IS NULL OR q.ngay_ket_thuc >= CURRENT_DATE)
+    GROUP BY d.ma_to, q.ma_ho
+),
+xep_hang AS (
+    SELECT s.*,
+           RANK() OVER (PARTITION BY s.ma_to ORDER BY s.so_cu_dan DESC) AS hang
+    FROM so_nguoi AS s
+)
+SELECT x.ma_to, t.ten_to, x.ma_ho, x.so_cu_dan
+FROM xep_hang AS x
+JOIN to_dan_pho AS t ON t.ma_to = x.ma_to
+WHERE x.hang = 1
+ORDER BY x.ma_to, x.ma_ho;
+\end{lstlisting}
+
+Lần kiểm thử ghi nhận 15 dòng thuộc 7 tổ. Tổ 08 không có hộ đang có cư dân nên không xuất hiện. CTE \texttt{so\_nguoi} đếm số người của từng hộ, CTE \texttt{xep\_hang} dùng \texttt{RANK()} để xếp hạng các hộ \emph{trong từng tổ} (\texttt{PARTITION BY ma\_to}). Các hộ có cùng số người nhận cùng hạng và được giữ đủ khi đồng hạng nhất. Nếu dùng \texttt{ROW\_NUMBER()} thay cho \texttt{RANK()}, mỗi tổ chỉ còn một hộ và các hộ đồng hạng bị bỏ sót.
+\end{minipage}\par\medskip
+
+\noindent\begin{minipage}{\linewidth}
+\subsection*{QSQL12 --- Tổ đông hơn mức trung bình}
+
+Tìm các tổ có số cư dân đang cư trú lớn hơn số cư dân trung bình của một tổ, tính cả tổ chưa có người.
+
+\begin{lstlisting}[style=sqlvn, basicstyle=\ttfamily\fontsize{10pt}{10.5pt}\selectfont]
+SELECT s.ma_to, s.ten_to, s.so_cu_dan, ROUND(s.trung_binh, 2) AS trung_binh
+FROM (
+    SELECT t.ma_to,
+           t.ten_to,
+           COUNT(DISTINCT q.ma_cu_dan) AS so_cu_dan,
+           AVG(COUNT(DISTINCT q.ma_cu_dan)) OVER () AS trung_binh
+    FROM to_dan_pho AS t
+    LEFT JOIN dia_chi AS d          ON d.ma_to = t.ma_to
+    LEFT JOIN ho_cu_tru AS h        ON h.ma_dia_chi = d.ma_dia_chi
+    LEFT JOIN qua_trinh_cu_tru AS q ON q.ma_ho = h.ma_ho
+                                   AND q.ngay_bat_dau <= CURRENT_DATE
+                                   AND (q.ngay_ket_thuc IS NULL OR q.ngay_ket_thuc >= CURRENT_DATE)
+    GROUP BY t.ma_to, t.ten_to
+) AS s
+WHERE s.so_cu_dan > s.trung_binh
+ORDER BY s.so_cu_dan DESC, s.ma_to;
+\end{lstlisting}
+
+Trong lần kiểm thử, mức trung bình của tám tổ là 25 người. Năm tổ vượt mức này gồm Tổ 05 (41), Tổ 01 (34), Tổ 04 (33), Tổ 06 (31) và Tổ 02 (29). Bảng dẫn xuất tính số người của từng tổ và trung bình bằng hàm cửa sổ. Câu lệnh bên ngoài lọc theo kết quả trung bình.
+\end{minipage}\par\medskip
+
+\noindent\begin{minipage}{\linewidth}
+\subsection*{QSQL13 --- Tài khoản ghi đủ mọi loại biến động (phép chia)}
+\phantomsection
+\label{sec:qsql13-phuluc}
+
+Tìm những tài khoản đã ghi nhận đủ mọi loại biến động có trong dữ liệu. Đây là cách viết SQL của phép chia ở Câu 9, Chương \ref{sec:chuong4}.
+
+\begin{lstlisting}[style=sqlvn, basicstyle=\ttfamily\fontsize{10pt}{10.5pt}\selectfont]
+SELECT a.ma_tai_khoan, a.ten_hien_thi
+FROM tai_khoan AS a
+JOIN (SELECT DISTINCT ma_tai_khoan FROM bien_dong_cu_tru) AS g
+  ON g.ma_tai_khoan = a.ma_tai_khoan
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM (SELECT DISTINCT loai_bien_dong FROM bien_dong_cu_tru) AS l
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM bien_dong_cu_tru AS b
+        WHERE b.ma_tai_khoan = a.ma_tai_khoan
+          AND b.loai_bien_dong = l.loai_bien_dong
+    )
+)
+ORDER BY a.ma_tai_khoan;
+\end{lstlisting}
+
+Truy vấn giữ tài khoản đã ghi biến động và có đủ mọi loại đã xuất hiện. Dữ liệu mẫu trả các mã 1 đến 4. Khi chưa có biến động, kết quả rỗng. Cả hai trường hợp khớp với phép chia ở Câu 9.
+\end{minipage}\par\medskip

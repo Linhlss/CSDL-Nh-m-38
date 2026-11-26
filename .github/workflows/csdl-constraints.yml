@@ -122,6 +122,8 @@ jobs:
         run: |
           set -euo pipefail
           psql -X -v ON_ERROR_STOP=1 -f tests/report_sql_01_10.sql > /tmp/report-sql.log 2>&1
+          psql -X -v ON_ERROR_STOP=1 -f sql/07_queries_bo_sung.sql > /tmp/report-sql-bo-sung-run.log 2>&1
+          psql -X -v ON_ERROR_STOP=1 -f tests/report_sql_bo_sung.sql > /tmp/report-sql-bo-sung.log 2>&1
           psql -X -v ON_ERROR_STOP=1 -f tests/report_ra_01_10.sql > /tmp/report-ra.log 2>&1
           psql -X -v ON_ERROR_STOP=1 -f tests/report_current_date.sql > /tmp/report-current-date.log 2>&1
           psql -X -v ON_ERROR_STOP=1 -f tests/report_security_ch6.sql > /tmp/report-security.log 2>&1

@@ -14,18 +14,16 @@ SELECT ma_bien_dong, loai_bien_dong, ma_qua_trinh_cu, ma_qua_trinh_moi, ngay_bie
 FROM bien_dong_cu_tru WHERE ma_qua_trinh_cu = 44;
 ROLLBACK;
 
-\echo '=== DML 2: ghi chuyển đi cho đợt 50 (cư dân 44, hộ 16) ==='
+\echo '=== DML 2: fn_chuyen_di, đợt 50 (cư dân 44, hộ 16) chuyển ra khỏi phường ==='
 BEGIN;
-UPDATE qua_trinh_cu_tru
-SET ngay_ket_thuc = CURRENT_DATE - 1
-WHERE ma_qua_trinh = 50;
-INSERT INTO bien_dong_cu_tru (loai_bien_dong, ma_qua_trinh_cu, ma_qua_trinh_moi,
-                              ngay_bien_dong, ma_tai_khoan)
-VALUES ('CHUYEN_DI', 50, NULL, CURRENT_DATE, 2)
-RETURNING ma_bien_dong, loai_bien_dong, ma_qua_trinh_cu, ngay_bien_dong;
+SELECT fn_chuyen_di(50, CURRENT_DATE, 2) AS ma_su_kien;
+SELECT ma_qua_trinh, ma_cu_dan, ma_ho, ngay_bat_dau, ngay_ket_thuc
+FROM qua_trinh_cu_tru WHERE ma_qua_trinh = 50;
+SELECT ma_bien_dong, loai_bien_dong, ma_qua_trinh_cu, ma_qua_trinh_moi, ngay_bien_dong
+FROM bien_dong_cu_tru WHERE ma_qua_trinh_cu = 50;
 ROLLBACK;
 
-\echo '=== DML 2b (đối chứng): ghi CHUYEN_DI khi đợt 50 chưa kết thúc, mong đợi B09 chặn ==='
+\echo '=== DML 2b (đối chứng): tự INSERT CHUYEN_DI khi đợt 50 chưa kết thúc, mong đợi B09 chặn ==='
 BEGIN;
 \set ON_ERROR_STOP off
 \set VERBOSITY verbose

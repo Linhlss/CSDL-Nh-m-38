@@ -295,3 +295,22 @@ E1: assertion chỉ dùng ở khâu nghiệm thu, chưa chống ghi trùng ngay 
 | Việc chưa nằm trong Gate 2 | 10 ảnh SQL, ảnh B1/B2, bản PDF chính thức, review hình thức, môi trường Windows TV2, nguồn giáo trình, xếp loại/chữ ký và nghiệm thu Gate 3/4. Người phụ trách và hạn nằm trong `docs/10_ban_giao_tv2_tv3.md`. |
 
 **Quy tắc lưu vết:** Đây là ghi nhận lời xác nhận của trưởng nhóm, **không mạo danh review của TV2/TV3**. Khi có xác nhận trực tiếp trên PR, có thể bổ sung liên kết. Các log tuần 1 và các trạng thái "chờ review" trong phần nhật ký lịch sử trước ngày chốt được giữ lại để truy vết. Sau khi merge PR #7 lên `main`, phải chạy CI lại trên commit `main` thực tế. Không đánh dấu Gate 3/4 hoặc nộp báo cáo hoàn thành.
+
+<a id="review-x07"></a>
+## 11. Sửa theo review báo cáo — TV3, 26/11/2026 (bản đề xuất trên PR #14)
+
+| Trường | Nội dung |
+|---|---|
+| **Trạng thái** | **Đề xuất, chờ TV1 duyệt.** Thay đổi phần thiết kế đã chốt ở Gate 2 nên cần trưởng nhóm đồng ý trên PR. |
+| X07 | Thêm `uq_bd_dot_cu UNIQUE (ma_qua_trinh_cu)` và `uq_bd_dot_moi UNIQUE (ma_qua_trinh_moi)` trong `sql/02_constraints.sql`. Liên kết Đợt cũ/Đợt mới đổi từ 1–N thành 1–1 (ERD, Chương 2–3). Ghi trùng bị chặn ngay lúc INSERT (23505). `sql/01_schema.sql` không đổi (giữ 3 UNIQUE trong tệp tạo bảng để không đổi bằng chứng tuần 1); tổng sau khi chạy hai tệp là 5 UNIQUE. Seed636 nạp được, E1 vẫn PASS. |
+| E1 | `fn_assert_e1` và V_E1_CU/V_E1_MOI giữ nguyên để kiểm tra lại. Hai ca E1_CU/E1_MOI trong `tests/constraints_week2.sql` đổi thành ca mong đợi 23505. `scripts/review_tv3.py` không bị ảnh hưởng vì chỉ nạp `01_schema.sql`, không nạp `02_constraints.sql`. |
+| B10 | Thêm `fn_chuyen_di` và `fn_chuyen_den` cho đối xứng với `fn_chuyen_noi_bo`. Ghi trực tiếp bằng UPDATE/INSERT vẫn được phép với csdl17_admin (giới hạn nêu trong báo cáo). |
+| Chuẩn hóa | Kết luận cả 7 bảng đạt BCNF; ngày biến động trùng ngày của đợt là dư thừa giữa hai bảng, không vi phạm dạng chuẩn. |
+| SQL | Thêm QSQL11–QSQL13 trong tệp mới `sql/07_queries_bo_sung.sql` (CTE + RANK, truy vấn con trong FROM, phép chia NOT EXISTS); `sql/04_queries.sql` không đổi. |
+| Bảo mật | `fn_tim_cu_dan` (Ví dụ 3, chỉ dựng trong giao dịch thử) thoát `\`, `%`, `_`. Sửa mô tả lời gọi `fn_chuyen_noi_bo` của reader/report: hàm được gọi nhưng bị chặn ở lệnh đọc bảng bên trong. |
+| Câu 6 RA | Đổi cư dân 92 sang cư dân 15 (biến động 2 nối cả hai đợt của người này). |
+
+
+### Bản rà soát dùng để nộp
+
+Bản này dùng thiết kế X07 từ PR #14. Chương 4, VIEW và QSQL11–12 xét hiệu lực bằng `CURRENT_DATE`. QSQL01–10 giữ câu lệnh của lần chạy pgAdmin. QSQL13 xét tập tài khoản đã có biến động và trả tập rỗng khi bảng biến động trống. Kết luận BCNF giới hạn theo các phụ thuộc hàm đã xét. Chữ ký và xác nhận nộp được ghi riêng khi hoàn tất.

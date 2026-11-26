@@ -85,9 +85,9 @@ Các đường nối trên sơ đồ thể hiện phân rã chức năng, không
 | B17 | Số người trong mỗi hộ/tổ là số mã cư dân phân biệt. Một người có thể thuộc hai tổ theo hai loại; tổng số người của các tổ không luôn bằng số người phân biệt toàn phường |
 | B18 | Mọi dữ liệu dân cư và địa chỉ là giả lập; không có CCCD/số điện thoại thật. Mật khẩu không được lưu trong danh mục tài khoản hoặc mã nguồn |
 
-Không áp đặt một đợt chỉ được tham chiếu bởi một sự kiện đầu vào/đầu ra. Không thêm UNIQUE cho hai FK đợt cũ/mới trong phiên bản này. B06, B08–B11, B14, B15 được hiện thực trong `sql/02_constraints.sql` và kiểm thử Gate 2. Cơ chế E1 chỉ là validation bắt buộc, chưa phải ràng buộc chống trùng ngay lúc ghi.
+Mỗi đợt gắn tối đa một biến động trong từng vai trò cũ hoặc mới. Hai ràng buộc UNIQUE của `sql/02_constraints.sql` chặn trùng cùng vai trò ngay khi ghi (23505). Quy tắc E1 vẫn được đối chiếu bằng `sql/06_validation.sql`. [Thiết kế X07](../meetings/decision_log.md#review-x07)
 
-**Làm rõ E1, 12/11/2026:** Giữ khả năng lưu 0..N tham chiếu ở mức schema để tương thích bộ bàn giao, nhưng nhiều sự kiện dùng cùng đợt trong **cùng vai trò** là cảnh báo ghi trùng phải xử lý trước nghiệm thu. Chạy riêng V_E1_CU và V_E1_MOI trong `sql/06_validation.sql`, yêu cầu cả hai trả 0 dòng. Một đợt là đợt mới của sự kiện đến, rồi là đợt cũ của sự kiện đi/nội bộ, không bị coi là trùng. Validation gọi `fn_assert_e1()` để báo lỗi và làm FAIL đợt nghiệm thu khi có trùng; không tự chặn thao tác INSERT trước thời điểm validation, không tự xóa hoặc gộp nhật ký. Quyết định này không thay thế các ràng buộc xuyên bảng tuần 2.
+**Quyết định lịch sử ngày 12/11/2026 (trước X07):** Giữ khả năng lưu 0..N tham chiếu ở mức schema để tương thích bộ bàn giao, nhưng nhiều sự kiện dùng cùng đợt trong **cùng vai trò** là cảnh báo ghi trùng phải xử lý trước nghiệm thu. Chạy riêng V_E1_CU và V_E1_MOI trong `sql/06_validation.sql`, yêu cầu cả hai trả 0 dòng. Một đợt là đợt mới của sự kiện đến, rồi là đợt cũ của sự kiện đi/nội bộ, không bị coi là trùng. Validation gọi `fn_assert_e1()` để báo lỗi và làm FAIL đợt nghiệm thu khi có trùng; không tự chặn thao tác INSERT trước thời điểm validation, không tự xóa hoặc gộp nhật ký. Quyết định này không thay thế các ràng buộc xuyên bảng tuần 2.
 
 ## 6. Đặc tả sáu quy trình
 

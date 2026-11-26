@@ -141,8 +141,8 @@ def erd(tables):
         ("qua_trinh_cu_tru.ma_cu_dan", [(557,264),(557,410)], [(567,277,"1"),(567,384,"0..N")]),
         ("qua_trinh_cu_tru.ma_ho", [(280,645),(335,645),(335,560),(395,560)], [(287,650,"1"),(345,536,"0..N")]),
         ("bien_dong_cu_tru.ma_tai_khoan", [(975,264),(975,410)], [(985,277,"1"),(985,384,"0..N")]),
-        ("bien_dong_cu_tru.ma_qua_trinh_cu", [(720,470),(830,470)], [(718,473,"0..1"),(785,473,"0..N")]),
-        ("bien_dong_cu_tru.ma_qua_trinh_moi", [(720,550),(830,550)], [(718,553,"0..1"),(785,553,"0..N")]),
+        ("bien_dong_cu_tru.ma_qua_trinh_cu", [(720,470),(830,470)], [(718,473,"0..1"),(785,473,"0..1")]),
+        ("bien_dong_cu_tru.ma_qua_trinh_moi", [(720,550),(830,550)], [(718,553,"0..1"),(785,553,"0..1")]),
     ]
     for name, points, labels in relationships:
         d.line(points, relationship=name)
@@ -160,7 +160,7 @@ def erd(tables):
             line = f"{prefix}  {c['name']} : {c['type']}{' ?' if c['nullable'] else ''}"
             d.text(x+3,y+34+i*24,w-6,24,line,12, schemaColumn=f"{table}.{c['name']}")
     d.text(30,733,1090,24,"Ký hiệu: PK khóa chính • FK khóa ngoại • UQ duy nhất • ? cho phép NULL • 1 bắt buộc • 0..1 tùy chọn • 0..N nhiều",12)
-    d.text(30,763,1090,23,"Mỗi sự kiện: đến chỉ đợt mới; đi chỉ đợt cũ; nội bộ có cả hai. UNIQUE ghép địa chỉ: (ma_to, dia_chi_chuan).",12)
+    d.text(30,763,1090,23,"Mỗi sự kiện: đến chỉ đợt mới; đi chỉ đợt cũ; nội bộ có cả hai. UNIQUE ghép địa chỉ: (ma_to, dia_chi_chuan). Đợt cũ/mới 1–1: UNIQUE riêng từng cột (X07).",12)
     d.save()
 
 

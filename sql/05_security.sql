@@ -107,7 +107,7 @@ $$;
 -- =====================================================================
 -- PHẦN 1. VIEW THỐNG KÊ (dùng cho Demo B2)
 -- =====================================================================
--- Số cư dân đang cư trú theo từng tổ tại ngày tham chiếu cố định 2026-11-20.
+-- Số cư dân đang cư trú theo từng tổ theo ngày hiện tại của PostgreSQL.
 -- Chỉ trả về ma_to, ten_to, so_cu_dan: KHÔNG có họ tên, ngày sinh, mã cư dân.
 -- LEFT JOIN và điều kiện thời gian đặt trong ON để giữ cả tổ có 0 người.
 -- security_invoker = false (mặc định): view đọc bảng nền bằng quyền của
@@ -122,13 +122,13 @@ FROM to_dan_pho t
 LEFT JOIN dia_chi d          ON d.ma_to = t.ma_to
 LEFT JOIN ho_cu_tru h        ON h.ma_dia_chi = d.ma_dia_chi
 LEFT JOIN qua_trinh_cu_tru q ON q.ma_ho = h.ma_ho
-                            AND q.ngay_bat_dau <= DATE '2026-11-20'
+                            AND q.ngay_bat_dau <= CURRENT_DATE
                             AND (q.ngay_ket_thuc IS NULL
-                                 OR q.ngay_ket_thuc >= DATE '2026-11-20')
+                                 OR q.ngay_ket_thuc >= CURRENT_DATE)
 GROUP BY t.ma_to, t.ten_to;
 
 COMMENT ON VIEW vw_thong_ke_cu_dan_theo_to IS
-    'Demo B2: số cư dân đang cư trú theo tổ tại 2026-11-20; không chứa dữ liệu nhận diện cá nhân.';
+    'Demo B2: số cư dân đang cư trú theo tổ theo ngày hiện tại. không chứa dữ liệu nhận diện cá nhân.';
 
 
 -- =====================================================================

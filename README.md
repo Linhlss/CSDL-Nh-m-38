@@ -16,9 +16,9 @@ Xây dựng CSDL quản lý cư dân và biến động cư trú tại một ph�
 
 - [Bản PDF để rà soát và in](Báo_cáo_CSDL_nhóm_38/main.pdf), [nguồn LaTeX](Báo_cáo_CSDL_nhóm_38/main.tex) và [cách biên dịch](Báo_cáo_CSDL_nhóm_38/README_COMPILE.md).
 - [PowerPoint thuyết trình](presentation/CSDL_Nhom38_HUST_ThuyetTrinh.pptx), [PDF dự phòng](presentation/CSDL_Nhom38_HUST_ThuyetTrinh.pdf) và [kịch bản 20 phút](presentation/SPEAKER_NOTES.md).
-- Chương 5 và phần SQL trên slide dùng [QSQL01–QSQL10](sql/04_queries.sql), cùng các câu TV2 thực thi trong pgAdmin. Mười ảnh nằm trong phụ lục báo cáo. Xem [kết quả đối chiếu lại](tests/final_test_log.md#qsql-report-evidence) trên CSDL dựng mới.
-- Chương 4 giữ bộ đại số quan hệ trong báo cáo. Tái lập bằng [script RA](tests/report_ra_01_10.sql), [thử ràng buộc](tests/report_bang_thu_rang_buoc.sql) và [ví dụ bảo mật](tests/report_security_ch6.sql). [Log ngày 22/11](tests/report_current_date_log.txt) vẫn là nguồn cho đại số quan hệ, các ca theo ngày hệ thống và bảo mật trong phạm vi đã ghi. Kết quả SQL trong log đó thuộc bản báo cáo trước khi chuyển sang QSQL.
-- Chương 2–3 có bảng ràng buộc tham gia, giải thích chỉ mục và [ba ví dụ DML đã chạy lại](tests/report_dml_minh_hoa_log.txt). Phụ lục A trích mã nguồn trigger và hàm. E1 phát hiện lặp ở bước validation theo [quyết định đã chốt, mục 9](meetings/decision_log.md).
+- Chương 5 và phần SQL trên slide dùng [QSQL01–QSQL10](sql/04_queries.sql), cùng các câu TV2 thực thi trong pgAdmin. Mười ảnh nằm trong phụ lục báo cáo. [QSQL11–QSQL13](sql/07_queries_bo_sung.sql) nằm ở Phụ lục A.8. Chương 4, QSQL11–12 và VIEW xét hiệu lực theo ngày hệ thống. Xem [kết quả đối chiếu lại](tests/final_test_log.md#qsql-report-evidence) trên CSDL dựng mới.
+- Chương 4 giữ bộ đại số quan hệ trong báo cáo. Tái lập bằng [script RA](tests/report_ra_01_10.sql), [thử ràng buộc](tests/report_bang_thu_rang_buoc.sql) và [ví dụ bảo mật](tests/report_security_ch6.sql). [Kết quả rà soát bản nộp](tests/final_test_log.md#report-submission-audit) ghi kết quả ở phiên bản hiện hành. Các log ngày 22/11 lưu kết quả của bản trước.
+- Chương 2–3 có bảng ràng buộc tham gia, chỉ mục và [ví dụ DML](tests/report_dml_minh_hoa_log.txt). Hai ràng buộc UNIQUE chặn trùng đợt ngay khi ghi theo X07. E1 vẫn đối chiếu lại khi kiểm tra dữ liệu. [Nhật ký thiết kế](meetings/decision_log.md#review-x07)
 
 ## Hiện trạng và việc tiếp theo
 
@@ -34,7 +34,7 @@ Xây dựng CSDL quản lý cư dân và biến động cư trú tại một ph�
 
 ## Kiểm thử ràng buộc nâng cao (TV1 — tuần 2)
 
-B06 (chống chồng lấn), B08–B09 (sự kiện và ngày), B10 (chuyển nội bộ nguyên tử), B11 (địa chỉ lịch sử), B14 (tài khoản hoạt động), B15 (ngày và tên) và E1 (assertion nghiệm thu) được triển khai tại `sql/02_constraints.sql` trên nhánh tích hợp Gate 2.
+B06 (chống chồng lấn), B08–B09 (sự kiện và ngày), B10 (ba hàm chuyển nguyên tử), B11 (địa chỉ lịch sử), B14 (tài khoản hoạt động), B15 (ngày và tên) và X07/E1 (UNIQUE và đối chiếu dữ liệu) được triển khai tại `sql/02_constraints.sql` trên nhánh tích hợp Gate 2.
 
 Dựng lại trên **PostgreSQL ≥15** với quyền bật extension `btree_gist`:
 

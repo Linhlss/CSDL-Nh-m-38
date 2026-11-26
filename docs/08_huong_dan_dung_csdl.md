@@ -21,6 +21,7 @@ psql -X -U postgres -d csdl17_seed636 -v ON_ERROR_STOP=1 -f sql/03_seed.sql
 psql -X -U postgres -d csdl17_seed636 -v ON_ERROR_STOP=1 -f tests/constraints_week2.sql
 psql -X -U postgres -d csdl17_seed636 -v ON_ERROR_STOP=1 -f sql/06_validation.sql
 psql -X -U postgres -d csdl17_seed636 -v ON_ERROR_STOP=1 -f sql/04_queries.sql
+psql -X -U postgres -d csdl17_seed636 -v ON_ERROR_STOP=1 -f sql/07_queries_bo_sung.sql
 
 # Bảo mật: chạy psql -f, không dùng -1/--single-transaction.
 # Script chứa các câu SQL bị từ chối CỐ Ý (bật/tắt ON_ERROR_STOP tại chỗ).
@@ -57,7 +58,7 @@ Lần chạy đầy đủ chuỗi này trên macOS ngày 20/11/2026 được ghi
 
 ### Bằng chứng thành công
 
-- `sql/06_validation.sql` phải có PASS cho B06/B08/B09, E1, B15. E1 gồm hai vai trò `CU`, `MOI`; chỉ một đợt là "mới" rồi là "cũ" không phải lỗi.
+- `sql/06_validation.sql` phải có PASS cho B06/B08/B09, E1, B15. Hai UNIQUE chặn ghi trùng trong cùng vai trò với mã 23505. Một đợt là đợt mới của sự kiện này và là đợt cũ của sự kiện khác vẫn hợp lệ.
 - `tests/constraints_week2.sql` phải có các ca cố ý sai bị từ chối và kiểm tra bộ seed vẫn **636 bản ghi** sau rollback.
 - `scripts/verify_gate2_integration.py` phải khớp kết quả **10 QRA**, **QRA07_DIV**, **10 QSQL**, kết quả VIEW và quyền `csdl17_reader`/`csdl17_report`.
 - Seed hợp lệ: 8 tổ, 50 địa chỉ, 60 hộ, 200 cư dân, 250 đợt, 63 biến động, 5 tài khoản.

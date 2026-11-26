@@ -1,6 +1,6 @@
 # Lời nhắc diễn giả
 
-Hai trang nhận diện HUST đứng trước bìa và trước khi bắt đầu tính giờ. Khung 20 phút gồm 20 slide nội dung và ba trang phân phần. Mười phụ lục dùng khi hỏi đáp. Ghi chú cũng có trong Notes của PPTX.
+Hai trang nhận diện HUST đứng trước bìa và trước khi bắt đầu tính giờ. Khung 20 phút gồm 20 slide nội dung và ba trang phân phần. Mười một phụ lục A01–A11 dùng khi hỏi đáp. Ghi chú cũng có trong Notes của PPTX.
 
 ## 01 · Cơ sở dữ liệu quản lý cư dân và biến động cư trú
 
@@ -64,17 +64,17 @@ Nguồn `Báo_cáo_CSDL_nhóm_38/chuong2.tex`, `sql/01_schema.sql`.
 
 TV1 · 85 giây / 05:05
 
-Đây là ERD dùng ký hiệu Chen. Hình chữ nhật là thực thể, hình thoi là liên kết và hình elip là thuộc tính. Bắt đầu từ góc trên, một tổ quản lý nhiều địa chỉ và một địa chỉ có thể có nhiều hộ. Về phía cư dân, một người có thể có nhiều đợt. Mỗi đợt gắn đúng một người và một hộ. Vì thế quan hệ nhiều nhiều giữa cư dân với hộ theo thời gian được biểu diễn qua thực thể đợt. Ở góc dưới, biến động nối tới đợt với hai vai trò độc lập. Chuyển đến có đợt mới, chuyển đi có đợt cũ, còn chuyển nội bộ có cả hai và cùng cư dân. Mỗi biến động cũng tham chiếu tài khoản ghi nhận. Điều kiện tài khoản đang hoạt động được xét lúc ghi. Các số một và N trên hình cho biết bản số, còn hai vai trò đợt cũ và đợt mới sẽ thành hai khóa ngoại riêng trong lược đồ SQL.
+Đây là ERD dùng ký hiệu Chen. Hình chữ nhật là thực thể, hình thoi là liên kết và hình elip là thuộc tính. Bắt đầu từ góc trên, một tổ quản lý nhiều địa chỉ và một địa chỉ có thể có nhiều hộ. Về phía cư dân, một người có thể có nhiều đợt. Mỗi đợt gắn đúng một người và một hộ. Vì thế quan hệ nhiều nhiều giữa cư dân với hộ theo thời gian được biểu diễn qua thực thể đợt. Ở góc dưới, biến động nối tới đợt với hai vai trò độc lập. Chuyển đến có đợt mới, chuyển đi có đợt cũ, còn chuyển nội bộ có cả hai và cùng cư dân. Mỗi biến động cũng tham chiếu tài khoản ghi nhận. Điều kiện tài khoản đang hoạt động được xét lúc ghi. Các số một và N trên hình cho biết bản số. Riêng đợt cũ và đợt mới là liên kết một một, vì một đợt chỉ bị một biến động kết thúc và chỉ được một biến động mở. Hai vai trò này sẽ thành hai khóa ngoại riêng trong lược đồ SQL.
 
 Thao tác (25 giây) · Lần theo ba vùng của ERD. Dừng ở hai hình thoi Đợt cũ và Đợt mới.
 
 Nguồn `Báo_cáo_CSDL_nhóm_38/chuong2.tex`, `erd.png`, `docs/03_dac_ta_nghiep_vu.md`.
 
-## 07 · Từ liên kết 1–N đến khóa ngoại
+## 07 · Từ liên kết đến khóa ngoại
 
 TV1 · 55 giây / 06:00
 
-Khi ánh xạ một liên kết một nhiều, nhóm đặt khóa ngoại ở bảng phía nhiều. Ví dụ, địa chỉ mang mã tổ và hộ mang mã địa chỉ. Bảng quá trình có khóa riêng và tham chiếu cư dân cùng hộ. Bảng biến động có ba khóa ngoại. Một khóa chỉ người ghi, hai khóa còn lại cùng trỏ bảng quá trình nhưng tên cột khác nhau để chỉ đợt cũ và đợt mới. Hai cột này cho phép NULL tùy loại biến động. Những khóa ngoại khác là bắt buộc. Lược đồ có bảy bảng, ba mươi lăm cột, bảy khóa chính và bảy khóa ngoại. Cách đặt khóa giúp lần theo từ biến động đến những đợt đã lưu và nơi ở tương ứng.
+Khi ánh xạ một liên kết một nhiều, nhóm đặt khóa ngoại ở bảng phía nhiều. Ví dụ, địa chỉ mang mã tổ và hộ mang mã địa chỉ. Bảng quá trình có khóa riêng và tham chiếu cư dân cùng hộ. Bảng biến động có ba khóa ngoại. Một khóa chỉ người ghi, hai khóa còn lại cùng trỏ bảng quá trình nhưng tên cột khác nhau để chỉ đợt cũ và đợt mới. Hai cột này cho phép NULL tùy loại biến động, và mỗi cột có ràng buộc UNIQUE riêng để giữ liên kết một một. Những khóa ngoại khác là bắt buộc. Lược đồ có bảy bảng, ba mươi lăm cột, bảy khóa chính, bảy khóa ngoại và năm ràng buộc UNIQUE. Cách đặt khóa giúp lần theo từ biến động đến những đợt đã lưu và nơi ở tương ứng.
 
 Thao tác (11 giây) · Chỉ đường tổ, địa chỉ, hộ và hai FK về bảng đợt.
 
@@ -84,7 +84,7 @@ Nguồn `Báo_cáo_CSDL_nhóm_38/chuong3.tex`, `diagrams/erd_v1.png`, `sql/01_sc
 
 TV1 · 45 giây / 06:45
 
-Nếu gộp họ tên, nơi ở, ngày cư trú và người ghi vào một bảng, họ tên sẽ lặp theo mỗi lần chuyển. Trong lược đồ hiện tại, mã cư dân xác định hồ sơ và mã đợt xác định khoảng thời gian. Cặp mã tổ và địa chỉ chuẩn là khóa ứng viên của địa chỉ. Báo cáo phân tích chuẩn hóa theo các phụ thuộc hàm đã công bố. Ngày biến động có thể suy ra từ đợt liên quan theo B09, nhưng nhóm giữ giá trị này để biểu diễn ngày nghiệp vụ trực tiếp và dùng trigger kiểm tra nhất quán. Vì vậy kết luận về chuẩn ba có điều kiện.
+Nếu gộp họ tên, nơi ở, ngày cư trú và người ghi vào một bảng, họ tên sẽ lặp theo mỗi lần chuyển. Trong lược đồ hiện tại, mã cư dân xác định hồ sơ và mã đợt xác định khoảng thời gian. Cặp mã tổ và địa chỉ chuẩn là khóa ứng viên của địa chỉ. Báo cáo phân tích chuẩn hóa theo các phụ thuộc hàm đã công bố. Sáu bảng đạt BCNF theo tập phụ thuộc hàm đã xét. Với bảng biến động, khóa chính xác định dòng trên toàn bảng. Hai khóa ngoại có UNIQUE chỉ xác định dòng khi khác NULL. Ngày biến động trùng với ngày của đợt theo B09, nhưng đây là dữ liệu lặp giữa hai bảng, không phải phụ thuộc trong một bảng; trigger kiểm tra để hai bảng luôn khớp.
 
 Thao tác (4 giây) · Đối chiếu ví dụ bảng gộp với hai hàng hồ sơ và đợt.
 
@@ -94,7 +94,7 @@ Nguồn `Báo_cáo_CSDL_nhóm_38/chuong3.tex`, `docs/04_data_dictionary_va_chuan
 
 TV1 · 55 giây / 07:40
 
-B06 dùng ràng buộc loại trừ GiST để hai đợt của cùng người và cùng loại không chồng ngày. Một đợt thường trú và một đợt tạm trú có thể đồng thời tồn tại. B09 dùng trigger kiểm tra ở cả hai chiều. Khi chuyển vào ngày t, đợt cũ kết thúc vào t trừ một ngày và đợt mới bắt đầu vào ngày t. Nếu sửa lại mốc một đợt đã liên kết, trigger cũng kiểm tra sự nhất quán. B10 là tính nguyên tử của nghiệp vụ: hàm đóng đợt cũ, mở đợt mới và ghi biến động trong cùng giao dịch. Nếu một bước lỗi, cả chuỗi được hoàn tác. Các ca hợp lệ và vi phạm nằm trong bộ kiểm thử ràng buộc. Em mời Ngọc trình bày dữ liệu và truy vấn SQL.
+B06 dùng ràng buộc loại trừ GiST để hai đợt của cùng người và cùng loại không chồng ngày. Một đợt thường trú và một đợt tạm trú có thể đồng thời tồn tại. B09 dùng trigger kiểm tra ở cả hai chiều. Khi chuyển vào ngày t, đợt cũ kết thúc vào t trừ một ngày và đợt mới bắt đầu vào ngày t. Nếu sửa lại mốc một đợt đã liên kết, trigger cũng kiểm tra sự nhất quán. B10 là tính nguyên tử của nghiệp vụ: ba hàm chuyển nội bộ, chuyển đi và chuyển đến đóng hoặc mở đợt và ghi biến động trong cùng giao dịch. Nếu một bước lỗi, cả chuỗi được hoàn tác. Các ca hợp lệ và vi phạm nằm trong bộ kiểm thử ràng buộc. Em mời Ngọc trình bày dữ liệu và truy vấn SQL.
 
 Thao tác (10 giây) · Chỉ đường biên t và ba bước trong giao dịch. Mời Ngọc vào phần 2.
 
@@ -118,15 +118,15 @@ Thao tác (2 giây) · Chỉ tổng số bản ghi và hai bảng có nhiều d�
 
 Nguồn `sql/03_seed.sql`, `tests/final_test_log.md`.
 
-## 11 · Danh mục QSQL01–QSQL10
+## 11 · Danh mục QSQL01–QSQL13
 
 TV2 · 40 giây / 08:45
 
-Phần em dùng đúng mười truy vấn em đã chạy trong pgAdmin. Câu một tìm người đang cư trú tại Tổ 01. Câu hai tìm hộ có từ bốn người, còn câu ba đếm theo tổ. Các câu bốn đến bảy tra địa chỉ và lịch sử cư trú. Ba câu cuối thống kê biến động theo tháng, tìm những lần chuyển khác tổ và đếm theo tài khoản. Em chọn câu ba để giải thích tổ có số không và câu chín để giải thích hai nhánh nối từ đợt cũ và đợt mới.
+Báo cáo có mười ba truy vấn. Mười câu đầu em đã chạy và chụp trong pgAdmin. Câu một tìm người đang cư trú tại Tổ 01. Câu hai tìm hộ có từ bốn người, còn câu ba đếm theo tổ. Các câu bốn đến bảy tra địa chỉ và lịch sử cư trú. Ba câu cuối thống kê biến động theo tháng, tìm những lần chuyển khác tổ và đếm theo tài khoản. Em chọn câu ba để giải thích tổ có số không và câu chín để giải thích hai nhánh nối từ đợt cũ và đợt mới. Ba câu bổ sung ở dòng cuối dùng CTE với RANK, truy vấn con trong FROM và phép chia; chi tiết ở phụ lục A05.
 
 Thao tác (6 giây) · Chỉ vị trí QSQL03 và QSQL09 trong danh mục.
 
-Nguồn `Báo_cáo_CSDL_nhóm_38/chuong5.tex`, `sql/04_queries.sql`, `tests/final_test_log.md`.
+Nguồn `Báo_cáo_CSDL_nhóm_38/chuong5.tex`, `sql/04_queries.sql`, `sql/07_queries_bo_sung.sql`, `tests/final_test_log.md`.
 
 ## 12 · QSQL03 · Thống kê cư trú theo tổ
 
@@ -152,7 +152,7 @@ Nguồn `Báo_cáo_CSDL_nhóm_38/chuong5.tex`, `sql/04_queries.sql`, `tests/week
 
 TV2 · 35 giây / 12:35
 
-Nhóm dựng lại cơ sở dữ liệu, nạp đủ sáu trăm ba mươi sáu bản ghi rồi chạy bước kiểm tra dữ liệu. Cả mười câu đều khớp toàn bộ kết quả đã lưu. Câu hai trả hai mươi bốn hộ có ít nhất bốn người. Tổ 08 ở câu ba vẫn có mặt và mang số không. Tài khoản dự phòng mã năm ở câu mười cũng xuất hiện với số không. Mười ảnh chạy SQL nằm trong phụ lục báo cáo. Em mời Ninh trình bày đại số quan hệ và bảo mật.
+Nhóm dựng lại cơ sở dữ liệu, nạp đủ sáu trăm ba mươi sáu bản ghi rồi chạy bước kiểm tra dữ liệu. Mười câu chính khớp toàn bộ tập kết quả đã lưu. Ba câu bổ sung được chạy và đối chiếu bằng cách viết khác. Câu hai trả hai mươi bốn hộ có ít nhất bốn người. Tổ 08 ở câu ba vẫn có mặt và mang số không. Tài khoản dự phòng mã năm ở câu mười cũng xuất hiện với số không. Ảnh chạy QSQL01 đến QSQL10 nằm trong phụ lục báo cáo. Em mời Ninh trình bày đại số quan hệ và bảo mật.
 
 Thao tác (5 giây) · Chỉ kết quả đối chiếu, ngưỡng bốn người và hai số đếm bằng không. Mời Ninh vào phần 3.
 
@@ -174,7 +174,7 @@ TV3 · 40 giây / 13:20
 
 Thao tác (8 giây) · Lướt hai cột. Dừng ở RA 3 và RA 9 trước khi chuyển.
 
-Nguồn `Báo_cáo_CSDL_nhóm_38/chuong4.tex`, `tests/report_ra_01_10.sql`, `tests/report_current_date_log.txt`.
+Nguồn `Báo_cáo_CSDL_nhóm_38/chuong4.tex`, `tests/report_ra_01_10.sql`, `tests/report_ra_01_10_log.txt`.
 
 ## 16 · RA 3 · Thường trú tại Tổ 01
 
@@ -184,17 +184,17 @@ Câu ba tìm mã và họ tên những người đang thường trú tại Tổ 
 
 Thao tác (19 giây) · Chỉ ba bước và hai cột kết quả. Dừng để đọc một dòng mẫu.
 
-Nguồn `Báo_cáo_CSDL_nhóm_38/chuong4.tex`, `tests/report_ra_01_10.sql`, `tests/report_current_date_log.txt`.
+Nguồn `Báo_cáo_CSDL_nhóm_38/chuong4.tex`, `tests/report_ra_01_10.sql`, `tests/report_ra_01_10_log.txt`.
 
 ## 17 · RA 9 · Tài khoản ghi đủ loại biến động
 
 TV3 · 105 giây / 16:35
 
-Câu chín có chữ đủ, nên điều kiện phải đúng với mọi loại trong tập xét. Đầu tiên, chiếu bảng biến động lên cặp mã tài khoản và loại biến động. Khi một cán bộ ghi nhiều biến động cùng loại, phép chiếu theo ngữ nghĩa tập hợp chỉ giữ một cặp. Sau đó chiếu riêng cột loại để được tập chia. Bộ dữ liệu kiểm thử có đủ ba loại biến động là chuyển đến, chuyển đi và chuyển nội bộ. Đọc ma trận từ trái sang phải. Một tài khoản được giữ khi cả ba cột đều có cặp tương ứng. Tài khoản 1 đến 4 thỏa và tài khoản 5 chưa ghi biến động. Kỹ thuật SQL thứ nhất dùng hai lớp NOT EXISTS. Nó rà xem có loại nào còn thiếu đối với tài khoản đang xét. Kỹ thuật thứ hai đếm loại phân biệt theo tài khoản và so với số loại phân biệt toàn bảng. Hai cách cho cùng tập bốn mã. Nếu cơ sở dữ liệu chỉ từng ghi hai loại, mẫu số của chính câu này sẽ có hai loại. Muốn bắt buộc mọi loại mà quy tắc cho phép, mẫu số phải là danh mục cố định theo miền nghiệp vụ. Ở đây câu hỏi và kết quả dùng đúng tập loại xuất hiện.
+Câu chín có chữ đủ, nên điều kiện phải đúng với mọi loại trong tập xét. Đầu tiên, chiếu bảng biến động lên cặp mã tài khoản và loại biến động. Khi một cán bộ ghi nhiều biến động cùng loại, phép chiếu theo ngữ nghĩa tập hợp chỉ giữ một cặp. Sau đó chiếu riêng cột loại để được tập chia. Bộ dữ liệu kiểm thử có đủ ba loại biến động là chuyển đến, chuyển đi và chuyển nội bộ. Đọc ma trận từ trái sang phải. Một tài khoản được giữ khi cả ba cột đều có cặp tương ứng. Tài khoản 1 đến 4 thỏa và tài khoản 5 chưa ghi biến động. Kỹ thuật SQL thứ nhất dùng hai lớp NOT EXISTS, chính là QSQL13 trong báo cáo. QSQL13 chỉ xét tài khoản từng ghi biến động, rồi tìm xem còn thiếu loại nào. Nếu chưa có biến động thì cả biểu thức và SQL đều trả tập rỗng. Kỹ thuật thứ hai đếm loại phân biệt theo tài khoản và so với số loại phân biệt toàn bảng. Hai cách cho cùng tập bốn mã. Nếu cơ sở dữ liệu chỉ từng ghi hai loại, mẫu số của chính câu này sẽ có hai loại. Muốn bắt buộc mọi loại mà quy tắc cho phép, mẫu số phải là danh mục cố định theo miền nghiệp vụ. Ở đây câu hỏi và kết quả dùng đúng tập loại xuất hiện.
 
 Thao tác (26 giây) · Chỉ mẫu số. Đọc một hàng đủ ba loại và hàng tài khoản 5.
 
-Nguồn `Báo_cáo_CSDL_nhóm_38/chuong4.tex`, `tests/report_ra_01_10.sql`, `tests/report_current_date_log.txt`.
+Nguồn `Báo_cáo_CSDL_nhóm_38/chuong4.tex`, `tests/report_ra_01_10.sql`, `tests/report_ra_01_10_log.txt`.
 
 ## 18 · B1 · Phân quyền bằng PostgreSQL role
 
@@ -210,11 +210,11 @@ Nguồn `Báo_cáo_CSDL_nhóm_38/chuong6.tex`, `Báo_cáo_CSDL_nhóm_38/image/se
 
 TV3 · 85 giây / 19:35
 
-B2 là trường hợp người tổng hợp chỉ cần số cư dân theo tổ. Trong hai ảnh, phiên đăng nhập dùng csdl17 report. Bên trái, VIEW trả ba cột là mã tổ, tên tổ và số cư dân. Có tám dòng, Tổ 01 có ba mươi bốn người và Tổ 08 có số không. Định nghĩa trong ảnh bổ trợ dùng CURRENT DATE để xét hiệu lực của đợt. Bên phải, hai lệnh đọc trực tiếp bảng cư dân và bảng quá trình cư trú đều bị từ chối. Cách cấp quyền này cho phép dùng báo cáo tổng hợp trong phạm vi công việc. Số đếm nhỏ vẫn có nguy cơ suy luận. Ví dụ bổ sung B3 trình bày cách truyền đầu vào tra cứu dưới dạng tham số để giữ nó tách khỏi câu lệnh. Nhóm đã lưu kết quả riêng của B3 trong log thử nghiệm.
+B2 là trường hợp người tổng hợp chỉ cần số cư dân theo tổ. Trong hai ảnh, phiên đăng nhập dùng csdl17 report. Bên trái, VIEW trả ba cột là mã tổ, tên tổ và số cư dân. Có tám dòng, Tổ 01 có ba mươi bốn người và Tổ 08 có số không. VIEW thực tế dùng CURRENT DATE để xét hiệu lực của đợt. Số đếm có thể thay đổi theo ngày chạy. Bên phải, hai lệnh đọc trực tiếp bảng cư dân và bảng quá trình cư trú đều bị từ chối. Cách cấp quyền này cho phép dùng báo cáo tổng hợp trong phạm vi công việc. Số đếm nhỏ vẫn có nguy cơ suy luận. Ví dụ bổ sung B3 trình bày cách truyền đầu vào tra cứu dưới dạng tham số để giữ nó tách khỏi câu lệnh. Nhóm đã lưu kết quả riêng của B3 trong log thử nghiệm.
 
 Thao tác (14 giây) · Chỉ ba cột của VIEW, dòng Tổ 08 và hai lỗi khi đọc bảng gốc.
 
-Nguồn `Báo_cáo_CSDL_nhóm_38/chuong6.tex`, `Báo_cáo_CSDL_nhóm_38/image/security/SEC_B2_view_ok.png`, `Báo_cáo_CSDL_nhóm_38/image/security/SEC_B2_denied.png`, `Báo_cáo_CSDL_nhóm_38/image/security/SEC_B2_viewdef.png`, `tests/report_current_date_log.txt`.
+Nguồn `Báo_cáo_CSDL_nhóm_38/chuong6.tex`, `Báo_cáo_CSDL_nhóm_38/image/security/SEC_B2_view_ok.png`, `Báo_cáo_CSDL_nhóm_38/image/security/SEC_B2_denied.png`, `Báo_cáo_CSDL_nhóm_38/image/security/SEC_B2_viewdef.png`, `tests/report_ra_01_10_log.txt`.
 
 ## 20 · Kết luận và cảm ơn
 
@@ -224,7 +224,7 @@ Nhóm đã thiết kế một cơ sở dữ liệu giữ các đợt cư trú th
 
 Thao tác (2 giây) · Dừng ở slide cảm ơn trước khi vào hỏi đáp.
 
-Nguồn `Báo_cáo_CSDL_nhóm_38/ketluan.tex`, `tests/report_current_date_log.txt`.
+Nguồn `Báo_cáo_CSDL_nhóm_38/ketluan.tex`, `tests/report_ra_01_10_log.txt`.
 
 ## A01 · Danh mục 10 câu đại số quan hệ
 
@@ -232,7 +232,7 @@ TV3 · Hỏi đáp
 
 Dùng khi cần tra một câu RA. Câu 1 và 8 ghi nhận kết quả. Tám câu còn lại có kiểm tra tự động. Số bộ của câu 3, 4 và 10 có thể thay đổi theo ngày hệ thống.
 
-Nguồn `Báo_cáo_CSDL_nhóm_38/chuong4.tex`, `tests/report_current_date_log.txt`.
+Nguồn `Báo_cáo_CSDL_nhóm_38/chuong4.tex`, `tests/report_ra_01_10_log.txt`.
 
 ## A02 · RA 3 · Các bước trung gian
 
@@ -240,7 +240,7 @@ TV3 · Hỏi đáp
 
 Giải thích đầu vào năm cột NOT NULL và điều kiện B05. Một phép chiếu cuối trả mã và họ tên. So sánh tập kết quả theo cả hai chiều với truy vấn SQL đối chứng của Chương 4.
 
-Nguồn `Báo_cáo_CSDL_nhóm_38/chuong4.tex`, `tests/report_ra_01_10.sql`, `tests/report_current_date_log.txt`.
+Nguồn `Báo_cáo_CSDL_nhóm_38/chuong4.tex`, `tests/report_ra_01_10.sql`, `tests/report_ra_01_10_log.txt`.
 
 ## A03 · RA 9 · Ngữ nghĩa phép chia
 
@@ -248,7 +248,7 @@ TV3 · Hỏi đáp
 
 Chỉ đưa tài khoản vào kết quả khi từng loại trong số chia đều đi cùng tài khoản đó trong quan hệ bị chia. Mẫu có cả ba loại. Hai cách kiểm chứng là NOT EXISTS lồng và đếm loại phân biệt.
 
-Nguồn `Báo_cáo_CSDL_nhóm_38/chuong4.tex`, `tests/report_ra_01_10.sql`, `tests/report_current_date_log.txt`.
+Nguồn `Báo_cáo_CSDL_nhóm_38/chuong4.tex`, `tests/report_ra_01_10.sql`, `tests/report_ra_01_10_log.txt`.
 
 ## A04 · RA 4–6 · Hiệu, giao và hợp
 
@@ -256,15 +256,15 @@ TV3 · Hỏi đáp
 
 Câu 4 loại người còn đợt hiệu lực khỏi những người có đợt đã bắt đầu. Câu 5 lấy phần mã cư dân chung của hai tập loại. Câu 6 dùng hợp trên mã biến động, do một lần chuyển nội bộ có thể xuất hiện ở cả vế cũ và mới.
 
-Nguồn `Báo_cáo_CSDL_nhóm_38/chuong4.tex`, `tests/report_current_date_log.txt`.
+Nguồn `Báo_cáo_CSDL_nhóm_38/chuong4.tex`, `tests/report_ra_01_10_log.txt`.
 
-## A05 · Danh mục QSQL01–QSQL10
+## A05 · Danh mục QSQL01–QSQL13
 
 TV2 · Hỏi đáp
 
-Danh mục theo mã câu trong báo cáo và trong ảnh. QSQL02 dùng ngưỡng bốn cư dân. QSQL08 gom tất cả biến động đã ghi theo tháng và loại. QSQL10 giữ cả tài khoản chưa ghi biến động.
+Danh mục theo mã câu trong báo cáo và trong ảnh. QSQL02 dùng ngưỡng bốn cư dân. QSQL08 gom tất cả biến động đã ghi theo tháng và loại. QSQL10 giữ cả tài khoản chưa ghi biến động. QSQL11 đến QSQL13 là ba câu bổ sung: CTE với RANK xếp hạng hộ trong từng tổ, truy vấn con trong FROM so với mức trung bình 24,88 người, và phép chia bằng hai lớp NOT EXISTS cho cùng kết quả với RA 9.
 
-Nguồn `Báo_cáo_CSDL_nhóm_38/chuong5.tex`, `sql/04_queries.sql`, `tests/week1_execution_results.json`, `tests/final_test_log.md`.
+Nguồn `Báo_cáo_CSDL_nhóm_38/chuong5.tex`, `sql/04_queries.sql`, `tests/week1_execution_results.json`, `tests/final_test_log.md`, `sql/07_queries_bo_sung.sql`, `tests/report_sql_bo_sung_log.txt`.
 
 ## A06 · QSQL03 · Truy vấn đầy đủ
 
@@ -282,11 +282,11 @@ Lọc biến động chuyển nội bộ, cùng mã cư dân và khác mã tổ.
 
 Nguồn `Báo_cáo_CSDL_nhóm_38/chuong5.tex`, `sql/04_queries.sql`, `tests/week1_execution_results.json`, `tests/final_test_log.md`.
 
-## A08 · B06, B09 và B10 · Các ca kiểm tra
+## A08 · B06, B09, B10 và X07 · Các ca kiểm tra
 
 TV1 · Hỏi đáp
 
-B06 phát hiện giao khoảng với mã 23P01. B09 kiểm biên ngày đợt và báo 23514. Ca B10 minh họa lỗi 23503 khi cập nhật theo chuỗi và kiểm tra toàn bộ chuỗi được hoàn tác.
+B06 phát hiện giao khoảng với mã 23P01. B09 kiểm biên ngày đợt và báo 23514. Ca B10 minh họa lỗi 23503 khi cập nhật theo chuỗi và kiểm tra toàn bộ chuỗi được hoàn tác. Ba hàm fn_chuyen_noi_bo, fn_chuyen_di và fn_chuyen_den đều chạy hợp lệ. X07: ghi thêm một biến động chuyển đi cho đợt 16, vốn đã là đợt cũ của biến động 2, bị UNIQUE uq_bd_dot_cu từ chối với 23505.
 
 Nguồn `sql/02_constraints.sql`, `tests/constraints_week2.sql`, `tests/week2_tv1_integration_log.md`, `tests/report_bang_thu_rang_buoc_log.txt`.
 
@@ -302,9 +302,9 @@ Nguồn `Báo_cáo_CSDL_nhóm_38/chuong6.tex`, `sql/05_security.sql`, `tests/rep
 
 TV1 / TV3 · Hỏi đáp
 
-E1 phát hiện đợt dùng lặp trong cùng vai trò ở bước kiểm tra dữ liệu. B3 thử hai cách tra cứu trên cụm cô lập và kết thúc bằng ROLLBACK. Theo log, cách sử dụng tham số trả 0 dòng với đầu vào thử và 8 dòng cho từ khóa thông thường. Những việc mở rộng là kiểm toán sửa lịch sử, phân quyền theo tổ và chính sách công bố nhóm nhỏ.
+Hai ràng buộc UNIQUE chặn ngay việc một đợt bị dùng lặp trong cùng vai trò; E1 kiểm tra lại ở bước kiểm tra dữ liệu. B3 thử hai cách tra cứu trên cụm cô lập và kết thúc bằng ROLLBACK. Theo log, cách sử dụng tham số trả 0 dòng với đầu vào thử và 8 dòng cho từ khóa thông thường. Những việc mở rộng là kiểm toán sửa lịch sử, phân quyền theo tổ và chính sách công bố nhóm nhỏ.
 
-Nguồn `Báo_cáo_CSDL_nhóm_38/chuong6.tex`, `Báo_cáo_CSDL_nhóm_38/ketluan.tex`, `sql/03_seed.sql`, `tests/final_test_log.md`, `tests/report_current_date_log.txt`, `tests/report_security_ch6_log.txt`.
+Nguồn `Báo_cáo_CSDL_nhóm_38/chuong6.tex`, `Báo_cáo_CSDL_nhóm_38/ketluan.tex`, `sql/03_seed.sql`, `tests/final_test_log.md`, `tests/report_ra_01_10_log.txt`, `tests/report_security_ch6_log.txt`.
 
 ## A11 · B09 · Trigger kiểm tra ngày chuyển
 

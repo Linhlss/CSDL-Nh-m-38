@@ -47,7 +47,7 @@ BEGIN
     RAISE NOTICE '[%] RA2: so_bo = % ; doi chung COUNT dia_chi cua To 01 = %', CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END, n, m;
 
     -- RA3: R1 = sigma_{THUONG_TRU}(Q_ht); R2 = pi_{ma_ho}(HO join sigma_{ma_to=1}(DC));
-    --      KQ = pi_{ma_cu_dan, ho_ten}((R1 join R2) join CD)  — đối chiếu SQL câu 1 cùng CURRENT_DATE
+    --      KQ = pi_{ma_cu_dan, ho_ten}((R1 join R2) join CD)  — đối chiếu SQL câu 1 cùng ngày chạy
     WITH q_ht AS (SELECT DISTINCT ma_qua_trinh, ma_cu_dan, ma_ho, loai_cu_tru, ngay_bat_dau
                  FROM qua_trinh_cu_tru
                  WHERE ngay_bat_dau <= CURRENT_DATE
@@ -71,10 +71,10 @@ BEGIN
                                   UNION ALL (SELECT * FROM sq EXCEPT SELECT * FROM ra)) d)
       INTO n, m;
     ok := m = 0; so_fail := so_fail + (NOT ok)::INT;
-    RAISE NOTICE '[%] RA3: so_bo = %, lech voi SQL cau 1 = % bo (ky vong lech 0 theo CURRENT_DATE)', CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END, n, m;
+    RAISE NOTICE '[%] RA3: so_bo = %, lech voi SQL cau 1 = % bo (ky vong lech 0 tai CURRENT_DATE)', CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END, n, m;
 
-    -- RA4: pi_{ma_cu_dan}(sigma_{ngay_bat_dau<=CURRENT_DATE}(QT)) - pi_{ma_cu_dan}(Q_ht), rồi join CD
-    --      đối chiếu SQL câu 4 cùng CURRENT_DATE
+    -- RA4: pi_{ma_cu_dan}(sigma_{ngay_bat_dau<=d}(QT)) - pi_{ma_cu_dan}(Q_ht), rồi join CD
+    --      đối chiếu SQL câu 4 cùng ngày chạy
     WITH q_ht AS (SELECT DISTINCT ma_qua_trinh, ma_cu_dan, ma_ho, loai_cu_tru, ngay_bat_dau
                  FROM qua_trinh_cu_tru
                  WHERE ngay_bat_dau <= CURRENT_DATE
@@ -93,7 +93,7 @@ BEGIN
                                   UNION ALL (SELECT * FROM sq EXCEPT SELECT * FROM ra)) d)
       INTO n, m;
     ok := m = 0; so_fail := so_fail + (NOT ok)::INT;
-    RAISE NOTICE '[%] RA4: so_bo = %, lech voi SQL cau 4 = % bo (ky vong lech 0 theo CURRENT_DATE)', CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END, n, m;
+    RAISE NOTICE '[%] RA4: so_bo = %, lech voi SQL cau 4 = % bo (ky vong lech 0 tai CURRENT_DATE)', CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END, n, m;
 
     -- RA5: A ∩ B — đối chiếu SQL câu 9 (31)
     SELECT COUNT(*) INTO n FROM (
@@ -103,8 +103,9 @@ BEGIN
     ok := n = 31; so_fail := so_fail + (NOT ok)::INT;
     RAISE NOTICE '[%] RA5: so_bo = % (ky vong 31 = SQL cau 9)', CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END, n;
 
-    -- RA6: biến động liên quan cư dân 92 (vế cũ ∪ vế mới); đối chứng bằng OR
-    WITH q AS (SELECT ma_qua_trinh FROM qua_trinh_cu_tru WHERE ma_cu_dan = 92),
+    -- RA6: biến động liên quan cư dân 15 (vế cũ ∪ vế mới); đối chứng bằng OR.
+    -- Cư dân 15 có 2 đợt (16 ở hộ 22, 17 ở hộ 9), cả hai cùng gắn biến động 2.
+    WITH q AS (SELECT ma_qua_trinh FROM qua_trinh_cu_tru WHERE ma_cu_dan = 15),
          ra AS (SELECT bd.ma_bien_dong FROM bien_dong_cu_tru bd JOIN q ON bd.ma_qua_trinh_cu = q.ma_qua_trinh
                 UNION
                 SELECT bd.ma_bien_dong FROM bien_dong_cu_tru bd JOIN q ON bd.ma_qua_trinh_moi = q.ma_qua_trinh),
@@ -116,7 +117,7 @@ BEGIN
            (SELECT COUNT(*) FROM ((SELECT * FROM ra EXCEPT SELECT * FROM dc)
                                   UNION ALL (SELECT * FROM dc EXCEPT SELECT * FROM ra)) d)
       INTO n, v, m;
-    ok := m = 0; so_fail := so_fail + (NOT ok)::INT;
+    ok := m = 0 AND n = 1 AND v = '2'; so_fail := so_fail + (NOT ok)::INT;
     RAISE NOTICE '[%] RA6: so_bo = %, ma_bien_dong = {%}, lech voi cach viet OR = %', CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END, n, v, m;
 
     -- RA7: chuyển nội bộ với hộ cũ/mới (dùng hai bản sao QC, QM) — đối chiếu SQL câu 7 (27)
@@ -176,22 +177,29 @@ BEGIN
         CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END, v, w, n, m;
 
     -- RA10: gamma_{ma_ho; COUNT(ma_cu_dan)}(pi_{ma_ho, ma_cu_dan}(Q_ht))
-    --       đối chiếu chéo: số hộ có >= 3 người phải khớp SQL câu 3 cùng CURRENT_DATE
+    --       Đối chiếu toàn bộ (mã hộ, số cư dân), lọc ngày bằng daterange.
     WITH q_ht AS (SELECT DISTINCT ma_qua_trinh, ma_cu_dan, ma_ho, loai_cu_tru, ngay_bat_dau
                  FROM qua_trinh_cu_tru
                  WHERE ngay_bat_dau <= CURRENT_DATE
                    AND (ngay_ket_thuc IS NULL OR ngay_ket_thuc >= CURRENT_DATE)),
          g AS (SELECT ma_ho, COUNT(ma_cu_dan) AS so_nhan_khau
-               FROM (SELECT DISTINCT ma_ho, ma_cu_dan FROM q_ht) p GROUP BY ma_ho)
-    SELECT (SELECT COUNT(*) FROM g), (SELECT COUNT(*) FROM g WHERE so_nhan_khau >= 3),
-           (SELECT SUM(so_nhan_khau)::TEXT FROM g)
-      INTO n, m, v;
-    SELECT COUNT(*) INTO expected_count FROM (
-        SELECT h.ma_ho FROM ho_cu_tru h JOIN qua_trinh_cu_tru q USING(ma_ho)
-        WHERE daterange(q.ngay_bat_dau,q.ngay_ket_thuc,'[]') @> CURRENT_DATE
-        GROUP BY h.ma_ho HAVING COUNT(DISTINCT q.ma_cu_dan)>=3) x;
-    ok := m = expected_count; so_fail := so_fail + (NOT ok)::INT;
-    RAISE NOTICE '[%] RA10: so_ho_co_nguoi = %, tong = %, so_ho_>=3 = % (doi chieu SQL cau 3 cung CURRENT_DATE)',
+               FROM (SELECT DISTINCT ma_ho, ma_cu_dan FROM q_ht) p GROUP BY ma_ho),
+         dc AS (
+             SELECT h.ma_ho, COUNT(DISTINCT q.ma_cu_dan) AS so_nhan_khau
+             FROM ho_cu_tru h JOIN qua_trinh_cu_tru q USING(ma_ho)
+             WHERE daterange(q.ngay_bat_dau,q.ngay_ket_thuc,'[]') @> CURRENT_DATE
+             GROUP BY h.ma_ho
+         )
+    SELECT (SELECT COUNT(*) FROM g),
+           (SELECT SUM(so_nhan_khau)::TEXT FROM g),
+           (SELECT COUNT(*) FROM (
+                (SELECT * FROM g EXCEPT SELECT * FROM dc)
+                UNION ALL
+                (SELECT * FROM dc EXCEPT SELECT * FROM g)
+            ) delta)
+      INTO n, v, m;
+    ok := m = 0; so_fail := so_fail + (NOT ok)::INT;
+    RAISE NOTICE '[%] RA10: so_ho_co_nguoi = %, tong = %, so_bo_lech = %',
         CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END, n, v, m;
 
     -- RA10 (kiểm tác dụng của phép chiếu trước gamma): nếu không chiếu, có bao nhiêu

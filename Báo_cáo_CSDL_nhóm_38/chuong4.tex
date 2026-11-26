@@ -34,7 +34,7 @@ Nhiều bảng có cùng cột \texttt{ghi\_chu}. Để phép kết nối so kh�
 \subsection*{Dữ liệu đầu vào cho các câu xét hiệu lực}
 \label{subsec:qd}
 
-Nhóm chuẩn bị hai quan hệ bằng SQL theo quy tắc B05 tại ngày hiện tại của phiên PostgreSQL. Cả hai chỉ giữ năm cột bắt buộc:
+Nhóm chuẩn bị hai quan hệ bằng SQL theo quy tắc B05 dựa trên ngày hiện tại của PostgreSQL (\texttt{CURRENT\_DATE}, mục \ref{subsec:quytac}). Gọi ngày đó là $d$. Cả hai chỉ giữ năm cột bắt buộc:
 \begin{equation*}
 \begin{aligned}
 Q_{\mathrm{ht}}(&\text{ma\_qua\_trinh},\ \text{ma\_cu\_dan},\ \text{ma\_ho},\\
@@ -43,8 +43,8 @@ Q_{\mathrm{ht}}(&\text{ma\_qua\_trinh},\ \text{ma\_cu\_dan},\ \text{ma\_ho},\\
 \end{equation*}
 
 \begin{itemize}[leftmargin=*, topsep=3pt, itemsep=3pt]
-    \item $Q_{\mathrm{bd}}$ gồm các đợt đã bắt đầu theo \texttt{ngay\_bat\_dau <= CURRENT\_DATE}.
-    \item $Q_{\mathrm{ht}}$ gồm các đợt đã bắt đầu và có ngày kết thúc để trống hoặc không trước \texttt{CURRENT\_DATE}.
+    \item $Q_{\mathrm{bd}}$ gồm các đợt đã bắt đầu, tức \texttt{ngay\_bat\_dau} không sau ngày $d$.
+    \item $Q_{\mathrm{ht}}$ gồm các đợt đã bắt đầu và có ngày kết thúc để trống hoặc không trước ngày $d$.
 \end{itemize}
 
 Nhóm dùng \texttt{SELECT DISTINCT} trên năm cột bắt buộc. Cột ngày kết thúc được xét trong SQL, rồi bỏ khỏi đầu vào đại số quan hệ.
@@ -65,7 +65,7 @@ R &\leftarrow \sigma_{\text{ten\_to} = \text{'Tổ 01'}}(TDP)\\
 KQ &\leftarrow \pi_{\text{ma\_dia\_chi},\ \text{dia\_chi\_chuan}}\left(R \bowtie_{R.\text{ma\_to} = DC.\text{ma\_to}} DC\right)
 \end{aligned}
 \end{equation*}
-Nhóm áp dụng phép chọn trên quan hệ tổ trước khi kết nối với quan hệ địa chỉ.
+Trong biểu thức đại số, nhóm lọc theo tổ trước để giảm số bộ đưa vào phép kết nối.
 \end{racau}
 
 \begin{racau}{3}{Cư dân đang thường trú tại Tổ 01}
@@ -83,8 +83,8 @@ $R_1$ giữ các đợt thường trú còn hiệu lực. $R_2$ giữ mã hộ t
 Cuối cùng, nối $R_3$ với CD theo mã cư dân để lấy mã và họ tên.
 \end{racau}
 
-\begin{racau}{4}{Cư dân từng cư trú và không còn đợt hiệu lực}
-Tìm các cư dân đã từng cư trú trong phường nhưng hiện tại không còn đợt nào hiệu lực, để cán bộ rà soát lại hồ sơ.
+\begin{racau}{4}{Cư dân từng cư trú và hiện không còn đợt cư trú hiệu lực}
+Tìm các cư dân đã từng cư trú trong phường nhưng tại ngày $d$ không còn đợt nào hiệu lực, để cán bộ rà soát lại hồ sơ.
 \begin{equation*}
 \begin{aligned}
 R &\leftarrow \pi_{\text{ma\_cu\_dan}}\left(Q_{\mathrm{bd}}\right) - \pi_{\text{ma\_cu\_dan}}(Q_{\mathrm{ht}})\\
@@ -106,20 +106,20 @@ KQ &\leftarrow A \cap B
 Không thể viết câu này bằng một phép chọn với điều kiện AND, vì mỗi bộ của QT chỉ có một loại cư trú; hai điều kiện phải đúng ở hai bộ khác nhau nên cần dùng phép giao.
 \end{racau}
 
-\begin{racau}{6}{Biến động liên quan đến cư dân mã 92}
-Liệt kê mã tất cả các biến động có liên quan đến cư dân mã 92, dù cư dân này nằm ở đợt cũ hay đợt mới của biến động.
+\begin{racau}{6}{Biến động liên quan đến cư dân mã 15}
+Liệt kê mã tất cả các biến động có liên quan đến cư dân mã 15, dù cư dân này nằm ở đợt cũ hay đợt mới của biến động.
 \begin{equation*}
 \begin{aligned}
-Q &\leftarrow \pi_{\text{ma\_qua\_trinh}}\left(\sigma_{\text{ma\_cu\_dan} = 92}(QT)\right)\\
+Q &\leftarrow \pi_{\text{ma\_qua\_trinh}}\left(\sigma_{\text{ma\_cu\_dan} = 15}(QT)\right)\\
 KQ &\leftarrow \pi_{\text{ma\_bien\_dong}}\left(BD \bowtie_{\text{ma\_qua\_trinh\_cu} = \text{ma\_qua\_trinh}} Q\right)\\
 &\phantom{\leftarrow}\ \cup\ \pi_{\text{ma\_bien\_dong}}\left(BD \bowtie_{\text{ma\_qua\_trinh\_moi} = \text{ma\_qua\_trinh}} Q\right)
 \end{aligned}
 \end{equation*}
-Vế trái của phép hợp lấy các biến động mà cư dân 92 rời đi, vế phải lấy các biến động mà cư dân 92 đến; một lần chuyển nội bộ sẽ xuất hiện ở cả hai vế nhưng phép hợp tự loại bỏ bộ trùng.
+Vế trái của phép hợp lấy các biến động mà cư dân 15 rời đi, vế phải lấy các biến động mà cư dân 15 đến; một lần chuyển nội bộ sẽ xuất hiện ở cả hai vế nhưng phép hợp tự loại bỏ bộ trùng. Cư dân 15 có hai đợt: đợt 16 ở hộ 22 (Tổ 01) kết thúc ngày 14/10/2026 và đợt 17 ở hộ 9 (Tổ 02) bắt đầu ngày 15/10/2026. Cả hai đợt cùng gắn với biến động 2, nên biến động này có mặt ở cả hai vế và chỉ còn một bộ sau phép hợp.
 \end{racau}
 
 \begin{racau}{7}{Hộ cũ và hộ mới của mỗi lần chuyển nội bộ}
-Với mỗi biến động chuyển nội bộ, cho biết họ tên cư dân, mã hộ cũ và mã hộ mới.
+Với mỗi lần chuyển nội bộ, cho biết mã biến động, họ tên cư dân, mã hộ cũ và mã hộ mới.
 \begin{equation*}
 \begin{aligned}
 QC &\leftarrow \rho_{QC(\text{mq\_cu},\ \text{ho\_cu})}\left(\pi_{\text{ma\_qua\_trinh},\ \text{ma\_ho}}(QT)\right)\\
@@ -176,13 +176,13 @@ Quan hệ bị chia gồm các cặp (mã tài khoản, loại biến động). 
 \par}
 \medskip
 
-Hai cách kiểm chứng bằng SQL là dùng hai lớp \texttt{NOT EXISTS} và đếm số loại phân biệt. Cả hai trả về tài khoản 1--4. Tài khoản 5 chưa ghi biến động nào.
+Hai cách kiểm chứng bằng SQL là dùng hai lớp \texttt{NOT EXISTS} (trình bày đầy đủ ở \hyperref[sec:qsql13-phuluc]{QSQL13, Phụ lục A.8}) và đếm số loại phân biệt. Cả hai trả về tài khoản 1--4. Tài khoản 5 chưa ghi biến động nào. Khi bảng biến động trống, tập tài khoản xuất hiện trong quan hệ bị chia cũng rỗng.
 
 Bộ dữ liệu có đủ ba loại biến động. Nếu yêu cầu xét mọi loại mà ràng buộc \texttt{CHECK} cho phép, dùng quan hệ hằng gồm ba loại làm quan hệ chia.
 \end{racau}
 
 \begin{racau}{10}{Số nhân khẩu đang cư trú theo hộ}
-Đếm số nhân khẩu đang cư trú hiện tại của từng hộ.
+Đếm số nhân khẩu của các hộ đang có người cư trú.
 \begin{equation*}
 {}_{\text{ma\_ho}}\,\gamma_{\,\text{COUNT(ma\_cu\_dan)} \rightarrow \text{so\_nhan\_khau}}\left(\pi_{\text{ma\_ho},\ \text{ma\_cu\_dan}}(Q_{\mathrm{ht}})\right)
 \end{equation*}
@@ -190,13 +190,13 @@ Phép gom nhóm $\gamma$ thuộc \textbf{đại số quan hệ mở rộng}, v�
 
 Nhóm chiếu về cặp (mã hộ, mã cư dân), rồi gom theo mã hộ và đếm số cư dân trong mỗi nhóm. Nhờ phép chiếu, một người có cả đợt thường trú và tạm trú trong cùng hộ vẫn chỉ được đếm một lần theo B17. Trường hợp này chưa xuất hiện trong bộ dữ liệu kiểm thử.
 
-Lần kiểm chứng của chương này ghi nhận 56 hộ có người cư trú. Truy vấn đối chứng dùng cùng ngày hệ thống và đếm cư dân phân biệt theo từng hộ.
+Lần kiểm chứng của chương này ghi nhận 56 hộ có người cư trú. Truy vấn đối chứng đếm cư dân phân biệt theo từng hộ tại ngày chạy.
 \end{racau}
 
 \clearpage
 \subsection*{Đối chiếu biểu thức đại số quan hệ với SQL}
 
-Mỗi biểu thức được dịch sang SQL theo ngữ nghĩa tập hợp: phép chiếu dùng SELECT DISTINCT; hợp, giao, hiệu lần lượt dùng UNION, INTERSECT, EXCEPT; phép chia dùng hai lớp NOT EXISTS; phép gom nhóm dùng GROUP BY. Nhóm dùng các truy vấn SQL đối chứng riêng cho những biểu thức cần so sánh tập kết quả theo cả hai chiều. Riêng Câu 5 có thể đối chiếu theo mã cư dân với QSQL06 ở Chương \ref{sec:chuong5}. Bảng \ref{tab:doichieura} trình bày số liệu minh họa trên bộ dữ liệu mẫu tại thời điểm thực nghiệm. Các kết quả về cư trú hiện tại có thể thay đổi theo ngày hệ thống; việc kiểm chứng đối chiếu truy vấn dùng cùng ngày hệ thống, không gắn kết quả với một ngày cố định.
+Mỗi biểu thức được dịch sang SQL theo ngữ nghĩa tập hợp: phép chiếu dùng SELECT DISTINCT; hợp, giao, hiệu lần lượt dùng UNION, INTERSECT, EXCEPT; phép chia dùng hai lớp NOT EXISTS; phép gom nhóm dùng GROUP BY. Nhóm dùng các truy vấn SQL đối chứng riêng cho những biểu thức cần so sánh tập kết quả theo cả hai chiều. Riêng Câu 5 có thể đối chiếu theo mã cư dân với QSQL06 ở Chương \ref{sec:chuong5}. Bảng \ref{tab:doichieura} trình bày kết quả trên bộ dữ liệu mẫu. Các câu xét hiệu lực chạy theo ngày hệ thống. Bảng ghi kết quả của lần kiểm thử trên bộ dữ liệu mẫu.
 
 \begin{table}[H]
 \centering
@@ -210,13 +210,13 @@ Mỗi biểu thức được dịch sang SQL theo ngữ nghĩa tập hợp: phé
 1 & 98 & Bằng số cư dân nữ (không có hai người nữ trùng cả họ tên và ngày sinh) \\
 2 & 8 & Bằng số địa chỉ thuộc Tổ 01 \\
 3 & 23 & Khớp từng cặp mã cư dân và họ tên với truy vấn đối chứng thường trú tại Tổ 01 \\
-4 & 17 & Khớp từng bộ với truy vấn đối chứng dùng \texttt{EXISTS} và \texttt{NOT EXISTS} cùng ngày hệ thống \\
+4 & 17 & Khớp từng bộ với truy vấn đối chứng dùng \texttt{EXISTS} và \texttt{NOT EXISTS} ở cùng ngày chạy \\
 5 & 31 & Khớp 31 mã cư dân với QSQL06, truy vấn dùng hai điều kiện \texttt{EXISTS} \\
-6 & 1 (biến động 32) & Lần chuyển nội bộ ngày 02/7/2026 từ hộ 56 sang hộ 20; trùng với cách viết một phép chọn dùng điều kiện ``hoặc'' \\
+6 & 1 (biến động 2) & Lần chuyển nội bộ ngày 15/10/2026 từ hộ 22 sang hộ 9, xuất hiện ở cả hai vế của phép hợp; trùng với cách viết một phép chọn dùng điều kiện ``hoặc'' \\
 7 & 27 & Khớp từng bộ trên 4 cột với truy vấn đối chứng xét mọi lần chuyển nội bộ \\
 8 & 2 & Cán bộ Cư trú 01 và Cán bộ Cư trú 02, từ 2 biến động chuyển đi trong tháng 10/2026 \\
 9 & 4 (tài khoản 1--4) & Cách viết NOT EXISTS và cách đếm cho cùng kết quả \\
-10 & 56 hộ & Đối chiếu số hộ theo ngưỡng nhân khẩu bằng điều kiện khoảng ngày trong truy vấn kiểm thử \\
+10 & 56 hộ & Đối chiếu từng cặp mã hộ và số cư dân bằng điều kiện khoảng ngày trong truy vấn kiểm thử \\
 \hline
 \end{tabularx}
 \caption{Kết quả đối chiếu 10 câu đại số quan hệ trên bộ dữ liệu mẫu}

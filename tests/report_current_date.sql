@@ -62,18 +62,6 @@ WHERE qt.loai_cu_tru = 'THUONG_TRU'
   AND (qt.ngay_ket_thuc IS NULL OR qt.ngay_ket_thuc >= CURRENT_DATE)
   AND cd.ngay_sinh <= CURRENT_DATE - INTERVAL '18 years'
 ORDER BY dc.dia_chi_chuan, cd.ho_ten;
-CREATE TEMP VIEW report_view AS
-SELECT t.ma_to,
-       t.ten_to,
-       COUNT(DISTINCT q.ma_cu_dan) AS so_cu_dan
-FROM to_dan_pho t
-LEFT JOIN dia_chi d          ON d.ma_to = t.ma_to
-LEFT JOIN ho_cu_tru h        ON h.ma_dia_chi = d.ma_dia_chi
-LEFT JOIN qua_trinh_cu_tru q ON q.ma_ho = h.ma_ho
-                            AND q.ngay_bat_dau <= CURRENT_DATE
-                            AND (q.ngay_ket_thuc IS NULL
-                                 OR q.ngay_ket_thuc >= CURRENT_DATE)
-GROUP BY t.ma_to, t.ten_to;
 CREATE TEMP TABLE report_before AS SELECT * FROM report_sql_02 WHERE ma_to=1;
 INSERT INTO dia_chi(ma_dia_chi,ma_to,dia_chi_chuan) VALUES(999001,1,'DEMO_CURRENT_DATE_BOUNDARY');
 INSERT INTO ho_cu_tru(ma_ho,ma_dia_chi,ngay_lap) VALUES(999001,999001,CURRENT_DATE-30);
@@ -120,9 +108,9 @@ BEGIN
  SELECT COUNT(*) INTO n FROM report_sql_02 WHERE ma_to=8 AND so_thuong_tru=0 AND so_tam_tru=0 AND tong_so_nguoi=0;
  IF n<>1 THEN RAISE EXCEPTION 'C02 empty group missing'; END IF;
  RAISE NOTICE '[PASS] B06: empty group retained with zero counts';
- SELECT so_cu_dan INTO n FROM report_view WHERE ma_to=1;
+ SELECT so_cu_dan INTO n FROM vw_thong_ke_cu_dan_theo_to WHERE ma_to=1;
  SELECT tong_so_nguoi INTO v FROM report_sql_02 WHERE ma_to=1;
- SELECT COUNT(*) INTO expected FROM report_view;
+ SELECT COUNT(*) INTO expected FROM vw_thong_ke_cu_dan_theo_to;
  IF n IS DISTINCT FROM v OR expected<>8 THEN RAISE EXCEPTION 'Current-date report view mismatch'; END IF;
  RAISE NOTICE '[PASS] B07: current-date report VIEW agrees with SQL and retains all eight groups';
 END $boundary$;
