@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {Presentation, PresentationFile} from '@oai/artifact-tool';
-import {program, ra, sql, seed} from './story.mjs';
+import {program, ra, sql, sqlExtra, seed} from './story.mjs';
 
 const build=process.env.HUST_BUILD;
 const report='Báo_cáo_CSDL_nhóm_38';
@@ -178,7 +178,7 @@ for(const s of program){
   block('Mở đợt mới',718,445,209,59,17);
   ar(937,464,31);
   block('Ghi biến động',978,445,225,59,17,true);
-  text('Một bước lỗi thì PostgreSQL hoàn tác cả chuỗi.',460,522,729,66,19,{color:navy,bold:true});
+  text('Ba hàm chuyển nội bộ, chuyển đi, chuyển đến. Một bước lỗi thì PostgreSQL hoàn tác cả chuỗi.',460,522,729,66,19,{color:navy,bold:true});
   break;
  case 10:
   text('636',96,202,447,170,108,{color:navy,bold:true});
@@ -196,9 +196,11 @@ for(const s of program){
  case 13:
   eq(formula9,55,135,1170,61,28);
   tbl(matchRows,59,227,[189,155,155,155],58,20,4);
-  txtLines([['Tập loại trong dữ liệu','Chuyển đến, chuyển đi, chuyển nội bộ.'],['Kết quả','Tài khoản 1, 2, 3, 4.\nTài khoản 5 chưa ghi biến động.']],770,235,431,{step:138,size:21});
+  txtLines([['Tập loại trong dữ liệu','Chuyển đến, chuyển đi, chuyển nội bộ.'],['Kết quả','Tài khoản 1, 2, 3, 4.\nTài khoản 5 chưa ghi biến động.'],['Viết bằng SQL','QSQL13: hai lớp NOT EXISTS.']],770,235,431,{step:138,size:21});
   break;
- case 14: idx(sql);break;
+ case 14: idx(sql);
+  text('Bổ sung QSQL11–13: CTE và RANK(), truy vấn con trong FROM, phép chia bằng hai lớp NOT EXISTS (A05).',55,600,1150,30,14,{color:muted});
+  break;
  case 15:
   text('Điều kiện hiệu lực đặt trong ON',55,132,642,45,22,{color:navy,bold:true});
   code(sql3Join,55,201,659,237,15);
@@ -232,7 +234,7 @@ for(const s of program){
   text('B3 · Truy vấn tra cứu dùng tham số để giữ dữ liệu nhập tách khỏi câu lệnh.',55,555,1169,65,20,{color:navy,bold:true});
   break;
  case 19:
-  txtLines([['Dữ liệu nạp vào cơ sở dữ liệu','636 bản ghi trên 7 bảng. Kiểm tra dữ liệu đạt.'],['Kết quả truy vấn','10 QSQL khớp toàn bộ các dòng đối chiếu.'],['Kiểm tra kết quả','24 hộ có từ 4 người. Tổ 08 và tài khoản 5 đều có số đếm bằng 0.']],60,155,1160,{step:135,size:22});
+  txtLines([['Dữ liệu nạp vào cơ sở dữ liệu','636 bản ghi trên 7 bảng. Kiểm tra dữ liệu đạt.'],['Kết quả truy vấn','13 QSQL khớp toàn bộ các dòng đối chiếu.'],['Kiểm tra kết quả','24 hộ có từ 4 người. Tổ 08 và tài khoản 5 đều có số đếm bằng 0.']],60,155,1160,{step:135,size:22});
   break;
  case 20:
   text('Cảm ơn cô đã lắng nghe',508,155,685,100,36,{color:'#A51025',bold:true,name:'Tiêu đề'});
@@ -258,7 +260,8 @@ for(const s of program){
   txtLines([['RA 4 · Hiệu','π[mã cư dân](Qbd) − π[mã cư dân](Qht), rồi nối hồ sơ.\nHiện tại không còn đợt hiệu lực.'],['RA 5 · Giao','π[mã cư dân](đợt tạm trú) ∩ π[mã cư dân](đợt thường trú).\nCư dân có cả hai loại trong lịch sử.'],['RA 6 · Hợp','π[mã biến động](BD nối đợt cũ của cư dân 15)\n∪ π[mã biến động](BD nối đợt mới của cư dân 15).']],58,147,1160,{step:153,size:20});
   break;
  case 25:
-  tbl([['Mã câu','Nội dung','Kỹ thuật chính','Số dòng'],...sql.map(([a,b],n)=>[qsqlId(n+1),a,b,qsqlRows[qsqlId(n+1)].length])],55,142,[145,582,325,113],41,15);
+  tbl([['Mã câu','Nội dung','Kỹ thuật chính','Số dòng'],...sql.map(([a,b],n)=>[qsqlId(n+1),a,b,qsqlRows[qsqlId(n+1)].length]),
+   ...sqlExtra.map(([a,b,c],n)=>[qsqlId(n+11),a,b,c])],55,142,[145,582,325,113],33,14);
   break;
  case 26:
   {const full=sqlFull[2].split('\n').map(l=>l.trimStart()).join('\n').replace(' OR q.ngay_ket_thuc','\n  OR q.ngay_ket_thuc');
@@ -270,7 +273,7 @@ for(const s of program){
   tbl(sampleTable,55,465,[228,191,174,174,401],34,15);
   break;
  case 28:
-  tbl([['Mã','Kiểm tra','Kết quả quan sát'],['B06','Hai đợt cùng người và cùng loại giao ngày','GiST từ chối với 23P01'],['B09','Sửa ngày đợt làm lệch ngày biến động','Trigger từ chối với 23514'],['B10','Lỗi khóa ngoại giữa chuỗi thao tác chuyển nội bộ','23503. Toàn bộ giao dịch hoàn tác.'],['B10','Đóng cũ, mở mới và ghi biến động hợp lệ','Ba bước thành công nhất quán']],55,149,[118,570,477],89,18);
+  tbl([['Mã','Kiểm tra','Kết quả quan sát'],['B06','Hai đợt cùng người và cùng loại giao ngày','GiST từ chối với 23P01'],['B09','Sửa ngày đợt làm lệch ngày biến động','Trigger từ chối với 23514'],['B10','Lỗi khóa ngoại giữa chuỗi thao tác chuyển nội bộ','23503. Toàn bộ giao dịch hoàn tác.'],['B10','Chuyển nội bộ, chuyển đi, chuyển đến hợp lệ qua ba hàm','Ba bước thành công nhất quán'],['X07','Ghi thêm CHUYEN_DI cho đợt đã là đợt cũ của biến động khác','UNIQUE uq_bd_dot_cu từ chối với 23505']],55,149,[118,570,477],74,18);
   break;
  case 29:
   tbl(roles,55,144,[344,276,268,277],48,16);
@@ -278,7 +281,7 @@ for(const s of program){
   break;
  case 30:
   tbl([['Bảng','Số bản ghi'],...seed],55,146,[279,153],49,17);
-  txtLines([['Kiểm chứng trên bộ 636 bản ghi','10 QSQL khớp toàn bộ dòng đối chiếu. Đại số quan hệ có 8 kiểm tra đạt và 2 câu ghi nhận kết quả.'],['B3 trên cơ sở dữ liệu thử nghiệm','Với cùng đầu vào thử, ghép chuỗi trả 200 dòng và dùng tham số trả 0. Từ khóa Hùng trả 8 dòng.'],['Hướng mở rộng','Kiểm toán cập nhật lịch sử, phân quyền theo tổ và quy tắc công bố nhóm nhỏ.']],529,153,681,{step:134,size:19});
+  txtLines([['Kiểm chứng trên bộ 636 bản ghi','13 QSQL khớp toàn bộ dòng đối chiếu. 10 câu đại số quan hệ đều có truy vấn SQL đối chứng.'],['B3 trên cơ sở dữ liệu thử nghiệm','Với cùng đầu vào thử, ghép chuỗi trả 200 dòng và dùng tham số trả 0. Từ khóa Hùng trả 8 dòng.'],['Hướng mở rộng','Kiểm toán cập nhật lịch sử, phân quyền theo tổ và quy tắc công bố nhóm nhỏ.']],529,153,681,{step:134,size:19});
   break;
  case 31: {
   const constraints = fs.readFileSync('sql/02_constraints.sql','utf8');

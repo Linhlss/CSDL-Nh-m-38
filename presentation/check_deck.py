@@ -60,16 +60,26 @@ with ZipFile(deck) as z, ZipFile(template) as t:
     targets={e.get('Id'):e.get('Target') for e in relationships}
     order=[posixpath.join('ppt',targets[e.get('{'+ns['r']+'}id')])
            for e in pres.findall('p:sldIdLst/p:sldId',ns)]
-    assert order==[f'ppt/slides/slide{i}.xml' for i in [35,36,*range(1,35)]]
-    for source, target in [(1,35),(2,36)]:
-        assert t.read(f'ppt/slides/slide{source}.xml')==z.read(f'ppt/slides/slide{target}.xml')
-        assert t.read(f'ppt/slides/_rels/slide{source}.xml.rels')==z.read(f'ppt/slides/_rels/slide{target}.xml.rels')
+    # Tên tệp slide có thể đổi khi lưu lại bằng PowerPoint/python-pptx, nên tra theo thứ tự trình chiếu.
+    assert len(order)==36 and len(set(order))==36
+    def rels_of(part):
+        head,name=posixpath.split(part)
+        return f'{head}/_rels/{name}.rels'
+    def slide_part(i):
+        return order[i+1]
+    def notes_part(i):
+        rels=E.fromstring(z.read(rels_of(slide_part(i))))
+        target=next(x.get('Target') for x in rels if x.get('Target').startswith('../notesSlides/'))
+        return posixpath.normpath(posixpath.join('ppt/slides',target))
+    for source, part in [(1,order[0]),(2,order[1])]:
+        assert t.read(f'ppt/slides/slide{source}.xml')==z.read(part)
+        assert t.read(f'ppt/slides/_rels/slide{source}.xml.rels')==z.read(rels_of(part))
     size=pres.find('p:sldSz',ns)
     assert [size.get(k) for k in ['cx','cy']]==['12192000','6858000']
     elapsed = folio = 0
     for i in range(1,35):
-        slide=E.fromstring(z.read(f'ppt/slides/slide{i}.xml'))
-        note=E.fromstring(z.read(f'ppt/notesSlides/notesSlide{i}.xml'))
+        slide=E.fromstring(z.read(slide_part(i)))
+        note=E.fromstring(z.read(notes_part(i)))
         copy=alltext(slide)
         speech=alltext(note)
         assert slide.xpath('//p:sp[p:txBody//a:t]',namespaces=ns),(i,'not editable')
@@ -79,7 +89,7 @@ with ZipFile(deck) as z, ZipFile(template) as t:
             elapsed += expected_times[i-1]
             if i in dividers:
                 number = check_divider(copy, i)
-                rels=E.fromstring(z.read(f'ppt/slides/_rels/slide{i}.xml.rels'))
+                rels=E.fromstring(z.read(rels_of(slide_part(i))))
                 assert any(x.get('Target')=='../slideLayouts/slideLayout11.xml' for x in rels),i
                 tag=f'Phần {number}'
             else:
@@ -93,7 +103,7 @@ with ZipFile(deck) as z, ZipFile(template) as t:
         else:
             assert 'PHỤ LỤC' in copy and f'A{i-23:02d}' in copy and 'Phụ lục hỏi đáp' in speech,i
         if i in figures or i in security_figures:
-            rels=E.fromstring(z.read(f'ppt/slides/_rels/slide{i}.xml.rels'))
+            rels=E.fromstring(z.read(rels_of(slide_part(i))))
             embeds=slide.xpath('//p:pic//a:blip/@r:embed',namespaces=ns)
             parts=[posixpath.normpath(posixpath.join('ppt/slides',rel.get('Target')))
                    for rel in rels if rel.get('Id') in embeds]
@@ -114,29 +124,32 @@ with ZipFile(deck) as z, ZipFile(template) as t:
                 continue
             x,y,w,h=map(int,(pos.get('x'),pos.get('y'),ext.get('cx'),ext.get('cy')))
             assert min(x,y,w,h)>=0 and x+w<=12192000+5 and y+h<=6858000+5,(i,x,y,w,h)
-    b09 = alltext(E.fromstring(z.read('ppt/slides/slide34.xml')))
+    b09 = alltext(E.fromstring(z.read(slide_part(34))))
     assert all(token in b09 for token in ('A11','p_ngay - 1','23514','trg_dot_khong_pha_su_kien'))
     assert folio==20 and elapsed==1200
-    src=(report/'chuong5.tex').read_text()
+    src=(report/'chuong5.tex').read_text(encoding='utf-8')
     listings=re.findall(r'\\begin\{lstlisting\}\[style=sqlvn\]\n(.*?)\\end\{lstlisting\}',src,re.S)
-    raw=(workspace/'sql/04_queries.sql').read_text()
+    raw=(workspace/'sql/04_queries.sql').read_text(encoding='utf-8')
     source_queries=re.split(r'^-- QSQL\d{2}\.[^\n]*\n',raw,flags=re.M)[1:]
-    assert [sql.strip() for sql in listings]==[sql.split('\n',1)[1].strip() for sql in source_queries]
+    assert [sql.strip() for sql in listings[:10]]==[sql.split('\n',1)[1].strip() for sql in source_queries]
+    extra=re.split(r'^-- QSQL\d{2}\.[^\n]*\n',(workspace/'sql/07_queries_bo_sung.sql').read_text(encoding='utf-8'),flags=re.M)[1:]
+    strip=lambda q:canon('\n'.join(l for l in q.splitlines() if not l.lstrip().startswith('--')))
+    assert [canon(q) for q in listings[10:]]==[strip(q) for q in extra]
     for number,case in [(29,3),(30,9)]:
-        slide=E.fromstring(z.read(f'ppt/slides/slide{number}.xml'))
+        slide=E.fromstring(z.read(slide_part(number)))
         assert canon(listings[case-1]) in canon(alltext(slide)),number
-    catalog=E.fromstring(z.read('ppt/slides/slide28.xml'))
+    catalog=E.fromstring(z.read(slide_part(28)))
     rows=[row.xpath('.//a:t/text()',namespaces=ns) for row in catalog.xpath('//a:tbl/a:tr',namespaces=ns)]
     assert [(row[0],int(row[-1])) for row in rows[1:]]==list(zip(
-        [f'QSQL{i:02}' for i in range(1,11)],[36,24,8,4,54,31,17,45,22,5]))
-    recorded=json.loads((workspace/'tests/week1_execution_results.json').read_text())['checks']
+        [f'QSQL{i:02}' for i in range(1,14)],[36,24,8,4,54,31,17,45,22,5,14,5,4]))
+    recorded=json.loads((workspace/'tests/week1_execution_results.json').read_text(encoding='utf-8'))['checks']
     results={c['test']:c['actual'] for c in recorded}
     qsql03=[[r['ma_to'],r['ten_to'],r['so_cu_dan']] for r in results['w1_seed/QSQL03/full-tuples']]
     qsql09=[[r['ma_bien_dong'],r['ma_cu_dan'],r['ma_to_cu'],r['ma_to_moi'],
              '/'.join(reversed(r['ngay_bien_dong'].split('-')))]
             for r in results['w1_seed/QSQL09/full-tuples'][:3]]
     for number,expected in [(14,qsql03),(29,qsql03),(15,qsql09),(30,qsql09)]:
-        slide=E.fromstring(z.read(f'ppt/slides/slide{number}.xml'))
+        slide=E.fromstring(z.read(slide_part(number)))
         actual=[row.xpath('.//a:t/text()',namespaces=ns) for row in slide.xpath('//a:tbl/a:tr',namespaces=ns)]
         assert actual[1:]==[[str(x) for x in row] for row in expected],number
 

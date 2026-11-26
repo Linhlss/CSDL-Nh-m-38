@@ -1,6 +1,6 @@
 # Lời nhắc diễn giả
 
-Hai trang nhận diện HUST đứng trước bìa và trước khi bắt đầu tính giờ. Khung 20 phút gồm 20 slide nội dung và ba trang phân phần. Mười phụ lục dùng khi hỏi đáp. Ghi chú cũng có trong Notes của PPTX.
+Hai trang nhận diện HUST đứng trước bìa và trước khi bắt đầu tính giờ. Khung 20 phút gồm 20 slide nội dung và ba trang phân phần. Mười một phụ lục A01–A11 dùng khi hỏi đáp. Ghi chú cũng có trong Notes của PPTX.
 
 ## 01 · Cơ sở dữ liệu quản lý cư dân và biến động cư trú
 
@@ -118,15 +118,15 @@ Thao tác (2 giây) · Chỉ tổng số bản ghi và hai bảng có nhiều d�
 
 Nguồn `sql/03_seed.sql`, `tests/final_test_log.md`.
 
-## 11 · Danh mục QSQL01–QSQL10
+## 11 · Danh mục QSQL01–QSQL13
 
 TV2 · 40 giây / 08:45
 
-Phần em dùng đúng mười truy vấn em đã chạy trong pgAdmin. Câu một tìm người đang cư trú tại Tổ 01. Câu hai tìm hộ có từ bốn người, còn câu ba đếm theo tổ. Các câu bốn đến bảy tra địa chỉ và lịch sử cư trú. Ba câu cuối thống kê biến động theo tháng, tìm những lần chuyển khác tổ và đếm theo tài khoản. Em chọn câu ba để giải thích tổ có số không và câu chín để giải thích hai nhánh nối từ đợt cũ và đợt mới.
+Báo cáo có mười ba truy vấn. Mười câu đầu em đã chạy và chụp trong pgAdmin. Câu một tìm người đang cư trú tại Tổ 01. Câu hai tìm hộ có từ bốn người, còn câu ba đếm theo tổ. Các câu bốn đến bảy tra địa chỉ và lịch sử cư trú. Ba câu cuối thống kê biến động theo tháng, tìm những lần chuyển khác tổ và đếm theo tài khoản. Em chọn câu ba để giải thích tổ có số không và câu chín để giải thích hai nhánh nối từ đợt cũ và đợt mới. Ba câu bổ sung ở dòng cuối dùng CTE với RANK, truy vấn con trong FROM và phép chia; chi tiết ở phụ lục A05.
 
 Thao tác (6 giây) · Chỉ vị trí QSQL03 và QSQL09 trong danh mục.
 
-Nguồn `Báo_cáo_CSDL_nhóm_38/chuong5.tex`, `sql/04_queries.sql`, `tests/final_test_log.md`.
+Nguồn `Báo_cáo_CSDL_nhóm_38/chuong5.tex`, `sql/04_queries.sql`, `sql/07_queries_bo_sung.sql`, `tests/final_test_log.md`.
 
 ## 12 · QSQL03 · Thống kê cư trú theo tổ
 
@@ -152,7 +152,7 @@ Nguồn `Báo_cáo_CSDL_nhóm_38/chuong5.tex`, `sql/04_queries.sql`, `tests/week
 
 TV2 · 35 giây / 12:35
 
-Nhóm dựng lại cơ sở dữ liệu, nạp đủ sáu trăm ba mươi sáu bản ghi rồi chạy bước kiểm tra dữ liệu. Cả mười câu đều khớp toàn bộ kết quả đã lưu. Câu hai trả hai mươi bốn hộ có ít nhất bốn người. Tổ 08 ở câu ba vẫn có mặt và mang số không. Tài khoản dự phòng mã năm ở câu mười cũng xuất hiện với số không. Mười ảnh chạy SQL nằm trong phụ lục báo cáo. Em mời Ninh trình bày đại số quan hệ và bảo mật.
+Nhóm dựng lại cơ sở dữ liệu, nạp đủ sáu trăm ba mươi sáu bản ghi rồi chạy bước kiểm tra dữ liệu. Cả mười ba câu đều khớp toàn bộ kết quả đã lưu. Câu hai trả hai mươi bốn hộ có ít nhất bốn người. Tổ 08 ở câu ba vẫn có mặt và mang số không. Tài khoản dự phòng mã năm ở câu mười cũng xuất hiện với số không. Ảnh chạy QSQL01 đến QSQL10 nằm trong phụ lục báo cáo. Em mời Ninh trình bày đại số quan hệ và bảo mật.
 
 Thao tác (5 giây) · Chỉ kết quả đối chiếu, ngưỡng bốn người và hai số đếm bằng không. Mời Ninh vào phần 3.
 
@@ -190,7 +190,7 @@ Nguồn `Báo_cáo_CSDL_nhóm_38/chuong4.tex`, `tests/report_ra_01_10.sql`, `tes
 
 TV3 · 105 giây / 16:35
 
-Câu chín có chữ đủ, nên điều kiện phải đúng với mọi loại trong tập xét. Đầu tiên, chiếu bảng biến động lên cặp mã tài khoản và loại biến động. Khi một cán bộ ghi nhiều biến động cùng loại, phép chiếu theo ngữ nghĩa tập hợp chỉ giữ một cặp. Sau đó chiếu riêng cột loại để được tập chia. Bộ dữ liệu kiểm thử có đủ ba loại biến động là chuyển đến, chuyển đi và chuyển nội bộ. Đọc ma trận từ trái sang phải. Một tài khoản được giữ khi cả ba cột đều có cặp tương ứng. Tài khoản 1 đến 4 thỏa và tài khoản 5 chưa ghi biến động. Kỹ thuật SQL thứ nhất dùng hai lớp NOT EXISTS. Nó rà xem có loại nào còn thiếu đối với tài khoản đang xét. Kỹ thuật thứ hai đếm loại phân biệt theo tài khoản và so với số loại phân biệt toàn bảng. Hai cách cho cùng tập bốn mã. Nếu cơ sở dữ liệu chỉ từng ghi hai loại, mẫu số của chính câu này sẽ có hai loại. Muốn bắt buộc mọi loại mà quy tắc cho phép, mẫu số phải là danh mục cố định theo miền nghiệp vụ. Ở đây câu hỏi và kết quả dùng đúng tập loại xuất hiện.
+Câu chín có chữ đủ, nên điều kiện phải đúng với mọi loại trong tập xét. Đầu tiên, chiếu bảng biến động lên cặp mã tài khoản và loại biến động. Khi một cán bộ ghi nhiều biến động cùng loại, phép chiếu theo ngữ nghĩa tập hợp chỉ giữ một cặp. Sau đó chiếu riêng cột loại để được tập chia. Bộ dữ liệu kiểm thử có đủ ba loại biến động là chuyển đến, chuyển đi và chuyển nội bộ. Đọc ma trận từ trái sang phải. Một tài khoản được giữ khi cả ba cột đều có cặp tương ứng. Tài khoản 1 đến 4 thỏa và tài khoản 5 chưa ghi biến động. Kỹ thuật SQL thứ nhất dùng hai lớp NOT EXISTS, chính là QSQL13 trong báo cáo. Nó rà xem có loại nào còn thiếu đối với tài khoản đang xét. Kỹ thuật thứ hai đếm loại phân biệt theo tài khoản và so với số loại phân biệt toàn bảng. Hai cách cho cùng tập bốn mã. Nếu cơ sở dữ liệu chỉ từng ghi hai loại, mẫu số của chính câu này sẽ có hai loại. Muốn bắt buộc mọi loại mà quy tắc cho phép, mẫu số phải là danh mục cố định theo miền nghiệp vụ. Ở đây câu hỏi và kết quả dùng đúng tập loại xuất hiện.
 
 Thao tác (26 giây) · Chỉ mẫu số. Đọc một hàng đủ ba loại và hàng tài khoản 5.
 
@@ -258,13 +258,13 @@ Câu 4 loại người còn đợt hiệu lực khỏi những người có đ�
 
 Nguồn `Báo_cáo_CSDL_nhóm_38/chuong4.tex`, `tests/report_current_date_log.txt`.
 
-## A05 · Danh mục QSQL01–QSQL10
+## A05 · Danh mục QSQL01–QSQL13
 
 TV2 · Hỏi đáp
 
-Danh mục theo mã câu trong báo cáo và trong ảnh. QSQL02 dùng ngưỡng bốn cư dân. QSQL08 gom tất cả biến động đã ghi theo tháng và loại. QSQL10 giữ cả tài khoản chưa ghi biến động.
+Danh mục theo mã câu trong báo cáo và trong ảnh. QSQL02 dùng ngưỡng bốn cư dân. QSQL08 gom tất cả biến động đã ghi theo tháng và loại. QSQL10 giữ cả tài khoản chưa ghi biến động. QSQL11 đến QSQL13 là ba câu bổ sung: CTE với RANK xếp hạng hộ trong từng tổ, truy vấn con trong FROM so với mức trung bình 24,88 người, và phép chia bằng hai lớp NOT EXISTS cho cùng kết quả với RA 9.
 
-Nguồn `Báo_cáo_CSDL_nhóm_38/chuong5.tex`, `sql/04_queries.sql`, `tests/week1_execution_results.json`, `tests/final_test_log.md`.
+Nguồn `Báo_cáo_CSDL_nhóm_38/chuong5.tex`, `sql/04_queries.sql`, `tests/week1_execution_results.json`, `tests/final_test_log.md`, `sql/07_queries_bo_sung.sql`, `tests/report_sql_bo_sung_log.txt`.
 
 ## A06 · QSQL03 · Truy vấn đầy đủ
 
@@ -282,11 +282,11 @@ Lọc biến động chuyển nội bộ, cùng mã cư dân và khác mã tổ.
 
 Nguồn `Báo_cáo_CSDL_nhóm_38/chuong5.tex`, `sql/04_queries.sql`, `tests/week1_execution_results.json`, `tests/final_test_log.md`.
 
-## A08 · B06, B09 và B10 · Các ca kiểm tra
+## A08 · B06, B09, B10 và X07 · Các ca kiểm tra
 
 TV1 · Hỏi đáp
 
-B06 phát hiện giao khoảng với mã 23P01. B09 kiểm biên ngày đợt và báo 23514. Ca B10 minh họa lỗi 23503 khi cập nhật theo chuỗi và kiểm tra toàn bộ chuỗi được hoàn tác.
+B06 phát hiện giao khoảng với mã 23P01. B09 kiểm biên ngày đợt và báo 23514. Ca B10 minh họa lỗi 23503 khi cập nhật theo chuỗi và kiểm tra toàn bộ chuỗi được hoàn tác. Ba hàm fn_chuyen_noi_bo, fn_chuyen_di và fn_chuyen_den đều chạy hợp lệ. X07: ghi thêm một biến động chuyển đi cho đợt 16, vốn đã là đợt cũ của biến động 2, bị UNIQUE uq_bd_dot_cu từ chối với 23505.
 
 Nguồn `sql/02_constraints.sql`, `tests/constraints_week2.sql`, `tests/week2_tv1_integration_log.md`, `tests/report_bang_thu_rang_buoc_log.txt`.
 
