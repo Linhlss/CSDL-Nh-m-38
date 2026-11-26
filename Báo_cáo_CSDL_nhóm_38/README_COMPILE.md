@@ -44,9 +44,8 @@ Chương 5 lấy câu lệnh từ [QSQL01–QSQL10](../sql/04_queries.sql). Kế
 - Thêm mục 3.4 về khóa ứng viên, phụ thuộc hàm, 1NF–3NF và dư thừa có kiểm soát ở `ngay_bien_dong`. Các mục ràng buộc và DDL lần lượt chuyển thành 3.5 và 3.6.
 - Đầu vào `Q_d` chỉ giữ năm cột NOT NULL; đã chạy lại trên seed636 dựng mới bằng PostgreSQL 17.12. Log `tests/report_ra_20261122_log.txt` có hash script và kết quả; lần này không chạy lại kiểm thử bảo mật.
 - Giữ nguyên toàn bộ tài sản ảnh ERD và lệnh chèn ảnh.
-- Trang phân công ghi rõ xếp loại/chữ ký đang chờ nhóm tự điền và xác nhận; không tự đánh giá đóng góp hoặc tạo chữ ký.
 
 ## Lưu ý khi sửa
 
 - Mã SQL trong báo cáo có ký tự tiếng Việt. Nếu thêm khối mã có chữ tiếng Việt mới mà chưa có trong danh sách `literate` của `sqllisting.tex`, hãy bổ sung ký tự đó theo cùng cách (định nghĩa lấy từ `t5enc.dfu`).
-- Cột xếp loại và chữ ký ở trang cuối để trống cho nhóm điền tay sau khi in.
+- Trang cuối ghi chi tiết công việc, sản phẩm và xếp loại. Từng thành viên điền chữ ký sau khi in.

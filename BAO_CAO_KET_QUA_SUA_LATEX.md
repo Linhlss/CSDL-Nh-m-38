@@ -5,7 +5,9 @@
 - Báo cáo in: [PDF 71 trang](Báo_cáo_CSDL_nhóm_38/main.pdf). Slide: [PowerPoint 36 trang](presentation/CSDL_Nhom38_HUST_ThuyetTrinh.pptx) và [PDF dự phòng](presentation/CSDL_Nhom38_HUST_ThuyetTrinh.pdf).
 - Tiếp nhận từ [PR #13](https://github.com/Linhlss/CSDL-Nh-m-38/pull/13) phần ràng buộc tham gia, thực thể kết hợp, chỉ mục, ba ví dụ DML và phụ lục mã nguồn. Bổ sung A11 về B09 cho phần hỏi đáp.
 - Quyết định E1 giữ theo nhật ký, mục 9. Bảng biến động vẫn nêu rõ phần dư thừa có điều kiện. Phần SQL dùng đúng QSQL01–QSQL10; báo cáo chứa mười ảnh của TV2 và bảy ảnh bảo mật của TV3.
-- [Kiểm chứng DML](tests/report_dml_minh_hoa_log.txt) trên PostgreSQL 17.12 ghi hai lỗi B09 đúng SQLSTATE 23514 và 636 bản ghi giống hệt trước và sau hoàn tác. Trang xếp loại và chữ ký để nhóm tự điền.
+- [Kiểm chứng DML](tests/report_dml_minh_hoa_log.txt) trên PostgreSQL 17.12 ghi hai lỗi B09 đúng SQLSTATE 23514 và 636 bản ghi giống hệt trước và sau hoàn tác.
+- Trang 71 ghi công việc và sản phẩm của từng thành viên, kèm xếp loại do chủ repo xác nhận. Cột chữ ký để từng thành viên ký tay.
+- Đã rà văn phong, làm rõ cách xét hiệu lực của Chương 4 và Chương 5, đồng bộ tiêu đề câu truy vấn và rút các câu lặp về giới hạn. Kiểm tra lại bố cục A4, ảnh minh chứng, công thức và các đoạn mã sau khi biên dịch.
 
 ## Bản lịch sử — truy vấn theo ngày hệ thống
 

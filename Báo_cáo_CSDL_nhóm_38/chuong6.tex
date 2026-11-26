@@ -43,7 +43,7 @@ Trong thiết kế của nhóm, bảng tai\_khoan không có cột mật khẩu 
 
 Ví dụ 1 và 2 trình bày hai cách kiểm tra quyền trên cơ sở dữ liệu cư trú. Các đoạn mã minh họa đổi role bằng \texttt{SET ROLE}. Các ảnh bên dưới ghi lại phiên đăng nhập độc lập bằng từng role trên PostgreSQL 17.11, với \texttt{session\_user} và \texttt{current\_user} cùng mang tên role đã đăng nhập. Ví dụ 3 dành cho chức năng tra cứu. Mục \ref{subsec:danhgia} tổng hợp kết quả kiểm thử của cả chương \cite{postgres}.
 
-\textbf{Ví dụ 1: Phân quyền theo nguyên tắc quyền tối thiểu và bảo vệ lịch sử (Demo B1).} Nhóm tạo hai role đăng nhập độc lập, không phải superuser và không sở hữu bảng nào. Role \texttt{csdl17\_admin} được đọc và ghi dữ liệu nghiệp vụ nhưng bị thu hồi quyền DELETE trên hai bảng lịch sử (B12). Role \texttt{csdl17\_reader} là cán bộ tra cứu, chỉ được đọc sáu bảng nghiệp vụ và không được đọc bảng tài khoản.
+\textbf{Ví dụ 1: Phân quyền theo nguyên tắc quyền tối thiểu và bảo vệ lịch sử (B1).} Nhóm tạo hai role đăng nhập độc lập, không phải superuser và không sở hữu bảng nào. Role \texttt{csdl17\_admin} được đọc và ghi dữ liệu nghiệp vụ nhưng bị thu hồi quyền DELETE trên hai bảng lịch sử (B12). Role \texttt{csdl17\_reader} là cán bộ tra cứu, chỉ được đọc sáu bảng nghiệp vụ và không được đọc bảng tài khoản.
 
 \begin{lstlisting}[style=sqlvn]
 CREATE ROLE csdl17_admin  LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE;
@@ -74,7 +74,7 @@ RESET ROLE;
 
 Hình~\ref{fig:sec-b1-select} cho thấy role \texttt{csdl17\_reader} đếm được 200 cư dân. Hình~\ref{fig:sec-b1-denied} ghi nhận PostgreSQL từ chối thao tác ghi và đọc bảng tài khoản trong phiên của cùng role. Nhật ký kiểm thử ghi mã SQLSTATE 42501 cho các trường hợp này.
 
-Với \texttt{csdl17\_admin}, phép thử trong đoạn mã cho thấy lệnh DELETE trên sổ biến động bị từ chối với thông báo \textit{permission denied for table bien\_dong\_cu\_tru}. Cần lưu ý rằng việc thu hồi quyền DELETE chỉ ngăn \emph{xóa vật lý} lịch sử: csdl17\_admin vẫn giữ quyền UPDATE trên hai bảng lịch sử, và các lệnh sửa này chỉ bị giới hạn bởi trigger kiểm tra B08, B09, B14 chứ không bị cấm hoàn toàn (mục \ref{subsec:danhgia}). Vì vậy, đính chính một biến động ghi sai bằng cách ghi thêm bản ghi mới là quy trình nhóm khuyến nghị để giữ dấu vết, chưa phải điều cơ sở dữ liệu bắt buộc. Nhóm không cho role demo làm chủ sở hữu bảng, vì chủ sở hữu luôn có toàn quyền trên bảng của mình và phép thử quyền khi đó sẽ không còn ý nghĩa.
+Trong phép thử B1, PostgreSQL từ chối lệnh \texttt{DELETE} trên bảng biến động khi chạy dưới role \texttt{csdl17\_admin}. Kết quả xác nhận cơ chế thu hồi quyền xóa bản ghi theo B12.
 
 \begin{figure}[H]
     \centering
@@ -87,7 +87,7 @@ Với \texttt{csdl17\_admin}, phép thử trong đoạn mã cho thấy lệnh DE
     \label{fig:sec-b1-denied}
 \end{figure}
 
-\textbf{Ví dụ 2: Dùng khung nhìn để chỉ công bố số liệu tổng hợp (Demo B2).} Cán bộ tổng hợp của phường cần biết mỗi tổ đang có bao nhiêu người cư trú, nhưng không cần biết họ tên hay ngày sinh của từng người. Nhóm tạo một view chỉ trả về mã tổ, tên tổ và số người, rồi chỉ cấp quyền trên view này cho role \texttt{csdl17\_report}, không cấp quyền trên bảng gốc.
+\textbf{Ví dụ 2: Dùng khung nhìn để chỉ công bố số liệu tổng hợp (B2).} Cán bộ tổng hợp của phường cần biết mỗi tổ đang có bao nhiêu người cư trú, nhưng không cần biết họ tên hay ngày sinh của từng người. Nhóm tạo một view chỉ trả về mã tổ, tên tổ và số người, rồi chỉ cấp quyền trên view này cho role \texttt{csdl17\_report}, không cấp quyền trên bảng gốc.
 
 \begin{lstlisting}[style=sqlvn]
 CREATE ROLE csdl17_report LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE;
@@ -115,7 +115,7 @@ SELECT ho_ten, ngay_sinh FROM cu_dan LIMIT 1;               -- bị từ chối
 RESET ROLE;
 \end{lstlisting}
 
-Hình~\ref{fig:sec-b2-view} cho thấy \texttt{csdl17\_report} đọc được VIEW gồm ba cột và tám tổ. Trong lần chạy này, Tổ 01 có 34 cư dân và Tổ 08 có 0. PostgreSQL từ chối quyền đọc trực tiếp hai bảng gốc \texttt{cu\_dan} và \texttt{qua\_trinh\_cu\_tru} trong cùng role (Hình~\ref{fig:sec-b2-denied}). Điều này làm được nhờ tùy chọn \texttt{security\_invoker = false}: view đọc các bảng nền bằng quyền của chủ sở hữu view, nên người dùng chỉ cần quyền trên view mà không cần quyền trên từng bảng bên dưới. View không trực tiếp hiển thị họ tên, ngày sinh hoặc mã cư dân; số liệu nhóm nhỏ vẫn có nguy cơ suy luận thông tin cá nhân, như giới hạn nêu ở mục \ref{subsec:danhgia}.
+Hình~\ref{fig:sec-b2-view} cho thấy \texttt{csdl17\_report} đọc được VIEW gồm ba cột và tám tổ. Trong lần chạy này, Tổ 01 có 34 cư dân và Tổ 08 có 0. PostgreSQL từ chối quyền đọc trực tiếp hai bảng gốc \texttt{cu\_dan} và \texttt{qua\_trinh\_cu\_tru} trong cùng role (Hình~\ref{fig:sec-b2-denied}). Điều này làm được nhờ tùy chọn \texttt{security\_invoker = false}: view đọc các bảng nền bằng quyền của chủ sở hữu view, nên người dùng chỉ cần quyền trên view mà không cần quyền trên từng bảng bên dưới. Khung nhìn công bố ba trường tổng hợp và ẩn các trường định danh cư dân.
 
 \begin{figure}[H]
     \centering
@@ -184,7 +184,7 @@ Hai hàm của Ví dụ 3 không nằm trong các script cài đặt của nhóm
 \hline
 \textbf{Kiểm thử (tệp)} & \textbf{Nội dung kiểm tra} & \textbf{Kết quả} \\
 \hline
-Soát catalog quyền (\texttt{security\_catalog\_tv3.sql}) & Ba role demo không đặc quyền, không sở hữu đối tượng, không là thành viên role khác; PUBLIC không có CONNECT/TEMP/CREATE và không có quyền trên bảng; reader chỉ đọc 6 bảng; report chỉ đọc VIEW; VIEW không có cột định danh; admin không có DELETE trên hai bảng lịch sử & 15/15 PASS \\
+Kiểm tra quyền đã cấp (\texttt{security\_catalog\_tv3.sql}) & Ba role demo không đặc quyền, không sở hữu đối tượng, không là thành viên role khác; PUBLIC không có CONNECT/TEMP/CREATE và không có quyền trên bảng; reader chỉ đọc 6 bảng; report chỉ đọc VIEW; VIEW không có cột định danh; admin không có DELETE trên hai bảng lịch sử & 15/15 PASS \\
 \hline
 Đăng nhập thật bằng csdl17\_reader (\texttt{security\_login\_tv3.sql}) & SELECT được; UPDATE, INSERT, DELETE, TRUNCATE, đọc tai\_khoan, đọc VIEW, gọi \texttt{fn\_chuyen\_noi\_bo}, tạo bảng, tạo bảng tạm và SET ROLE sang admin đều bị từ chối (42501) & 12/12 PASS \\
 \hline
@@ -201,11 +201,11 @@ Ví dụ của chương và quyền admin (\texttt{report\_security\_ch6.sql}) &
 
 Khác với \texttt{SET ROLE} ở Ví dụ 1 và 2, các phép thử đăng nhập thật mở phiên mới bằng \texttt{psql -h localhost -U csdl17\_reader} (tương tự với csdl17\_report). Dòng đầu mỗi log xác nhận \texttt{session\_user} và \texttt{current\_user} đều là role demo và phiên không phải superuser, nên kết quả phản ánh đúng quyền của role khi được dùng độc lập. Mật khẩu tạm chỉ đặt cho phiên thử và được xóa ngay sau đó, không ghi vào mã nguồn. Sau các phiên thử, giá trị băm md5 của các bảng dữ liệu không đổi. Các ảnh bổ trợ về quyền, dữ liệu trước và sau phép thử, và định nghĩa VIEW nằm trong \hyperref[sec:anh-sec]{phụ lục ảnh kiểm thử bảo mật}.
 
-\textbf{Giới hạn của quyền csdl17\_admin.} Kiểm thử trên bộ dữ liệu mẫu, trong giao dịch có ROLLBACK, cho thấy các giới hạn sau mà thiết kế hiện tại \emph{chưa khắc phục}:
+\textbf{Giới hạn của quyền csdl17\_admin.} Các phép thử trong giao dịch có \texttt{ROLLBACK} cho kết quả sau.
 \begin{itemize}[leftmargin=*]
     \item \textbf{Vẫn sửa được lịch sử trong phạm vi trigger cho phép.} csdl17\_admin sửa được ghi chú của một biến động, đổi tài khoản ghi nhận của biến động cũ sang một tài khoản đang hoạt động khác, và đóng một đợt cư trú chưa gắn với biến động nào. Các lệnh làm sai quan hệ ngày giữa biến động và đợt cư trú, như đổi ngày biến động hay sửa ngày kết thúc của đợt đã gắn biến động, bị trigger B09 chặn với SQLSTATE 23514.
-    \item \textbf{Toàn quyền trên bảng tai\_khoan.} csdl17\_admin có SELECT, INSERT, UPDATE và DELETE trên tai\_khoan. Xóa tài khoản đã ghi biến động bị khóa ngoại chặn (23503), nhưng tài khoản chưa ghi biến động nào (tài khoản 5) thì xóa được. Admin cũng sửa được ten\_hien\_thi, vai\_tro và trang\_thai. Do nhật ký biến động chỉ lưu ma\_tai\_khoan, đổi tên hiển thị sẽ đổi cách đọc ``ai đã ghi'' của các biến động cũ; còn mở khóa một tài khoản đang KHOA thì tài khoản đó ghi lại được ngay, vì B14 chỉ kiểm tra trạng thái tại thời điểm ghi.
-    \item \textbf{Vai trò nghiệp vụ chỉ là nhãn mô tả (X01, phương án b).} Cột tai\_khoan.vai\_tro chỉ là nhãn mô tả người ghi; quyền thực tế do role PostgreSQL quyết định, và trigger B14 chỉ kiểm tra tài khoản đang HOAT\_DONG chứ không kiểm tra vai trò. Bộ dữ liệu mẫu được giữ nguyên: 13/63 biến động do tài khoản có vai trò THONG\_KE ghi và 11/63 do tài khoản QUAN\_TRI ghi. Báo cáo không khẳng định cơ sở dữ liệu ngăn tài khoản THONG\_KE ghi biến động.
+    \item \textbf{Quyền trên bảng tài khoản.} Role \texttt{csdl17\_admin} có quyền đọc, thêm, sửa và xóa bản ghi trên bảng \texttt{tai\_khoan}. Xóa tài khoản đã ghi biến động bị khóa ngoại chặn (23503), nhưng tài khoản chưa ghi biến động nào (tài khoản 5) thì xóa được. Admin cũng sửa được ten\_hien\_thi, vai\_tro và trang\_thai. Do nhật ký biến động chỉ lưu ma\_tai\_khoan, đổi tên hiển thị sẽ đổi cách đọc ``ai đã ghi'' của các biến động cũ; còn mở khóa một tài khoản đang KHOA thì tài khoản đó ghi lại được ngay, vì B14 chỉ kiểm tra trạng thái tại thời điểm ghi.
+    \item \textbf{Vai trò nghiệp vụ chỉ là nhãn mô tả (X01, phương án b).} Cột tai\_khoan.vai\_tro chỉ là nhãn mô tả người ghi; quyền thực tế do role PostgreSQL quyết định, và trigger B14 chỉ kiểm tra tài khoản đang HOAT\_DONG chứ không kiểm tra vai trò. Bộ dữ liệu mẫu được giữ nguyên: 13/63 biến động do tài khoản có vai trò THONG\_KE ghi và 11/63 do tài khoản QUAN\_TRI ghi.
 \end{itemize}
 
 \textbf{Các giới hạn khác.} VIEW tổng hợp vẫn có nguy cơ suy luận ở nhóm nhỏ. Thống kê hiện tại dùng ngày hệ thống nên kết quả thay đổi theo thời gian. Đồ án chưa triển khai bảo mật mức dòng, kiểm toán đầy đủ, mã hóa kết nối TLS hay chính sách \texttt{pg\_hba.conf} cho vận hành. Các hàm \texttt{fn\_*} vẫn cho PUBLIC quyền EXECUTE nhưng chạy với quyền người gọi (SECURITY INVOKER); nếu đổi sang SECURITY DEFINER, phải rà soát và thu hồi quyền PUBLIC phù hợp.

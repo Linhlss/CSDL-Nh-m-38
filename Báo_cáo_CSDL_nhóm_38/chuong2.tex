@@ -40,7 +40,7 @@ Tài khoản & Tài khoản của cán bộ sử dụng hệ thống & ma\_tai\_
 \label{tab:thucthe}
 \end{table}
 
-Thực thể quá trình cư trú cho biết một cư dân ở hộ nào, thường trú hay tạm trú, và ở trong khoảng thời gian nào. Khi chuyển sang hộ khác trong phường, hệ thống kết thúc đợt cũ và mở đợt mới; khi chuyển ra khỏi phường, hệ thống chỉ kết thúc đợt cũ. Mỗi đợt được lưu thành một bản ghi riêng nên có thể xem lại lịch sử, còn việc bảo vệ các bản ghi này phụ thuộc vào phân quyền và trigger.
+Thực thể quá trình cư trú ghi nhận hộ, loại cư trú và khoảng thời gian của từng đợt. Khi chuyển sang hộ khác trong phường, hệ thống kết thúc đợt cũ và mở đợt mới. Khi chuyển ra khỏi phường, hệ thống kết thúc đợt cũ. Mỗi đợt có một bản ghi riêng để tra cứu lịch sử.
 
 \subsection{Các mối liên kết}
 \label{subsec:lienket}
@@ -57,9 +57,9 @@ Quản lý & Tổ dân phố & Địa chỉ & Một tổ quản lý nhiều đ�
 \hline
 Chứa & Địa chỉ & Hộ cư trú & Một địa chỉ có thể có nhiều hộ, mỗi hộ ở đúng một địa chỉ \\
 \hline
-Gồm & Hộ cư trú & Quá trình cư trú & Một hộ gồm nhiều quá trình cư trú của các thành viên \\
+Gồm & Hộ cư trú & Quá trình cư trú & Một hộ có thể gắn với nhiều đợt cư trú \\
 \hline
-Có đợt & Cư dân & Quá trình cư trú & Một cư dân có nhiều đợt cư trú theo thời gian \\
+Có đợt & Cư dân & Quá trình cư trú & Một cư dân có thể có nhiều đợt cư trú theo thời gian \\
 \hline
 Ghi nhận & Tài khoản & Biến động cư trú & Biến động được ghi bằng đúng một tài khoản ở trạng thái hoạt động tại thời điểm ghi nhận (B14) \\
 \hline

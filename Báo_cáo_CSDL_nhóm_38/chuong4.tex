@@ -65,7 +65,7 @@ R &\leftarrow \sigma_{\text{ten\_to} = \text{'Tổ 01'}}(TDP)\\
 KQ &\leftarrow \pi_{\text{ma\_dia\_chi},\ \text{dia\_chi\_chuan}}\left(R \bowtie_{R.\text{ma\_to} = DC.\text{ma\_to}} DC\right)
 \end{aligned}
 \end{equation*}
-Nhóm chọn tổ trước rồi mới kết nối để giảm số bộ ở đầu vào của phép kết nối theo biến đổi đại số. Đây là cách tổ chức biểu thức, không phải kết luận đo hiệu năng thực thi.
+Nhóm áp dụng phép chọn trên quan hệ tổ trước khi kết nối với quan hệ địa chỉ.
 \end{racau}
 
 \begin{racau}{3}{Cư dân đang thường trú tại Tổ 01}
@@ -83,7 +83,7 @@ $R_1$ giữ các đợt thường trú còn hiệu lực. $R_2$ giữ mã hộ t
 Cuối cùng, nối $R_3$ với CD theo mã cư dân để lấy mã và họ tên.
 \end{racau}
 
-\begin{racau}{4}{Cư dân từng ở nhưng đã hết hiệu lực}
+\begin{racau}{4}{Cư dân từng cư trú và không còn đợt hiệu lực}
 Tìm các cư dân đã từng cư trú trong phường nhưng hiện tại không còn đợt nào hiệu lực, để cán bộ rà soát lại hồ sơ.
 \begin{equation*}
 \begin{aligned}

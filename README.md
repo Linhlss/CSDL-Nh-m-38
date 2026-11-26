@@ -30,7 +30,7 @@ Xây dựng CSDL quản lý cư dân và biến động cư trú tại một ph�
 - **TV2:** kiểm thử dữ liệu/10 SQL cùng ràng buộc mới, ghi expected/actual; viết Chương 3.5 và Chương 5.
 - **TV3:** đã có QRA07 bằng phép chia, kết quả seed636 của QRA02/03/06/08, kiểm thử đăng nhập thật và sửa X02. Nội dung PR #5 đã vào nhánh tích hợp; PR #5 đã đóng, không merge. PR #8 đã được gộp (fast-forward) vào nhánh TV1. Việc còn lại: review bản tích hợp, chốt Chương 4/6, chụp B1/B2 ngày 24/11.
 
-[Checklist và lịch phối hợp](docs/03_CHECKLIST_DU_AN.md#tuan-2-hien-hanh) giữ đầy đủ 142 mã việc và reviewer. **Gate 2 PASS** theo xác nhận nhóm do TV1 báo lại ngày 20/11. Báo cáo và slide hiện hành đã đưa vào bằng chứng SQL và bảo mật. Nhóm còn xác nhận xếp loại, ký trang phân công và nộp. [Biên bản chốt Gate 2](meetings/decision_log.md#gate2).
+[Checklist và lịch phối hợp](docs/03_CHECKLIST_DU_AN.md#tuan-2-hien-hanh) giữ đầy đủ 142 mã việc và reviewer. **Gate 2 PASS** theo xác nhận nhóm do TV1 báo lại ngày 20/11. Báo cáo và slide hiện hành đã đưa vào bằng chứng SQL và bảo mật. Trang cuối báo cáo đã ghi công việc và xếp loại đóng góp. Từng thành viên ký trên bản in trước khi nộp. [Biên bản chốt Gate 2](meetings/decision_log.md#gate2).
 
 ## Kiểm thử ràng buộc nâng cao (TV1 — tuần 2)
 

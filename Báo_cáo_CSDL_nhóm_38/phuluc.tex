@@ -64,7 +64,7 @@ $fn$;
 
 \subsection*{A.2. Trigger khi ghi biến động: B08, B09 chiều thuận và B14}
 
-Trigger \texttt{trg\_bien\_dong\_hop\_le} chạy trước mỗi lệnh thêm hoặc sửa biến động. Khi thêm mới hoặc đổi người ghi, trigger kiểm tra tài khoản phải đang ở trạng thái HOAT\_DONG (B14); sau đó gọi hàm ở mục A.1 để kiểm tra ngày và hai đợt cư trú của biến động.
+Trigger \texttt{trg\_bien\_dong\_hop\_le} chạy trước khi thêm hoặc sửa từng bản ghi biến động. Khi thêm mới hoặc đổi người ghi, trigger kiểm tra tài khoản phải đang ở trạng thái HOAT\_DONG (B14); sau đó gọi hàm ở mục A.1 để kiểm tra ngày và hai đợt cư trú của biến động.
 
 \begin{lstlisting}[style=sqlvn, caption={Trigger khi ghi biến động: B08, B09 chiều thuận và B14}, label={lst:pl_bd}]
 -- B14: lúc ghi sự kiện hoặc đổi người ghi phải dùng tài khoản HOAT_DONG.

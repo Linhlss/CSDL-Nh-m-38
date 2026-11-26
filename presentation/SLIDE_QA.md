@@ -73,6 +73,6 @@ Các bảng kết quả được chép từ log PostgreSQL. Nhãn thuộc tính 
 | PPTX | `4a99ddf6e883d4d6e7a1bcaf689b3b5beed62aca92a48b7a5b995b88388ee009` |
 | PDF dự phòng | `be81401fad684d0fa53b9ac8e6039de159a94ce5a2cb6b1a57800dfcd1127c82` |
 | Template HUST | `0bc59aff84b8df880709d6d0f86633d85635fe22d4000ac783593d3e218426fa` |
-| PDF báo cáo hiện hành | `1683e3a13dc23782cbee973440eef93370b4ef05732480dda29518a1a51960de` |
+| PDF báo cáo hiện hành | `0fc99779469ea10756a0d4efa80b041a5a656a1f145bc578f4052628723d192e` |
 
 Nguồn từng slide xem [SOURCE_MAP.md](SOURCE_MAP.md). Mốc thời lượng và lời chuyển xem [SPEAKER_NOTES.md](SPEAKER_NOTES.md). Cách sửa bằng PowerPoint và tái tạo xem [README.md](README.md).

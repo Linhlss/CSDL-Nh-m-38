@@ -1,6 +1,6 @@
 {
   "version": "v1",
-  "recorded_date": "2026-11-24",
+  "recorded_date": "2026-11-26",
   "scope": "static_handoff_and_recorded_runtime_evidence",
   "runtime_evidence_available": true,
   "week1_technical_complete": true,
@@ -25,8 +25,8 @@
     },
     {
       "path": "BAO_CAO_KET_QUA_SUA_LATEX.md",
-      "bytes": 13575,
-      "sha256": "73d892ab32e686a7e44c9c7927900251ae73609565bc100f5f005de229210845"
+      "bytes": 13966,
+      "sha256": "d9016927c5215237dc801da79261c4deb19e1501eea363b76962e5bbd3c84d8e"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/.gitignore",
@@ -40,8 +40,8 @@
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/00_loicamon.tex",
-      "bytes": 1552,
-      "sha256": "db9d29f2f352e9afcbe94cbcad1728634cdf2b779088609a916b60aad0646bbb"
+      "bytes": 1422,
+      "sha256": "d61a495a2d2e621d462e5fe8878c38a4c017b02b66d041aac83396a7fe7615fc"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/00_viettat.tex",
@@ -50,38 +50,38 @@
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/README_COMPILE.md",
-      "bytes": 5314,
-      "sha256": "34ed962436667d87fa416c861f2cf4780da6c22790b511542e7a2b6a849b2418"
+      "bytes": 5180,
+      "sha256": "e6b1940f312be7b5e6dcca1a94b43659ac4d22692d94c131b39a04b8b342a4a2"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/chuong1.tex",
-      "bytes": 6516,
-      "sha256": "3f291e575847acc9dd849fe3ceac5776f79ea0581096f6d75293e96cfe190c6f"
+      "bytes": 6416,
+      "sha256": "6c4597b0605d0001e3bb5c548be7fef4c3eb69bbd32e90ef8289aa96b4422570"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/chuong2.tex",
-      "bytes": 10072,
-      "sha256": "7eaef787f2dc41229c8a5d1f4d93ad8d3b0ba163e2381b0099905dccec5ba09e"
+      "bytes": 9914,
+      "sha256": "efe2d43eba880903d2a0f211da88ad1e774ccf4d74bbb35ae1db005ccfccb0b4"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/chuong3.tex",
-      "bytes": 29376,
-      "sha256": "2090d10b410613d3e4293cc30dbc8723e8ae8f8b181fba09022d25a1f96de7c3"
+      "bytes": 27977,
+      "sha256": "15dda823fb6d9376c34eb855b02a5adb7ef7a23c7708783045fbc442b7a0210e"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/chuong4.tex",
-      "bytes": 14274,
-      "sha256": "0f3bbdfe28158a7109f0df805710861974bc2adee136baab6241cdc274532cb7"
+      "bytes": 14145,
+      "sha256": "0f65b9d125568a1446ff5bb69981e7f258fdbe27d8667e4b359aa43bda400584"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/chuong5.tex",
-      "bytes": 12038,
-      "sha256": "d06c7214b0d5f07aab045a163db57b6caccd0203e5db1fa7540a3987c0d3dc3e"
+      "bytes": 12058,
+      "sha256": "329cd21b4d4026377d810c4a4b25ca5df1ae9f267a388675c516d9d1001ed826"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/chuong6.tex",
-      "bytes": 19468,
-      "sha256": "915e5fafafa2e27703d11141e5de70f8860d3ab4deae78d059782664709e8c0a"
+      "bytes": 18490,
+      "sha256": "35ed071424e5ff0d13e00df7cd896d5c4fabb2fded04ee0c7aac6a4a438a18dc"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/image/erd.png",
@@ -200,18 +200,18 @@
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/ketluan.tex",
-      "bytes": 4995,
-      "sha256": "b8c1b592c9b13087fe256c1bdf0e8a954823e310c27de17977733595cfa499cf"
+      "bytes": 4027,
+      "sha256": "c027883c90acddea813ff1c30b059477f2983a8c0af2edbcec9421fa1a7a3608"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/loimodau.tex",
-      "bytes": 2593,
-      "sha256": "ad6ecb1cffd216a9e1318e7aa5cb79baa8f556ecd178fd4c063fc3683c16d386"
+      "bytes": 2461,
+      "sha256": "73bef11026840d824dd6016bb8fb1254f2cafb50d3427f3ece49ab5d8e5408d2"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/main.pdf",
-      "bytes": 2266635,
-      "sha256": "1683e3a13dc23782cbee973440eef93370b4ef05732480dda29518a1a51960de"
+      "bytes": 2263284,
+      "sha256": "0fc99779469ea10756a0d4efa80b041a5a656a1f145bc578f4052628723d192e"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/main.tex",
@@ -220,13 +220,13 @@
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/phancong.tex",
-      "bytes": 1297,
-      "sha256": "ad0d3786f64497cc74224cfb59bb08c9ebc5ba6cc7eadb6b2681d7ab49c8fa1c"
+      "bytes": 1756,
+      "sha256": "a4e5c5ae84154fd35724ebc0058f779ed641f8a4994f2546f474479f71e80bc7"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/phuluc.tex",
-      "bytes": 14384,
-      "sha256": "2d8e0a05a43ac32ee1a880b72cb9f25d54131fb1aedabe328f77989f9a85824a"
+      "bytes": 14392,
+      "sha256": "ae6165046e8907cd849a21257adc1b2435ab4cca1b738956bf1edf784878f9ed"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/phuluc_baomat.tex",
@@ -235,8 +235,8 @@
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/phuluc_sql.tex",
-      "bytes": 3154,
-      "sha256": "8ad41eafe956d64eed20d31b13c51a6f41b526b321962f5fd3d788bc404310fd"
+      "bytes": 3164,
+      "sha256": "21f69e7def99338cc59650e5540ff998c168bad6be8f445f4054aeb27b253cb1"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/setuppackages.tex",
@@ -255,8 +255,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 9165,
-      "sha256": "c0d48c0c69db9ae8efcbeff9c8c2fa7602b5033b443f25d2c00cd8a45a7cc299"
+      "bytes": 9229,
+      "sha256": "8af11ce532b8a14d83eb33b3584a88e77242d6a585942146a6a7b8b27d864651"
     },
     {
       "path": "Slide/HUST_PPT_template_2022_Blue_16x9.pptx",
@@ -441,7 +441,7 @@
     {
       "path": "presentation/SLIDE_QA.md",
       "bytes": 7273,
-      "sha256": "5c6f2e3467ce60d0c924a1490e41c43ad4eeb85974b34a7b897c83b7aa693981"
+      "sha256": "cf5436a4879325709fec9b101bd50ffffd989c0af9cb32b65eaa05b9ec9fa510"
     },
     {
       "path": "presentation/SOURCE_MAP.md",
@@ -756,7 +756,7 @@
     {
       "path": "tests/week1_verification_log.md",
       "bytes": 4562,
-      "sha256": "d284320d5a051436b5f2d24df7b8705fffc78c63bdf998ed4a25ff4928dd4469"
+      "sha256": "f748a74fd474fd119f8f6c3b648a2f2dda5e86fb8e24a0b94c3515a5c97c5741"
     },
     {
       "path": "tests/week2_constraints_execution_log.md",

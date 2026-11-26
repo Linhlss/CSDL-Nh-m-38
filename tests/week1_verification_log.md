@@ -1,4 +1,4 @@
-# BIÊN BẢN KIỂM TRA TỆP DỰ ÁN — 24/11/2026
+# BIÊN BẢN KIỂM TRA TỆP DỰ ÁN — 26/11/2026
 
 **Lệnh đã chạy:** `python3 scripts/verify_week1.py --record` từ thư mục gốc.
 **Python thực tế:** 3.13.5. **Hệ điều hành:** Darwin 27.2.0.
