@@ -51,7 +51,7 @@ Schema/ERD/từ điển đã thống nhất về cấu trúc 7 bảng/35 cột. 
 | `tests/final_test_log.md` | TV2 chính | Nhật ký chạy thật, lỗi/khắc phục, commit và môi trường |
 | `evidence/sql/` và `evidence/security/` | TV2 / TV3 | Ảnh hoặc file kết quả rõ nội dung, không minh họa giả |
 | `meetings/decision_log.md` | TV1 | Các quyết định, thay đổi schema, duyệt Gate 1–4 |
-| `report/` | TV1 tích hợp | Bản báo cáo nguồn và PDF cuối cùng |
+| `Báo_cáo_CSDL_nhóm_38/` | TV1 tích hợp | Nguồn LaTeX, ảnh và PDF cuối cùng |
 
 **Nguồn dùng chung:** README dẫn vào sản phẩm; checklist giữ mã/owner/reviewer; nhật ký giữ quyết định, review và bảng đối chiếu tuần 1. Sửa các liên kết khi đổi tên file; không tạo bản hướng dẫn trùng.
 
@@ -283,7 +283,7 @@ Schema/ERD/từ điển đã thống nhất về cấu trúc 7 bảng/35 cột. 
 - [ ] **W3-T1-09 · 25/11:** Kiểm tra từng ảnh minh chứng SQL/bảo mật có câu hỏi, code thực thi, kết quả/hình rõ; tránh chụp ảnh thiếu ngữ cảnh hoặc quá bé khi in A4.
 - [ ] **W3-T1-10 · 25/11:** Hoàn thành bìa: trường, môn, tên đề tài, **mã lớp**, **STT NHÓM**, danh sách 3 thành viên MSSV/họ tên, tên giảng viên; kiểm tra chính tả.
 - [ ] **W3-T1-11 · 25–26/11:** Hoàn thành **TRANG CUỐI** báo cáo: bảng phân công chi tiết theo sản phẩm, đánh giá mức đóng góp/xếp loại A, B, C… và **chữ ký của từng người**; không nhầm trang cuối với phụ lục.
-- [ ] **W3-T1-12 · 25–26/11:** Kết xuất PDF báo cáo, rà soát trực quan từng trang (mục lục, ERD, công thức RA, bảng dài, chú thích); lưu bản nguồn + bản PDF duy nhất trong `report/`.
+- [ ] **W3-T1-12 · 25–26/11:** Kết xuất PDF báo cáo, rà soát trực quan từng trang (mục lục, ERD, công thức RA, bảng dài, chú thích); lưu nguồn LaTeX và bản PDF duy nhất trong `Báo_cáo_CSDL_nhóm_38/`.
 - [ ] **W3-T1-13 · 26/11:** Chuẩn bị bản in **A4, in 2 mặt, đóng quyển, KHÔNG bìa cứng, KHÔNG bìa mica**, tờ bìa bằng A4 thông thường; kiểm tra bản in trước nộp.
 - [ ] **W3-T1-14 · 26/11:** Kiểm tra gói bàn giao: báo cáo PDF, các file nguồn, SQL, CSV/seed, hướng dẫn chạy, ảnh minh chứng; lưu phiên bản cuối và backup khác máy.
 - [ ] **W3-T1-15 · 27/11:** Nộp bản mềm lên **Assignment**, giao bản cứng theo hướng dẫn trước tiết 3; lưu xác nhận nộp. Phối hợp cả nhóm báo cáo từ ngày 27/11 theo thứ tự cô công bố.
@@ -482,7 +482,7 @@ Quyết định: PASS / PASS CÓ ĐIỀU KIỆN / FAIL
 ### Tài liệu nguồn cần đối chiếu khi có thay đổi
 
 - Đề cương nội bộ: `docs/01_de_cuong.md` (phạm vi, mô hình, bộ 10 RA/SQL, S01–S21).
-- Sườn báo cáo: `docs/02_bao_cao_suon.md`.
+- Báo cáo chính [PDF](../Báo_cáo_CSDL_nhóm_38/main.pdf) và [nguồn LaTeX](../Báo_cáo_CSDL_nhóm_38/main.tex).
 - Giao việc ban đầu: `docs/03_CHECKLIST_DU_AN.md`.
 - DDL thiết kế v1: `sql/01_schema.sql`; ràng buộc nâng cao `sql/02_constraints.sql` còn TODO. Seed/10 SQL/bảo mật đã có mã và bằng chứng, nghiệm thu tuần 2 theo checklist.
 - Yêu cầu, bản in và thời hạn: nhóm đã đối chiếu thông báo gốc theo xác nhận chủ repo tiếp nhận16/11/2026; bản thông báo chưa lưu trong repo. Nếu cô cập nhật, ưu tiên thông báo mới nhất.

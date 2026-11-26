@@ -102,4 +102,6 @@ Dấu vết đầu vào của lượt chạy:
 04_queries.sql SHA-256 043d1a771719f1304a9b03134269862b33811343a1d5422fd56ef72e26b8487b
 ```
 
-Lượt đối chiếu này xác nhận bộ QSQL và bổ sung liên kết ảnh của TV2. Phiên bản máy TV2 và xác nhận Gate 3 vẫn cần biên bản riêng.
+Lượt đối chiếu này xác nhận bộ QSQL và bổ sung liên kết ảnh của TV2.
+
+**Máy Windows của TV2.** Ngọc ghi nhận dùng PostgreSQL 19 (x64) và pgAdmin 4 trong [PR #11](https://github.com/Linhlss/CSDL-Nh-m-38/pull/11). Mười ảnh cho thấy kết nối và thực thi từng QSQL trong pgAdmin. Kết quả tái lập đủ 10 truy vấn bằng PostgreSQL 17.12 được ghi riêng ở trên. Xác nhận Gate 3 vẫn cần biên bản của nhóm.

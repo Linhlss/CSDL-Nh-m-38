@@ -65,7 +65,7 @@ Mỗi mã chỉ có một dòng. Reviewer kỹ thuật hỗ trợ là agent, xá
 | W1-T1-15 | TV1 | 13–14/11 · Soát DDL v0 | [01_schema.sql](../sql/01_schema.sql); [week1_sql_compatibility.json](../tests/week1_sql_compatibility.json) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
 | W1-T1-16 | TV1 | 14/11 · Kiểm tra các ràng buộc còn thiếu | [02_constraints.sql](../sql/02_constraints.sql); [week1_design_cases.md](../tests/week1_design_cases.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
 | W1-T1-17 | TV1 | 14/11 · Đối chiếu truy vấn | [07_ma_tran_truy_van_va_review.md](../docs/07_ma_tran_truy_van_va_review.md); [05_ke_hoach_du_lieu_va_sql.md](../docs/05_ke_hoach_du_lieu_va_sql.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
-| W1-T1-18 | TV1 | 14–15/11 · Hoàn thiện Chương 1–3 dạng bản nháp | [02_bao_cao_suon.md](../docs/02_bao_cao_suon.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-T1-18 | TV1 | 14–15/11 · Hoàn thiện Chương 1–3 dạng bản nháp | [Bản nháp ở mốc tuần 1](https://github.com/Linhlss/CSDL-Nh-m-38/blob/4bf6e7386c9b79236e80d937e1a190ed6099cc22/docs/02_bao_cao_suon.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
 | W1-T1-19 | TV1 | 15/11 · Tổ chức Gate 1 | [decision_log.md](../meetings/decision_log.md) | Đạt review Gate 1 theo chủ repo xác nhận cả ba đã đồng ý, tiếp nhận 16/11/2026; không ghi ngày họp hoặc chữ ký giả |
 | W1-T1-20 | TV1 | 15/11 · Phát hành schema v1 | [phiên bản và Gate 1](decision_log.md#gate1) | Đạt phát hành thiết kế v1 theo xác nhận chủ repo tiếp nhận 16/11/2026; giữ nguyên schema |
 | W1-T2-01 | TV2 | 10–11/11 · Thiết lập máy | [week1_environment.md](../tests/week1_environment.md); [week1_execution_results.json](../tests/week1_execution_results.json) | Hoãn theo yêu cầu chủ repo 16/11/2026 sang W2-T2-01; TV2 dùng Windows, chưa rõ PostgreSQL/công cụ/kết quả kết nối cá nhân |
@@ -96,7 +96,7 @@ Mỗi mã chỉ có một dòng. Reviewer kỹ thuật hỗ trợ là agent, xá
 | W1-T3-12 | TV3 | 14/11 · Review ERD độc lập | [review TV3](decision_log.md#review-tv3) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
 | W1-T3-13 | TV3 | 14–15/11 · Review test dữ liệu TV2 | [review dữ liệu](decision_log.md#review-data); [week1_execution_results.json](../tests/week1_execution_results.json) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
 | W1-T3-14 | TV3 | 15/11 · Bàn giao đặc tả | [06a_dai_so_quan_he.md](../docs/06a_dai_so_quan_he.md); [06b_bao_mat.md](../docs/06b_bao_mat.md); [review TV3](decision_log.md#review-tv3) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
-| W1-G-01 | Cả nhóm | Kickoff, vai trò và thông tin nhóm | [02_bao_cao_suon.md](../docs/02_bao_cao_suon.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
+| W1-G-01 | Cả nhóm | Kickoff, vai trò và thông tin nhóm | [Bản nháp ở mốc tuần 1](https://github.com/Linhlss/CSDL-Nh-m-38/blob/4bf6e7386c9b79236e80d937e1a190ed6099cc22/docs/02_bao_cao_suon.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
 | W1-G-02 | Cả nhóm | Repo và quyền cộng tác | [README.md](../README.md) | Đạt sản phẩm và review kỹ thuật hỗ trợ |
 | W1-G-03 | Cả nhóm | Đối soát chung 10 RA/10 SQL | [week1_execution_results.json](../tests/week1_execution_results.json); [decision_log.md](../meetings/decision_log.md) | Đạt đối soát kỹ thuật; nhóm đồng ý thiết kế theo xác nhận chủ repo tiếp nhận 16/11/2026 |
 | W1-G-04 | Cả nhóm | Biên bản Gate 1 | [decision_log.md](../meetings/decision_log.md) | Đạt Gate 1 theo xác nhận chủ repo trong chat, tiếp nhận 16/11/2026; không tạo ngày họp hoặc chữ ký |

@@ -715,7 +715,7 @@ ID QSQLxx / Tên câu:
 
 | Người | Công việc cụ thể | Tệp/sản phẩm nộp nội bộ | Hạn | Reviewer |
 |---|---|---|---|---|
-| **TV1** | (1) Tích hợp chương 1–6; (2) chuẩn hóa hình, bảng, số mục; (3) soát tên PK/FK/schema xuyên suốt; (4) tạo bìa/phiếu phân công; (5) xuất bản mềm, in thử rồi in chính thức; (6) nộp Assignment và kiểm tra trạng thái | `report/BTL_CSDL_NhomXX_final.pdf` + nguồn, bản in A4 hai mặt, biên nhận nộp | **25/11** báo cáo; **26/11** in; **27/11** nộp | TV2 + TV3 |
+| **TV1** | (1) Tích hợp chương 1–6; (2) chuẩn hóa hình, bảng, số mục; (3) soát tên PK/FK/schema xuyên suốt; (4) tạo bìa/phiếu phân công; (5) xuất bản mềm, in thử rồi in chính thức; (6) nộp Assignment và kiểm tra trạng thái | `Báo_cáo_CSDL_nhóm_38/main.pdf` + nguồn LaTeX, bản in A4 hai mặt, biên nhận nộp | **25/11** báo cáo; **26/11** in; **27/11** nộp | TV2 + TV3 |
 | **TV2** | (1) Chạy lại DDL+seed+10 SQL trên DB sạch; (2) chụp ảnh lệnh và kết quả; (3) ghi test case pass/fail, bổ sung phụ lục script; (4) rà các số liệu trong báo cáo | `evidence/sql/`, `tests/final_test_log.md`, phụ lục dữ liệu | **24/11** chuyên môn, **25/11** review | TV1 |
 | **TV3** | (1) Kiểm tra và chốt 10 RA; (2) chạy demo B1/B2 dưới role thật; (3) chụp ảnh cả thành công và bị từ chối; (4) viết phần bảo mật và tài liệu tham khảo; (5) cùng review file final | `evidence/security/`, `sql/05_security.sql`, chương 4/6 final | **24/11** chuyên môn, **25/11** review | TV2 |
 
@@ -978,9 +978,9 @@ BTL_CSDL_DE_TAI_17/
 ├── evidence/
 │   ├── sql/
 │   └── security/
-├── report/
-│   ├── BTL_CSDL_NhomXX_source.docx    # Khi chọn Word
-│   └── BTL_CSDL_NhomXX_FINAL.pdf      # Khi xuất bản cuối
+├── Báo_cáo_CSDL_nhóm_38/
+│   ├── main.tex                       # Nguồn LaTeX
+│   └── main.pdf                       # Bản để in
 └── meetings/
     └── decision_log.md
 ```

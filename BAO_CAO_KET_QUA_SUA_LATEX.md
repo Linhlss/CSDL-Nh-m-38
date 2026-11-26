@@ -7,6 +7,7 @@
 - Quyết định E1 giữ theo nhật ký, mục 9. Bảng biến động vẫn nêu rõ phần dư thừa có điều kiện. Phần SQL dùng đúng QSQL01–QSQL10; báo cáo chứa mười ảnh của TV2 và bảy ảnh bảo mật của TV3.
 - [Kiểm chứng DML](tests/report_dml_minh_hoa_log.txt) trên PostgreSQL 17.12 ghi hai lỗi B09 đúng SQLSTATE 23514 và 636 bản ghi giống hệt trước và sau hoàn tác.
 - Trang 71 ghi công việc và sản phẩm của từng thành viên, kèm xếp loại do chủ repo xác nhận. Cột chữ ký để từng thành viên ký tay.
+- Bản nháp Markdown đã được dọn khỏi cây tệp hiện hành. Lịch sử PR #10–#13 giữ các bản review và minh chứng đã bàn giao. Báo cáo dùng điều kiện E1 kiểm tra dữ liệu theo quyết định tại mục 9 của [nhật ký nhóm](meetings/decision_log.md).
 - Đã rà văn phong, làm rõ cách xét hiệu lực của Chương 4 và Chương 5, đồng bộ tiêu đề câu truy vấn và rút các câu lặp về giới hạn. Kiểm tra lại bố cục A4, ảnh minh chứng, công thức và các đoạn mã sau khi biên dịch.
 
 ## Bản lịch sử — truy vấn theo ngày hệ thống

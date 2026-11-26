@@ -25,10 +25,11 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "tests/week1_manifest.json"
 LOG = ROOT / "tests/week1_verification_log.md"
 LEDGER = "meetings/decision_log.md"
+REPORT_DIR = Path("Báo_cáo_CSDL_nhóm_38")
 TABLES = {"to_dan_pho": 3, "dia_chi": 4, "ho_cu_tru": 4, "cu_dan": 5,
           "qua_trinh_cu_tru": 6, "tai_khoan": 5, "bien_dong_cu_tru": 8}
 REQUIRED = ["README.md", ".gitignore", "docs/03_dac_ta_nghiep_vu.md", "docs/04_data_dictionary_va_chuan_hoa.md",
-            "docs/02_bao_cao_suon.md", "docs/07_ma_tran_truy_van_va_review.md",
+            "docs/07_ma_tran_truy_van_va_review.md",
             LEDGER, "sql/01_schema.sql",
             "sql/02_constraints.sql", "tests/week1_design_cases.md", "tests/week1_sql_compatibility.json",
             "scripts/render_week1_diagrams.py", "scripts/verify_week1.py"]
@@ -37,6 +38,7 @@ REQUIRED += [f"diagrams/{name}.{ext}" for name in ("erd_v1", "phan_ra_chuc_nang"
 REQUIRED += [".gitattributes", "docs/05_ke_hoach_du_lieu_va_sql.md",
              "tests/week1_fixture.sql", "tests/week1_expected.json", "tests/week1_environment.md",
              "tests/week1_execution_results.json", "scripts/verify_week1_runtime.py"]
+REQUIRED += [str(REPORT_DIR / name) for name in ("main.tex", "main.pdf")]
 RESULTS = []
 
 
@@ -217,11 +219,10 @@ def coverage():
 
 
 def report_and_handoff():
-    report = read("docs/02_bao_cao_suon.md")
-    part = report.split("## CHƯƠNG 4")[0].split("## CHƯƠNG 1")[1]
-    assert "[TODO" not in part and "[CHÈN HÌNH" not in part
     for n in range(1,4):
-        assert len(re.findall(rf"^### {n}\.\d+\.",part,re.M)) >= 4
+        chapter = read(REPORT_DIR / f"chuong{n}.tex")
+        assert "[TODO" not in chapter and "[CHÈN HÌNH" not in chapter
+        assert len(re.findall(r"^\\subsection\{", chapter, re.M)) >= 4
     ids = re.findall(r"^\| (W1-T1-\d\d) \|",read(LEDGER),re.M)
     assert len(ids) == 20 and set(ids) == {f"W1-T1-{n:02}" for n in range(1,21)}
     gate = gate1_state()
@@ -262,12 +263,12 @@ def python_syntax():
 
 def files_for_manifest():
     files = [ROOT/"README.md",ROOT/".gitignore",ROOT/".gitattributes"]
-    for directory in ("docs","diagrams","sql","scripts","tests","meetings","data","report","evidence","presentation"):
+    for directory in ("docs","diagrams","sql","scripts","tests","meetings","data","evidence","presentation"):
         files.extend(p for p in (ROOT/directory).rglob("*") if p.is_file()
                      and p.name != ".DS_Store" and "__pycache__" not in p.parts and p != MANIFEST)
     # The printable report is versioned with its sources and images; TeX build
     # intermediates stay local and must not make the manifest machine-dependent.
-    latex = ROOT / "Báo_cáo_CSDL_nhóm_38"
+    latex = ROOT / REPORT_DIR
     if latex.is_dir():
         files.extend(p for p in latex.rglob("*") if p.is_file()
                      and (p.suffix in {".tex", ".md"} or p.name in {".gitignore", "main.pdf"}

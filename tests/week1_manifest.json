@@ -25,8 +25,8 @@
     },
     {
       "path": "BAO_CAO_KET_QUA_SUA_LATEX.md",
-      "bytes": 13966,
-      "sha256": "d9016927c5215237dc801da79261c4deb19e1501eea363b76962e5bbd3c84d8e"
+      "bytes": 14267,
+      "sha256": "3263fa9375b71fad0dff1558b340b947f690fa8b69ba77391cee47450d114359"
     },
     {
       "path": "Báo_cáo_CSDL_nhóm_38/.gitignore",
@@ -255,8 +255,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 9229,
-      "sha256": "8af11ce532b8a14d83eb33b3584a88e77242d6a585942146a6a7b8b27d864651"
+      "bytes": 9128,
+      "sha256": "015ef2e42484ec2a3b5476c96d05a4a946f3fa83ec37a4bf9ea094d07caaceba"
     },
     {
       "path": "Slide/HUST_PPT_template_2022_Blue_16x9.pptx",
@@ -345,18 +345,13 @@
     },
     {
       "path": "docs/01_de_cuong.md",
-      "bytes": 76861,
-      "sha256": "e726c2e7343ffdf2041a154333c883c74905d36adbee1c71908ad13f0f4490e3"
-    },
-    {
-      "path": "docs/02_bao_cao_suon.md",
-      "bytes": 108686,
-      "sha256": "71878136b558b6596234a5e3e598bd034e723ac1b96b07546fc2e3b131ba07ee"
+      "bytes": 76873,
+      "sha256": "ac17b138b3638029baec3a2b28356e41392c4f465c5220e1764d121c062f3d6f"
     },
     {
       "path": "docs/03_CHECKLIST_DU_AN.md",
-      "bytes": 63315,
-      "sha256": "07cba54883d8cbe228efcec7f3ea9afc0e2c238c876361dfd3f6d7800be1fdf4"
+      "bytes": 63420,
+      "sha256": "28e05d813b1c16d8205d098fd964de9e6a01f5134439bd6e97cae901a34b46e5"
     },
     {
       "path": "docs/03_dac_ta_nghiep_vu.md",
@@ -385,8 +380,8 @@
     },
     {
       "path": "docs/07_ma_tran_truy_van_va_review.md",
-      "bytes": 25996,
-      "sha256": "3f28e9cdb65384c0e6d41f8d33dcb91fb6dddbc227f16b75bec409962ecbb2fa"
+      "bytes": 26001,
+      "sha256": "475d78506b229bc1ea894b0cee963aa25b8f6f2120c0ad07b67e4b9c62342cd2"
     },
     {
       "path": "docs/08_huong_dan_dung_csdl.md",
@@ -420,8 +415,8 @@
     },
     {
       "path": "meetings/decision_log.md",
-      "bytes": 42662,
-      "sha256": "7bdb55e0c9836185fab759b45474484a500c30ee5828e403a8c43f5850fde68c"
+      "bytes": 42852,
+      "sha256": "a39071f55deb42567d935e90deb1aa2545116ea2c77245b5597592dc8d51e2d2"
     },
     {
       "path": "presentation/CSDL_Nhom38_HUST_ThuyetTrinh.pdf",
@@ -519,11 +514,6 @@
       "sha256": "8a3b699ca5059876f1f2e18af7465122cbaea85d81b2dbf2b30fff9224dc2f00"
     },
     {
-      "path": "report/.gitkeep",
-      "bytes": 0,
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
-    {
       "path": "scripts/.gitkeep",
       "bytes": 0,
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
@@ -555,8 +545,8 @@
     },
     {
       "path": "scripts/verify_week1.py",
-      "bytes": 25178,
-      "sha256": "6f7dc972f9b1dbea9ca581f3cc9b3142dbf52a4c75ad80570c82e246797b0cb6"
+      "bytes": 25199,
+      "sha256": "64f2aab9679750657bf18b61407a9b004389ecd413ee2e7a5792ca8c0b9a4282"
     },
     {
       "path": "scripts/verify_week1_runtime.py",
@@ -605,8 +595,8 @@
     },
     {
       "path": "tests/final_test_log.md",
-      "bytes": 8896,
-      "sha256": "595cb4d40a77fe180b3a0a6cb781fa293fb44b7370ca9d8a571e37932100c780"
+      "bytes": 9204,
+      "sha256": "33a96f258de8b702d47cce620089a6526d245d64047f33c6f0e48e44192517d2"
     },
     {
       "path": "tests/ra_fixture.sql",
@@ -756,7 +746,7 @@
     {
       "path": "tests/week1_verification_log.md",
       "bytes": 4562,
-      "sha256": "f748a74fd474fd119f8f6c3b648a2f2dda5e86fb8e24a0b94c3515a5c97c5741"
+      "sha256": "a3022d0a8ed1954929a40e58a5490c3bdd409bee44dc0b2efe0a2d6cbf5fca90"
     },
     {
       "path": "tests/week2_constraints_execution_log.md",

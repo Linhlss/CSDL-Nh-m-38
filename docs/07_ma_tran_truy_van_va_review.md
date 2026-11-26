@@ -83,7 +83,7 @@ Chạy [tests/seed636_s01_s16_tv3.sql](../tests/seed636_s01_s16_tv3.sql) trên C
 | S02 | C7, C8 tạm trú Tổ 02 được lấy; C9, C10 thường trú bị loại | Đạt |
 | S03 | C1 sinh đúng 20/11/1966 và C2 được lấy; C3 sinh 21/11/1966 bị loại | Đạt |
 | S04 | QSQL04/QRA05 ra **47, 48, 49, 50**; địa chỉ của hộ rỗng 59/60 không lọt | Đạt, xem ghi chú 1 |
-| S05 | Hộ 59, 60: 0 người tại d, mỗi hộ từng có 1 đợt | Đạt |
+| S05 | Hộ 36, 37, 59 và 60 có 0 người ở ngày kiểm thử. Hộ 37 chưa có đợt cư trú nào | Đạt |
 | S06 | C15 hai hộ được lấy; C17 hai đợt cùng một hộ bị loại | Đạt |
 | S07 | `INTERSECT` lấy C6 (hai loại cùng lúc), C17, C18 (hai loại khác thời kỳ) | Đạt |
 | S08 | C1, C2 chỉ thường trú, C7 chỉ tạm trú không lọt tập giao | Đạt |
@@ -114,11 +114,11 @@ Nền: nhánh `tv3/gate2-w2-t3`, dựng trên `fix/tv1-integration-gate2` @ `025
 
 | Sản phẩm | Tệp | Trạng thái kiểm chứng |
 |---|---|---|
-| 10 biểu thức RA (QRA01–10, kèm QRA07 cách phép chia), đủ 8 mục mỗi câu | [06a](06a_dai_so_quan_he.md), Chương 4 trong [02](02_bao_cao_suon.md) | Seed636: 10/10 câu khớp SQL kiểm chứng theo tập mã ([phụ lục 06a](06a_dai_so_quan_he.md), [seed636_qra02_03_06_08.sql](../tests/seed636_qra02_03_06_08.sql)); fixture: [ra_fixture.sql](../tests/ra_fixture.sql) |
+| 10 biểu thức RA (QRA01–10, kèm QRA07 cách phép chia), đủ 8 mục mỗi câu | [06a](06a_dai_so_quan_he.md) | Seed636: 10/10 câu khớp SQL kiểm chứng theo tập mã ([phụ lục 06a](06a_dai_so_quan_he.md), [seed636_qra02_03_06_08.sql](../tests/seed636_qra02_03_06_08.sql)); fixture: [ra_fixture.sql](../tests/ra_fixture.sql) |
 | Kiểm tra chéo S01–S16 trên seed636 | [seed636_s01_s16_tv3.sql](../tests/seed636_s01_s16_tv3.sql), mục 8 | 16/16 ca có dữ liệu và đúng; ghi chú S04/S14b đã được TV1, TV2 xử lý |
 | Script bảo mật B1/B2 | [05_security.sql](../sql/05_security.sql) | Chạy trên bản có `02_constraints`: đúng 6 lỗi cố ý, không lỗi khác |
 | Kiểm tra quyền thật (S20/S21) | [security_catalog_tv3.sql](../tests/security_catalog_tv3.sql), [security_login_tv3.sql](../tests/security_login_tv3.sql), [biên bản](../tests/week2_security_login_log.md) | Catalog 15/15 (gồm C15 thêm theo X02), reader 12/12, report 10/10 PASS bằng phiên đăng nhập thật; dữ liệu không đổi |
-| Chương 6 | Chương 6 trong [02](02_bao_cao_suon.md), [06b](06b_bao_mat.md) | Đã cập nhật kết quả tuần 2; chờ TV2 review |
+| Chương 6 | [Chương 6](../Báo_cáo_CSDL_nhóm_38/chuong6.tex), [06b](06b_bao_mat.md) | Đã cập nhật kết quả tuần 2; chờ TV2 review |
 
 **Vấn đề còn lại (sửa trước 24/11 trừ khi ghi khác)**
 

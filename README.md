@@ -70,7 +70,6 @@ Xem **[Hướng dẫn dựng CSDL thống nhất](docs/08_huong_dan_dung_csdl.md
 | 10 RA, SQL kiểm chứng và B1/B2 | [Đại số quan hệ](docs/06a_dai_so_quan_he.md), [bảo mật](docs/06b_bao_mat.md) |
 | Kết quả, quyết định và xác nhận | [Nhật ký chung](meetings/decision_log.md), [ma trận câu hỏi](docs/07_ma_tran_truy_van_va_review.md) |
 | Báo cáo chính để in | [PDF](Báo_cáo_CSDL_nhóm_38/main.pdf), [nguồn và cách biên dịch](Báo_cáo_CSDL_nhóm_38/README_COMPILE.md) |
-| Khung và hồ sơ biên tập báo cáo | [Bản Markdown tích hợp](docs/02_bao_cao_suon.md) |
 
 Nhận bản mới trên nhánh main từ [repo GitHub](https://github.com/Linhlss/CSDL-Nh-m-38), rồi kiểm tra tệp:
 
